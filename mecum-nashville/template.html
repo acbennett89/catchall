@@ -1,0 +1,543 @@
+<meta charset="utf-8">
+<title>Mecum Block Sheet</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#EEF1F5;--surface:#FFFFFF;--surface-2:#F6F8FB;--line:#D6DCE4;--ink:#101820;--muted:#5A6470;
+  --accent:#2447C8;--accent-ink:#FFFFFF;--accent-soft:#E3E9FB;
+  --ok:#1E7F4E;--ok-soft:#DFF3E7;--over:#B3261E;--over-soft:#F9E1DE;--sold:#0E7C86;--sold-soft:#D9F0F2;--amber:#B7791F;--amber-soft:#FBEFD6;
+  --star:#D99A06;--shadow:0 1px 2px rgba(16,24,32,.06),0 4px 14px rgba(16,24,32,.06);
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;--body:"Barlow","Segoe UI",Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F141A;--surface:#171E26;--surface-2:#1D2630;--line:#2B3641;--ink:#E7ECF2;--muted:#8B96A3;
+  --accent:#7B9BFF;--accent-ink:#0B1230;--accent-soft:#1E2A4F;
+  --ok:#5CCB8B;--ok-soft:#153A27;--over:#F08C84;--over-soft:#43201D;--sold:#5FD0DA;--sold-soft:#123A3F;--amber:#E5B255;--amber-soft:#3E2E12;
+  --star:#F2B72B;--shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.35);}}
+:root[data-theme="dark"]{
+  --bg:#0F141A;--surface:#171E26;--surface-2:#1D2630;--line:#2B3641;--ink:#E7ECF2;--muted:#8B96A3;
+  --accent:#7B9BFF;--accent-ink:#0B1230;--accent-soft:#1E2A4F;
+  --ok:#5CCB8B;--ok-soft:#153A27;--over:#F08C84;--over-soft:#43201D;--sold:#5FD0DA;--sold-soft:#123A3F;--amber:#E5B255;--amber-soft:#3E2E12;
+  --star:#F2B72B;--shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.35);}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.4;margin:0;-webkit-text-size-adjust:100%}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{padding-inline:16px;max-width:1120px;margin:0 auto}
+
+/* header + day tabs */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:var(--shadow)}
+.top .wrap{display:flex;flex-direction:column;gap:8px;padding-block:10px 0}
+.brand{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{font-family:var(--display);font-weight:700;font-size:26px;letter-spacing:.01em;margin:0;text-wrap:balance}
+h1 small{font-family:var(--body);font-weight:500;font-size:13px;color:var(--muted);margin-left:8px;letter-spacing:0}
+.asof{font-size:12px;color:var(--muted)}
+.upd{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.aucsel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 10px;min-height:34px;font-family:var(--display);font-weight:600;font-size:15px;max-width:min(100%,360px)}
+.updbtn{border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);border-radius:6px;padding:6px 12px;font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.03em;min-height:34px}
+.updbtn[disabled]{opacity:.6;cursor:wait}
+.asof.err{color:var(--over)}
+.days{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding-inline:16px}
+.days::-webkit-scrollbar{display:none}
+.day{flex:0 0 auto;border:0;background:none;padding:8px 12px 10px;border-bottom:3px solid transparent;font-family:var(--display);font-weight:600;font-size:17px;line-height:1;color:var(--muted);display:flex;flex-direction:column;gap:3px;align-items:flex-start;min-width:64px}
+.day b{font-weight:700;font-size:20px;color:var(--ink)}
+.day span{font-family:var(--body);font-size:11px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.day[aria-selected="true"]{border-bottom-color:var(--accent);color:var(--accent)}
+.day[aria-selected="true"] b{color:var(--accent)}
+
+/* controls */
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 14px;padding-block:14px;align-items:end}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.field input,.field select{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:8px 10px;min-height:38px;width:100%}
+.budget{display:flex;align-items:center;gap:6px}
+.budget input{font-family:var(--display);font-size:22px;font-weight:600;padding:4px 10px;font-variant-numeric:tabular-nums}
+.budget .pre{font-family:var(--display);font-size:20px;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;padding:7px 10px;font-size:13px;font-weight:500;color:var(--muted);min-height:38px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.toggles{display:flex;flex-wrap:wrap;gap:8px 16px;padding-block:0 12px}
+.toggles label{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink);cursor:pointer}
+.toggles input{accent-color:var(--accent);width:16px;height:16px}
+.summary{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted);padding-block:0 10px;border-bottom:1px solid var(--line);margin-bottom:10px}
+.summary b{color:var(--ink);font-family:var(--display);font-size:17px;font-weight:600}
+
+/* lot rows */
+.list{display:flex;flex-direction:column;gap:6px;padding-block:0 40px}
+.lot{background:var(--surface);border:1px solid var(--line);border-radius:8px;display:grid;grid-template-columns:96px 1fr auto;gap:0 12px;align-items:stretch;overflow:hidden}
+.lot.watched{border-color:var(--star)}
+.lot.hidden-by-you{opacity:.55}
+.thumb{width:96px;min-height:72px;background:var(--surface-2);object-fit:cover;display:block;align-self:stretch}
+.thumb.none{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px}
+.main{padding:8px 0;min-width:0;display:flex;flex-direction:column;gap:4px;justify-content:center}
+.lotno{font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.06em;color:var(--muted)}
+.title{font-weight:600;font-size:15px;line-height:1.25;margin:0;overflow-wrap:anywhere}
+.title button{all:unset;cursor:pointer;color:inherit}
+.title button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+.chips{display:flex;flex-wrap:wrap;gap:4px;font-size:11px;color:var(--muted)}
+.chip{border-radius:4px;padding:1px 6px;background:var(--surface-2);border:1px solid var(--line);white-space:nowrap}
+.chip.nr{background:var(--amber-soft);color:var(--amber);border-color:transparent;font-weight:600}
+.chip.sold{background:var(--sold-soft);color:var(--sold);border-color:transparent;font-weight:600}
+.chip.col{max-width:220px;overflow:hidden;text-overflow:ellipsis}
+.prior{font-size:12px;color:var(--muted);margin-top:2px}
+.prior b{color:var(--ink);font-variant-numeric:tabular-nums}
+.prior a{color:var(--accent)}
+.chip.cond{background:var(--ok-soft);color:var(--ok);border-color:transparent;font-weight:600}
+.chip.cond.neg{background:var(--over-soft);color:var(--over)}
+.chip.miles{font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink)}
+.hl{margin:0;padding-left:18px;columns:2;column-gap:24px}
+.hl li{break-inside:avoid;padding:2px 0}
+@media (max-width:560px){.hl{columns:1}}
+.price{padding:8px 10px 8px 0;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:2px;text-align:right;min-width:118px}
+.exp{font-family:var(--display);font-weight:700;font-size:24px;line-height:1;font-variant-numeric:tabular-nums}
+.exp.ok{color:var(--ok)}.exp.over{color:var(--over)}.exp.unk{color:var(--muted);font-size:16px;font-weight:600}
+.range{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.rng{display:block;width:164px;max-width:100%;height:28px;margin-top:3px;overflow:visible}
+.rng .lbl{fill:var(--muted);font-family:var(--body);font-size:10px;font-variant-numeric:tabular-nums}
+.rng .whisker{stroke:var(--muted);stroke-width:1.5;stroke-linecap:round}
+.rng .cap{stroke:var(--muted);stroke-width:1.5}
+.rng .body{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1}
+.rng .exp{stroke:var(--ink);stroke-width:2}
+.rng .hammer{fill:var(--sold);stroke:var(--surface);stroke-width:2}
+.rng .budget{stroke:var(--over);stroke-width:1.5;stroke-dasharray:2 2}
+.conf{font-size:11px;color:var(--muted);white-space:nowrap}
+.conf.warn{color:var(--amber);white-space:normal;max-width:260px}
+.hammer{font-size:12px;color:var(--sold);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lot.sold{box-shadow:inset 4px 0 0 var(--sold)}
+.soldlbl{font-family:var(--display);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--sold)}
+.exp.soldp{color:var(--sold)}
+.range b.up{color:var(--ok)}.range b.dn{color:var(--over)}
+.acts{grid-column:1/-1;display:flex;gap:6px;padding:0 10px 8px;border-top:1px dashed var(--line);padding-top:6px;align-items:center;flex-wrap:wrap}
+.acts button{border:1px solid var(--line);background:var(--surface-2);border-radius:5px;padding:4px 9px;font-size:12px;font-weight:500;color:var(--muted);min-height:30px}
+.acts button[aria-pressed="true"]{color:var(--ink);border-color:var(--ink)}
+.acts button.watch[aria-pressed="true"]{color:var(--star);border-color:var(--star)}
+.acts input{flex:1 1 140px;border:1px solid var(--line);background:var(--surface);border-radius:5px;padding:4px 8px;font-size:12px;min-height:30px;min-width:0}
+.acts a{font-size:12px;color:var(--accent);margin-left:auto;white-space:nowrap}
+.comps{grid-column:1/-1;background:var(--surface-2);border-top:1px solid var(--line);padding:8px 10px 10px;font-size:13px}
+.comps h4{margin:0 0 6px;font-family:var(--display);font-size:14px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.comps table{border-collapse:collapse;width:100%}
+.comps td{padding:3px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.comps td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap;padding-left:10px}
+.comps td.a{color:var(--muted);white-space:nowrap;padding-inline:10px}
+.comps a{color:inherit}
+.comps .muted{color:var(--muted);font-size:12px}
+.comps .note{margin:0 0 6px;font-size:12px;color:var(--amber);font-weight:500}
+.empty{padding:30px 0;color:var(--muted);text-align:center}
+.foot{font-size:12px;color:var(--muted);padding-block:10px 40px;max-width:70ch}
+.foot p{margin:0 0 6px}
+@media (max-width:560px){
+  .lot{grid-template-columns:76px 1fr}
+  .thumb{width:76px}
+  .price{grid-column:2;flex-direction:row;align-items:baseline;justify-content:flex-start;gap:8px;padding:0 10px 8px 0;min-width:0;text-align:left;flex-wrap:wrap}
+  .exp{font-size:22px}
+  .comps td.a{display:none}
+}
+@media (prefers-reduced-motion:no-preference){.lot{transition:opacity .15s}}
+</style>
+
+<header class="top"><div class="wrap">
+  <div class="brand">
+    <h1><span id="h1name">Block Sheet</span> <small id="h1sub"></small></h1>
+    <div class="upd"><select id="auction" class="aucsel" aria-label="Auction"></select><span class="asof" id="asof"></span><button type="button" id="update" class="updbtn">Update results</button></div>
+  </div>
+  <div class="days" role="tablist" id="days"></div>
+</div></header>
+
+<main class="wrap">
+  <div class="controls">
+    <div class="field"><label for="budget">Hide lots expected above</label>
+      <div class="budget"><span class="pre">$</span><input id="budget" type="number" inputmode="numeric" min="0" step="1000" placeholder="no limit"></div></div>
+    <div class="field"><label>Compare budget against</label>
+      <div class="seg" id="basis"><button data-v="median" aria-pressed="true">Expected</button><button data-v="p75">High end</button><button data-v="p25">Low end</button></div></div>
+    <div class="field"><label for="search">Search</label><input id="search" type="search" placeholder="lot #, make, model, collection"></div>
+    <div class="field"><label for="make">Make</label><select id="make"><option value="">All makes</option></select></div>
+    <div class="field"><label for="type">Category</label><select id="type"><option value="vehicles">Cars &amp; bikes</option><option value="Auto">Cars &amp; trucks</option><option value="Motorcycle">Motorcycles</option><option value="Road Art">Road art</option><option value="">Everything</option></select></div>
+    <div class="field"><label for="trans">Transmission</label><select id="trans"><option value="">Any</option><option value="Manual">Manual</option><option value="Automatic">Automatic</option></select></div>
+    <div class="field"><label for="maxmiles">Max miles on odometer</label><input id="maxmiles" type="number" inputmode="numeric" min="0" step="1000" placeholder="any"></div>
+    <div class="field"><label for="sort">Order</label><select id="sort"><option value="run">Run order</option><option value="exp-asc">Expected price ↑</option><option value="exp-desc">Expected price ↓</option><option value="year">Year</option><option value="miles">Mileage ↑</option></select></div>
+  </div>
+  <div class="toggles">
+    <label><input type="checkbox" id="hammeronly"> Hammer prices (10% buyer's premium stripped out)</label>
+    <label><input type="checkbox" id="nr"> No-reserve only</label>
+    <label><input type="checkbox" id="hidesold"> Hide already sold</label>
+    <label><input type="checkbox" id="hideunk"> Hide lots with no comps</label>
+    <label><input type="checkbox" id="watchonly"> Watchlist only</label>
+    <label><input type="checkbox" id="showhidden"> Show lots you hid</label>
+  </div>
+  <div class="summary" id="summary"></div>
+  <div class="list" id="list"></div>
+  <div class="foot">
+    <p><strong>How the expected price is made.</strong> Prior Mecum sales of the same year, make and model (tightening to trim where possible, loosening to ±2 or ±5 years when needed) from the last three years, matched on Mecum's own lot grade — a General-run lot is compared with past General-run lots, a Feature lot with Feature lots. Measured on this sale's first day, General-grade cars hammer around the lower quartile of their model's Mecum history, so that is what "expected" reports for them; graded lots use the median. The range is the middle half (25th–75th percentile). Every figure Mecum publishes — this sale's results and the comps — is the sale price <em>including</em> the 10% buyer's premium (a $6,050 result is a $5,500 hammer). By default this sheet strips that back out and shows hammer prices — the numbers the auctioneer actually calls; untick "Hammer prices" to see what a car costs with the premium. Condition, options, documentation and provenance are not in the comps — a numbers-matching car will beat its expected figure, a driver-quality car will trail it.</p>
+    <p>Lots you hide, watch and your notes are saved only in this browser. Results shown as "Sold" were captured when this sheet was built.</p>
+  </div>
+</main>
+
+<script>
+const DATA = /*__DATA__*/{};
+const LOTS = DATA.lots, MECUM = DATA.comps, CLASSIC = DATA.classic || {};
+let THUMBS = DATA.thumbs || {};
+const AUCTION = DATA.auction, SLUG = AUCTION.slug;
+// dates in the index are UTC midnight; format them as UTC so the calendar day is right
+const utcDate = ts => new Date(ts * 1000);
+const fmtDay = (d, opts) => d.toLocaleDateString("en-US", { timeZone: "UTC", ...opts });
+const spanText = (s, e) => { const a = utcDate(s), b = utcDate(e); return a.getUTCMonth() === b.getUTCMonth() ? `${fmtDay(a, { month: "short", day: "numeric" })}–${fmtDay(b, { day: "numeric", year: "numeric" })}` : `${fmtDay(a, { month: "short", day: "numeric" })} – ${fmtDay(b, { month: "short", day: "numeric", year: "numeric" })}`; };
+const phase = a => { const now = Date.now() / 1000; return now > a.end + 86400 ? "past" : now < a.start - 86400 ? "upcoming" : "live"; };
+document.getElementById("h1name").textContent = AUCTION.name.replace(/\s+\d{4}$/, "") + " Block Sheet";
+document.getElementById("h1sub").textContent = "Mecum · " + spanText(AUCTION.start, AUCTION.end) + (phase(AUCTION) === "past" ? " · results" : phase(AUCTION) === "upcoming" ? " · upcoming" : "");
+// auction selector: every built auction, newest first
+{
+  const sel = document.getElementById("auction");
+  for (const a of [...DATA.auctions].sort((x, y) => y.start - x.start)) {
+    const o = document.createElement("option"); o.value = a.slug;
+    o.textContent = `${a.name} · ${spanText(a.start, a.end)} · ${a.lots.toLocaleString("en-US")} lots${phase(a) === "live" ? " · LIVE" : phase(a) === "upcoming" ? " · upcoming" : ""}`;
+    if (a.slug === SLUG) o.selected = true;
+    sel.append(o);
+  }
+  sel.onchange = e => { location.href = e.target.value + ".html"; };
+}
+// COMPS is a view over the two sources, rebuilt whenever the source selector changes
+let COMPS = {};
+function buildComps() {
+  COMPS = {};
+  for (const l of LOTS) {
+    const m = MECUM[l.id], k = CLASSIC[l.id];
+    const hasM = m && m.n, hasK = k && k.n;
+    let c = null;
+    if (S.source === "mecum" || (S.source === "blend" && hasM && !hasK)) c = hasM ? { ...m, src: "Mecum" } : null;
+    else if (S.source === "classic" || (S.source === "blend" && hasK && !hasM)) c = hasK ? { ...k, tier: `${k.n} of ${k.total} sold across ${k.venues.length} venue${k.venues.length === 1 ? "" : "s"}`, src: "Classic.com", recent: k.recent.map(r => ({ title: r.title, price: r.price, auction: `${r.venue || ""} · ${r.date || ""}`, url: null, cond: r.cond, miles: r.miles })) } : null;
+    else if (hasM && hasK) {
+      // blend: weight each source by how many comps it found, capped so one side can't swamp the other
+      const wm = Math.min(m.n, 12), wk = Math.min(k.n, 12), t = wm + wk;
+      const mix = (a, b) => Math.round((a * wm + b * wk) / t);
+      // general-run lots hammer near the lower quartile on other venues too (measured day 1), so use p25 there
+      const kExp = m.grade === "General" && k.n >= 4 ? k.p25 : k.median;
+      c = { n: m.n + k.n, tier: `blend of ${m.n} Mecum + ${k.n} other-venue sales`, src: "blend",
+            median: mix(m.median, kExp), p25: mix(m.p25, k.p25), p75: mix(m.p75, k.p75), lo: Math.min(m.lo, k.lo), hi: Math.max(m.hi, k.hi),
+            mecum: m, classic: k };
+    }
+    if (c) COMPS[l.id] = c;
+  }
+}
+const DAYS = DATA.days.map(d => { const x = new Date(d + "T00:00:00Z"); return [d, fmtDay(x, { weekday: "short" }), String(x.getUTCDate())]; }).concat([["all", "All", "days"]]);
+const $ = id => document.getElementById(id);
+const fmt = n => "$" + Math.round(n).toLocaleString("en-US");
+const fmtK = n => n >= 1e6 ? "$" + (n/1e6).toFixed(2).replace(/\.?0+$/,"") + "M" : n >= 1000 ? "$" + Math.round(n/1000) + "K" : "$" + Math.round(n);
+
+// per-viewer state: preferences are shared across auctions, per-lot marks and the chosen day are per auction
+const PER_AUCTION = new Set(["day", "hidden", "watched", "notes", "results"]);
+const key = k => PER_AUCTION.has(k) ? `${SLUG}:${k}` : k;
+const store = (k, v) => { try { v === undefined ? localStorage.removeItem(key(k)) : localStorage.setItem(key(k), JSON.stringify(v)); } catch (e) {} };
+const load = (k, d) => { try { const v = localStorage.getItem(key(k)); return v === null ? d : JSON.parse(v); } catch (e) { return d; } };
+const S = {
+  day: load("day", DAYS[0][0]), budget: load("budget", ""), basis: load("basis", "median"), hammeronly: load("hammeronly", true),
+  nr: false, hidesold: load("hidesold", false), hideunk: load("hideunk", false), watchonly: false, showhidden: false,
+  search: "", make: "", type: load("type", "vehicles"), sort: "run", trans: load("trans", ""), maxmiles: load("maxmiles", ""), source: "mecum",
+  hidden: new Set(load("hidden", [])), watched: new Set(load("watched", [])), notes: load("notes", {}), open: new Set(),
+};
+// default day: today if the sale is running, else the first day (a finished sale opens on "all days")
+const today = new Date().toISOString().slice(0,10);
+if (!load("day", null)) S.day = DAYS.some(d => d[0] === today) ? today : phase(AUCTION) === "past" ? "all" : DAYS[0][0];
+if (!DAYS.some(d => d[0] === S.day)) S.day = DAYS[0][0];
+
+// controls
+$("asof").textContent = "Results as of " + DATA.built + " · " + LOTS.filter(l => l.sold).length + " sold";
+$("budget").value = S.budget; $("hammeronly").checked = S.hammeronly; $("hidesold").checked = S.hidesold; $("hideunk").checked = S.hideunk; $("type").value = S.type;
+const makes = [...new Set(LOTS.map(l => l.make).filter(Boolean))].sort();
+for (const m of makes) { const o = document.createElement("option"); o.value = m; o.textContent = m; $("make").append(o); }
+buildComps();
+for (const b of $("basis").querySelectorAll("button")) { b.setAttribute("aria-pressed", b.dataset.v === S.basis); b.onclick = () => { S.basis = b.dataset.v; store("basis", S.basis); for (const x of $("basis").children) x.setAttribute("aria-pressed", x === b); render(); }; }
+$("budget").oninput = e => { S.budget = e.target.value; store("budget", S.budget); render(); };
+$("search").oninput = e => { S.search = e.target.value.trim().toLowerCase(); render(); };
+$("make").onchange = e => { S.make = e.target.value; render(); };
+$("type").onchange = e => { S.type = e.target.value; store("type", S.type); render(); };
+$("sort").onchange = e => { S.sort = e.target.value; render(); };
+$("trans").value = S.trans; $("trans").onchange = e => { S.trans = e.target.value; store("trans", S.trans); render(); };
+$("maxmiles").value = S.maxmiles; $("maxmiles").oninput = e => { S.maxmiles = e.target.value; store("maxmiles", S.maxmiles); render(); };
+for (const id of ["hammeronly","nr","hidesold","hideunk","watchonly","showhidden"]) $(id).onchange = e => { S[id] = e.target.checked; if (["hammeronly","hidesold","hideunk"].includes(id)) store(id, S[id]); render(); };
+
+// day tabs
+for (const [key, dow, num] of DAYS) {
+  const b = document.createElement("button"); b.className = "day"; b.role = "tab"; b.dataset.day = key;
+  b.innerHTML = `<b>${num}</b><span>${dow}</span>`;
+  b.onclick = () => { S.day = key; store("day", key); render(); };
+  $("days").append(b);
+}
+
+function typeOk(l) { return !S.type || (S.type === "vehicles" ? l.type !== "Road Art" : l.type === S.type); }
+// Mecum's published figures (results and comps alike) are hammer + 10% buyer's premium;
+// the toggle divides that back out so you can compare against the number the auctioneer calls
+const MULT = () => S.hammeronly ? 1 / 1.10 : 1;
+function basisPrice(c) {
+  if (!c || !c.n) return null;
+  return c[S.basis] * MULT();
+}
+function visible(l) {
+  const c = COMPS[l.id];
+  if (S.day !== "all" && l.run_date !== S.day) return false;
+  if (!typeOk(l)) return false;
+  if (S.make && l.make !== S.make) return false;
+  if (S.nr && !l.status.includes("No reserve")) return false;
+  if (S.trans && (l.trans || "") !== S.trans) return false;
+  if (S.maxmiles !== "" && l.miles != null && l.miles > +S.maxmiles) return false;
+  if (S.hidesold && l.sold) return false;
+  if (S.watchonly && !S.watched.has(l.id)) return false;
+  if (!S.showhidden && S.hidden.has(l.id)) return false;
+  if (S.hideunk && l.type !== "Road Art" && !(c && c.n)) return false;
+  if (S.budget !== "" && !S.watched.has(l.id)) { const k = knownPrice(l); const p = k ? k * MULT() : basisPrice(c); if (p !== null && p > +S.budget) return false; }
+  if (S.search) { const hay = `${l.lot} ${l.title} ${l.collection||""} ${l.color||""} ${l.trans_detail||""} ${l.vin||""} ${(l.highlights||[]).join(" ")}`.toLowerCase(); if (!hay.includes(S.search)) return false; }
+  return true;
+}
+// once a lot has hammered, its sale price replaces the estimate everywhere a price is compared
+function knownPrice(l) { return l.sold && l.hammer ? l.hammer : null; }
+function comparator() {
+  const exp = l => { const k = knownPrice(l); if (k) return k; const c = COMPS[l.id]; return c && c.n ? c.median : null; };
+  if (S.sort === "exp-asc") return (a, b) => (exp(a) ?? 1e12) - (exp(b) ?? 1e12);
+  if (S.sort === "exp-desc") return (a, b) => (exp(b) ?? -1) - (exp(a) ?? -1);
+  if (S.sort === "year") return (a, b) => (a.year||0) - (b.year||0) || a.sort - b.sort;
+  if (S.sort === "miles") return (a, b) => (a.miles ?? 1e12) - (b.miles ?? 1e12) || a.sort - b.sort;
+  return (a, b) => a.sort - b.sort;
+}
+
+function lotRow(l) {
+  const c = COMPS[l.id], mult = MULT(), isArt = l.type === "Road Art";
+  const div = document.createElement("article"); div.className = "lot" + (S.watched.has(l.id) ? " watched" : "") + (S.hidden.has(l.id) ? " hidden-by-you" : "");
+  const t = THUMBS[l.id];
+  const chips = [];
+  if (l.sold) chips.push(`<span class="chip sold">Sold</span>`);
+  else if (l.bid_goes_on) chips.push(`<span class="chip">Bid goes on</span>`);
+  if (l.status.includes("No reserve")) chips.push(`<span class="chip nr">No reserve</span>`);
+  if (l.status.includes("Main attraction")) chips.push(`<span class="chip">Main attraction</span>`);
+  else if (l.status.includes("Feature")) chips.push(`<span class="chip">Feature</span>`);
+  if (l.type === "Motorcycle") chips.push(`<span class="chip">Motorcycle</span>`);
+  if (l.collection) chips.push(`<span class="chip col" title="${esc(l.collection)}">${esc(l.collection)}</span>`);
+  if (l.engine) chips.push(`<span class="chip">${esc(l.engine)}</span>`);
+  if (l.trans_detail || l.trans) chips.push(`<span class="chip">${esc(l.trans_detail || l.trans)}</span>`);
+  if (l.miles != null) chips.push(`<span class="chip miles">${l.miles.toLocaleString("en-US")} ${l.miles_units === "K" ? "km" : "mi"}${l.miles_since ? " " + esc(l.miles_since.toLowerCase()) : ""}${l.actual_miles ? " · actual" : ""}</span>`);
+  if (l.color) chips.push(`<span class="chip">${esc(l.color)}</span>`);
+
+  let priceHtml;
+  const expLine = c && c.n ? `<div class="range">expected ${fmt(c.median*mult)} · ${fmtK(c.p25*mult)} – ${fmtK(c.p75*mult)}</div><div class="conf">${c.n} comp${c.n===1?"":"s"} · ${esc(c.tier)}</div>` : "";
+  if (l.sold && l.hammer) {
+    // strike price leads; the estimate drops to a footnote so you can see how far off it was
+    const d = c && c.n ? Math.round((l.hammer / c.median - 1) * 100) : null;
+    priceHtml = `<div class="soldlbl">Sold · ${S.hammeronly ? "hammer" : "with premium"}</div><div class="exp soldp">${fmt(l.hammer*mult)}</div>` +
+      (c && c.n ? `<div class="range">expected ${fmt(c.median*mult)} <b class="${d >= 0 ? "up" : "dn"}">${d >= 0 ? "+" : ""}${d}%</b></div>` + rangeGlyph(c, mult, l.hammer) : "") + (isArt ? "" : (c && c.n ? "" : `<div class="conf">no comps</div>`));
+    div.classList.add("sold");
+  } else if (l.bid_goes_on) {
+    priceHtml = `<div class="soldlbl">Bid goes on · high bid</div><div class="exp">${l.current_bid > 0 ? fmt(l.current_bid) : "—"}</div>` + expLine;
+  } else if (isArt) priceHtml = `<div class="exp unk">Road art</div>`;
+  else if (c && c.n) {
+    const p = basisPrice(c), over = S.budget !== "" && p > +S.budget;
+    priceHtml = `<div class="exp ${over ? "over" : S.budget !== "" ? "ok" : ""}">${fmt(c.median*mult)}</div>
+      <div class="range">${fmtK(c.p25*mult)} – ${fmtK(c.p75*mult)}</div>` + rangeGlyph(c, mult, null) +
+      `<div class="conf">${c.n} comp${c.n===1?"":"s"} · ${esc(c.tier)}</div>` + (c.note ? `<div class="conf warn">${esc(c.note)}</div>` : "");
+    if (l.current_bid > 0) priceHtml += `<div class="hammer">Current bid ${fmt(l.current_bid)}</div>`;
+  } else priceHtml = `<div class="exp unk">No comps</div><div class="conf">nothing similar sold at Mecum since 2023</div>`;
+
+  div.innerHTML = `
+    ${t ? `<img class="thumb" src="${t}" alt="" loading="lazy">` : `<div class="thumb none">no photo</div>`}
+    <div class="main">
+      <div class="lotno">LOT ${esc(l.lot||"—")} · ${dayLabel(l.run_date)}</div>
+      <h3 class="title"><button type="button" data-open="${l.id}">${esc(l.title)}</button></h3>
+      <div class="chips">${condChips(l)}${chips.join("")}</div>
+      ${priorLine(l, mult)}
+    </div>
+    <div class="price">${priceHtml}</div>`;
+  if (S.open.has(l.id)) {
+    const acts = document.createElement("div"); acts.className = "acts";
+    acts.innerHTML = `
+      <button type="button" class="watch" data-watch="${l.id}" aria-pressed="${S.watched.has(l.id)}">★ Watch</button>
+      <button type="button" data-hide="${l.id}" aria-pressed="${S.hidden.has(l.id)}">${S.hidden.has(l.id) ? "Unhide" : "Hide as unattainable"}</button>
+      <input type="text" id="note-${l.id}" placeholder="Your max bid / notes" value="${esc(S.notes[l.id]||"")}" data-note="${l.id}">
+      <a href="${l.url}" target="_blank" rel="noopener">Open on Mecum ↗</a>`;
+    div.append(acts);
+    if (l.highlights && l.highlights.length) {
+      const hl = document.createElement("div"); hl.className = "comps";
+      hl.innerHTML = `<h4>Mecum's highlights${l.vin ? ` · VIN ${esc(l.vin)}` : ""}</h4><ul class="hl">` + l.highlights.map(h => `<li>${esc(h)}</li>`).join("") + `</ul>`;
+      div.append(hl);
+    }
+    const compTable = (title, cc) => {
+      const cm = document.createElement("div"); cm.className = "comps";
+      cm.innerHTML = `<h4>${title} — ${esc(cc.tier)} · expected ${fmt(cc.median*mult)} · 10th–90th pct ${fmtK(cc.lo*mult)}–${fmtK(cc.hi*mult)}</h4>` +
+        (cc.note ? `<p class="note">${esc(cc.note)}</p>` : "") + `<table>` +
+        cc.recent.map(r => `<tr><td>${r.url ? `<a href="${r.url}" target="_blank" rel="noopener">${esc(r.title)}</a>` : esc(r.title)}${r.miles ? ` <span class="muted">· ${typeof r.miles === "number" ? r.miles.toLocaleString("en-US") + " mi" : esc(r.miles)}</span>` : ""}${r.cond && r.cond !== "Original & Highly Original" ? ` <span class="muted">· ${esc(r.cond)}</span>` : ""}</td><td class="a">${esc(r.auction)}</td><td>${fmt(r.price*mult)}</td></tr>`).join("") + `</table>`;
+      return cm;
+    };
+    if (c && c.n) {
+      if (c.src === "blend") { div.append(compTable("Mecum sales", c.mecum)); div.append(compTable("Other venues (via Classic.com)", COMPS_K(l.id))); }
+      else div.append(compTable(c.src === "Classic.com" ? "Other venues (via Classic.com)" : "Mecum sales", c));
+    }
+  }
+  return div;
+}
+// the Classic.com side of a blended lot, shaped like a comp record for the table renderer
+function COMPS_K(id) { const k = CLASSIC[id]; return { ...k, tier: `${k.n} of ${k.total} sold across ${k.venues.length} venue${k.venues.length === 1 ? "" : "s"}: ${k.venues.join(", ")}`, recent: k.recent.map(r => ({ title: r.title, price: r.price, auction: `${r.venue || ""} · ${r.date || ""}`, url: null, cond: r.cond, miles: r.miles })) }; }
+// range glyph: whisker low→high, body 25th–75th, tick at expected, dot at the hammer once sold, dashed line at your budget
+function rangeGlyph(c, mult, hammer) {
+  const W = 164, H = 28, mid = 9, pad = 18;   // pad leaves room for the end labels under each cap
+  const budget = S.budget !== "" ? +S.budget : null;
+  let lo = c.lo * mult, hi = c.hi * mult;
+  if (hammer) { lo = Math.min(lo, hammer * mult); hi = Math.max(hi, hammer * mult); }
+  if (budget !== null && budget > 0) { lo = Math.min(lo, budget); hi = Math.max(hi, budget); }
+  if (hi <= lo) hi = lo * 1.1 + 1;
+  const x = v => pad + (W - 2 * pad) * (v - lo) / (hi - lo);
+  const xl = x(c.lo * mult), xh = x(c.hi * mult), x25 = x(c.p25 * mult), x75 = x(c.p75 * mult), xe = x(c.median * mult);
+  const tip = `10th pct ${fmt(c.lo*mult)} · 25th ${fmt(c.p25*mult)} · expected ${fmt(c.median*mult)} · 75th ${fmt(c.p75*mult)} · 90th pct ${fmt(c.hi*mult)}` +
+    (hammer ? ` · sold ${fmt(hammer*mult)}` : "") + (budget ? ` · budget ${fmt(budget)}` : "");
+  return `<svg class="rng" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(tip)}"><title>${esc(tip)}</title>
+    <line class="whisker" x1="${xl.toFixed(1)}" y1="${mid}" x2="${xh.toFixed(1)}" y2="${mid}"/>
+    <line class="cap" x1="${xl.toFixed(1)}" y1="${mid-4}" x2="${xl.toFixed(1)}" y2="${mid+4}"/><line class="cap" x1="${xh.toFixed(1)}" y1="${mid-4}" x2="${xh.toFixed(1)}" y2="${mid+4}"/>
+    <rect class="body" x="${x25.toFixed(1)}" y="${mid-5}" width="${Math.max(2, x75 - x25).toFixed(1)}" height="10" rx="2"/>
+    <line class="exp" x1="${xe.toFixed(1)}" y1="${mid-6}" x2="${xe.toFixed(1)}" y2="${mid+6}"/>
+    ${budget ? `<line class="budget" x1="${x(budget).toFixed(1)}" y1="1" x2="${x(budget).toFixed(1)}" y2="${H-1}"/>` : ""}
+    ${hammer ? `<circle class="hammer" cx="${x(hammer*mult).toFixed(1)}" cy="${mid}" r="4.5"/>` : ""}
+    <text class="lbl" x="${xl.toFixed(1)}" y="${H - 1}" text-anchor="${xh - xl < 34 ? "end" : "middle"}">${fmtK(c.lo*mult)}</text>
+    <text class="lbl" x="${xh.toFixed(1)}" y="${H - 1}" text-anchor="${xh - xl < 34 ? "start" : "middle"}">${fmtK(c.hi*mult)}</text>
+  </svg>`;
+}
+// condition & provenance, read from Mecum's own highlight bullets. Shown, not priced in: on held-out sales these
+// cars averaged above their estimate, but car-to-car the effect was too uneven to improve individual estimates.
+const COND = [
+  ["award", "Award / concours", /concours|ncrs|bloomington|top flight|gold award|best in class|award[- ]winning|\baward\b/],
+  ["frame-off", "Frame-off restoration", /frame[- ]off|rotisserie|body[- ]off|nut[- ]and[- ]bolt/],
+  ["numbers matching", "Numbers matching", /numbers[- ]matching|matching[- ]numbers/],
+  ["documented", "Documented", /marti report|build sheet|window sticker|protect-o-plate|documented|documentation|fender tag|govier/],
+  ["low/actual miles", "Low / actual miles", /actual miles|one owner|single owner|original owner/],
+  ["survivor", "Survivor / original", /survivor|unrestored|original paint|all original|highly original/],
+  ["restomod parts", "Restomod parts", /\bls[1-9a]\b|coyote|crate|air ride|tremec|holley sniper|vintage air|fuel[- ]injection conversion/],
+  ["project", "Project / as-is", /non[- ]running|not running|barn find|sold as is|bill of sale only|project/],
+];
+// this exact car (same VIN) at earlier Mecum sales — the closest comp there is
+function priorLine(l, mult) {
+  if (!l.prior || !l.prior.length) return "";
+  return `<div class="prior">This car before: ` + l.prior.map(p => `<a href="${p.url}" target="_blank" rel="noopener">${esc(p.auction)}</a> ` +
+    (p.sold && p.price ? `<b>sold ${fmt(p.price * mult)}</b>` : `<span>no sale${p.price ? ` (high bid ${fmt(p.price * mult)})` : ""}</span>`)).join(" · ") + `</div>`;
+}
+function condChips(l) {
+  const h = (l.highlights || []).join(" ").toLowerCase(); if (!h) return "";
+  return COND.filter(([, , re]) => re.test(h)).map(([k, label]) => {
+    const m = (DATA.cond || {})[k];
+    const tip = m ? `Cars whose descriptions mention this sold about ${Math.round((m - 1) * 100)}% ${m >= 1 ? "above" : "below"} their comp estimate on average (measured on past 2026 sales). Individual cars vary widely, so it isn't built into the estimate.` : "Mentioned in Mecum's description.";
+    return `<span class="chip cond${k === "project" ? " neg" : ""}" title="${esc(tip)}">${esc(label)}</span>`;
+  }).join("");
+}
+function dayLabel(d) { const x = DAYS.find(z => z[0] === d); return x ? `${x[1]} ${x[2]}` : d || ""; }
+function esc(s) { return String(s ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch])); }
+
+function render() {
+  for (const b of $("days").children) b.setAttribute("aria-selected", b.dataset.day === S.day);
+  const inDay = LOTS.filter(l => (S.day === "all" || l.run_date === S.day) && typeOk(l));
+  const shown = LOTS.filter(visible).sort(comparator());
+  const list = $("list"); list.replaceChildren();
+  const frag = document.createDocumentFragment();
+  for (const l of shown) frag.append(lotRow(l));
+  list.append(frag);
+  if (!shown.length) list.innerHTML = `<div class="empty">Nothing matches. Loosen the budget or filters.</div>`;
+  const hiddenByBudget = inDay.length - shown.length;
+  const watchedHere = shown.filter(l => S.watched.has(l.id)).length;
+  const sumExp = shown.reduce((a, l) => { const c = COMPS[l.id]; return a + (knownPrice(l) || (c && c.n ? c.median : 0)); }, 0);
+  $("summary").innerHTML = `<span><b>${shown.length}</b> of ${inDay.length} lots ${S.day === "all" ? "across the sale" : "on " + dayLabel(S.day)}</span>` +
+    (hiddenByBudget ? `<span><b>${hiddenByBudget}</b> filtered out</span>` : "") +
+    `<span><b>${watchedHere}</b> watched</span>` +
+    (S.hidden.size ? `<span><b>${S.hidden.size}</b> hidden by you</span>` : "") +
+    (shown.length && sumExp ? `<span>median expected <b>${fmtK(median(shown.map(l => knownPrice(l) || (COMPS[l.id] && COMPS[l.id].n ? COMPS[l.id].median : null)).filter(Boolean)) * MULT())}</b></span>` : "");
+  // per-day counts in tabs
+  for (const b of $("days").children) {
+    const k = b.dataset.day; const n = LOTS.filter(l => (k === "all" || l.run_date === k) && typeOk(l)).length;
+    b.querySelector("span").textContent = (DAYS.find(d => d[0] === k)[1]) + " · " + n;
+  }
+}
+function median(a) { if (!a.length) return 0; a = [...a].sort((x, y) => x - y); const m = a.length >> 1; return a.length % 2 ? a[m] : (a[m-1] + a[m]) / 2; }
+
+$("list").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.open) { S.open.has(b.dataset.open) ? S.open.delete(b.dataset.open) : S.open.add(b.dataset.open); render(); }
+  else if (b.dataset.watch) { const id = b.dataset.watch; S.watched.has(id) ? S.watched.delete(id) : S.watched.add(id); store("watched", [...S.watched]); render(); }
+  else if (b.dataset.hide) { const id = b.dataset.hide; S.hidden.has(id) ? S.hidden.delete(id) : S.hidden.add(id); store("hidden", [...S.hidden]); render(); }
+});
+// ---- live results -------------------------------------------------------
+// Three sources, in order of freshness: Mecum's search index directly (works when this
+// file is opened from disk; the hosted page's sandbox blocks it), the shared results
+// document Claude pushes from its side, and whatever this browser last saw.
+const ALG = { app: "U6CFCQ7V52", key: "0291c46cde807bcb428a021a96138fcb", index: "wp_posts_lot_sort_order_asc", auction: AUCTION.facet };
+const RUN_TS = [...new Set(LOTS.map(l => l.run_ts).filter(Boolean))];
+const BY_ID = Object.fromEntries(LOTS.map(l => [l.id, l]));
+let resultsAt = DATA.builtTs || 0;
+function applyResults(map, at, source) {
+  if (!map || at <= resultsAt) return false;
+  let sold = 0;
+  for (const [id, r] of Object.entries(map)) {
+    const l = BY_ID[id]; if (!l) continue;
+    l.hammer = r.h ?? null; l.sold = r.s ? 1 : 0; l.bid_goes_on = r.b ? 1 : 0; l.current_bid = r.c ?? null;
+  }
+  for (const l of LOTS) if (l.sold) sold++;
+  resultsAt = at;
+  store("results", { map, at });
+  setStatus(`Results as of ${new Date(at).toLocaleString("en-US", { weekday: "short", hour: "numeric", minute: "2-digit" })} · ${sold} sold · ${source}`);
+  render();
+  return true;
+}
+function setStatus(msg, err) { $("asof").textContent = msg; $("asof").classList.toggle("err", !!err); }
+async function fetchMecum() {
+  const map = {};
+  for (const ts of RUN_TS) {
+    const r = await fetch(`https://${ALG.app}-dsn.algolia.net/1/indexes/${ALG.index}/query`, {
+      method: "POST", headers: { "x-algolia-application-id": ALG.app, "x-algolia-api-key": ALG.key, "Content-Type": "application/json" },
+      body: JSON.stringify({ query: "", hitsPerPage: 1000, filters: `taxonomies.auction_tax.name:"${ALG.auction}" AND taxonomies.run_date.timestamp:${ts}`,
+        attributesToRetrieve: ["web_id_meta", "hammer_price_meta", "sold", "bid_goes_on", "current_bid_meta"], attributesToHighlight: [], attributesToSnippet: [] }),
+    });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    for (const h of (await r.json()).hits) map[h.web_id_meta] = { h: h.hammer_price_meta ?? null, s: h.sold ? 1 : 0, b: h.bid_goes_on ? 1 : 0, c: h.current_bid_meta > 0 ? h.current_bid_meta : null };
+  }
+  return map;
+}
+// serve.py keeps results.json fresh next to this page; a plain file or the hosted copy has none
+async function fetchLocalServer() {
+  if (location.protocol === "file:") return null;
+  const r = await fetch(`results/${SLUG}.json`, { cache: "no-store" }); if (!r.ok) return null;
+  const d = await r.json(); return d && d.map ? d : null;
+}
+async function fetchShared() {
+  const db = await window.claude?.use?.("db"); if (!db) return null;
+  const snap = await db.doc(`results/${SLUG}`).get();
+  return snap.exists ? snap.data() : null;
+}
+$("update").onclick = async () => {
+  const b = $("update"); b.disabled = true; setStatus("Checking Mecum…");
+  try {
+    let srv = null; try { srv = await fetchLocalServer(); } catch (e) {}
+    if (srv) { applyResults(srv.map, srv.at, "local server") || setStatus("Already current"); return; }
+    const map = await fetchMecum();
+    applyResults(map, Date.now(), "live from Mecum") || setStatus("Already current");
+  } catch (e) {
+    try {
+      const d = await fetchShared();
+      if (d && d.map) { applyResults(d.map, d.at, "Claude's last sync") || setStatus("Already current — Claude's last sync was " + new Date(d.at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })); }
+      else setStatus("This hosted page can't reach Mecum directly. Open the local index.html for live updates, or ask Claude to sync.", true);
+    } catch (e2) { setStatus("Update failed: " + (e2.message || e2), true); }
+  } finally { b.disabled = false; }
+};
+// restore what this browser saw last, then follow the shared document if it exists
+{ const r = load("results", null); if (r && r.map) applyResults(r.map, r.at, "saved in this browser"); }
+// thumbnails ship in a sidecar so the page itself stays small; paint them once they arrive
+if (!Object.keys(THUMBS).length && location.protocol !== "file:") {
+  fetch(`thumbs/${SLUG}.json`).then(r => r.ok ? r.json() : {}).then(t => { if (t && Object.keys(t).length) { THUMBS = t; render(); } }).catch(() => {});
+}
+// outside the hosted viewer, poll the local server so the sheet keeps itself current (only while the sale is on)
+if (!window.claude && location.protocol !== "file:" && phase(AUCTION) === "live") {
+  const tick = async () => { try { const d = await fetchLocalServer(); if (d) applyResults(d.map, d.at, "local server"); } catch (e) {} };
+  tick(); setInterval(tick, 30000);
+}
+window.claude?.use?.("db").then(db => {
+  if (!db) return;
+  db.doc(`results/${SLUG}`).onSnapshot(snap => { const d = snap.data(); if (d && d.map) applyResults(d.map, d.at, "Claude's sync"); }, () => {});
+}).catch(() => {});
+
+$("list").addEventListener("input", e => {
+  const id = e.target.dataset.note; if (!id) return;
+  if (e.target.value) S.notes[id] = e.target.value; else delete S.notes[id];
+  store("notes", S.notes);
+});
+render();
+</script>

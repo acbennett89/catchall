@@ -1,0 +1,18 @@
+{
+ "lookback": 5,
+ "half_life": 2.0,
+ "year_decay": 0.35,
+ "trim_none_vs_some": 0.2,
+ "trim_disjoint": 0.05,
+ "mod_mismatch": 0.08,
+ "body_group_same": 0.7,
+ "body_group_diff": 0.25,
+ "body_unknown": 0.7,
+ "ci_near": 0.7,
+ "ci_far": 0.4,
+ "trans_diff": 0.75,
+ "grade_step": 0.3,
+ "miles_k": 0.6,
+ "general_p25": false,
+ "miles_unknown": 0.5
+}
