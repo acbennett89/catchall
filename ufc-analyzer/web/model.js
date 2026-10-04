@@ -68,6 +68,7 @@ function renderModel(f) {
       <dl class="kv tight">
         <dt>Model fair price</dt><dd>${esc(fmtOdds(pr.fair[i]))}</dd>
         <dt>Market fair</dt><dd>${mkt ? pct(mkt[i], 1) : "—"}</dd>
+        ${pr.ratings !== undefined && pr.ratings !== null ? `<dt title="The power-ratings model (second model in the blend)">Power ratings</dt><dd>${pct(i === 0 ? pr.ratings : 1 - pr.ratings, 1)}</dd>` : ""}
         ${pr.blend ? `<dt>Blend</dt><dd>${pct(pr.blend[i], 1)}</dd>` : ""}
         ${s.evModel !== undefined ? `<dt>EV at ${TARGET} (model)</dt><dd class="${s.evModel >= 0 ? "pos" : "neg"}">${signedPct(s.evModel)}</dd>` : ""}
         ${s.evBlend !== undefined ? `<dt>EV at ${TARGET} (blend)</dt><dd class="${s.evBlend >= 0 ? "pos" : "neg"}">${signedPct(s.evBlend)}</dd>` : ""}
