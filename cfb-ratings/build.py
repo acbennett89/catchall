@@ -31,7 +31,8 @@ COLUMNS = [
     ("SOS", "SOS_AdjEM"), ("rk_SOS", "SOS_Rk"), ("NCSOS", "NCSOS_AdjEM"),
     ("OppO", "Opp_AdjO"), ("OppD", "Opp_AdjD"),
     ("WVT", "WinValueTotal"), ("AvgWV", "AvgWinValue"), ("LCT", "LossCostTotal"),
-    ("NetResume", "NetResume"), ("rk_NetResume", "NetResume_Rk"), ("SchedNS", "SchedNetStrength"),
+    ("NetResume", "NetResume"), ("NetPerGame", "NetResumePerGame"), ("rk_NetPerGame", "Resume_Rk"),
+    ("SchedNS", "SchedStrengthRatio"),
     ("BestWin", "BestWinValue"), ("BestWinOpp", "BestWinOpp"),
     ("WorstLoss", "WorstLossCost"), ("WorstLossOpp", "WorstLossOpp"),
 ]
@@ -41,7 +42,16 @@ def name_of(teams, t):
     return teams.get(t, {}).get("name", t)
 
 
-def team_trace(t, res, data, cfg, sigma):
+def opp_status(opp, teams, eligible):
+    """How an opponent's rating may be shown inside another team's trace."""
+    if teams.get(opp, {}).get("division") != "FBS":
+        return "internal: FCS team (FCS teams are rated only to adjust FBS numbers)"
+    if opp not in eligible:
+        return "internal: FBS team below the game minimum (not a published rating)"
+    return "published"
+
+
+def team_trace(t, res, data, cfg, sigma, eligible):
     teams = data["teams"]
     row = res["teams"][t]
     ppd, sr, tempo, muT = res["ppd"], res["sr"], res["tempo"], res["muT"]
@@ -71,6 +81,7 @@ def team_trace(t, res, data, cfg, sigma):
         for side in ("offense", "defense"):
             for ln in e[side]["lines"]:
                 ln["opp_name"] = nm(ln["opp"])
+                ln["opp_status"] = opp_status(ln["opp"], teams, eligible)
         em_games = []
         dmap = {x["game"]: x for x in e["defense"]["lines"]}
         for x in e["offense"]["lines"]:
@@ -91,6 +102,7 @@ def team_trace(t, res, data, cfg, sigma):
             tt = trace_tempo(tempo, t)
             for ln in tt["lines"]:
                 ln["opp_name"] = nm(ln["opp"])
+                ln["opp_status"] = opp_status(ln["opp"], teams, eligible)
             tr["tempo"] = {"muT": muT, **tt}
 
     # five factors, game by game
@@ -128,17 +140,19 @@ def team_trace(t, res, data, cfg, sigma):
         if opp in ppd["O"]:
             sos_lines.append({"opp_name": nm(opp), "opp_AdjEM": (ppd["O"][opp] - ppd["D"][opp]) * muT,
                               "opp_AdjO": ppd["O"][opp], "opp_AdjD": ppd["D"][opp],
-                              "conf_game": bool(g["conf_game"])})
+                              "conf_game": bool(g["conf_game"]),
+                              "opp_status": opp_status(opp, teams, eligible)})
     tr["sos_efficiency"] = {"SOS": row["SOS"], "NCSOS": row["NCSOS"], "opponents": sos_lines}
 
     resume = res["net"].resume(t, with_trees=True)
     label_tree(resume, teams)
-    tr["network"] = {"ns_ref": resume["ns_ref"],
+    tr["network"] = {"refs": resume["refs"],
                      "weights": cfg["net_weights"], "record_prior": cfg["record_prior"],
                      "exclusion": cfg.get("exclusion", "path"),
                      "win_value_total": resume["win_value_total"],
                      "loss_cost_total": resume["loss_cost_total"],
                      "net_resume": resume["net_resume"],
+                     "net_per_game": row.get("NetPerGame"),
                      "avg_win_value": resume["avg_win_value"],
                      "schedule_ns_ratio": resume["schedule_ratio"],
                      "wins": resume["wins"], "losses": resume["losses"]}
@@ -200,8 +214,23 @@ def main():
                 out.append(round(v, 4) if isinstance(v, float) else v)
             w.writerow(out)
 
+    eligible = {t for t, r in res["teams"].items() if r["eligible"]}
+    bad = []
     for r in rows:
-        tr = team_trace(r["id"], res, data, cfg, sigma)
+        tr = team_trace(r["id"], res, data, cfg, sigma, eligible)
+        checks = [tr["efficiency"][s]["check_ok"] for s in ("offense", "defense")] if "efficiency" in tr else []
+        checks += [tr["success_rate_adjusted"][s]["check_ok"] for s in ("offense", "defense")] \
+            if "success_rate_adjusted" in tr else []
+        checks += [tr["tempo"]["check_ok"]] if "tempo" in tr else []
+        if not all(checks):
+            bad.append(r["name"])
+        if not r["eligible"]:
+            # The game minimum: no published rating, resume or ranking for this team.
+            tr = {"team": tr["team"], "schedule": tr["schedule"], "eligibility": tr["eligibility"],
+                  "summary": {k: r[k] for k in ("id", "name", "conference", "W", "L", "games", "eligible")},
+                  "note": f"{r['name']} has played {r['games']} of the {cfg['min_games']} games "
+                          "required for a rating. Its internal estimate is used only to adjust its "
+                          "opponents' numbers and is not published."}
         with open(os.path.join(OUT, "traces", f"{r['id']}.json"), "w") as f:
             json.dump(tr, f, separators=(",", ":"), default=float)
 
@@ -220,8 +249,11 @@ def main():
     for u in upcoming:
         if u["week"] != nxt:
             continue
+        fbs_sides = [x for x in (u["home"], u["away"]) if teams[x]["division"] == "FBS"]
+        if not fbs_sides or any(x not in eligible for x in fbs_sides):
+            continue  # a prediction would expose an unpublished rating
         p = predict(res, u["home"], u["away"], u["neutral"])
-        if p is None or (teams[u["home"]]["division"] != "FBS" and teams[u["away"]]["division"] != "FBS"):
+        if p is None:
             continue
         preds.append({"game": u["id"], "date": u["date"][:10], "home": name_of(teams, u["home"]),
                       "away": name_of(teams, u["away"]), "neutral": bool(u["neutral"]),
@@ -237,7 +269,7 @@ def main():
         "mu_ppd": res["ppd"]["mu"], "h_per_drive": res["ppd"]["h"],
         "hfa_points": res["hfa_points"], "muT": res["muT"],
         "prior_drives": cfg["prior_drives"], "sigma_points": sigma,
-        "ns_ref": res["net"].reference(), "net_weights": cfg["net_weights"],
+        "net_refs": res["net"].references(), "net_weights": cfg["net_weights"],
         "min_games": cfg["min_games"],
         "eligible": sum(r["eligible"] for r in res["teams"].values()),
         "fbs_teams": len(res["teams"]),
@@ -259,17 +291,9 @@ def main():
         json.dump({"meta": meta, "teams": published, "conferences": conferences,
                    "predictions": preds, "names": {k: v.get("name", k) for k, v in teams.items()}},
                   f, indent=1, default=float)
-    bad = []
-    for r in rows:
-        tr = json.load(open(os.path.join(OUT, "traces", f"{r['id']}.json")))
-        checks = [tr["efficiency"][s]["check_ok"] for s in ("offense", "defense")] if "efficiency" in tr else []
-        checks += [tr["success_rate_adjusted"][s]["check_ok"] for s in ("offense", "defense")] \
-            if "success_rate_adjusted" in tr else []
-        checks += [tr["tempo"]["check_ok"]] if "tempo" in tr else []
-        if not all(checks):
-            bad.append(r["name"])
     print(f"{meta['fbs_teams']} FBS teams, {meta['eligible']} eligible, through week {last_week}; "
-          f"HFA {meta['hfa_points']:.2f} pts; sigma {sigma:.1f}; NS_ref {meta['ns_ref']:.4f}; "
+          f"HFA {meta['hfa_points']:.2f} pts; sigma {sigma:.1f}; NS refs win {meta['net_refs']['win']:.4f} "
+          f"loss {meta['net_refs']['loss']:.4f} all {meta['net_refs']['all']:.4f}; "
           f"{len(preds)} predictions for week {nxt}")
     if bad:
         raise SystemExit(f"trace self-check FAILED for: {', '.join(bad)}")

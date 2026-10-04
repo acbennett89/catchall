@@ -156,7 +156,7 @@ details[open] > summary { margin-bottom: 6px; }
       <div class="unrated" id="unrated"></div>
     </section>
     <section id="tab-resume" hidden>
-      <div class="controls"><span class="hint">Every FBS win is valued by the beaten team's +2 network (primary, secondary, tertiary records). 1.00 is a perfectly expected win. Losses cost by the mirror image. Click a team to see each win's tree.</span></div>
+      <div class="controls"><span class="hint">Every FBS win is valued by the beaten team's +2 network (primary, secondary, tertiary records). 1.00 is the average FBS win, a perfectly expected win. A loss costs 1.00 when it's an average FBS loss. Click a team to see each win's tree.</span></div>
       <div class="tablewrap"><table class="grid" id="tbl-resume"></table></div>
     </section>
     <section id="tab-picks" hidden>
@@ -248,7 +248,7 @@ details[open] > summary { margin-bottom: 6px; }
     { k: "AdjT", label: "AdjT", desc: true, title: "Adjusted possessions per game", f: v => fx(v, 1) },
     { k: "SOS", label: "SOS", desc: true, title: "Average opponent AdjEM", f: (v, r) => withRk(v, r, "rk_SOS", 1, true) },
     { k: "NCSOS", label: "NCSOS", desc: true, title: "Non-conference SOS", f: v => `<span class="${cls(v)}">${fx(v, 1, true)}</span>` },
-    { k: "NetResume", label: "Net resume", desc: true, title: "Sum of win values minus loss costs", f: (v, r) => withRk(v, r, "rk_NetResume", 2, true) },
+    { k: "NetPerGame", label: "Resume / G", desc: true, title: "Net resume (win values minus loss costs) per game", f: (v, r) => withRk(v, r, "rk_NetPerGame", 3, true) },
     { k: "luck", label: "Luck", desc: true, title: "Actual W% minus Pythagorean W%", f: v => `<span class="${cls(v)}">${fx(v, 3, true)}</span>` },
   ];
   const confs = [...new Set(rated.map(t => t.conference))].sort();
@@ -271,24 +271,25 @@ details[open] > summary { margin-bottom: 6px; }
 
   /* ---------- resume ---------- */
   const resumeCols = [
-    { k: "rk_NetResume", label: "Rk" },
+    { k: "rk_NetPerGame", label: "Rk", title: "Rank by net resume per game" },
     { k: "name", label: "Team", text: true, f: v => esc(v) },
     { k: "W", label: "W-L", f: (v, r) => `${r.W}-${r.L}`, sortv: r => r.W - r.L, desc: true },
     { k: "WVT", label: "Win value total", desc: true, f: v => fx(v, 2) },
     { k: "AvgWV", label: "Avg win", desc: true, f: v => fx(v, 3) },
     { k: "LCT", label: "Loss cost", f: v => fx(v, 2) },
-    { k: "NetResume", label: "Net", desc: true, f: v => `<span class="em ${cls(v)}">${fx(v, 2, true)}</span>` },
-    { k: "SchedNS", label: "Sched strength", desc: true, title: "Average opponent network strength / NS_ref (1.00 = average)", f: v => fx(v, 3) },
+    { k: "NetResume", label: "Net", desc: true, f: v => fx(v, 2, true) },
+    { k: "NetPerGame", label: "Net / game", desc: true, f: v => `<span class="em ${cls(v)}">${fx(v, 3, true)}</span>` },
+    { k: "SchedNS", label: "Sched strength", desc: true, title: "Average opponent network strength (FCS = 0) / NS_all; 1.00 = average FBS schedule", f: v => fx(v, 3) },
     { k: "BestWin", label: "Best win", desc: true, f: (v, r) => v == null ? "—" : `${fx(v, 3)} <span class="rk">${esc(nm(r.BestWinOpp))}</span>` },
     { k: "WorstLoss", label: "Worst loss", desc: true, f: (v, r) => v == null ? "—" : `${fx(v, 3)} <span class="rk">${esc(nm(r.WorstLossOpp))}</span>` },
     { k: "rk_AdjEM", label: "AdjEM rk" },
   ];
-  buildTable(document.getElementById("tbl-resume"), rated, resumeCols, "rk_NetResume", 1, openTeam);
+  buildTable(document.getElementById("tbl-resume"), rated, resumeCols, "rk_NetPerGame", 1, openTeam);
 
   /* ---------- picks ---------- */
   const P = D.predictions || [];
   document.getElementById("picks-hint").textContent = P.length
-    ? `Model margins for the next slate (${P.length} games with an FBS team). Win probability uses σ = ${fx(M.sigma_points, 1)} points, the out-of-sample error from this season's walk-forward test. These include teams not yet rated: predictions use every team's internal estimate.`
+    ? `Model margins for the next slate (${P.length} games with an FBS team). Win probability uses σ = ${fx(M.sigma_points, 1)} points, the out-of-sample error from this season's walk-forward test. Games involving an FBS team that isn't rated yet are left out.`
     : "No upcoming games in the data.";
   if (!P.length) document.getElementById("picks-tab").hidden = true;
   const pickRows = P.map(p => {
@@ -331,8 +332,9 @@ details[open] > summary { margin-bottom: 6px; }
     const L = side.lines;
     const tw = L.reduce((a, b) => a + b.w, 0);
     let h = `<div class="tablewrap"><table class="mini"><thead><tr><th class="t">Opponent</th><th>Drives</th><th>Raw PPD</th><th>${oppKey === "opp_AdjD" ? "Opp AdjD" : "Opp AdjO"}</th><th>Opp adj</th><th>Venue adj</th><th>Adjusted</th></tr></thead><tbody>`;
-    L.forEach(l => { h += `<tr><td class="t">${esc(l.opp_name)}</td><td>${l.w}</td><td>${fx(l.raw, 3)}</td><td>${fx(l[oppKey], 3)}</td><td>${fx(l.opp_adjustment, 3, true)}</td><td>${fx(l.hfa_adjustment, 3, true)}</td><td>${fx(l.adjusted, 3)}</td></tr>`; });
+    L.forEach(l => { h += `<tr><td class="t">${esc(l.opp_name)}${l.opp_status && l.opp_status !== "published" ? ` <span class="rk" title="${esc(l.opp_status)}">internal*</span>` : ""}</td><td>${l.w}</td><td>${fx(l.raw, 3)}</td><td>${fx(l[oppKey], 3)}</td><td>${fx(l.opp_adjustment, 3, true)}</td><td>${fx(l.hfa_adjustment, 3, true)}</td><td>${fx(l.adjusted, 3)}</td></tr>`; });
     h += `<tr class="prior"><td class="t">Phantom game (${esc(side.prior.division)} average)</td><td>${side.prior.weight}</td><td></td><td></td><td></td><td></td><td>${fx(side.prior.value, 3)}</td></tr></tbody></table></div>`;
+    if (L.some(l => l.opp_status && l.opp_status !== "published")) h += `<p class="note">* Internal input: the opponent is an FCS team or an FBS team below the game minimum. Its rating isn't published; it appears here only so this line can be checked.</p>`;
     h += `<div class="formula">${label} = (Σ drives × adjusted + ${side.prior.weight} × ${fx(side.prior.value, 3)}) / (${tw} + ${side.prior.weight}) = ${fx(side.recomputed, 4)}   ${side.check_ok ? "✓ matches stored value" : "✗ MISMATCH"}</div>`;
     return h;
   }
@@ -346,8 +348,8 @@ details[open] > summary { margin-bottom: 6px; }
     const counted = p.games.filter(g => g.counted).map(g => (g.won ? "W " : "L ") + esc(g.opp_name)).join(", ");
     const excluded = p.games.filter(g => !g.counted).map(g => esc(g.opp_name) + (g.note ? ` (${esc(g.note)})` : "")).join(", ") || "none";
     const head = isWin
-      ? `value = NS / NS_ref = ${fx(r.ns, 4)} / ${fx(n.ns_ref, 4)} = ${fx(r.value, 3)}`
-      : `cost = (1 − NS) / (1 − NS_ref) = ${fx(1 - r.ns, 4)} / ${fx(1 - n.ns_ref, 4)} = ${fx(r.cost, 3)}`;
+      ? `value = NS / NS_win = ${fx(r.ns, 4)} / ${fx(n.refs.win, 4)} = ${fx(r.value, 3)}`
+      : `cost = (1 − NS) / (1 − NS_loss) = ${fx(1 - r.ns, 4)} / ${fx(1 - n.refs.loss, 4)} = ${fx(r.cost, 3)}`;
     let h = `<div class="win"><div class="line1"><span><span class="tag ${isWin ? "" : "l"}">${isWin ? "W" : "L"}</span> <span class="opp">${esc(r.opp_name)}</span></span>` +
       (isWin ? gauge(r.value) : "") + `<span class="val">${isWin ? fx(r.value, 3) : "−" + fx(r.cost, 3)}</span></div>`;
     h += `<div class="formula">NS = ${w.primary}×${fx(t.P, 4)} + ${w.secondary}×${fx(t.S, 4)} + ${w.tertiary}×${fx(t.T, 4)} = ${fx(t.ns, 4)}\n${head}</div>`;
@@ -370,12 +372,12 @@ details[open] > summary { margin-bottom: 6px; }
       (r.eligible ? ` · ranked <b>${r.rk_AdjEM}</b> of ${M.eligible}` : ` · <b>not yet rated</b>`) + `</div></div><button class="close" id="close">Close</button></div>`;
     if (r.eligible && r.AdjEM != null) {
       h += `<div class="statrow">` + [["AdjEM", fx(r.AdjEM, 1, true) + " ± " + fx(r.AdjEM_se, 1)], ["AdjO", fx(r.AdjO, 2)], ["AdjD", fx(r.AdjD, 2)], ["AdjT", fx(r.AdjT, 1)],
-        ["SOS", fx(r.SOS, 1, true)], ["Net resume", fx(r.NetResume, 2, true)], ["Luck", fx(r.luck, 3, true)]].map(([k, v]) => `<div class="stat"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("") + "</div>";
+        ["SOS", fx(r.SOS, 1, true)], ["Resume / game", fx(r.NetPerGame, 3, true)], ["Luck", fx(r.luck, 3, true)]].map(([k, v]) => `<div class="stat"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("") + "</div>";
     }
     h += `<h3>Schedule</h3><div class="tablewrap"><table class="mini"><thead><tr><th>Wk</th><th class="t">Opponent</th><th>Site</th><th>Result</th><th class="t">Notes</th></tr></thead><tbody>` +
       tr.schedule.map(g => `<tr><td>${g.week}</td><td class="t">${esc(g.opp_name)} <span class="rk">${esc(g.opp_division)}${g.conf_game ? " · conf" : ""}</span></td><td>${g.site}</td><td>${g.result} ${g.us}-${g.them}</td><td class="t note">${g.used_in_efficiency ? (g.note ? esc(g.note) : "") : "not in efficiency model: " + esc(g.note)}</td></tr>`).join("") + "</tbody></table></div>";
     if (!r.eligible) {
-      h += `<p class="note">${esc(r.name)} has played ${r.games} game${r.games === 1 ? "" : "s"}. The rule is ${M.min_games}, so no rating is published. The model still holds an internal estimate, used only to adjust its opponents' numbers.</p>`;
+      h += `<p class="note">${esc(tr.note || "")}</p>`;
     } else {
       const e = tr.efficiency;
       if (e) {
@@ -385,10 +387,10 @@ details[open] > summary { margin-bottom: 6px; }
         h += `<div class="formula">AdjEM = (AdjO − AdjD) × possessions per game = (${fx(e.AdjO, 4)} − ${fx(e.AdjD, 4)}) × ${fx(e.muT, 3)} = ${fx(e.AdjEM, 2, true)}\n±SE ${fx(e.AdjEM_se, 1)} from game margins: ${e.game_margins.map(g => esc(g.opp_name) + " " + fx(g.adj_margin_per_game, 1, true)).join(", ")}</div>`;
       }
       const n = tr.network;
-      h += `<h3>Win values</h3><p class="note">Primary is the beaten team's record. Secondary is its opponents' records. Tertiary is their opponents' records. Records are (W+1)/(G+2), and FCS wins are ignored. Each record leaves out games against teams higher in the tree, and ${esc(r.name)} is removed from the graph entirely. NS_ref ${fx(n.ns_ref, 4)} is the average opponent's network strength.</p>`;
+      h += `<h3>Win values</h3><p class="note">Primary is the beaten team's record. Secondary is its opponents' records. Tertiary is their opponents' records. Records are (W+1)/(G+2), and FCS wins are ignored. Each record leaves out games against teams higher in the tree, and ${esc(r.name)} is removed from the graph entirely. NS_win ${fx(n.refs.win, 4)} is the average network strength of every team beaten in an FBS game, so the average win is worth exactly 1.00. NS_loss ${fx(n.refs.loss, 4)} does the same for losses.</p>`;
       n.wins.forEach(w => { h += winCard(w, n, true); });
       n.losses.forEach(l => { h += winCard(l, n, false); });
-      h += `<div class="formula">Win value total ${fx(n.win_value_total, 3)} − loss cost total ${fx(n.loss_cost_total, 3)} = net resume ${fx(n.net_resume, 3, true)}</div>`;
+      h += `<div class="formula">Win value total ${fx(n.win_value_total, 3)} − loss cost total ${fx(n.loss_cost_total, 3)} = net resume ${fx(n.net_resume, 3, true)}\nPer game: ${fx(n.net_resume, 3, true)} / ${r.games} = ${fx(n.net_per_game, 3, true)} (the resume ranking uses this, so a sixth game isn't an advantage)</div>`;
       const fac = tr.factors.games;
       const tot = s => fac.reduce((a, g) => { Object.keys(g[s]).forEach(k => { a[k] = (a[k] || 0) + g[s][k]; }); return a; }, {});
       const O = tot("O"), Dd = tot("D");
@@ -400,7 +402,7 @@ details[open] > summary { margin-bottom: 6px; }
       const lk = tr.luck;
       h += `<h4>Luck</h4><div class="formula">Pythag = ${lk.PF}^${lk.exponent} / (${lk.PF}^${lk.exponent} + ${lk.PA}^${lk.exponent}) = ${fx(lk.pythag, 3)}; actual ${fx(lk.actual, 3)}; luck ${fx(lk.luck, 3, true)}</div>`;
       const so = tr.sos_efficiency;
-      h += `<h4>Schedule (efficiency)</h4><div class="formula">SOS = mean opponent AdjEM = ${fx(so.SOS, 2, true)}; NCSOS ${fx(so.NCSOS, 2, true)}\n${so.opponents.map(o => `${esc(o.opp_name)} ${fx(o.opp_AdjEM, 1, true)}${o.conf_game ? " (conf)" : ""}`).join(" · ")}</div>`;
+      h += `<h4>Schedule (efficiency)</h4><div class="formula">SOS = mean opponent AdjEM = ${fx(so.SOS, 2, true)}; NCSOS ${fx(so.NCSOS, 2, true)}\n${so.opponents.map(o => `${esc(o.opp_name)} ${fx(o.opp_AdjEM, 1, true)}${o.conf_game ? " (conf)" : ""}${o.opp_status && o.opp_status !== "published" ? "*" : ""}`).join(" · ")}</div>`;
       const dr = tr.drives;
       h += `<h3>Every drive</h3><details><summary>Show ${dr.rows.length} drives with keep/exclude reasons</summary><div class="tablewrap"><table class="mini"><thead><tr><th class="t">Opponent</th><th>Side</th><th>Q</th><th>Clock</th><th>Start</th><th class="t">Result</th><th>Pts</th><th>Margin</th><th class="t">Used?</th></tr></thead><tbody>` +
         dr.rows.map(x => { const sch = tr.schedule.find(g => g.game === x[0]); return `<tr><td class="t">${esc(sch ? sch.opp_name : x[0])}</td><td>${x[2]}</td><td>${x[3]}</td><td>${esc(x[4] || "")}</td><td>${x[5] == null ? "—" : x[5]}</td><td class="t">${esc(x[6] || "")}</td><td>${x[7]}</td><td>${fx(x[8], 0, true)}</td><td class="t ${x[9] ? "" : "note"}">${x[9] ? "kept" : esc(x[10])}</td></tr>`; }).join("") +

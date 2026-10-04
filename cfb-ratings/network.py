@@ -4,11 +4,15 @@ When team A beats team B, the win is valued by B's network strength:
 
     P = B's record                                   (games vs A removed)
     S = mean record of B's FBS opponents C           (games vs A and B removed)
-    T = mean over C of mean record of C's opponents D (games vs A and C removed;
-        D is never A or B)
+    T = mean over C of mean record of C's opponents D (games vs A, B and C
+        removed; D is never A or B)  -- the "path" exclusion rule
     NS = wP*P + wS*S + wT*T
-    WinValue  = NS / NS_ref
-    LossCost  = (1 - NS) / (1 - NS_ref)
+    WinValue  = NS / NS_win      NS_win  = mean NS of every beaten FBS opponent
+    LossCost  = (1 - NS) / (1 - NS_loss)   NS_loss = mean NS of every FBS team that won
+
+So the average FBS win is worth exactly 1.00 and the average FBS loss costs
+exactly 1.00. Schedule strength is the mean opponent NS (FCS opponents = 0)
+divided by NS_all, the mean over every FBS game side.
 
 Records are FBS-only: FBS wins over FCS teams are ignored entirely, losses to
 FCS teams count as losses (config: fcs_losses_count). FCS teams are never
@@ -43,7 +47,7 @@ class Network:
         self.other_games = defaultdict(list)
         for g in games:
             if g["home_pts"] == g["away_pts"]:
-                continue  # no ties in modern CFB; guard against bad data
+                continue  # ties can't happen in modern CFB; ratings.py skips them too
             for me, opp, won in ((g["home"], g["away"], g["home_pts"] > g["away_pts"]),
                                  (g["away"], g["home"], g["away_pts"] > g["home_pts"])):
                 if me not in self.fbs:
@@ -52,7 +56,7 @@ class Network:
                 bucket[me].append((opp, won, g["id"]))
         self._rec = {}
         self._ns = {}
-        self.ns_ref = None
+        self._refs = None
 
     # ---- records -------------------------------------------------------
     def record(self, x, excl=frozenset()):
@@ -127,17 +131,29 @@ class Network:
                  for o, won, gid in self.other_games[x]]
         return rows
 
+    def references(self):
+        """The three anchors, each a plain mean over FBS-vs-FBS game sides.
+
+        win:  NS of the beaten team, over every FBS win   -> average win = 1.00
+        loss: NS of the winning team, over every FBS loss -> average loss = 1.00
+        all:  NS of the opponent, over every game side     -> average schedule = 1.00
+        """
+        if self._refs is None:
+            won, lost = [], []
+            for a in self.fbs:
+                for b, w, _ in self.fbs_games[a]:
+                    (won if w else lost).append(self.strength(b, a)["ns"])
+            mean = lambda v: sum(v) / len(v) if v else 0.5
+            self._refs = {"win": mean(won), "loss": mean(lost), "all": mean(won + lost),
+                          "n_wins": len(won), "n_losses": len(lost)}
+        return self._refs
+
     def reference(self):
-        """NS_ref: mean opponent NS across every FBS-vs-FBS game side played."""
-        if self.ns_ref is None:
-            vals = [self.strength(b, a)["ns"]
-                    for a in self.fbs for b, _, _ in self.fbs_games[a]]
-            self.ns_ref = sum(vals) / len(vals) if vals else 0.5
-        return self.ns_ref
+        return self.references()["all"]
 
     # ---- per-team resume ------------------------------------------------
     def resume(self, a, with_trees=True):
-        ref = self.reference()
+        refs = self.references()
         wins, losses, sched = [], [], []
         for b, won, gid in self.fbs_games[a]:
             st = self.strength(b, a, tree=with_trees)
@@ -147,19 +163,20 @@ class Network:
             if with_trees:
                 row["tree"] = st
             if won:
-                row["value"] = ns / ref
+                row["value"] = ns / refs["win"]
                 wins.append(row)
             else:
-                row["cost"] = (1 - ns) / (1 - ref)
+                row["cost"] = (1 - ns) / (1 - refs["loss"])
                 losses.append(row)
         for b, won, gid in self.other_games[a]:
             row = {"game": gid, "opp": b, "ns": 0.0, "fcs": True}
+            sched.append(0.0)
             if won:
                 row["value"] = 0.0
                 row["note"] = "win over FCS: worth 0, branches not traversed"
                 wins.append(row)
             else:
-                row["cost"] = 1 / (1 - ref)
+                row["cost"] = 1 / (1 - refs["loss"])
                 row["note"] = "loss to FCS: opponent strength treated as 0 (maximum cost)"
                 losses.append(row)
         wvt = sum(r["value"] for r in wins)
@@ -172,8 +189,8 @@ class Network:
             "loss_cost_total": lct,
             "net_resume": wvt - lct,
             "schedule_ns": sum(sched) / len(sched) if sched else None,
-            "schedule_ratio": (sum(sched) / len(sched)) / ref if sched else None,
+            "schedule_ratio": (sum(sched) / len(sched)) / refs["all"] if sched else None,
             "best_win": max(fbs_wins, key=lambda r: r["value"], default=None),
             "worst_loss": max(losses, key=lambda r: r["cost"], default=None),
-            "ns_ref": ref,
+            "refs": refs,
         }

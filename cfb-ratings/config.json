@@ -29,5 +29,6 @@
     "tol": 1e-09
   },
   "exclusion": "path",
-  "layer_mode": "rate"
+  "layer_mode": "rate",
+  "end_of_half_seconds": 60
 }

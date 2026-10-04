@@ -27,9 +27,10 @@ def solve(obs, division, prior_weight, max_iter=500, tol=1e-9, use_hfa=True,
     fixed_h:  hold the home-field term at this value instead of estimating it.
     center:   division whose average team is the zero point. O and D are only
               identified up to a shared constant (O+c, D-c predict identical
-              games); we pin mean(O - D) over this division's teams to 0, and
-              mu is that division's own average, so AdjO reads as "points per
-              drive against an average FBS defense".
+              games); we pin mean(O - D) over this division's teams to 0, then
+              shift O, D and mu together so the division's average defense
+              equals mu. AdjO is then exactly "points per drive against an
+              average FBS defense on a neutral field".
     """
     teams = {o["off"] for o in obs} | {o["def"] for o in obs}
     core = [o for o in obs if division[o["off"]] == center and division[o["def"]] == center] or obs
@@ -72,6 +73,15 @@ def solve(obs, division, prior_weight, max_iter=500, tol=1e-9, use_hfa=True,
         O, D, h = newO, newD, newh
         if delta < tol:
             break
+    # Final reparametrization (predictions unchanged): shift O, D and mu together so
+    # the average FBS defense sits exactly at mu. Then AdjO is literally "points per
+    # drive against an average FBS defense, neutral field", AdjD the mirror, and mu is
+    # what an average FBS offense scores against an average FBS defense.
+    m = _mean(O[t] for t in centered)
+    s = m - mu
+    O = {t: x + s for t, x in O.items()}
+    D = {t: x + s for t, x in D.items()}
+    mu = m + s
     prior_O = {d: _mean(O[t] for t in teams if division[t] == d) for d in divs}
     prior_D = {d: _mean(D[t] for t in teams if division[t] == d) for d in divs}
     return {"mu": mu, "O": O, "D": D, "h": h, "iterations": it, "converged": delta < tol,

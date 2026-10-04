@@ -68,25 +68,36 @@ class ToyNetwork(unittest.TestCase):
         self.assertNotIn("F", seen)  # FCS never a node
 
     def test_win_values_and_fcs_rules(self):
-        ref = self.net.reference()
+        refs = self.net.references()
         res = self.net.resume("A")
         vals = {r["opp"]: r["value"] for r in res["wins"]}
-        self.assertAlmostEqual(vals["B"], self.net.strength("B", "A")["ns"] / ref)
-        self.assertAlmostEqual(vals["E"], 0.4375 / ref)
+        self.assertAlmostEqual(vals["B"], self.net.strength("B", "A")["ns"] / refs["win"])
+        self.assertAlmostEqual(vals["E"], 0.4375 / refs["win"])
         b = self.net.resume("B")
         self.assertEqual([r["value"] for r in b["wins"] if r.get("fcs")], [0.0])
         d = self.net.resume("D")
         fcs_loss = [r for r in d["losses"] if r.get("fcs")][0]
-        self.assertAlmostEqual(fcs_loss["cost"], 1 / (1 - ref))
+        self.assertAlmostEqual(fcs_loss["cost"], 1 / (1 - refs["loss"]))
         self.assertAlmostEqual(d["net_resume"], d["win_value_total"] - d["loss_cost_total"])
 
-    def test_average_opponent_win_is_one(self):
-        """By construction the mean opponent NS over all FBS game sides equals NS_ref."""
-        ref = self.net.reference()
-        sides = [self.net.strength(b, a)["ns"] / ref
-                 for a in self.net.fbs for b in self.net.opponents(a)]
-        self.assertAlmostEqual(sum(sides) / len(sides), 1.0)
+    def test_average_fbs_win_and_loss_are_one(self):
+        """The anchors are defined so that, over actual FBS-vs-FBS results,
+        the mean win value is 1.00 and the mean loss cost is 1.00 (wins over FCS,
+        worth 0 by rule, and FCS losses are outside the average)."""
+        wins, losses = [], []
+        for t in self.net.fbs:
+            r = self.net.resume(t, with_trees=False)
+            wins += [x["value"] for x in r["wins"] if not x.get("fcs")]
+            losses += [x["cost"] for x in r["losses"] if not x.get("fcs")]
+        self.assertAlmostEqual(sum(wins) / len(wins), 1.0)
+        self.assertAlmostEqual(sum(losses) / len(losses), 1.0)
 
+    def test_schedule_strength_counts_fcs_opponents_as_zero(self):
+        refs = self.net.references()
+        d = self.net.resume("D", with_trees=False)   # D: FBS opponents C, E (and B? no) + FCS F
+        fbs_ns = [self.net.strength(o, "D")["ns"] for o in self.net.opponents("D")]
+        expected = (sum(fbs_ns) + 0.0) / (len(fbs_ns) + 1) / refs["all"]
+        self.assertAlmostEqual(d["schedule_ratio"], expected)
 
 if __name__ == "__main__":
     unittest.main()

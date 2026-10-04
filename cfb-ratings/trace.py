@@ -54,7 +54,8 @@ def efficiency(tr):
         print(f"    {'opponent':22s} {'drives':>6} {'raw PPD':>8} {opp_key:>9} {'opp adj':>8} "
               f"{'venue':>6} {'adjusted':>9}")
         for ln in s["lines"]:
-            print(f"    {ln['opp_name'][:22]:22s} {ln['w']:>6} {ln['raw']:>8.3f} {ln[opp_key]:>9.3f} "
+            mark = "" if ln.get("opp_status", "published") == "published" else " *"
+            print(f"    {(ln['opp_name'][:20] + mark):22s} {ln['w']:>6} {ln['raw']:>8.3f} {ln[opp_key]:>9.3f} "
                   f"{ln['opp_adjustment']:>+8.3f} {ln['hfa_adjustment']:>+6.3f} {ln['adjusted']:>9.3f}")
         p = s["prior"]
         tot_w = sum(ln["w"] for ln in s["lines"])
@@ -65,6 +66,8 @@ def efficiency(tr):
               f"check {'OK' if s['check_ok'] else 'FAIL'}]")
     print(f"  AdjEM = ({f(e['AdjO'], 4)} - {f(e['AdjD'], 4)}) * {f(e['muT'], 3)} = {f(e['AdjEM'], 2)} "
           f"pts/game vs an average FBS team, neutral field  (+/- {f(e['AdjEM_se'], 1)} SE)")
+    print("  * opponent rating is an internal input (FCS team, or FBS team below the game minimum),"
+          " shown only so this line can be checked")
     print("  game-level adjusted margins (basis of the SE):",
           ", ".join(f"{g['opp_name']} {g['adj_margin_per_game']:+.1f}" for g in e["game_margins"]))
 
@@ -116,14 +119,18 @@ def sos(tr):
     s = tr["sos_efficiency"]
     print(f"\nSOS (efficiency) = mean opponent AdjEM = {f(s['SOS'], 2)};  NCSOS = {f(s['NCSOS'], 2)}")
     for o in s["opponents"]:
-        print(f"    {o['opp_name'][:22]:22s} AdjEM {o['opp_AdjEM']:+6.2f}{'  (conf)' if o['conf_game'] else ''}")
+        mark = "" if o.get("opp_status", "published") == "published" else "  * internal input"
+        print(f"    {o['opp_name'][:22]:22s} AdjEM {o['opp_AdjEM']:+6.2f}{'  (conf)' if o['conf_game'] else ''}{mark}")
 
 
 def network(tr):
     n = tr["network"]
     w = n["weights"]
-    print(f"\nNETWORK WIN VALUES  NS = {w['primary']}*P + {w['secondary']}*S + {w['tertiary']}*T; "
-          f"NS_ref = {n['ns_ref']:.4f} (average FBS opponent)")
+    rf = n["refs"]
+    print(f"\nNETWORK WIN VALUES  NS = {w['primary']}*P + {w['secondary']}*S + {w['tertiary']}*T")
+    print(f"  anchors: NS_win {rf['win']:.4f} (mean NS of all {rf['n_wins']} beaten FBS teams -> average win = 1.00); "
+          f"NS_loss {rf['loss']:.4f} (mean NS of teams that won -> average loss costs 1.00); "
+          f"NS_all {rf['all']:.4f} (schedule)")
     print(f"  record rate = (W + {n['record_prior']['wins']}) / (W + L + "
           f"{n['record_prior']['wins'] + n['record_prior']['losses']}); exclusion rule: {n['exclusion']}")
     for kind, rows in (("WIN", n["wins"]), ("LOSS", n["losses"])):
@@ -133,9 +140,9 @@ def network(tr):
                       + (f"value {r['value']:.3f}" if kind == "WIN" else f"cost {r['cost']:.3f}"))
                 continue
             t = r["tree"]
-            val = (f"value = NS / NS_ref = {r['ns']:.4f} / {n['ns_ref']:.4f} = {r['value']:.3f}"
+            val = (f"value = NS / NS_win = {r['ns']:.4f} / {rf['win']:.4f} = {r['value']:.3f}"
                    if kind == "WIN" else
-                   f"cost = (1 - NS) / (1 - NS_ref) = {1 - r['ns']:.4f} / {1 - n['ns_ref']:.4f} = {r['cost']:.3f}")
+                   f"cost = (1 - NS) / (1 - NS_loss) = {1 - r['ns']:.4f} / {1 - rf['loss']:.4f} = {r['cost']:.3f}")
             print(f"\n  {kind} vs {r['opp_name']}:  NS = {w['primary']}*{t['P']:.4f} + "
                   f"{w['secondary']}*{t['S']:.4f} + {w['tertiary']}*{t['T']:.4f} = {t['ns']:.4f};  {val}")
             p = t["primary"]
@@ -152,7 +159,8 @@ def network(tr):
             if t.get("fallbacks"):
                 print(f"    (empty layers set to .500: {t['fallbacks']})")
     print(f"\n  Win Value Total {n['win_value_total']:.3f}  Loss Cost Total {n['loss_cost_total']:.3f}  "
-          f"Net Resume {n['net_resume']:+.3f}  Schedule strength ratio {f(n['schedule_ns_ratio'])}")
+          f"Net Resume {n['net_resume']:+.3f} ({f(n['net_per_game'])} per game)  "
+          f"Schedule strength ratio {f(n['schedule_ns_ratio'])} (FCS opponents count as 0)")
 
 
 def drives(tr):
@@ -171,6 +179,11 @@ def main():
     a = ap.parse_args()
     tr = find_team(a.team)
     s = tr["summary"]
+    if not s.get("eligible"):
+        print(f"{s['name']} ({s['conference']})  {s['W']}-{s['L']}  NOT RATED")
+        print(tr["note"])
+        schedule(tr)
+        return
     print(f"{s['name']} ({s['conference']})  {s['W']}-{s['L']}  rank "
           f"{s.get('rk_AdjEM', 'unranked')}  AdjEM {f(s.get('AdjEM'), 2)}")
     if a.drives:

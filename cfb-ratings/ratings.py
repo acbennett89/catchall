@@ -107,6 +107,8 @@ def rate(data, cfg, through_week=None):
             us, them = (g["home_pts"], g["away_pts"]) if g["home"] == t else (g["away_pts"], g["home_pts"])
             pf += us
             pa += them
+            if us == them:
+                continue  # ties can't happen in modern CFB; network.py skips them too
             won = us > them
             w += won
             l += not won
@@ -179,6 +181,8 @@ def rate(data, cfg, through_week=None):
         res = net.resume(t, with_trees=False)
         r.update(WVT=res["win_value_total"], AvgWV=res["avg_win_value"],
                  LCT=res["loss_cost_total"], NetResume=res["net_resume"],
+                 # Per game, so a sixth game played isn't an advantage over five.
+                 NetPerGame=res["net_resume"] / len(mine) if mine else None,
                  SchedNS=res["schedule_ratio"],
                  BestWin=(res["best_win"] or {}).get("value"),
                  BestWinOpp=(res["best_win"] or {}).get("opp"),
@@ -189,7 +193,7 @@ def rate(data, cfg, through_week=None):
     # ranks among eligible teams
     elig = [r for r in out.values() if r["eligible"] and r.get("AdjEM") is not None]
     for key, rev in (("AdjEM", True), ("AdjO", True), ("AdjD", False), ("AdjT", True),
-                     ("SOS", True), ("NCSOS", True), ("NetResume", True), ("WVT", True),
+                     ("SOS", True), ("NCSOS", True), ("NetResume", True), ("NetPerGame", True), ("WVT", True),
                      ("Luck", True), ("SchedNS", True)):
         src = "luck" if key == "Luck" else key
         ranked = sorted((r for r in elig if r.get(src) is not None),
