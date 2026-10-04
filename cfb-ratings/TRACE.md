@@ -4,7 +4,9 @@ Every published number is a short, explicit computation over listed inputs. Ther
 are three ways to follow one:
 
 1. **The web page** (`out/site/index.html`; pick the season at the top). Click a team to see each game's adjustment, every
-   win's +2 network tree, the five-factor counts, and every drive with its keep or exclude reason.
+   win's +2 network tree, the five-factor counts, and every drive with its keep or exclude reason. The page loads each
+   season's data files from beside it, so serve the folder rather than opening the file:
+   `python -m http.server -d out/site`, then http://localhost:8000. The published page needs nothing.
 2. **The command line.** `python trace.py "Team"` prints the same derivation as text.
    Add `--section network` (or `efficiency`, `success_rate`, `tempo`, `factors`, `luck`, `sos`,
    `situational`, `discipline`) for one part, or `--drives` for every drive.
@@ -64,7 +66,7 @@ phantom game (FBS avg)     12                                        2.344
 - **AdjO** = (9×4.430 + 6×5.042 + 8.5×3.301 + 5×5.349 + 9×4.371 + 12×2.344) / (37.5 + 12) = **3.8867**. The trace
   recomputes this sum and checks it against the stored rating; `build.py` fails if any team's doesn't match.
 
-## Worked example 2: Notre Dame's AdjEM
+## Worked example 2: Notre Dame's AdjEM (2026, through week 5)
 
 `AdjEM = (AdjO − AdjD) × possessions per game = (3.8867 − 1.2603) × 11.558 = +30.36`.
 That is points per game better than an average FBS team on a neutral field. The average over all 138 FBS
@@ -125,10 +127,11 @@ that weren't tagged.
 
 ## What guarantees the traces are right
 
-- **Self-checks.** Every AdjO, AdjD, AdjSR and AdjT trace recomputes its stored value, for all 266 D-I
-  teams: the 107 rated teams, plus the internal derivations of the 31 unrated FBS teams and the 128 FCS
-  teams. `build.py` fails loudly if any differs by more than 1e-6.
-- **Unit tests** (`tests/`, 32 tests):
+- **Self-checks.** Every AdjO, AdjD, AdjSR and AdjT trace recomputes its stored value, for every D-I
+  team in the season. In 2026 through week 5 that is 266 teams: the 107 rated teams, plus the internal
+  derivations of the 31 unrated FBS teams and the 128 FCS teams (2025: 265, 2024: 263). `build.py` fails
+  loudly if any differs by more than 1e-6.
+- **Unit tests** (`tests/`, 36 tests):
   - A hand-computed network on a toy graph covers FCS wins and losses, path exclusions, and the
     average FBS win and loss being exactly 1.00.
   - Solver tests recover known ratings from synthetic games.

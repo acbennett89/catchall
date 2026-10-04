@@ -29,6 +29,10 @@ def _match(query, items):
 
 def find_team(query, internal=False):
     if internal:
+        rated = json.load(open(os.path.join(OUT, "ratings.json")))["teams"]
+        hit = next((t for t in rated if t["name"].lower() == query.lower()), None)
+        if hit and hit.get("eligible"):
+            sys.exit(f"{hit['name']} is rated in {os.path.basename(OUT)}; run without --internal")
         index = json.load(open(os.path.join(OUT, "traces", "internal", "index.json")))
         tid = _match(query, list(index.items()))
         if tid is None:

@@ -46,6 +46,7 @@ h1 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 5vw, 
 .season-status { font-family: var(--display); font-weight: 600; font-size: 16px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
 .meta { margin: 0; color: var(--muted); font-size: 14px; max-width: 90ch; }
 .meta b { color: var(--ink); font-weight: 600; }
+.dq.warn { color: var(--ink); border-left: 3px solid var(--gold); padding-left: 10px; }
 nav.tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
 nav.tabs button { font-family: var(--display); font-weight: 600; font-size: 16px; letter-spacing: .05em; text-transform: uppercase;
   background: transparent; color: var(--muted); border: 1px solid transparent; border-radius: 3px; padding: 5px 12px; cursor: pointer; }
@@ -138,6 +139,7 @@ details[open] > summary { margin-bottom: 6px; }
   <header class="top">
     <div class="brand"><h1>FBS Efficiency Ratings</h1><select class="season" id="yr" aria-label="Season"></select><span class="season-status" id="season-status"></span></div>
     <p class="meta" id="meta"></p>
+    <p class="meta dq" id="dq"></p>
     <nav class="tabs" role="tablist" aria-label="Sections">
       <button role="tab" data-tab="ratings" aria-selected="true">Ratings</button>
       <button role="tab" data-tab="resume">Win values</button>
@@ -195,6 +197,7 @@ details[open] > summary { margin-bottom: 6px; }
 
   /* ---------- files beside the page (season tables, team traces) ---------- */
   const pending = {};
+  const FILE_MSG = "This page loads its data files from beside it, which browsers block for pages opened straight from disk. Serve the folder instead: python -m http.server -d out/site, then open http://localhost:8000.";
   function loadFile(file) {
     if (!pending[file]) pending[file] = fetch(file).then(r => { if (!r.ok) throw new Error(file + ": " + r.status); return r.json(); })
       .catch(e => { delete pending[file]; throw e; });
@@ -290,6 +293,7 @@ details[open] > summary { margin-bottom: 6px; }
     { k: "OffPreSnap100", label: "Pre-snap /100", title: "False starts, delay of game, illegal formation/motion/shift per 100 offensive snaps", f: (v, r) => vsConf(v, r, "OffPreSnap100", 2) },
     { k: "DefPen100", label: "Def /100", title: "Defensive fouls per 100 defensive snaps (kept drives)", f: (v, r) => vsConf(v, r, "DefPen100", 2) },
     { k: "PenFDAllowedPG", label: "Pen 1st dn/G", title: "First downs given up by defensive penalty per game", f: v => fx(v, 2) },
+    { k: "PenCoverage", label: "Coverage", title: "Share of the team's box-score fouls that ESPN's play-by-play shows, over the games the rates use. The per-snap rates read low by about the shortfall.", f: v => v == null ? "—" : `<span class="${v < 0.9 ? "neg" : ""}">${Math.round(v * 100)}%</span>` },
     { k: "NeutralPace", label: "Neutral pace", title: "Seconds per snap, Q1-Q3, score within 14 (lower = faster)", f: v => v == null ? "—" : fx(v, 1) + " s" },
     { k: "NeutralRunRate", label: "Run %", f: v => v == null ? "—" : (v * 100).toFixed(0) + "%" },
     { k: "LP_drives", label: "Lead-protect drives", desc: true, title: "Q4 drives tagged as clock-burning to protect a lead, of Q4 leading drives in usable-clock games", f: (v, r) => `${v} <span class="rk">of ${r.Q4_lead_drives}</span>` },
@@ -317,11 +321,24 @@ details[open] > summary { margin-bottom: 6px; }
     const post = M.excluded_postseason || [];
     document.getElementById("meta").innerHTML =
       `<b>${M.eligible}</b> of ${M.fbs_teams} FBS teams rated (rule: ${M.min_games}+ games played). ` +
-      `${M.games_used} D-I games through ${esc(M.last_game_date || "week " + M.through_week)}, ${M.games_with_drives} with play-by-play` +
+      `${M.games_used} D-I games through ${esc(M.last_game_date || "week " + M.through_week)}, ${M.games_with_drives} with usable drive data` +
       (post.length ? `; ${post.length} postseason game${post.length === 1 ? "" : "s"} left out (${esc([...new Set(post.map(p => /^FCS Championship/i.test(p.reason) ? "FCS playoffs" : p.reason))].join(", "))})` : "") + `. ` +
       `Average FBS drive is worth <b>${fx(M.mu_ppd, 2)}</b> points; teams get <b>${fx(M.muT, 1)}</b> possessions a game; ` +
       `home field is worth <b>${fx(M.hfa_points, 1)}</b> points. Win values use weights ` +
       `${M.net_weights.primary} / ${M.net_weights.secondary} / ${M.net_weights.tertiary} (primary / secondary / tertiary).`;
+
+    // Coverage of ESPN's play-by-play differs a lot by season; say so where it is weak.
+    const dc = M.data_coverage, audit = M.penalty_audit, dq = document.getElementById("dq");
+    if (dc) {
+      const fbsMiss = dc.fbs_games ? 1 - dc.fbs_with_drives / dc.fbs_games : 0, stamp = dc.stamp_share == null ? 1 : dc.stamp_share;
+      const weak = fbsMiss > 0.03 || stamp < 0.5 || (audit && audit.count_exact < 0.7);
+      dq.className = "meta dq" + (weak ? " warn" : "");
+      dq.innerHTML = (weak ? "<b>Data note.</b> " : "Data coverage: ") +
+        `ESPN's play-by-play gives usable drives for ${dc.fbs_with_drives} of ${dc.fbs_games} games involving an FBS team` +
+        (fbsMiss > 0.03 ? `; the other ${dc.fbs_games - dc.fbs_with_drives} count in records, win values and the resume but not in AdjEM, so ratings are less precise this season` : "") + ". " +
+        `Snap-time stamps on ${Math.round(stamp * 100)}% of drives` + (stamp < 0.5 ? " (the clock rules, neutral pace and lead-protection tags fall back to ESPN's end-of-play clock, so they are not comparable with seasons that have stamps)" : "") + ". " +
+        (audit ? `Parsed penalties match the box score in ${Math.round(audit.count_exact * 100)}% of team-games.` : "");
+    } else dq.textContent = "";
 
     rated = D.teams.filter(t => t.eligible && t.AdjEM != null);
     q.value = "";
@@ -340,7 +357,7 @@ details[open] > summary { margin-bottom: 6px; }
     buildTable(document.getElementById("tbl-disc"), rated, discCols, "PenPG", 1, openTeam);
     const pa = M.penalty_audit, dh = document.getElementById("disc-hint");
     dh.dataset.base = dh.dataset.base || dh.textContent;
-    dh.textContent = dh.dataset.base + (pa ? ` This season, fouls parsed from the play-by-play match the box-score count exactly in ${Math.round(pa.count_exact * 100)}% of team-games (${Math.round(pa.count_within_1 * 100)}% within one), and ${fx(-pa.total_count_vs_box * 100, 1)}% of box-score fouls are missing from the play-by-play, so the per-100-snap rates run that much low. Games whose play-by-play lists no penalties at all are left out of the rates.` : "");
+    dh.textContent = dh.dataset.base + (pa ? ` This season, fouls parsed from the play-by-play match the box-score count exactly in ${Math.round(pa.count_exact * 100)}% of team-games (${Math.round(pa.count_within_1 * 100)}% within one); ${fx(-pa.total_count_vs_box * 100, 1)}% of all box-score fouls are missing from ESPN's play-by-play. The shortfall differs by team, so the Coverage column shows each team's share; per-snap rates under 90% coverage (red) read low. Games whose play-by-play lists no penalties at all are left out of the rates.` : "");
 
     const P = D.predictions || [];
     document.getElementById("picks-hint").textContent = P.length
@@ -387,7 +404,7 @@ details[open] > summary { margin-bottom: 6px; }
     }).catch(() => {
       yr.disabled = false; yr.value = String(current);
       if (hadFocus) yr.focus();
-      status.textContent = (M ? seasonStatus(M) + " · " : "") + `could not load ${season}; reload and try again`;
+      status.textContent = (M ? seasonStatus(M) + " · " : "") + `could not load ${season}; ` + (location.protocol === "file:" ? "serve the folder (see How to trace)" : "reload and try again");
       return false;
     });
   }
@@ -478,7 +495,7 @@ details[open] > summary { margin-bottom: 6px; }
     if (D.internal[id]) return openInternalNow(id);
     showLoading("Fetching the internal derivation");
     loadFile(`${season}/${D.internal_file}`).then(o => { TABLES[season].internal = o; if (wantDrawer === tok) openInternalNow(id); })
-      .catch(() => { if (wantDrawer === tok) showLoading("Could not load this season's internal derivations. Reload the page and try again.", "Not loaded"); });
+      .catch(() => { if (wantDrawer === tok) showLoading(location.protocol === "file:" ? FILE_MSG : "Could not load this season's internal derivations. Reload the page and try again.", "Not loaded"); });
   }
   function openTeam(id) {
     const season = current, tok = wantDrawer = `${season}:t${id}`;
@@ -491,7 +508,7 @@ details[open] > summary { margin-bottom: 6px; }
     loadFile(`${season}/${D.trace_files[k]}`).then(o => {
       Object.assign(TABLES[season].traces = TABLES[season].traces || {}, o);
       if (wantDrawer === tok) openTeamNow(id);
-    }).catch(() => { if (wantDrawer === tok) showLoading("Could not load this team's trace. Reload the page and try again.", "Not loaded"); });
+    }).catch(() => { if (wantDrawer === tok) showLoading(location.protocol === "file:" ? FILE_MSG : "Could not load this team's trace. Reload the page and try again.", "Not loaded"); });
   }
 
   function openInternalNow(id) {

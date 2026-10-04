@@ -42,6 +42,7 @@ COLUMNS = [
     ("OffPen100", "OffPen_per100"), ("OffPen100_conf", "OffPen_per100_confavg"),
     ("OffPreSnap100", "OffPreSnap_per100"), ("DefPen100", "DefPen_per100"),
     ("DefPen100_conf", "DefPen_per100_confavg"), ("PenFDAllowedPG", "PenFirstDownsAllowed_pg"),
+    ("PenCoverage", "PenCoverage_parsed_vs_box"),
     ("SOS", "SOS_AdjEM"), ("rk_SOS", "SOS_Rk"), ("NCSOS", "NCSOS_AdjEM"),
     ("OppO", "Opp_AdjO"), ("OppD", "Opp_AdjD"),
     ("WVT", "WinValueTotal"), ("AvgWV", "AvgWinValue"), ("LCT", "LossCostTotal"),
@@ -201,7 +202,7 @@ def team_trace(t, res, data, cfg, sigma, eligible):
                           "situational": is_situational_foul(rw, pf, by_i)})
     tr["discipline"] = {k: row.get(k) for k in DISCIPLINE_KEYS}
     tr["discipline"].update({f"{k}_conf": row.get(f"{k}_conf") for k in DISCIPLINE_KEYS},
-                            counts=row.get("pen_counts"), fouls=fouls,
+                            PenCoverage=row.get("PenCoverage"), counts=row.get("pen_counts"), fouls=fouls,
                             rules={"per_game": "box score accepted penalties (sanity-checked)",
                                    "rates": "accepted fouls on kept drives per 100 snaps; a Q4 "
                                             "leader's offensive delay of game is situational and "
@@ -262,6 +263,16 @@ def label_tree(resume, teams):
             c["name"] = name_of(teams, c["team"])
             for d in c["tertiary"]:
                 d["name"] = name_of(teams, d["team"])
+
+
+def data_coverage(games, teams):
+    """How complete ESPN's play-by-play is this season, for the page's coverage line."""
+    fbs = [g for g in games if "FBS" in (teams[g["home"]]["division"], teams[g["away"]]["division"])]
+    drives = [d for g in fbs for d in g["drives"] if d["kept"]]
+    return {"d1_games": len(games), "d1_with_drives": sum(1 for g in games if g["drives"]),
+            "fbs_games": len(fbs), "fbs_with_drives": sum(1 for g in fbs if g["drives"]),
+            # Snap time read from the "(MM:SS)" stamp; otherwise ESPN's end-of-play clock (METRICS 1.5, 7.1).
+            "stamp_share": sum(d["clock_src"] == "stamp" for d in drives) / len(drives) if drives else None}
 
 
 def eastern_date(iso):
@@ -435,6 +446,7 @@ def main():
         "last_game_date": eastern_date(max(g["date"] for g in res["games"])),
         # Parsed play-by-play fouls vs ESPN box scores, this season (python audit_penalties.py).
         "penalty_audit": audit(cfg["season"])[0],
+        "data_coverage": data_coverage(res["games"], teams),
         "excluded_postseason": data.get("excluded_postseason", []),
         "games_used": len(res["games"]),
         "games_with_drives": sum(1 for g in res["games"] if g["drives"]),

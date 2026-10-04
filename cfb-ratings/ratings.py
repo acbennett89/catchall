@@ -144,6 +144,7 @@ def discipline(t, mine, fields, cfg):
     pen_n = pen_y = box_games = net_y = net_games = 0
     off_snaps = def_snaps = off_f = off_pre = def_f = fd = pbp_games = 0
     gap_games = []
+    cov_parsed = cov_box = 0  # this team's accepted fouls in the play-by-play vs its box score, same games
     for g in mine:
         opp = g["away"] if g["home"] == t else g["home"]
         own_box, opp_box = (g["box"].get(t) or {}).get("pen"), (g["box"].get(opp) or {}).get("pen")
@@ -157,6 +158,10 @@ def discipline(t, mine, fields, cfg):
             gap_games.append(g["id"])
             continue
         pbp_games += 1
+        if own_box:
+            cov_box += own_box[0]
+            cov_parsed += sum(1 for row in g["penalties"]
+                              if row[f["status"]] == "accepted" and row[f["penalized_team_id"]] == t)
         by_i = {d["i"]: d for d in g["drives"]}
         for d in g["drives"]:
             if d["kept"]:
@@ -181,10 +186,14 @@ def discipline(t, mine, fields, cfg):
             "NetPenYdsPG": _rate(net_y, net_games),
             "OffPen100": per100(off_f, off_snaps), "OffPreSnap100": per100(off_pre, off_snaps),
             "DefPen100": per100(def_f, def_snaps), "PenFDAllowedPG": _rate(fd, pbp_games),
+            # Share of the team's box-score fouls that ESPN's play-by-play shows, over the games the
+            # rates use. Below 1 the per-snap rates read low by about that much (2024 varies by team).
+            "PenCoverage": _rate(cov_parsed, cov_box),
             "pen_counts": {"box_games": box_games, "off_fouls": off_f, "off_presnap": off_pre,
                            "def_fouls": def_f, "def_first_downs": fd, "off_snaps": off_snaps,
                            "def_snaps": def_snaps, "pbp_games": pbp_games,
-                           "pbp_gap_games": gap_games}}
+                           "pbp_gap_games": gap_games, "parsed_fouls": cov_parsed,
+                           "box_fouls_same_games": cov_box}}
 
 
 def drive_weight(d, cfg):

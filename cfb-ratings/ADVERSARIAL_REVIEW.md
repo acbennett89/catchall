@@ -367,7 +367,7 @@ page compares like with like.
 
 | Rule | 2025 drives flagged | MAE vs current rule | Verdict |
 |---|---|---|---|
-| **Current (Connelly margins)** | 3,584 (10.1%) on the final parse; 3,253 in the research | — | **Kept** |
+| **Current (Connelly margins)** | 3,556 (10.1%) on the final parse, regular season; 3,253 in the research | — | **Kept** |
 | No garbage filter | 0 | +0.027 on the final code (12.456 vs 12.429; round-3 paired SE ±0.12) | Same |
 | Time-aware sqrt rule (fit on 2025 wk 1–3) | 5,569 | +0.084 ± 0.082 | Same; flags 70% more |
 | State-only win-probability model, leader WP ≥ 0.99 (fit on wk 1–3) | — | +0.071 ± 0.072 | Same; agrees with the current rule on 96% of drives |

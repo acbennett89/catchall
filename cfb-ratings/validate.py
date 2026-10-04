@@ -131,6 +131,12 @@ def main():
               f"SU {mm['model']['straight_up']:.3f} sigma {r['sigma']:.1f} | same {sg['n']} games: "
               f"model {sg['model_MAE']:.2f} raw PPD {sg['raw_ppd_MAE']:.2f} "
               f"avg margin {sg['avg_margin_MAE']:.2f} | market n={mm['market']['n']}")
+    r = evaluate(2024, range(4, 17), base, "2024 default")
+    report["efficiency_2024"] = {"default (prior 12 drives, garbage filter on)": r}
+    mm, sg = r["methods"], r["same_games"]
+    print(f"2024 default: n={r['n']} model MAE {mm['model']['MAE']:.2f} SU {mm['model']['straight_up']:.3f} "
+          f"| same {sg['n']} games: model {sg['model_MAE']:.2f} raw PPD {sg['raw_ppd_MAE']:.2f} "
+          f"avg margin {sg['avg_margin_MAE']:.2f}")
     h = evaluate(2026, range(3, 6), base, "2026 weeks 3-5 holdout (default)")
     report["holdout_2026"] = h
     mm, sg = h["methods"], h["same_games"]
