@@ -24,7 +24,7 @@ where many variants were tried, the bar is higher (§G).
 
 | # | Challenge | Verdict | What the system does |
 |---|-----------|---------|----------------------|
-| A1 | "1.00 = expected win" has two readings | Ambiguous brief | Opponent-quality reading. **The average FBS win is worth exactly 1.00** (corrected in round 2; inputs in `out/anchors.json`) |
+| A1 | "1.00 = expected win" has two readings | Ambiguous brief | Opponent-quality reading. **The average FBS win is worth exactly 1.00** (corrected in round 2; inputs in `out/2026/anchors.json`) |
 | A2 | Raw win counts reward playing more games | Real fairness problem, no predictive gain | Records are rates, (W+1)/(G+2) |
 | A3 | Do FCS losses count? | The brief excludes only FCS wins | They count (6 teams affected) |
 | A4 | Should losses count? | Prediction can't decide it; fairness can | Both published; the resume is ranked by **net per counted game** (FCS wins excluded from the count in round 4) |
@@ -58,7 +58,7 @@ claim exact:
 
 - **NS_win** = mean network strength of every team beaten in an FBS game (0.468). The average FBS win = 1.00.
 - **NS_loss** = mean network strength of every team that won (0.535). The average FBS loss costs 1.00.
-- On the 2026 results both averages come out at exactly 1.000. Every input is listed in `out/anchors.json`, and a unit test checks the property on a small hand-built schedule.
+- On the 2026 results both averages come out at exactly 1.000. Every input is listed in `out/2026/anchors.json`, and a unit test checks the property on a small hand-built schedule.
 
 Reading 2 is covered separately: each game's opponent-adjusted margin is in the efficiency trace, and Luck (§4) compares wins with scoring.
 
@@ -412,8 +412,8 @@ the regression tests in `tests/test_parse.py` are built from the plays they cite
 | Situational | The Q2 cut in neutral pace was applied per drive, with a falsy-zero bug. | Applied per interval. |
 | Resume | Net Resume per game counted FCS wins in the divisor. | Divided by counted games (§A4). |
 | Traceability | Neutral pace, run rate, discipline rates, AdjSR and the lead-protection decision couldn't be rebuilt from the traces. | Each drive row now carries its intervals, run count, penalty-only snaps, clock source and weight. Each game carries clock status and box-score penalties. AdjSR has its own trace section (`trace.py --section success_rate`). |
-| Traceability | Internal ratings of unrated and FCS opponents were inputs but never derived, so 101 of 107 teams' chains stopped there. | `out/traces/internal/` holds each one's derivation, with no AdjEM, rank or resume (`trace.py --internal`, or the page's "internal*" links). |
-| Traceability | The global constants (μ, the phantom game, μT, NS_win, NS_loss) couldn't be recomputed. "Average AdjEM is 0" was false for the published table. | `out/anchors.json` lists every input. The docs say the 0 holds over all 138 FBS teams; the published 107 average −0.18. |
+| Traceability | Internal ratings of unrated and FCS opponents were inputs but never derived, so 101 of 107 teams' chains stopped there. | `out/<season>/traces/internal/` holds each one's derivation, with no AdjEM, rank or resume (`trace.py --internal`, or the page's "internal*" links). |
+| Traceability | The global constants (μ, the phantom game, μT, NS_win, NS_loss) couldn't be recomputed. "Average AdjEM is 0" was false for the published table. | `out/<season>/anchors.json` lists every input. The docs say the 0 holds over all 138 FBS teams; the published 107 average −0.18. |
 | Traceability | The build self-check covered only the 138 FBS teams. | It now covers all 266 D-I teams. |
 | Leaks | Unrated teams were listed in order of their internal AdjEM. | Listed by name. |
 | Leaks | Unrated teams' garbage-adjusted scores were published per game. | Removed from their schedules. |

@@ -12,12 +12,12 @@ weight set is judged by the information it carries, not by its scale.
 
     python backtest.py            -> writes out/backtest_network.json
 """
-import gzip
 import json
 import math
 import os
 
 from network import Network
+from ratings import load
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BASE = json.load(open(os.path.join(HERE, "config.json")))
@@ -135,8 +135,7 @@ def strip(d):
 
 
 def main():
-    with gzip.open(os.path.join(HERE, "data", "2025", "games.json.gz"), "rt") as f:
-        d = json.load(f)
+    d = load(2025)  # regular season only, as the ratings use it
     games, teams = d["games"], d["teams"]
     variants = {
         "default: rates, Laplace 1-1, FCS losses count, path exclusion": {},
@@ -253,8 +252,7 @@ def resume_backtest(games, teams, cfg):
 
 
 def run_resume_backtest():
-    with gzip.open(os.path.join(HERE, "data", "2025", "games.json.gz"), "rt") as f:
-        d = json.load(f)
+    d = load(2025)  # regular season only, as the ratings use it
     out = resume_backtest(d["games"], d["teams"], BASE)
     for k, v in out.items():
         print(k, v)

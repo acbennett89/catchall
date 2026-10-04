@@ -18,9 +18,22 @@ from parse import clock_secs
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
-def load(season):
+def load(season, regular_season_only=True):
+    """Parsed games for one season.
+
+    Postseason games (FCS playoff rounds, bowls, the CFP; see parse.postseason_reason) are set
+    aside: the ratings cover the regular season, conference championship games included. They
+    are listed in data["excluded_postseason"] so the page can say what was left out.
+    """
     with gzip.open(os.path.join(HERE, "data", str(season), "games.json.gz"), "rt") as f:
-        return json.load(f)
+        data = json.load(f)
+    if regular_season_only:
+        post = [g for g in data["games"] if g.get("postseason")]
+        data["games"] = [g for g in data["games"] if not g.get("postseason")]
+        data["excluded_postseason"] = [
+            {"game": g["id"], "week": g["week"], "teams": f"{g['away_name']} at {g['home_name']}",
+             "reason": g["postseason"]} for g in post]
+    return data
 
 
 def load_config():

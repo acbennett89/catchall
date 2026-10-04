@@ -202,5 +202,43 @@ class BoxPenalties(unittest.TestCase):
         self.assertIsNone(box_penalties(""))
 
 
+
+class Postseason(unittest.TestCase):
+    """The ratings cover the regular season; ESPN files FCS playoff rounds among its weeks."""
+
+    @staticmethod
+    def event(*notes, season_type=2):
+        return {"season": {"type": season_type},
+                "competitions": [{"notes": [{"headline": n} for n in notes]}]}
+
+    def test_fcs_playoff_rounds_are_postseason(self):
+        from parse import postseason_reason
+        for n in ("FCS Championship - First Round", "FCS Championship - Second Round",
+                  "FCS Championship - Quarterfinals", "FCS Championship - Semifinals",
+                  "College Football Playoff Semifinal at the Cotton Bowl"):
+            self.assertEqual(postseason_reason(self.event(n)), n)
+
+    def test_conference_title_games_and_named_games_are_regular_season(self):
+        from parse import postseason_reason
+        for n in ("SEC Championship", "Dr Pepper Big 12 Championship", "SWAC Championship",
+                  "Allstate Red River Rivalry", "Aflac Kickoff", "FCS Kickoff", "Turkey Day Classic",
+                  "FCS Kickoff - Declared No Contest with 7:46 remaining in 4th Quarter"):
+            self.assertEqual(postseason_reason(self.event(n)), "", n)
+        self.assertEqual(postseason_reason(self.event()), "")
+
+    def test_espn_postseason_type(self):
+        from parse import postseason_reason
+        self.assertTrue(postseason_reason(self.event("Rose Bowl Game", season_type=3)))
+
+    def test_load_sets_postseason_games_aside(self):
+        from ratings import load
+        full, reg = load(2025, regular_season_only=False), load(2025)
+        flagged = {g["id"] for g in full["games"] if g["postseason"]}
+        self.assertEqual(len(flagged), 17)  # FCS playoff rounds through the quarterfinals
+        self.assertFalse(flagged & {g["id"] for g in reg["games"]})
+        self.assertEqual({x["game"] for x in reg["excluded_postseason"]}, flagged)
+        self.assertEqual(len(reg["games"]) + len(flagged), len(full["games"]))
+
+
 if __name__ == "__main__":
     unittest.main()

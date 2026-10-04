@@ -4,6 +4,7 @@
     python trace.py "Notre Dame" --section network  # just the win values
     python trace.py Alabama --section efficiency
     python trace.py Alabama --drives                # every drive and why it was kept/excluded
+    python trace.py Indiana --season 2025           # another season (default: config.json)
 
 Sections: schedule, efficiency, success_rate, tempo, factors, luck, situational, discipline, sos,
 network. Opponents marked * are internal inputs; show one with:
@@ -15,6 +16,7 @@ import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+OUT = os.path.join(HERE, "out", "2026")  # set from --season in main()
 
 
 def _match(query, items):
@@ -27,16 +29,16 @@ def _match(query, items):
 
 def find_team(query, internal=False):
     if internal:
-        index = json.load(open(os.path.join(HERE, "out", "traces", "internal", "index.json")))
+        index = json.load(open(os.path.join(OUT, "traces", "internal", "index.json")))
         tid = _match(query, list(index.items()))
         if tid is None:
             sys.exit(f"no internal derivation for {query!r} (rated FBS teams have full traces)")
-        return json.load(open(os.path.join(HERE, "out", "traces", "internal", f"{tid}.json")))
-    data = json.load(open(os.path.join(HERE, "out", "ratings.json")))
+        return json.load(open(os.path.join(OUT, "traces", "internal", f"{tid}.json")))
+    data = json.load(open(os.path.join(OUT, "ratings.json")))
     tid = _match(query, [(t["id"], t["name"]) for t in data["teams"]])
     if tid is None:
         sys.exit(f"no FBS team matches {query!r}; for an FCS opponent use --internal")
-    return json.load(open(os.path.join(HERE, "out", "traces", f"{tid}.json")))
+    return json.load(open(os.path.join(OUT, "traces", f"{tid}.json")))
 
 
 def f(x, nd=3):
@@ -235,7 +237,7 @@ def network(tr):
     print(f"\nNETWORK WIN VALUES  NS = {w['primary']}*P + {w['secondary']}*S + {w['tertiary']}*T")
     print(f"  anchors: NS_win {rf['win']:.4f} (mean NS of the beaten team over all {rf['n_wins']} FBS wins -> "
           f"average win = 1.00); NS_loss {rf['loss']:.4f} (mean NS of the winner over all {rf['n_losses']} FBS "
-          f"losses -> average loss costs 1.00); NS_all {rf['all']:.4f} (schedule). Inputs: out/anchors.json")
+          f"losses -> average loss costs 1.00); NS_all {rf['all']:.4f} (schedule). Inputs: {os.path.relpath(OUT, HERE)}/anchors.json")
     print(f"  record rate = (W + {n['record_prior']['wins']}) / (W + L + "
           f"{n['record_prior']['wins'] + n['record_prior']['losses']}); exclusion rule: {n['exclusion']}")
     for kind, rows in (("WIN", n["wins"]), ("LOSS", n["losses"])):
@@ -283,7 +285,13 @@ def main():
     ap.add_argument("--section", choices=["schedule", "efficiency", "success_rate", "tempo", "factors", "luck",
                                           "situational", "discipline", "sos", "network"])
     ap.add_argument("--drives", action="store_true")
+    ap.add_argument("--season", type=int, help="season (default: config.json); build it first")
     a = ap.parse_args()
+    global OUT
+    season = a.season or json.load(open(os.path.join(HERE, "config.json")))["season"]
+    OUT = os.path.join(HERE, "out", str(season))
+    if not os.path.exists(os.path.join(OUT, "ratings.json")):
+        sys.exit(f"no ratings for {season}: run python build.py --season {season}")
     tr = find_team(a.team, a.internal)
     if tr.get("internal"):
         t = tr["team"]

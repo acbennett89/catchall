@@ -3,17 +3,17 @@
 Every published number is a short, explicit computation over listed inputs. There
 are three ways to follow one:
 
-1. **The web page** (`out/index.html`). Click a team to see each game's adjustment, every
+1. **The web page** (`out/site/index.html`; pick the season at the top). Click a team to see each game's adjustment, every
    win's +2 network tree, the five-factor counts, and every drive with its keep or exclude reason.
 2. **The command line.** `python trace.py "Team"` prints the same derivation as text.
    Add `--section network` (or `efficiency`, `success_rate`, `tempo`, `factors`, `luck`, `sos`,
    `situational`, `discipline`) for one part, or `--drives` for every drive.
    `python trace.py "Team" --internal` prints the derivation of an opponent's internal rating
    (an FCS team, or an FBS team below 5 games) wherever it feeds a rated team's numbers.
-3. **The raw files.** `out/traces/<team_id>.json` holds every input and intermediate value.
+3. **The raw files.** `out/<season>/traces/<team_id>.json` holds every input and intermediate value.
    Game ids match ESPN event ids, so any drive can be checked against the original payload at
    `cache/<season>/summaries/<game_id>.json.gz` or on ESPN's site.
-   `out/traces/internal/<team_id>.json` holds the internal derivations, and `out/anchors.json`
+   `out/<season>/traces/internal/<team_id>.json` holds the internal derivations, and `out/<season>/anchors.json`
    holds every input to the global constants (μ, the phantom game, μT, NS_win, NS_loss).
 
 ## Chain of custody
@@ -29,8 +29,9 @@ ESPN payload ── fetch.py ──> cache/2026/summaries/<game>.json.gz        
                  lead-protection drives are tagged and weighted (config)
                  penalties = one row per foul (penalties.py), with how each value was read
              ── ratings.py ─> every metric in METRICS.md
-             ── build.py ──> out/ratings.csv, out/ratings.json, out/traces/<id>.json,
-                             out/traces/internal/<id>.json, out/anchors.json
+             ── build.py ──> out/<season>/ratings.csv, ratings.json, traces/<id>.json,
+                             traces/internal/<id>.json, anchors.json
+             ── report.py ─> out/site/index.html + out/site/<season>/ (table, trace files)
 ```
 
 ## Worked example 1: Notre Dame's AdjO
@@ -91,7 +92,7 @@ WIN vs Wisconsin:  NS = 0.6*0.8000 + 0.3*0.5889 + 0.1*0.5444 = 0.7111;  value = 
 - **Tertiary.** For each of those teams, the mean record of *its* opponents, with games vs Notre Dame,
   Wisconsin and that team removed. The mean of the three branch means is 0.544.
 - **NS_win** = 0.4682 is the average network strength of the beaten team over all 271 FBS wins, so the
-  average FBS win is worth exactly 1.00. Every one of those 271 rows is in `out/anchors.json`.
+  average FBS win is worth exactly 1.00. Every one of those 271 rows is in `out/2026/anchors.json`.
 - **Value** = 0.7111 / 0.4682 = **1.519**: about 52% more valuable than a typical win.
 
 ## Worked example 4: a game result adjusted for garbage time

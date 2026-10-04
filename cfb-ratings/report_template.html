@@ -1,4 +1,5 @@
-<title>FBS Efficiency Ratings 2026</title>
+<meta charset="utf-8">
+<title>FBS Efficiency Ratings</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -40,7 +41,9 @@ header.top { display: grid; gap: 10px; padding-bottom: 14px; border-bottom: 2px 
 .brand { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
 h1 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 5vw, 46px); letter-spacing: .01em;
      text-transform: uppercase; margin: 0; line-height: 1; text-wrap: balance; }
-.season { font-family: var(--display); font-weight: 600; font-size: 20px; color: var(--accent); letter-spacing: .06em; text-transform: uppercase; }
+.season { font-family: var(--display); font-weight: 600; font-size: 20px; color: var(--accent); letter-spacing: .06em; background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: 1px 4px; cursor: pointer; }
+.season:disabled { opacity: .6; cursor: progress; }
+.season-status { font-family: var(--display); font-weight: 600; font-size: 16px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
 .meta { margin: 0; color: var(--muted); font-size: 14px; max-width: 90ch; }
 .meta b { color: var(--ink); font-weight: 600; }
 nav.tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
@@ -133,7 +136,7 @@ details[open] > summary { margin-bottom: 6px; }
 
 <div class="wrap">
   <header class="top">
-    <div class="brand"><h1>FBS Efficiency Ratings</h1><span class="season" id="season"></span></div>
+    <div class="brand"><h1>FBS Efficiency Ratings</h1><select class="season" id="yr" aria-label="Season"></select><span class="season-status" id="season-status"></span></div>
     <p class="meta" id="meta"></p>
     <nav class="tabs" role="tablist" aria-label="Sections">
       <button role="tab" data-tab="ratings" aria-selected="true">Ratings</button>
@@ -161,7 +164,7 @@ details[open] > summary { margin-bottom: 6px; }
       <div class="tablewrap"><table class="grid" id="tbl-resume"></table></div>
     </section>
     <section id="tab-discipline" hidden>
-      <div class="controls"><span class="hint">Descriptive only. None of these enter the rating: 22 penalty variants were tested and none improved predictions. Per-game counts come from the box score. Rates are per 100 snaps on the same drives the ratings use, with a Q4 leader's delay of game left out. The conference average sits beside each rate, because officiating differs by conference. Neutral pace is seconds per snap in Q1–Q3 with the score within 14. At five games these values are still noisy.</span></div>
+      <div class="controls"><span class="hint">Descriptive only. None of these enter the rating: 22 penalty variants were tested and none improved predictions. Per-game counts come from the box score. Rates are per 100 snaps on the same drives the ratings use, with a Q4 leader's delay of game left out. The conference average sits beside each rate, because officiating differs by conference. Neutral pace is seconds per snap in Q1–Q3 with the score within 14. Early in a season these values are noisy.</span></div>
       <div class="tablewrap"><table class="grid" id="tbl-disc"></table></div>
     </section>
     <section id="tab-picks" hidden>
@@ -180,26 +183,32 @@ details[open] > summary { margin-bottom: 6px; }
 <script type="application/json" id="data">__DATA__</script>
 <script>
 (function () {
-  const D = JSON.parse(document.getElementById("data").textContent);
-  const M = D.meta, N = D.names;
-  const byId = {}; D.teams.forEach(t => { byId[t.id] = t; });
+  const BOOT = JSON.parse(document.getElementById("data").textContent);
+  const SEASONS = BOOT.seasons;   // newest first: {season, complete, through_week, rated, fbs}
+  const TABLES = BOOT.tables;     // season -> ratings table; other seasons load on demand
+  let D, M, N, byId = {}, current = null;
   const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const fx = (x, d = 2, sign = false) => x == null || Number.isNaN(x) ? "—" : (sign && x > 0 ? "+" : "") + Number(x).toFixed(d);
   const cls = x => x == null ? "" : x > 0 ? "pos" : x < 0 ? "neg" : "";
   const nm = id => N[id] || id;
+  const seasonStatus = m => m.regular_season_complete ? "regular season final" : "through week " + m.through_week;
 
-  document.getElementById("season").textContent = M.season + " · through week " + M.through_week;
-  document.getElementById("meta").innerHTML =
-    `<b>${M.eligible}</b> of ${M.fbs_teams} FBS teams rated (rule: ${M.min_games}+ games played). ` +
-    `${M.games_used} D-I games, ${M.games_with_drives} with play-by-play. ` +
-    `Average FBS drive is worth <b>${fx(M.mu_ppd, 2)}</b> points; teams get <b>${fx(M.muT, 1)}</b> possessions a game; ` +
-    `home field is worth <b>${fx(M.hfa_points, 1)}</b> points. Win values use weights ` +
-    `${M.net_weights.primary} / ${M.net_weights.secondary} / ${M.net_weights.tertiary} (primary / secondary / tertiary).`;
+  /* ---------- files beside the page (season tables, team traces) ---------- */
+  const pending = {};
+  function loadFile(file) {
+    if (!pending[file]) pending[file] = fetch(file).then(r => { if (!r.ok) throw new Error(file + ": " + r.status); return r.json(); })
+      .catch(e => { delete pending[file]; throw e; });
+    return pending[file];
+  }
 
   /* ---------- tabs ---------- */
   const tabs = [...document.querySelectorAll("nav.tabs button")];
+  let activeTab = "ratings";
   function showTab(name) {
-    tabs.forEach(b => b.setAttribute("aria-selected", String(b.dataset.tab === name)));
+    const b = tabs.find(x => x.dataset.tab === name);
+    if (!b || b.hidden) name = "ratings";
+    activeTab = name;
+    tabs.forEach(x => x.setAttribute("aria-selected", String(x.dataset.tab === name)));
     document.querySelectorAll("main > section").forEach(s => { s.hidden = s.id !== "tab-" + name; });
     try { localStorage.setItem("cfb-tab", name); } catch (e) {}
   }
@@ -239,8 +248,7 @@ details[open] > summary { margin-bottom: 6px; }
   }
   const withRk = (v, r, rk, d, sign) => `<span class="${sign ? cls(v) : ""}">${fx(v, d, sign)}</span>` + (r[rk] ? `<span class="rk">${r[rk]}</span>` : "");
 
-  /* ---------- ratings ---------- */
-  const rated = D.teams.filter(t => t.eligible && t.AdjEM != null);
+  /* ---------- column definitions ---------- */
   const ratingCols = [
     { k: "rk_AdjEM", label: "Rk", title: "Rank by AdjEM" },
     { k: "name", label: "Team", text: true, f: v => esc(v) },
@@ -253,30 +261,11 @@ details[open] > summary { margin-bottom: 6px; }
     { k: "AdjT", label: "AdjT", desc: true, title: "Adjusted possessions per game", f: v => fx(v, 1) },
     { k: "SOS", label: "SOS", desc: true, title: "Average opponent AdjEM", f: (v, r) => withRk(v, r, "rk_SOS", 1, true) },
     { k: "NCSOS", label: "NCSOS", desc: true, title: "Non-conference SOS", f: v => `<span class="${cls(v)}">${fx(v, 1, true)}</span>` },
-    { k: "NetPerGame", label: "Resume / G", desc: true, title: "Net resume (win values minus loss costs) per game", f: (v, r) => withRk(v, r, "rk_NetPerGame", 3, true) },
+    { k: "NetPerGame", label: "Resume / G", desc: true, title: "Net resume (win values minus loss costs) per counted game", f: (v, r) => withRk(v, r, "rk_NetPerGame", 3, true) },
     { k: "luck", label: "Luck", desc: true, title: "Actual W% minus Pythagorean W%", f: v => `<span class="${cls(v)}">${fx(v, 3, true)}</span>` },
   ];
-  const confs = [...new Set(rated.map(t => t.conference))].sort();
-  const sel = document.getElementById("conf");
-  confs.forEach(c => { const o = document.createElement("option"); o.value = c; o.textContent = c; sel.appendChild(o); });
-  const ratingsTable = buildTable(document.getElementById("tbl"), rated, ratingCols, "rk_AdjEM", 1, openTeam);
-  const q = document.getElementById("q");
-  function filter() {
-    const s = q.value.trim().toLowerCase(), c = sel.value;
-    ratingsTable.setRows(rated.filter(t => (!s || t.name.toLowerCase().includes(s)) && (!c || t.conference === c)));
-  }
-  q.addEventListener("input", filter); sel.addEventListener("change", filter);
-  const unr = D.teams.filter(t => !t.eligible);
-  if (unr.length) {
-    document.getElementById("unrated").innerHTML =
-      `<h3>Not yet rated (${unr.length})</h3><p class="note">Fewer than ${M.min_games} games played. These teams still count as opponents for everyone else, so their games feed other teams' adjustments, but they get no published rating until game ${M.min_games}.</p>` +
-      `<div class="chips">` + unr.sort((a, b) => a.name.localeCompare(b.name)).map(t => `<button class="chip" data-id="${t.id}">${esc(t.name)} · ${t.games} G</button>`).join("") + "</div>";
-    document.querySelectorAll("#unrated .chip").forEach(b => b.addEventListener("click", () => openTeam(b.dataset.id)));
-  }
-
-  /* ---------- resume ---------- */
   const resumeCols = [
-    { k: "rk_NetPerGame", label: "Rk", title: "Rank by net resume per game" },
+    { k: "rk_NetPerGame", label: "Rk", title: "Rank by net resume per counted game" },
     { k: "name", label: "Team", text: true, f: v => esc(v) },
     { k: "W", label: "W-L", f: (v, r) => `${r.W}-${r.L}`, sortv: r => r.W - r.L, desc: true },
     { k: "WVT", label: "Win value total", desc: true, f: v => fx(v, 2) },
@@ -289,11 +278,8 @@ details[open] > summary { margin-bottom: 6px; }
     { k: "WorstLoss", label: "Worst loss", desc: true, f: (v, r) => v == null ? "—" : `${fx(v, 3)} <span class="rk">${esc(nm(r.WorstLossOpp))}</span>` },
     { k: "rk_AdjEM", label: "AdjEM rk" },
   ];
-  buildTable(document.getElementById("tbl-resume"), rated, resumeCols, "rk_NetPerGame", 1, openTeam);
-
-  /* ---------- discipline & pace ---------- */
   const vsConf = (v, r, key, d) => v == null ? "—" : `${fx(v, d)} <span class="rk">${fx(r[key + "_conf"], d)}</span>`;
-  buildTable(document.getElementById("tbl-disc"), rated, [
+  const discCols = [
     { k: "name", label: "Team", text: true, f: v => esc(v) },
     { k: "conference", label: "Conf", text: true, f: v => esc(v) },
     { k: "PenPG", label: "Pen/G", title: "Accepted penalties per game (box score); small number = conference average", f: (v, r) => vsConf(v, r, "PenPG", 1) },
@@ -306,34 +292,104 @@ details[open] > summary { margin-bottom: 6px; }
     { k: "NeutralPace", label: "Neutral pace", title: "Seconds per snap, Q1-Q3, score within 14 (lower = faster)", f: v => v == null ? "—" : fx(v, 1) + " s" },
     { k: "NeutralRunRate", label: "Run %", f: v => v == null ? "—" : (v * 100).toFixed(0) + "%" },
     { k: "LP_drives", label: "Lead-protect drives", desc: true, title: "Q4 drives tagged as clock-burning to protect a lead, of Q4 leading drives in usable-clock games", f: (v, r) => `${v} <span class="rk">of ${r.Q4_lead_drives}</span>` },
-  ], "PenPG", 1, openTeam);
-
-  /* ---------- picks ---------- */
-  const P = D.predictions || [];
-  document.getElementById("picks-hint").textContent = P.length
-    ? `Model margins for the next slate (${P.length} games with an FBS team). Win probability uses σ = ${fx(M.sigma_points, 1)} points, the out-of-sample error from this season's walk-forward test. Games involving an FBS team that isn't rated yet are left out.`
-    : "No upcoming games in the data.";
-  if (!P.length) document.getElementById("picks-tab").hidden = true;
-  const pickRows = P.map(p => {
-    const fav = p.home_margin >= 0 ? p.home : p.away;
-    return { ...p, matchup: `${p.away} ${p.neutral ? "vs" : "at"} ${p.home}`, fav, edge: Math.abs(p.home_margin), favp: Math.max(p.home_win_prob, 1 - p.home_win_prob) };
-  });
-  buildTable(document.getElementById("tbl-picks"), pickRows, [
+  ];
+  const pickCols = [
     { k: "date", label: "Date", text: true },
     { k: "matchup", label: "Matchup", text: true, f: v => esc(v) },
     { k: "fav", label: "Model favorite", text: true, f: v => esc(v) },
     { k: "edge", label: "By", desc: true, f: v => fx(v, 1) },
     { k: "favp", label: "Win prob", desc: true, f: v => (v * 100).toFixed(0) + "%" },
     { k: "possessions", label: "Poss.", f: v => fx(v, 1) },
-  ], "date", 1, null);
+  ];
+
+  /* ---------- one season's tables ---------- */
+  const q = document.getElementById("q"), sel = document.getElementById("conf");
+  let rated = [], ratingsTable = null;
+  function filter() {
+    const s = q.value.trim().toLowerCase(), c = sel.value;
+    ratingsTable.setRows(rated.filter(t => (!s || t.name.toLowerCase().includes(s)) && (!c || t.conference === c)));
+  }
+  q.addEventListener("input", filter); sel.addEventListener("change", filter);
+
+  function renderSeason() {
+    document.getElementById("season-status").textContent = seasonStatus(M);
+    const post = M.excluded_postseason || [];
+    document.getElementById("meta").innerHTML =
+      `<b>${M.eligible}</b> of ${M.fbs_teams} FBS teams rated (rule: ${M.min_games}+ games played). ` +
+      `${M.games_used} D-I games through ${esc(M.last_game_date || "week " + M.through_week)}, ${M.games_with_drives} with play-by-play` +
+      (post.length ? `; ${post.length} postseason game${post.length === 1 ? "" : "s"} left out (${esc([...new Set(post.map(p => /^FCS Championship/i.test(p.reason) ? "FCS playoffs" : p.reason))].join(", "))})` : "") + `. ` +
+      `Average FBS drive is worth <b>${fx(M.mu_ppd, 2)}</b> points; teams get <b>${fx(M.muT, 1)}</b> possessions a game; ` +
+      `home field is worth <b>${fx(M.hfa_points, 1)}</b> points. Win values use weights ` +
+      `${M.net_weights.primary} / ${M.net_weights.secondary} / ${M.net_weights.tertiary} (primary / secondary / tertiary).`;
+
+    rated = D.teams.filter(t => t.eligible && t.AdjEM != null);
+    q.value = "";
+    sel.innerHTML = `<option value="">All conferences</option>`;
+    [...new Set(rated.map(t => t.conference))].sort().forEach(c => { const o = document.createElement("option"); o.value = c; o.textContent = c; sel.appendChild(o); });
+    ratingsTable = buildTable(document.getElementById("tbl"), rated, ratingCols, "rk_AdjEM", 1, openTeam);
+    const unr = D.teams.filter(t => !t.eligible);
+    const un = document.getElementById("unrated");
+    un.innerHTML = unr.length
+      ? `<h3>Not yet rated (${unr.length})</h3><p class="note">Fewer than ${M.min_games} games played. These teams still count as opponents for everyone else, so their games feed other teams' adjustments, but they get no published rating until game ${M.min_games}.</p>` +
+        `<div class="chips">` + unr.sort((a, b) => a.name.localeCompare(b.name)).map(t => `<button class="chip" data-id="${t.id}">${esc(t.name)} · ${t.games} G</button>`).join("") + "</div>"
+      : "";
+    un.querySelectorAll(".chip").forEach(b => b.addEventListener("click", () => openTeam(b.dataset.id)));
+
+    buildTable(document.getElementById("tbl-resume"), rated, resumeCols, "rk_NetPerGame", 1, openTeam);
+    buildTable(document.getElementById("tbl-disc"), rated, discCols, "PenPG", 1, openTeam);
+
+    const P = D.predictions || [];
+    document.getElementById("picks-hint").textContent = P.length
+      ? `Model margins for the next slate (${P.length} games with an FBS team). Win probability uses σ = ${fx(M.sigma_points, 1)} points, the out-of-sample error from this season's walk-forward test. Games involving an FBS team that isn't rated yet are left out.`
+      : "No upcoming games in the data.";
+    document.getElementById("picks-tab").hidden = !P.length;
+    const pickRows = P.map(p => {
+      const fav = p.home_margin >= 0 ? p.home : p.away;
+      return { ...p, matchup: `${p.away} ${p.neutral ? "vs" : "at"} ${p.home}`, fav, edge: Math.abs(p.home_margin), favp: Math.max(p.home_win_prob, 1 - p.home_win_prob) };
+    });
+    buildTable(document.getElementById("tbl-picks"), pickRows, pickCols, "date", 1, null);
+    if (activeTab === "picks" && !P.length) showTab("ratings");
+  }
+
+  /* ---------- season picker ---------- */
+  const yr = document.getElementById("yr");
+  SEASONS.forEach(s => { const o = document.createElement("option"); o.value = s.season; o.textContent = s.season; yr.appendChild(o); });
+  function setHash(teamId) {
+    const parts = [];
+    if (current !== BOOT.default) parts.push("s" + current);
+    if (teamId) parts.push("t" + teamId);
+    history.replaceState(null, "", parts.length ? "#" + parts.join("-") : location.pathname + location.search);
+  }
+  function setSeason(season) {
+    if (season === current) return Promise.resolve();
+    const status = document.getElementById("season-status");
+    status.textContent = "loading…";
+    yr.disabled = true;
+    const ready = TABLES[season] ? Promise.resolve(TABLES[season])
+      : loadFile(`${season}/table.json`).then(t => (TABLES[season] = t));
+    return ready.then(t => {
+      yr.disabled = false;
+      closeTeam(true);
+      D = t; M = D.meta; N = D.names; current = season; yr.value = String(season);
+      byId = {}; D.teams.forEach(x => { byId[x.id] = x; });
+      renderSeason();
+      setHash();
+    }).catch(() => {
+      yr.disabled = false; yr.value = String(current);
+      status.textContent = `could not load ${season}; reload and try again`;
+    });
+  }
+  yr.addEventListener("change", () => setSeason(+yr.value));
 
   /* ---------- drawer ---------- */
   const drawer = document.getElementById("drawer"), scrim = document.getElementById("scrim");
   let lastFocus = null;
-  function closeTeam() {
+  function closeTeam(quiet) {
+    const wasOpen = !drawer.hidden;
     drawer.hidden = true; scrim.hidden = true;
-    if (location.hash.startsWith("#t")) history.replaceState(null, "", location.pathname + location.search);
-    if (lastFocus) lastFocus.focus();
+    if (quiet === true) return;
+    setHash();
+    if (wasOpen && lastFocus) lastFocus.focus();
   }
   scrim.addEventListener("click", closeTeam);
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !drawer.hidden) closeTeam(); });
@@ -396,7 +452,34 @@ details[open] > summary { margin-bottom: 6px; }
     drawer.querySelectorAll("[data-internal]").forEach(b => b.addEventListener("click", ev => { ev.stopPropagation(); openInternal(b.dataset.internal); }));
   }
 
+  function showLoading(msg) {
+    drawer.innerHTML = `<div class="dhead"><div><h2>Loading…</h2><div class="sub">${esc(msg)}</div></div><button class="close" id="close">Close</button></div>`;
+    drawer.hidden = false; scrim.hidden = false;
+    document.getElementById("close").addEventListener("click", closeTeam);
+  }
+  // Full traces ship as files beside the page and load the first time a team is opened.
   function openInternal(id) {
+    D.internal = D.internal || {};
+    if (D.internal[id]) return openInternalNow(id);
+    const season = current;
+    showLoading("Fetching the internal derivation");
+    loadFile(`${season}/internal.json`).then(o => { TABLES[season].internal = o; if (season === current && !drawer.hidden) openInternalNow(id); })
+      .catch(() => showLoading("Could not load this season's internal derivations. Reload the page and try again."));
+  }
+  function openTeam(id) {
+    D.traces = D.traces || {};
+    if (D.traces[id]) return openTeamNow(id);
+    const k = (D.trace_chunk || {})[id], season = current;
+    if (k == null) return;
+    lastFocus = document.activeElement;
+    showLoading("Fetching every game, drive and win value for this team");
+    loadFile(`${season}/traces_${k}.json`).then(o => {
+      Object.assign(TABLES[season].traces = TABLES[season].traces || {}, o);
+      if (season === current && !drawer.hidden) openTeamNow(id);
+    }).catch(() => showLoading(`Could not load this team's trace. Reload the page and try again.`));
+  }
+
+  function openInternalNow(id) {
     const tr = (D.internal || {})[id];
     if (!tr) return;
     const t = tr.team;
@@ -417,10 +500,10 @@ details[open] > summary { margin-bottom: 6px; }
       `<div class="formula">AdjT = mean(possessions − (opp AdjT − ${fx(tt.muT, 2)})) incl. one phantom game = ${fx(tt.recomputed, 3)} ${tt.check_ok ? "✓" : "✗"}\nPossessions = (both teams' regulation drives with a real snap) / 2</div>`;
   }
 
-  function openTeam(id) {
+  function openTeamNow(id) {
     const r = byId[id], tr = D.traces[id];
     if (!r || !tr) return;
-    lastFocus = document.activeElement;
+    if (drawer.hidden) lastFocus = document.activeElement;
     let h = `<div class="dhead"><div><h2>${esc(r.name)}</h2><div class="sub">${esc(r.conference)} · ${r.W}-${r.L} · ${r.games} games` +
       (r.eligible ? ` · ranked <b>${r.rk_AdjEM}</b> of ${M.eligible}` : ` · <b>not yet rated</b>`) + `</div></div><button class="close" id="close">Close</button></div>`;
     if (r.eligible && r.AdjEM != null) {
@@ -477,14 +560,20 @@ details[open] > summary { margin-bottom: 6px; }
     document.getElementById("close").addEventListener("click", closeTeam);
     document.getElementById("close").focus();
     wireInternal();
-    history.replaceState(null, "", "#t" + id);
+    setHash(id);
   }
 
+  // Deep links: #resume (a tab), #s2025 (a season), #t333 or #s2025-t333 (a team's derivation).
   let start = "ratings";
   try { start = localStorage.getItem("cfb-tab") || "ratings"; } catch (e) {}
   const hash = location.hash.slice(1);
   if (["ratings", "resume", "discipline", "picks", "metrics", "review", "trace"].includes(hash)) start = hash;
+  const link = /^(?:s(\d{4}))?-?(?:t(\d+))?$/.exec(hash) || [];
+  const wanted = SEASONS.some(x => x.season === +link[1]) ? +link[1] : BOOT.default;
   showTab(start);
-  if (/^t\d+$/.test(hash) && byId[hash.slice(1)]) openTeam(hash.slice(1));
+  setSeason(BOOT.default).then(() => wanted === BOOT.default ? null : setSeason(wanted)).then(() => {
+    showTab(start);
+    if (link[2] && byId[link[2]]) openTeam(link[2]);
+  });
 })();
 </script>

@@ -1,12 +1,18 @@
-"""Render out/index.html: ratings table + per-team derivations + the docs.
+"""Render the ratings site: out/site/index.html plus one folder of data files per season.
 
-    python report.py
+    python report.py        (after python build.py [--season YYYY] for each season)
+
+The page has a season picker. The default season (config.json) is embedded; other seasons'
+tables, and every team's full trace, load from out/site/<season>/ when needed. Serve the
+folder to view it locally: python -m http.server -d out/site
 """
 import glob
 import html
 import json
+import math
 import os
 import re
+import shutil
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "out")
@@ -76,33 +82,85 @@ def markdown(md):
     return "\n".join(out)
 
 
-def main():
-    ratings = json.load(open(os.path.join(OUT, "ratings.json")))
+def season_dirs():
+    """Every built season (out/<season>/ratings.json), newest first."""
+    found = [int(os.path.basename(os.path.dirname(p)))
+             for p in glob.glob(os.path.join(OUT, "*", "ratings.json"))
+             if os.path.basename(os.path.dirname(p)).isdigit()]
+    return sorted(found, reverse=True)
+
+
+def write_season(season, site):
+    """Write one season's table and its traces as files beside the page.
+
+    The table (every ranked number) is small; the traces (every game, drive, foul and +2 tree)
+    are large, so they go in chunks of about 1.5 MB that the page fetches when a team opens."""
+    src = os.path.join(OUT, str(season))
+    table = json.load(open(os.path.join(src, "ratings.json")))
     traces = {}
-    for f in glob.glob(os.path.join(OUT, "traces", "*.json")):
+    for f in sorted(glob.glob(os.path.join(src, "traces", "*.json"))):
         tr = json.load(open(f))
-        tr.pop("summary", None)  # duplicated in ratings
+        tr.pop("summary", None)  # duplicated in the table
         traces[tr["team"]["id"]] = tr
-    ratings["traces"] = traces
+    size = sum(len(json.dumps(t, separators=(",", ":"), default=float)) for t in traces.values())
+    n_chunks = max(1, math.ceil(size / 1.5e6))
+    chunks = [{} for _ in range(n_chunks)]
+    where = {}
+    for k, tid in enumerate(sorted(traces)):
+        chunks[k % n_chunks][tid] = traces[tid]
+        where[tid] = k % n_chunks
     internal = {}
-    for f in glob.glob(os.path.join(OUT, "traces", "internal", "*.json")):
+    for f in glob.glob(os.path.join(src, "traces", "internal", "*.json")):
         if not f.endswith("index.json"):
             tr = json.load(open(f))
             internal[tr["team"]["id"]] = tr
-    ratings["internal"] = internal
+    dst = os.path.join(site, str(season))
+    shutil.rmtree(dst, ignore_errors=True)
+    os.makedirs(dst)
+    for k, c in enumerate(chunks):
+        with open(os.path.join(dst, f"traces_{k}.json"), "w") as f:
+            json.dump(c, f, separators=(",", ":"), default=float)
+    with open(os.path.join(dst, "internal.json"), "w") as f:
+        json.dump(internal, f, separators=(",", ":"), default=float)
+    table["trace_chunk"] = where
+    with open(os.path.join(dst, "table.json"), "w") as f:
+        json.dump(table, f, separators=(",", ":"), default=float)
+    return table
+
+
+def main():
+    seasons = season_dirs()
+    if not seasons:
+        raise SystemExit("no built seasons: run python build.py [--season YYYY] first")
+    site = os.path.join(OUT, "site")
+    os.makedirs(site, exist_ok=True)
+    default = json.load(open(os.path.join(HERE, "config.json")))["season"]
+    if default not in seasons:
+        default = seasons[0]
+    tables, index = {}, []
+    for season in seasons:
+        t = write_season(season, site)
+        m = t["meta"]
+        index.append({"season": season, "complete": m.get("regular_season_complete", False),
+                      "through_week": m["through_week"], "rated": m["eligible"], "fbs": m["fbs_teams"]})
+        if season == default:
+            tables[str(season)] = t  # the default season is inline so the page renders without a fetch
     docs = {}
     for key, fn in (("metrics", "METRICS.md"), ("review", "ADVERSARIAL_REVIEW.md"),
                     ("trace", "TRACE.md")):
         p = os.path.join(HERE, fn)
         docs[key] = markdown(open(p).read()) if os.path.exists(p) else "<p>Not written yet.</p>"
-    blob = json.dumps(ratings, separators=(",", ":"), default=float).replace("</", "<\\/")
+    boot = {"default": default, "seasons": index, "tables": tables}
+    blob = json.dumps(boot, separators=(",", ":"), default=float).replace("</", "<\\/")
     page = open(os.path.join(HERE, "report_template.html")).read()
     page = page.replace("__DATA__", blob)
     for k, v in docs.items():
         page = page.replace(f"<!--DOC:{k}-->", v)
-    with open(os.path.join(OUT, "index.html"), "w") as f:
+    with open(os.path.join(site, "index.html"), "w") as f:
         f.write(page)
-    print(f"out/index.html: {len(page) / 1e6:.2f} MB")
+    total = sum(os.path.getsize(os.path.join(dp, fn)) for dp, _, fns in os.walk(site) for fn in fns)
+    print(f"out/site/: page {len(page) / 1e6:.2f} MB, seasons {', '.join(map(str, seasons))} "
+          f"(default {default}), {total / 1e6:.1f} MB in all")
 
 
 if __name__ == "__main__":

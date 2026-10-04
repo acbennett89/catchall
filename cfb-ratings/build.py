@@ -1,10 +1,13 @@
 """Build the published ratings and a full derivation trace for every FBS team.
 
-    python build.py
-      out/ratings.csv          one row per FBS team (eligible teams ranked)
-      out/ratings.json         same rows + model constants, conferences, predictions
-      out/traces/<id>.json     every number for one team, back to drives and plays
+    python build.py [--season 2025]      (default: config.json "season")
+      out/<season>/ratings.csv               one row per FBS team (eligible teams ranked)
+      out/<season>/ratings.json              same rows + model constants, conferences, predictions
+      out/<season>/traces/<id>.json          every number for one team, back to drives and plays
+      out/<season>/traces/internal/<id>.json derivations of internal inputs (FCS, unrated FBS)
+      out/<season>/anchors.json              every input to the global constants
 """
+import argparse
 import copy
 import csv
 import json
@@ -17,7 +20,6 @@ from ratings import (DISCIPLINE_KEYS, HERE, drive_weight, good_clock, is_situati
                      load_config, phi, predict, rate, venue)
 from validate import evaluate
 
-OUT = os.path.join(HERE, "out")
 
 COLUMNS = [
     ("rk_AdjEM", "Rk"), ("name", "Team"), ("conference", "Conf"), ("W", "W"), ("L", "L"),
@@ -259,7 +261,13 @@ def label_tree(resume, teams):
 
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--season", type=int, help="season to build (default: config.json)")
+    args = ap.parse_args()
     cfg = load_config()
+    if args.season:
+        cfg["season"] = args.season
+    out_dir = os.path.join(HERE, "out", str(cfg["season"]))
     data = load(cfg["season"])
     res = rate(copy.deepcopy(data), cfg)
     teams = data["teams"]
@@ -269,11 +277,11 @@ def main():
     holdout = evaluate(cfg["season"], range(3, last_week + 1), cfg, "walk-forward")
     sigma = holdout["sigma"]
 
-    os.makedirs(os.path.join(OUT, "traces"), exist_ok=True)
+    os.makedirs(os.path.join(out_dir, "traces"), exist_ok=True)
     # Rated teams by rank, then unrated teams alphabetically (never by an unpublished rating).
     rows = sorted(res["teams"].values(),
                   key=lambda r: (not r["eligible"], r.get("rk_AdjEM") or 999, r["name"]))
-    with open(os.path.join(OUT, "ratings.csv"), "w", newline="") as f:
+    with open(os.path.join(out_dir, "ratings.csv"), "w", newline="") as f:
         w = csv.writer(f)
         w.writerow([c for _, c in COLUMNS])
         identity = {"name", "conference", "W", "L", "games", "eligible"}
@@ -307,13 +315,13 @@ def main():
                   "note": f"{r['name']} has played {r['games']} of the {cfg['min_games']} games "
                           "required for a rating. Its internal estimate is used only to adjust its "
                           "opponents' numbers and is not published."}
-        with open(os.path.join(OUT, "traces", f"{r['id']}.json"), "w") as f:
+        with open(os.path.join(out_dir, "traces", f"{r['id']}.json"), "w") as f:
             json.dump(tr, f, separators=(",", ":"), default=float)
 
     # Internal-input derivations. Every FCS team and every FBS team below the game minimum
     # appears as an opponent in some rated team's trace; its own lines are written here,
     # labeled, with no AdjEM, rank or resume, so each rated number traces to the end.
-    idir = os.path.join(OUT, "traces", "internal")
+    idir = os.path.join(out_dir, "traces", "internal")
     os.makedirs(idir, exist_ok=True)
     index = {}
     for t in res["ppd"]["O"]:
@@ -358,7 +366,7 @@ def main():
     for a in res["net"].fbs:
         for b, won, gid in res["net"].fbs_games[a]:
             net_rows.append([gid, a, b, int(won), res["net"].strength(b, a)["ns"]])
-    with open(os.path.join(OUT, "anchors.json"), "w") as f:
+    with open(os.path.join(out_dir, "anchors.json"), "w") as f:
         json.dump({
             "mu": {"value": ppd_["mu"], "rule": "mean AdjO over all FBS teams (= mean FBS AdjD); "
                                                "includes teams below the game minimum (internal)"},
@@ -409,6 +417,10 @@ def main():
 
     meta = {
         "season": cfg["season"], "through_week": last_week,
+        # No regular-season games left to play: the table is the season's final regular-season one.
+        "regular_season_complete": not upcoming,
+        "last_game_date": max(g["date"] for g in res["games"])[:10],
+        "excluded_postseason": data.get("excluded_postseason", []),
         "games_used": len(res["games"]),
         "games_with_drives": sum(1 for g in res["games"] if g["drives"]),
         "mu_ppd": res["ppd"]["mu"], "h_per_drive": res["ppd"]["h"],
@@ -432,7 +444,7 @@ def main():
     published = [r if r["eligible"] else
                  {k: r[k] for k in ("id", "name", "conference", "W", "L", "games", "eligible")}
                  for r in rows]
-    with open(os.path.join(OUT, "ratings.json"), "w") as f:
+    with open(os.path.join(out_dir, "ratings.json"), "w") as f:
         json.dump({"meta": meta, "teams": published, "conferences": conferences,
                    "predictions": preds, "names": {k: v.get("name", k) for k, v in teams.items()}},
                   f, indent=1, default=float)

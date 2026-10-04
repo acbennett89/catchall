@@ -14,8 +14,9 @@ Universe: all Division I games (FBS and FCS). Only FBS teams are published.
 
 | # | Rule | Definition |
 |---|------|------------|
-| 0.1 | **Published teams** | FBS teams only (138 in 2026, from ESPN's 11 FBS conference rosters). |
-| 0.2 | **Eligibility** | A team is rated only after **5 completed games** against D-I opponents (FBS or FCS). Below that it gets **no published rating, rank, resume or prediction**, and its own trace shows only its schedule. These teams still count as opponents, so their internal estimates feed rated teams' numbers. Wherever that happens, the value is marked "internal input". Its derivation is published separately (`out/traces/internal/`, `trace.py --internal`, or the page's "internal*" links) with no AdjEM, rank or resume, so every rated number can be traced to the end. The same applies to FCS teams. The threshold is `min_games`. |
+| 0.1 | **Published teams** | FBS teams only (138 in 2026, from ESPN's 11 FBS conference rosters; 136 in 2025, 134 in 2024). |
+| 0.1b | **Season scope** | The **regular season**, conference championship games and Army–Navy included. Bowls and the CFP are never downloaded. The FCS playoff rounds ESPN lists among regular-season weeks ("FCS Championship - First Round" and so on) are flagged by `parse.py` and left out by `ratings.load()`; the page lists how many. A finished season is labeled "regular season final". |
+| 0.2 | **Eligibility** | A team is rated only after **5 completed games** against D-I opponents (FBS or FCS). Below that it gets **no published rating, rank, resume or prediction**, and its own trace shows only its schedule. These teams still count as opponents, so their internal estimates feed rated teams' numbers. Wherever that happens, the value is marked "internal input". Its derivation is published separately (`out/<season>/traces/internal/`, `trace.py --internal`, or the page's "internal*" links) with no AdjEM, rank or resume, so every rated number can be traced to the end. The same applies to FCS teams. The threshold is `min_games`. |
 | 0.3 | **Efficiency model universe** | Every D-I vs D-I game. FCS teams are rated from their own FCS schedules, so a win over a strong FCS team and a win over a weak one are adjusted differently. Games against D-II/NAIA teams are dropped, as KenPom drops non-D-I games. |
 | 0.4 | **Network universe** | FBS vs FBS games only. A win over an FCS team is worth **0**, and its secondary and tertiary branches are never traversed (your rule). |
 
@@ -53,7 +54,7 @@ O − D to 0, then shifts O, D and μ together so that the average FBS defense e
 
 | # | Metric | Definition | Units |
 |---|--------|------------|-------|
-| 2.1 | **μ** | Points per drive an average FBS offense scores against an average FBS defense on a neutral field (2.344 through week 5). It equals the mean AdjO, and the mean AdjD, over all 138 FBS teams; every input is listed in `out/anchors.json`. | pts/drive |
+| 2.1 | **μ** | Points per drive an average FBS offense scores against an average FBS defense on a neutral field (2.344 through week 5). It equals the mean AdjO, and the mean AdjD, over all 138 FBS teams; every input is listed in `out/2026/anchors.json`. | pts/drive |
 | 2.2 | **AdjO** | Points per drive against an **average FBS defense**, neutral field. It equals the drive-weighted mean of game values `raw PPD − (opp AdjD − μ) − h·v`, plus one phantom game at the division mean (§2.7). | pts/drive (higher is better) |
 | 2.3 | **AdjD** | Points per drive allowed to an **average FBS offense**, built the same way. | pts/drive (lower is better) |
 | 2.4 | **AdjEM** | `(AdjO − AdjD) × μT`. Points per game better than an average FBS team on a neutral field. **This is the ranking metric.** It averages exactly 0 over all 138 FBS teams, including the 31 not yet rated; the 107 published teams average −0.18. | pts/game |
@@ -211,7 +212,7 @@ penalty yards and first downs already show up in points per drive.
 | # | Output | Definition |
 |---|--------|------------|
 | 10.1 | **Next-week predictions** | `Margin = (AdjEM_A − AdjEM_B)·Poss/μT + 2h·Poss·home`, with `P(win) = Φ(margin / σ)`. Only games whose FBS teams are all rated. |
-| 10.3 | **Anchors** | `out/anchors.json` lists every input to μ, the phantom-game values, μT and NS_win/NS_loss/NS_all, so the global constants can be recomputed. |
+| 10.3 | **Anchors** | `out/<season>/anchors.json` lists every input to μ, the phantom-game values, μT and NS_win/NS_loss/NS_all, so the global constants can be recomputed. |
 | 10.2 | **Conference ratings** | Average AdjEM of rated members. |
 
 ---

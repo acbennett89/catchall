@@ -44,6 +44,25 @@ def scoreboard_events(season):
     return events
 
 
+# ESPN files FCS playoff rounds under regular-season weeks ("FCS Championship - First Round").
+# Those, and anything ESPN types as postseason (bowls, the CFP), are flagged here and left out
+# of the ratings by ratings.load(): the ratings cover the regular season, conference title
+# games included. Rivalry and kickoff names ("Red River Rivalry", "Aflac Kickoff") are not
+# postseason, so only explicit playoff-round wording counts.
+PLAYOFF_NOTE = re.compile(r"championship\s*-\s*(first round|second round|third round|quarterfinals?|"
+                          r"semifinals?|finals?)|college football playoff", re.I)
+
+
+def postseason_reason(e):
+    """Why ESPN's event is postseason, or "" for a regular-season game."""
+    if (e.get("season") or {}).get("type") == 3:
+        return "ESPN season type 3 (postseason)"
+    for n in (e.get("competitions") or [{}])[0].get("notes") or []:
+        if PLAYOFF_NOTE.search(n.get("headline") or ""):
+            return n["headline"]
+    return ""
+
+
 def clock_secs(s):
     try:
         m, sec = s.split(":")
@@ -432,7 +451,10 @@ def build(season):
     for eid, e in sorted(events.items(), key=lambda kv: kv[1]["date"]):
         comp = e["competitions"][0]
         cs = {c["homeAway"]: c for c in comp["competitors"]}
+        post = postseason_reason(e)
         if not comp["status"]["type"].get("completed"):
+            if post:
+                continue
             if cs["home"]["team"]["id"] in members and cs["away"]["team"]["id"] in members:
                 upcoming.append({
                     "id": eid, "week": e["_week"], "date": e["date"],
@@ -449,6 +471,7 @@ def build(season):
             "home_name": cs["home"]["team"].get("location") or cs["home"]["team"]["displayName"],
             "away_name": cs["away"]["team"].get("location") or cs["away"]["team"]["displayName"],
             "d1": int(home in members and away in members),
+            "postseason": post,
             "drives": [], "pbp_note": "", "box": {},
         }
         path = os.path.join(HERE, "cache", str(season), "summaries", f"{eid}.json.gz")
@@ -480,7 +503,8 @@ def main():
     d1 = [g for g in games if g["d1"]]
     with_pbp = [g for g in d1 if g["drives"]]
     print(f"{len(games)} final games, {len(d1)} D-I vs D-I, {len(with_pbp)} with usable drives, "
-          f"{sum(1 for g in with_pbp if g['pbp_note'])} kept with data notes")
+          f"{sum(1 for g in with_pbp if g['pbp_note'])} kept with data notes, "
+          f"{sum(1 for g in games if g['postseason'])} postseason (left out of the ratings)")
     for g in d1:
         if not g["drives"]:
             print(f"  dropped from efficiency: {g['id']} {g['away_name']} at {g['home_name']}: {g['pbp_note']}")
