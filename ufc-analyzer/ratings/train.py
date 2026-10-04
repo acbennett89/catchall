@@ -187,9 +187,10 @@ def main(rows_path=None):
     except Exception:
         pass
 
-    if os.environ.get("RATINGS_DUMP"):   # out-of-sample predictions for offline analysis
-        with open(os.environ["RATINGS_DUMP"], "wb") as f:
-            pickle.dump({"preds": preds, "rows": [{k: r[k] for k in ("id", "date", "year", "y", "swap", "mkt", "a", "b")} for r in rows]}, f)
+    # out-of-sample predictions: model/train.py reads these to test the ratings model inside the market blend
+    dump = os.environ.get("RATINGS_DUMP") or os.path.join(HERE, "data", "oos_preds.pkl")
+    with open(dump, "wb") as f:
+        pickle.dump({"preds": preds, "rows": [{k: r[k] for k in ("id", "date", "year", "y", "swap", "a", "b")} for r in rows]}, f)
 
     # 4. final fit on everything; standardized coefficients double as feature importances
     final_rows = [r for r in rows if r["year"] >= TRAIN_FROM]

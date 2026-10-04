@@ -92,7 +92,7 @@ def stacker(model_meta, card, now=None):
     def coef(anchor):
         s = st.get(anchor) or {}
         c = list(s.get("coef") or [])
-        return (c + [0.0, 0.0, 0.0])[:3], bool(s.get("gate"))
+        return (c + [0.0] * 5)[:5], bool(s.get("gate"))
     co, go = coef("open")
     cc, gc = coef("close")
     if hours >= OPEN_HOURS:
@@ -103,15 +103,19 @@ def stacker(model_meta, card, now=None):
         w = math.log(hours / CLOSE_HOURS) / math.log(OPEN_HOURS / CLOSE_HOURS)
     c = [w * a + (1 - w) * b for a, b in zip(co, cc)]
     return {"hours": round(hours, 1), "w_open": round(w, 3), "coef": c, "open_gate": go, "close_gate": gc,
-            "active": any(abs(v) > 1e-12 for v in c)}
+            "active": any(abs(v) > 1e-12 for v in c), "uses_ratings": any(abs(v) > 1e-12 for v in c[3:5])}
 
 
-def apply_stacker(stk, p_model, p_market, low_experience):
-    """z = L + alpha*L + b*(logit(model) - L), with b the low-experience weight when either fighter has <2 UFC fights."""
+def apply_stacker(stk, p_model, p_market, low_experience, p_ratings=None):
+    """z = L + alpha*L + b*(logit(model) - L) + c*(logit(ratings) - L), with the low-experience weights
+    when either fighter has <2 UFC fights.  Without a ratings prediction that term is left out (as if
+    the ratings model agreed with the market)."""
     lm = _logit(p_market)
     d = _logit(p_model) - lm
-    b_exp, b_low, alpha = stk["coef"]
+    b_exp, b_low, alpha, c_exp, c_low = stk["coef"]
     z = lm + alpha * lm + (b_low if low_experience else b_exp) * d
+    if p_ratings is not None:
+        z += (c_low if low_experience else c_exp) * (_logit(p_ratings) - lm)
     return 1 / (1 + math.exp(-z))
 
 
@@ -227,7 +231,16 @@ def fight_prediction(card, f, odds_view=None):
         fair = (odds_view.get("value") or {}).get("fair")
         pm = pred["p"][0]
         pred["market"] = fair[0] if fair else None
-        bet = apply_stacker(stk, pm, fair[0], low) if fair else None
+        p_r = None
+        if stk.get("uses_ratings"):
+            try:
+                import ratingsapi
+                rp = ratingsapi.fight_prediction(card, f) if ratingsapi.available() else None
+                p_r = rp["p"][0] if rp and rp.get("p") else None
+            except Exception:
+                p_r = None
+            pred["ratings"] = p_r
+        bet = apply_stacker(stk, pm, fair[0], low, p_r) if fair else None
         pred["blend"] = [round(bet, 4), round(1 - bet, 4)] if bet is not None else None
         if bet is not None:
             # props are priced from the bet probability (= market unless the blend is live), never the raw model's

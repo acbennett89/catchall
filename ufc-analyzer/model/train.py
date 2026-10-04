@@ -213,15 +213,36 @@ def market_price(r, side, which, hold=SYNTH_HOLD):
 
 # ------------------------------------------------------------------ stacker (market blend)
 def stack_x(r, p_model, key, form):
-    """Design row for the offset-form stacker z = L_m + b_e*(1-D2)*d + b_d*D2*d [+ alpha*L_m] where
-    L_m = logit(market), d = logit(model) - L_m and D2 = a fighter with fewer than 2 UFC fights."""
+    """Design row for the offset-form stacker z = L_m + b_e*(1-D2)*d + b_d*D2*d [+ alpha*L_m]
+    [+ c_e*(1-D2)*dr + c_d*D2*dr] where L_m = logit(market), d = logit(model) - L_m, D2 = a fighter with
+    fewer than 2 UFC fights, and dr = logit(ratings model) - L_m (form S2R: both models in the blend)."""
     lm = logit(market_p(r, key))
     d = logit(p_model) - lm
     d2 = 1.0 if min(r["A"]["fights"], r["B"]["fights"]) < 2 else 0.0
     x = [(1 - d2) * d, d2 * d]
-    if form == "S2":
+    if form in ("S2", "S2R"):
         x.append(lm)
+    if form == "S2R":
+        dr = logit(r["_pr"]) - lm
+        x += [(1 - d2) * dr, d2 * dr]
     return x, lm
+
+
+def load_ratings_preds(rows, path):
+    """Out-of-sample predictions of the ratings model (ratings/train.py RATINGS_DUMP), re-oriented to
+    these rows' side A; stored on each row as r["_pr"].  Returns how many rows got one."""
+    import pickle
+    with open(path, "rb") as f:
+        d = pickle.load(f)
+    swap_r = {x["id"]: x["swap"] for x in d["rows"]}
+    n = 0
+    for r in rows:
+        p = d["preds"].get(r["id"])
+        if p is None or r["id"] not in swap_r:
+            continue
+        r["_pr"] = p if swap_r[r["id"]] == r["swap"] else 1 - p
+        n += 1
+    return n
 
 
 def fit_stack(rows, preds, key, form="S1"):
@@ -570,11 +591,14 @@ def main():
     print(json.dumps({k: {kk: vv for kk, vv in v.items() if kk != "calibration"} for k, v in ev_rep.items()}, indent=1))
 
     # 3. market-centred stackers per anchor, walk-forward from 2016; gate decided on VAL, confirmed on TEST
+    ratings_path = os.environ.get("RATINGS_PREDS") or os.path.join(os.path.dirname(HERE), "ratings", "data", "oos_preds.pkl")
+    with_ratings = os.path.exists(ratings_path) and load_ratings_preds(rows, ratings_path) > 0
+    print(f"ratings model predictions: {'loaded' if with_ratings else 'not found'} ({ratings_path})")
     stack, stack_preds = {}, {}
     for anchor, key in ANCHOR_KEY.items():
-        have = [r for r in rows if r["id"] in preds and market_p(r, key) is not None]
+        have = [r for r in rows if r["id"] in preds and market_p(r, key) is not None and (not with_ratings or "_pr" in r)]
         res = {}
-        for form in ("S1", "S2"):
+        for form in (("S1", "S2", "S2R") if with_ratings else ("S1", "S2")):
             sp, fits = {}, []
             for Y in VAL_YEARS + TEST_YEARS:
                 tr = [r for r in have if r["year"] < Y]
@@ -590,15 +614,22 @@ def main():
         s2_vs_s1 = cluster_ci(hv, dll(lambda r: res["S2"]["preds"][r["id"]], lambda r: res["S1"]["preds"][r["id"]]))
         alpha_pos = sum(1 for yr, c in res["S2"]["fits"] if yr in VAL_YEARS and c[2] > 0)
         form = "S2" if s2_vs_s1["ci"][1] < 0 and (alpha_pos >= 4 or alpha_pos <= 1) else "S1"
+        # the ratings model joins the blend only if it beats the chosen single-model form on VAL
+        s2r_vs = None
+        if with_ratings:
+            s2r_vs = cluster_ci(hv, dll(lambda r: res["S2R"]["preds"][r["id"]], lambda r: res[form]["preds"][r["id"]]))
+            if s2r_vs["ci"][1] < 0:
+                form = "S2R"
         sp = res[form]["preds"]
         val_dll = cluster_ci(hv, dll(lambda r: sp[r["id"]], lambda r: market_p(r, key)))
         test_dll = cluster_ci(ht, dll(lambda r: sp[r["id"]], lambda r: market_p(r, key)))
         gate = val_dll["ci"][1] < 0 and test_dll["est"] <= 0
         enc = {name: cluster_ci(rs, lambda s: fit_stack(s, preds, key, "S1")[0] if s else None, reps=200)
                for name, rs in (("val", hv), ("test", ht))}
-        final = fit_stack(have, preds, key, form) if gate else [0.0] * (3 if form == "S2" else 2)
+        final = fit_stack(have, preds, key, form) if gate else [0.0] * {"S1": 2, "S2": 3, "S2R": 5}[form]
         stack[anchor] = {"form": form, "coef": final, "gate": gate, "val_minus_market": val_dll, "test_minus_market": test_dll,
-                         "val_s2_minus_s1": s2_vs_s1, "model_weight_b": enc, "fits_by_year": res[form]["fits"],
+                         "val_s2_minus_s1": s2_vs_s1, "val_s2r_minus_single": s2r_vs, "uses_ratings": form == "S2R",
+                         "model_weight_b": enc, "fits_by_year": res[form]["fits"],
                          "fights": len(have),
                          "val_metrics": metrics([sp[r["id"]] for r in hv], [r["y"] for r in hv]),
                          "test_metrics": metrics([sp[r["id"]] for r in ht], [r["y"] for r in ht]),
