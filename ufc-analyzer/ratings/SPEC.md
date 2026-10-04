@@ -165,3 +165,27 @@ fighters, style, the ratings page (adjusted and raw metrics side by side, better
 what's driving the pick by area, flags (debut, rust, chin, age), the track record, and a division
 rankings dialog. A chip in the fight list shows the ratings pick. It is a second opinion; the BET rule
 stays with the market blend.
+
+## Results (walk-forward, from `ratings/model.json` and `model/model.json`)
+
+- Rating settings: τ = 1,500 days (chosen on 2010–2015 and confirmed on 2016–2020 over 365–1,500),
+  15 pseudo-minutes of shrinkage for raw rates; per-dimension K from the reliability analysis.
+- Groups kept by the ablation: additive offense-and-defense margins, results, schedule, ring rust.
+  Dropped: momentum, multiplicative margins, cardio, pace, judging, record.
+- 2021–2026 (2,957 fights): log loss 0.631, 63.7% right; AdjEM alone 0.657 / 60.4%; without the
+  adjusted efficiencies 0.643. On the 2,872 fights with lines: 0.628 vs opening line 0.618
+  (difference +0.010, 95% range −0.000 to +0.019) and closing line 0.595. The fight model in
+  `model/` scores 0.638 on the same fights.
+- Calibration: by decile, predicted and actual agree within 2 points from 0.2 to 0.8.
+- In the market blend (`model/train.py`, two-model stacker, gated on 2016–2020): adding the ratings
+  beat the single-model blend by −0.0045 (opening) and −0.0024 (closing) log loss; blend minus
+  market −0.0113 and −0.0041 on 2021–2026. Served BET rule at historical opening prices: 1,003
+  bets, ROI +16.3% [+10.7, +22.2], CLV +7.2%; fight-week blend bets at Caesars-like prices: 674
+  bets, +9.8% [+4.0, +15.9] (2016–2020: +14.8%).
+
+## Not built yet (from the design panel's longer list)
+
+Debut prior by ridge regression on pre-UFC records; age-dependent decay and Glicko-style uncertainty
+inflation; division-specific temperature; per-round judging model and round-level luck; archetype
+pair matrix; market-informed debut variant; event location and short-notice data; a full dynamic-state
+(Kalman) rating as an alternative to decay.
