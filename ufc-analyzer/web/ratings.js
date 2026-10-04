@@ -68,10 +68,9 @@ function renderRatings(f) {
       <div class="os-price">${pct(r.p[i], 0)}<span class="small muted" style="font-weight:500"> to win</span></div>
       <dl class="kv tight">
         <dt title="Adjusted efficiency margin: cage points per 15 minutes vs an average opponent (log-odds)">AdjEM</dt><dd>${(r.adjem[i] >= 0 ? "+" : "") + r.adjem[i].toFixed(2)}</dd>
-        <dt>Beats an average ${r.rank[i] ? esc(divShort(r.rank[i].div)) : "fighter"}</dt><dd>${pct(P[i].adj.pyth, 0)}</dd>
-        <dt>${r.rank[i] ? esc(divShort(r.rank[i].div)) + " rank" : "Rank"}</dt><dd>${rankTxt(i)}</dd>
-        ${r.rank[i] ? `<dt>Percentile</dt><dd>${ordinal(r.rank[i].pct)}</dd>` : ""}
-        <dt>Data</dt><dd>${esc(tierTxt(i))}</dd>
+        <dt title="Chance of beating an average fighter of the division">Beats avg ${r.rank[i] ? esc(divShort(r.rank[i].div)) : ""}</dt><dd>${pct(P[i].adj.pyth, 0)}</dd>
+        <dt>Rank</dt><dd>${rankTxt(i)}${r.rank[i] ? ` <span class="faint">· ${ordinal(r.rank[i].pct)}</span>` : ""}</dd>
+        <dt title="Provisional under 15 effective minutes, developing to 45, established beyond">Data</dt><dd>${esc(tierTxt(i))}</dd>
         ${mkt ? `<dt>Market</dt><dd>${pct(mkt[i], 1)}</dd>` : ""}
       </dl>
       <div class="small muted" style="margin-top:6px">${esc(styleName(P[i].style.primary))} <span class="faint">/ ${esc(styleName(P[i].style.secondary))}</span></div></div>`).join("");
@@ -175,7 +174,7 @@ function groupName(g) {
   return { margins_mult: "Matchup (expected output each way)", margins_add: "Adjusted offense & defense", composite: "Efficiency margin (AdjEM)", results: "Results & performance", adjusted: "Adjusted ratings", schedule: "Schedule & luck", striking: "Striking", grappling: "Grappling", durability: "Durability", finishing: "Finishing", judging: "Judging", record: "Record",
     pace: "Pace", cardio: "Cardio", physical: "Physical", experience: "Experience", rust: "Ring rust", momentum: "Momentum", matchup: "Style matchup", other: "Other" }[g] || g;
 }
-function divName(d) { return (d || "").replace(/^w /, "women's ").replace(/\b\w/g, c => c.toUpperCase()); }
+function divName(d) { return (d || "").replace(/^w /, "women's ").replace(/(^|\s)\w/g, c => c.toUpperCase()); }
 function divShort(d) { return ({ "strawweight": "SW", "flyweight": "FLW", "bantamweight": "BW", "featherweight": "FW", "lightweight": "LW", "welterweight": "WW", "middleweight": "MW", "light heavyweight": "LHW", "heavyweight": "HW" })[(d || "").replace(/^w /, "")] ? ((d || "").startsWith("w ") ? "W" : "") + ({ "strawweight": "SW", "flyweight": "FLW", "bantamweight": "BW", "featherweight": "FW", "lightweight": "LW", "welterweight": "WW", "middleweight": "MW", "light heavyweight": "LHW", "heavyweight": "HW" })[(d || "").replace(/^w /, "")] : d; }
 function ordinal(n) { const s = ["th", "st", "nd", "rd"], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); }
 

@@ -17,7 +17,7 @@ from ratings import cagepoints, efficiency, engine, fightdata, profile  # noqa: 
 from ratings.efficiency import DIMS, Efficiency, BradleyTerry, side_vectors  # noqa: E402
 
 SINCE = "2009-01-01"
-SWEEPS_PER_DATE = 6
+SWEEPS_PER_DATE = 40   # cap; convergence to 1e-4 usually takes 3-12 from a warm start
 
 
 def swap_for(fid):
@@ -69,9 +69,10 @@ class Replay:
         self.opps.setdefault(r["f2"], []).append((r["f1"], t))
 
     def settle(self, t, sweeps=SWEEPS_PER_DATE):
-        """Bring the ratings up to date for day t (after a date's fights are applied)."""
-        self.eff.sweep(t, n=sweeps)
-        self.bt.sweep(t, n=3)
+        """Bring the ratings up to date for day t (after a date's fights are applied): iterate to
+        convergence from the warm start, so training rows see the same fixed point serving computes."""
+        self.eff.sweep(t, n=sweeps, tol=1e-4)
+        self.bt.sweep(t, n=5)
 
     def converge(self, t):
         self.eff.sweep(t, n=200, tol=1e-4)
