@@ -4,7 +4,7 @@ import datetime, os, sys, unittest
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(HERE))
 
-from ratings import dataset, efficiency, engine, features, fightdata, profile, rounds  # noqa: E402
+from ratings import dataset, efficiency, engine, features, fightdata, flatbet, profile, rounds  # noqa: E402
 from ratings.efficiency import DIMS, DIM_INDEX, Efficiency, BradleyTerry, side_vectors  # noqa: E402
 
 
@@ -229,6 +229,45 @@ class ServingHelpersTests(unittest.TestCase):
         self.assertAlmostEqual(engine.fade_ratio([10, 10, 10], 900), 1.0)
         self.assertLess(engine.fade_ratio([20, 5, 5], 900), 1.0)       # fading
         self.assertGreater(engine.fade_ratio([0, 10, 10], 900), 1.0)   # slow start, no blow-up
+
+
+class FlatBetTests(unittest.TestCase):
+    def _fight(self, p1, y1, open_, close_fair=None, date="2024-01-06"):
+        o1, o2 = open_
+        a, b = (1 / flatbet.dec_odds(o1), 1 / flatbet.dec_odds(o2))
+        return {"id": f"{p1}{y1}{o1}", "date": date, "year": 2024, "p1": p1, "y1": y1, "open": open_,
+                "open_fair": a / (a + b), "close_fair": close_fair if close_fair is not None else a / (a + b)}
+
+    def test_prices(self):
+        self.assertEqual(flatbet.synth_price(0.5), -109)                     # a 4.4% hold split evenly: 52.2% a side
+        fav, dog = flatbet.synth_price(0.7), flatbet.synth_price(0.3)
+        self.assertLess(1 / flatbet.dec_odds(fav) + 1 / flatbet.dec_odds(dog) - 1, 0.045)
+        self.assertGreater(1 / flatbet.dec_odds(dog) - 0.3, 1 / flatbet.dec_odds(fav) - 0.7)   # more margin on the dog
+        self.assertEqual(flatbet.bucket_of(-100, False), 100)
+        self.assertEqual(flatbet.bucket_of(-149, False), 100)
+        self.assertEqual(flatbet.bucket_of(-150, False), 150)
+        self.assertEqual(flatbet.bucket_of(-800, False), 550)
+        self.assertEqual(flatbet.bucket_of(-110, True), "pickem")
+
+    def test_picks_settle_and_skip(self):
+        recs = flatbet.picks([
+            self._fight(0.62, 1, (-180, 155)),        # pick f1 (the favourite), wins
+            self._fight(0.40, 0, (-180, 155)),        # pick f2 (the dog), wins
+            self._fight(0.55, 0, (-180, 155)),        # pick f1, loses
+            self._fight(0.80, 1, (-400, 310)),        # sides with a -400 favourite: skipped
+            self._fight(0.30, 0, (-400, 310)),        # against a -400 favourite: still a bet
+            self._fight(0.51, 1, (-110, -110)),       # pick'em open: no opening pick
+        ], stake=10, max_fav=-350, hold=0.044)
+        self.assertEqual([r["bet"] for r in recs], [True, True, True, False, True, True])
+        self.assertEqual([r["won"] for r in recs], [1, 1, 0, 1, 1, 1])
+        self.assertEqual([r["open_right"] for r in recs], [1, 0, 0, 1, 0, None])
+        self.assertAlmostEqual(recs[0]["pnl"]["listed"], 10 * (flatbet.dec_odds(-180) - 1))
+        self.assertAlmostEqual(recs[1]["pnl"]["listed"], 15.5)
+        self.assertEqual(recs[2]["pnl"]["listed"], -10)
+        self.assertEqual(recs[0]["pnl"]["open"], 10 * (flatbet.dec_odds(flatbet.synth_price(recs[0]["open_fair"])) - 1))
+        bets = [r for r in recs if r["bet"]]
+        self.assertEqual(len(bets), 5)
+        self.assertGreater(flatbet.total(bets, "listed"), 0)
 
 
 class RoundsParserTests(unittest.TestCase):

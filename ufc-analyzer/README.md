@@ -223,6 +223,15 @@ On the fights with odds the ratings score 0.628, just behind the opening line (d
 95% range +0.001 to +0.019) and clearly behind the close. The adjusted efficiencies are worth about
 0.012 log loss over the same stats unadjusted; AdjEM alone picks 60% of winners.
 
+**Flat bets on every pick.** `python -m ratings.flatbet` prices every out-of-sample pick of the last
+five years at a Caesars-like line (the no-vig price re-vigged to a 4.4% hold, since Caesars' own
+history isn't published), skipping picks that side with an opening favourite of -350 or heavier, and
+groups every fight by the opening favourite's price to compare how often the ratings, the opening
+line and the closing line named the winner. At opening prices a flat $10 on each of the 2,180 picks
+since October 2021 made about +$1,260 (ROI +5.8%, 95% range +$550 to +$1,990); at closing prices the
+same picks made +$200 (ROI +0.9%, range -$470 to +$900), so the edge is in beating the opener, not
+the close. Options: `--since`, `--stake`, `--max-fav`, `--hold`.
+
 The ratings are both a **second opinion on who wins** (the panel, the rankings) and, since adding
 them to the market blend beat the single-model blend on the validation years, **part of the bet
 probability** the BET rule uses (see the prediction model section). Retrain with
