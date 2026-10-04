@@ -70,14 +70,11 @@ def fight_prediction(card, f):
     if hist:
         day = min(day, hist[0])
     rounds = (hist[1] if hist else None) or f.get("rounds") or 3
-    div = fightdata.division(f.get("weightClass") or "")
-    if div == "catch":
-        sd = _predict.state_on(day)
-        div = sd["last_div"].get(a["ufcstats_id"]) or sd["last_div"].get(b["ufcstats_id"]) or "catch"
-    pred = _predict.predict(a["ufcstats_id"], b["ufcstats_id"], day=day, div=div, rounds=rounds, title=bool(f.get("title")), attrs=attrs, outside=outside)
+    div = fightdata.division(f.get("weightClass") or "")   # a catchweight is rated in the usual division (predict decides, as in training)
+    pred = _predict.predict(a["ufcstats_id"], b["ufcstats_id"], day=day, div=div, rounds=rounds, title=bool(f.get("title")), attrs=attrs, outside=outside,
+                            names={a["ufcstats_id"]: a["name"], b["ufcstats_id"]: b["name"]})
     pred["ids"] = [a["ufcstats_id"], b["ufcstats_id"]]
     pred["names"] = [a["name"], b["name"]]
-    pred["div"] = div
     return pred
 
 

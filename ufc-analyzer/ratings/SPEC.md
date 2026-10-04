@@ -26,8 +26,11 @@ plus tempo, strength of schedule and luck, then predicts games from the ratings.
 | Log5 / game predictor | Ratings only: log5 of both fighters' Pyth. The full predictor: a logistic regression on antisymmetric matchup features, led by the expected output each way per dimension (A's offense × B's defense), plus physical, experience, durability, schedule and ring-rust terms |
 
 Every number is point in time: computed from fights strictly before the fight date (same-day cards
-never see each other), with exponential decay (τ = 1,500 days; a fight four years ago counts 37%),
-and shrinkage toward the division while the sample is small. Ratings carry a data tier
+never see each other), with exponential decay and shrinkage toward the division while the sample is
+small. Two decay conventions are in use, both tuned on 2010–2015: the adjusted efficiencies,
+Bradley-Terry and strength of schedule decay with e-folding time 1,500 days (a fight four years ago
+counts 38%); the raw per-fighter rates and division priors use a 1,500-day half-life (four years ago
+counts 51%). Ratings carry a data tier
 (provisional < 15 effective minutes, developing 15–45, established 45+); only established fighters
 or those with 3+ fights and 30+ minutes are ranked.
 

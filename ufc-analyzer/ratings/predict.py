@@ -8,6 +8,7 @@ ranks, and a prediction for any matchup, all as of a date.
 import datetime, json, math, os, threading, time
 
 from ratings import cagepoints, dataset, fightdata, profile
+from ratings.dataset import rating_division, usual_division  # noqa: F401  (shared with training)
 from ratings.efficiency import DIMS
 from ratings.features import GROUP, matchup
 from ratings.learn import sigmoid
@@ -92,12 +93,6 @@ def pool_as_of(R, day, years=POOL_YEARS):
     return [f for f, bs in R.ledger.log.items() if any(cut <= b.day < day for b in bs)]
 
 
-def usual_division(bouts):
-    """The division a fighter belongs to: the most common of their last three bouts, ignoring catchweights."""
-    recent = [b.div for b in bouts[-3:] if b.div != "catch"] or [b.div for b in bouts[-3:]]
-    return max(set(recent), key=lambda d: (recent.count(d), recent[::-1].index(d) * -1)) if recent else "catch"
-
-
 def tier_of(R, fid, day):
     """How much data is behind the rating: provisional < 15 effective minutes, developing 15-45, established 45+."""
     m = R.eff.effective_minutes(fid, day.toordinal())
@@ -136,13 +131,15 @@ def model_logit(model, x):
     return sum(c * x.get(f, 0.0) for f, c in zip(w["feats"], w["coef"]))
 
 
-def predict(a_id, b_id, day=None, div=None, rounds=3, title=False, attrs=None, outside=None):
-    """attrs: {fid: attributes} overrides (ESPN fallbacks for debutants); outside: {fid: (w, l, fin, known)}."""
+def predict(a_id, b_id, day=None, div=None, rounds=3, title=False, attrs=None, outside=None, names=None):
+    """attrs: {fid: attributes} overrides (ESPN fallbacks for debutants); outside: {fid: (w, l, fin, known)};
+    names: {fid: display name} for fighters not yet in the history.  A catchweight (or unknown) div is
+    rated in the usual division of the fighter with the longer history, as in training."""
     st = _load()
     day = day or datetime.date.today()
     sd = state_on(day)
     R = sd["R"]
-    div = div or sd["last_div"].get(a_id) or sd["last_div"].get(b_id) or "catch"
+    div = rating_division(R.ledger, div or "catch", a_id, b_id)
     attrs = attrs or {}
     outside = outside or {}
     P = [fighter_profile(sd, fid, attrs.get(fid) or st["data"]["fighters"].get(fid), day, div, outside.get(fid)) for fid in (a_id, b_id)]
@@ -172,12 +169,17 @@ def predict(a_id, b_id, day=None, div=None, rounds=3, title=False, attrs=None, o
         "tier": [sd["tier"].get(a_id) or tier_of(R, a_id, day), sd["tier"].get(b_id) or tier_of(R, b_id, day)],
         "groups": {k: round(v, 3) for k, v in sorted(groups.items(), key=lambda kv: -abs(kv[1]))},
         "drivers": [{"feature": f, "label": LABELS.get(f, f), "logit": round(v, 3), "favors": 0 if v > 0 else 1} for f, v in drivers if abs(v) >= 0.02],
-        "expected": {"a_on_b": {k: round(v * 15, 2) for k, v in ea.items()}, "b_on_a": {k: round(v * 15, 2) for k, v in eb.items()},
-                     "baseline": {k: round(v * 15, 2) for k, v in rb.items()}},   # per 15 minutes
+        "expected": {"a_on_b": {k: round(v * _scale(k), 2) for k, v in ea.items()}, "b_on_a": {k: round(v * _scale(k), 2) for k, v in eb.items()},
+                     "baseline": {k: round(v * _scale(k), 2) for k, v in rb.items()}},   # per 15 minutes (power: per 100 head strikes)
         "profiles": [card(P[0], sd, a_id), card(P[1], sd, b_id)],
-        "flags": flags(P, (a_id, b_id), st, sd),
+        "flags": flags(P, (a_id, b_id), st, sd, names),
         "div": div,
+        "asof": R.as_of,
     }
+
+
+def _scale(k):
+    return 100.0 if k == "pow" else 15.0
 
 
 def card(P, sd, fid):
@@ -189,8 +191,8 @@ def card(P, sd, fid):
     keep["adj"] = {
         "index_o": {k: round(100 * v) for k, v in e["O"].items()},
         "index_d": {k: round(100 * v) for k, v in e["D"].items()},
-        "o15": {k: round(e["O"][k] * rb.get(k, 0.0) * (15 if k != "pow" else 100), 2) for k in e["O"]},   # per 15 min (pow: per 100 head strikes)
-        "d15": {k: round(e["D"][k] * rb.get(k, 0.0) * (15 if k != "pow" else 100), 2) for k in e["D"]},
+        "o15": {k: round(e["O"][k] * rb.get(k, 0.0) * _scale(k), 2) for k in e["O"]},   # per 15 min (pow: per 100 head strikes)
+        "d15": {k: round(e["D"][k] * rb.get(k, 0.0) * _scale(k), 2) for k in e["D"]},
         "adjo": round(e["adjo"], 3), "adjd": round(e["adjd"], 3), "adjem": round(e["adjem"], 3),
         "pyth": round(sigmoid(e["adjem"]), 3), "bt": round(e["bt"], 3), "sos": round(e["sos"], 3), "sos_last3": round(e["sos_last3"], 3),
         "luck": round(e["luck"], 3), "pyth_share": round(e["pyth_share"], 3), "eff_min": round(e["eff_min"], 1),
@@ -210,7 +212,8 @@ def style_of(P, prior=None):
     s = {}
     s["wrestler"] = 0.5 * rel(P["td_att_15"], "td_a_15", 3.5) + 0.5 * rel(P["ctrl_15"] * 60, "ctrl_15", 170)   # prior ctrl is seconds per 15
     s["grappler"] = 0.6 * rel(P["sub_15"], "sub_15", 0.4) + 0.4 * rel(P["ground_15"], "ground_15", 0.4)
-    s["volume_striker"] = rel(P["attempts_pm"] * 15, "sig_a_15", 130) * (0.5 + 0.5 * P["share_dist"])
+    prior_dist = (pr.get("dist_15") or 0.0) / ((pr.get("dist_15") or 0.0) + (pr.get("clinch_15") or 0.0) + (pr.get("ground_15") or 0.0) or 1.0) if pr.get("dist_15") else 0.78
+    s["volume_striker"] = rel(P["attempts_pm"] * 15, "sig_a_15", 130) * (0.5 + 0.5 * P["share_dist"]) / (0.5 + 0.5 * prior_dist)
     s["power_striker"] = 0.6 * rel(P["kd_15"], "kd_15", 0.3) + 0.4 * rel(P["ko_win_share"], "ko_win_share", 0.35)
     s["kicker"] = rel(P["leg_15"], "leg_15", 5.0)
     s["clinch"] = rel(P["clinch_15"], "clinch_15", 5.0)
@@ -220,16 +223,15 @@ def style_of(P, prior=None):
     return {"scores": {k: round(v, 2) for k, v in s.items()}, "primary": top[0][0], "secondary": top[1][0]}
 
 
-def flags(P, ids, st, sd):
+def flags(P, ids, st, sd, names=None):
     out = []
-    names = st["names"]
     for i, (p, fid) in enumerate(zip(P, ids)):
-        name = names.get(fid, "Fighter A" if i == 0 else "Fighter B")
+        name = (names or {}).get(fid) or st["names"].get(fid) or (st["data"]["fighters"].get(fid) or {}).get("name") or ("Fighter A" if i == 0 else "Fighter B")
         t = sd["tier"].get(fid)
         if p["debut"]:
             out.append({"side": i, "text": f"{name} is making their UFC debut: ratings are the division average plus their regional record."})
         elif t and t["tier"] == "provisional":
-            out.append({"side": i, "text": f"{name} has {t['effective_minutes']:.0f} minutes of UFC data: a provisional rating, unranked."})
+            out.append({"side": i, "text": f"{name} has {t['fights']} UFC fight(s) and {t['effective_minutes']:.1f} effective minutes of data: a provisional rating, unranked."})
         elif p["ufc_fights"] < 3:
             out.append({"side": i, "text": f"{name} has {p['ufc_fights']} UFC fight(s); the rating leans on the division prior."})
         if p["layoff_days"] and p["layoff_days"] > 365:

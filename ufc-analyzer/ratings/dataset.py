@@ -38,7 +38,9 @@ class Replay:
 
     def __init__(self, weights=None, infight=None, tau=efficiency.TAU):
         self.ledger = engine.Ledger()
-        self.eff = Efficiency(tau=tau, weights=weights)
+        # the same fitted cage-point weights on both paths (training rows and serving); the engine's
+        # built-in defaults are only a fallback when cagepoints.json is missing
+        self.eff = Efficiency(tau=tau, weights=weights or cagepoints.load())
         self.bt = BradleyTerry(tau=tau)
         self.infight = infight or cagepoints.load() or {}
         self.pyth = {}        # fid -> [expected wins, decided fights, actual wins]
@@ -104,6 +106,26 @@ class Replay:
         return ({d[0]: ea[k] for k, d in enumerate(DIMS)}, {d[0]: eb[k] for k, d in enumerate(DIMS)}, {d[0]: rb[k] for k, d in enumerate(DIMS)})
 
 
+def usual_division(bouts):
+    """The division a fighter belongs to: the most common of their last three bouts, ignoring catchweights."""
+    recent = [b.div for b in bouts[-3:] if b.div != "catch"] or [b.div for b in bouts[-3:]]
+    return max(set(recent), key=lambda d: (recent.count(d), recent[::-1].index(d) * -1)) if recent else "catch"
+
+
+def rating_division(ledger, bout_div, f1, f2):
+    """The division a bout is rated in: its own, or for a catchweight bout the usual division of the
+    fighter with the longer UFC history (ties by id, so the choice doesn't depend on side order)."""
+    if bout_div != "catch":
+        return bout_div
+    cands = []
+    for fid in (f1, f2):
+        bouts = ledger.log.get(fid) or []
+        d = usual_division(bouts)
+        if d != "catch":
+            cands.append((len(bouts), fid, d))
+    return max(cands)[2] if cands else "catch"
+
+
 def build_rows(data=None, since=SINCE, log=print, market=None, replay=None):
     data = data or fightdata.load()
     fights = data["fights"]
@@ -123,13 +145,14 @@ def build_rows(data=None, since=SINCE, log=print, market=None, replay=None):
             for r in todays:
                 if r["result"] not in ("f1", "f2", "draw"):
                     continue
+                div = rating_division(R.ledger, r["div"], r["f1"], r["f2"])
                 sides = []
                 for fid in (r["f1"], r["f2"]):
-                    P = profile.raw_profile(R.ledger, fid, data["fighters"].get(fid), day, r["div"], priors=priors,
+                    P = profile.raw_profile(R.ledger, fid, data["fighters"].get(fid), day, div, priors=priors,
                                             outside=outside_for(data["espn"], fid, date))
-                    P["eff"] = R.eff_profile(fid, r["div"], t)
+                    P["eff"] = R.eff_profile(fid, div, t)
                     sides.append(P)
-                ea, eb, rb = R.matchup(r["f1"], r["f2"], r["div"])
+                ea, eb, rb = R.matchup(r["f1"], r["f2"], div)
                 sides[0]["eff"]["exp_on_opp"], sides[1]["eff"]["exp_on_opp"] = ea, eb
                 sides[0]["eff"]["rb"] = sides[1]["eff"]["rb"] = rb
                 swap = swap_for(r["id"])
@@ -137,7 +160,7 @@ def build_rows(data=None, since=SINCE, log=print, market=None, replay=None):
                 a, b = (r["f2"], r["f1"]) if swap else (r["f1"], r["f2"])
                 y = None if r["result"] == "draw" else (1 if (r["result"] == "f1") != swap else 0)
                 rows.append({"id": r["id"], "date": date, "year": int(date[:4]), "a": a, "b": b, "swap": swap, "y": y,
-                             "A": A, "B": B, "div": r["div"], "rounds": r.get("rounds") or 3, "title": bool(r.get("title")),
+                             "A": A, "B": B, "div": div, "bout_div": r["div"], "rounds": r.get("rounds") or 3, "title": bool(r.get("title")),
                              "kind": r["kind"], "round": r.get("round"), "secs": r["secs"], "result": r["result"],
                              "mkt": (market or {}).get(r["id"])})
         for r in todays:

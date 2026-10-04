@@ -68,7 +68,7 @@ function renderRatings(f) {
       <div class="os-price">${pct(r.p[i], 0)}<span class="small muted" style="font-weight:500"> to win</span></div>
       <dl class="kv tight">
         <dt title="Adjusted efficiency margin: cage points per 15 minutes vs an average opponent (log-odds)">AdjEM</dt><dd>${(r.adjem[i] >= 0 ? "+" : "") + r.adjem[i].toFixed(2)}</dd>
-        <dt title="Chance of beating an average fighter of the division">Beats avg ${r.rank[i] ? esc(divShort(r.rank[i].div)) : ""}</dt><dd>${pct(P[i].adj.pyth, 0)}</dd>
+        <dt title="Chance of beating an average fighter of the division this fight is rated in">Beats avg ${esc(divShort(r.div || ""))}</dt><dd>${pct(P[i].adj.pyth, 0)}</dd>
         <dt>Rank</dt><dd>${rankTxt(i)}${r.rank[i] ? ` <span class="faint">· ${ordinal(r.rank[i].pct)}</span>` : ""}</dd>
         <dt title="Provisional under 15 effective minutes, developing to 45, established beyond">Data</dt><dd>${esc(tierTxt(i))}</dd>
         ${mkt ? `<dt>Market</dt><dd>${pct(mkt[i], 1)}</dd>` : ""}
@@ -130,7 +130,7 @@ function renderRatings(f) {
   const rb = $("#rank-btn");
   if (rb) rb.onclick = () => openRankings(r.div || (r.rank[0] && r.rank[0].div));
   const meta = $("#m-ratings-meta");
-  if (meta) meta.textContent = S.ratings.model && S.ratings.model.trained_through ? `history through ${S.ratings.model.trained_through}` : "";
+  if (meta) meta.textContent = r.asof ? `history through ${r.asof}` : (S.ratings.model && S.ratings.model.trained_through ? `fitted through ${S.ratings.model.trained_through}` : "");
 }
 
 function ratingsRecord() {

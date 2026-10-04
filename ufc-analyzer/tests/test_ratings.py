@@ -33,8 +33,11 @@ def history():
     ], key=lambda r: (r["date"], r["event"]))
 
 
+WEIGHTS = {"sig": 0.03, "head": 0.01, "ground": 0.02, "kd": 0.4, "td": 0.1, "ctrl": 0.08, "sub": 0.3, "tot": 0.01}
+
+
 def replay(fights, until="2100-01-01"):
-    R = dataset.Replay(infight={"sig": 0.03, "kd": 0.4, "td": 0.1, "ctrl": 0.08})
+    R = dataset.Replay(infight={"sig": 0.03, "kd": 0.4, "td": 0.1, "ctrl": 0.08}, weights=WEIGHTS)
     for r in fights:
         if r["date"] >= until:
             break
@@ -121,6 +124,24 @@ class EfficiencyTests(unittest.TestCase):
         self.assertGreater(bt.get("cat"), bt.get("bea"))
         self.assertAlmostEqual(bt.get("ann") + bt.get("cat") + bt.get("bea"), 0.0, places=6)   # ridge keeps the mean at zero
 
+    def test_training_and_serving_use_the_same_weights(self):
+        """The composites in training rows must come from the same cage-point weights serving uses."""
+        from ratings import cagepoints
+        R = dataset.Replay()
+        self.assertEqual(R.eff.weights, cagepoints.load() or efficiency.DEFAULT_WEIGHTS)
+        rows, R = dataset.build_rows({"fights": history(), "fighters": {}, "espn": {}}, since="2021-06-01", log=lambda *a: None, replay=replay([]))
+        r = rows[0]
+        for P in (r["A"], r["B"]):
+            rb, O = P["eff"]["rb"], P["eff"]["O"]
+            self.assertAlmostEqual(P["eff"]["adjo"], sum(WEIGHTS[k] * rb[k] * O[k] * 15 for k in WEIGHTS), places=9)
+
+    def test_catchweight_is_rated_in_the_usual_division(self):
+        h = history() + [fight("x9", "2021-09-01", "ann", "bea", stats(), stats(), wc="Catch Weight")]
+        rows, R = dataset.build_rows({"fights": h, "fighters": {}, "espn": {}}, since="2021-09-01", log=lambda *a: None, replay=replay([]))
+        self.assertEqual((rows[0]["bout_div"], rows[0]["div"]), ("catch", "lightweight"))
+        self.assertEqual(dataset.rating_division(R.ledger, "catch", "zed", "yan"), "catch")   # two unknowns stay catch
+        self.assertEqual(dataset.rating_division(R.ledger, "catch", "bea", "ann"), dataset.rating_division(R.ledger, "catch", "ann", "bea"))
+
     def test_luck_and_sos(self):
         R = replay(history())
         t = datetime.date(2022, 1, 1).toordinal()
@@ -199,7 +220,7 @@ class ServingHelpersTests(unittest.TestCase):
         self.assertEqual(predict.style_of(dee, P.get("lightweight"))["primary"], "wrestler")
         avg = profile.raw_profile(L, "nobody", {}, day, "lightweight", priors=P)
         s = predict.style_of(avg, P.get("lightweight"))["scores"]
-        for k in ("wrestler", "power_striker", "kicker", "counter"):
+        for k in ("wrestler", "power_striker", "kicker", "counter", "volume_striker", "clinch"):
             self.assertAlmostEqual(s[k], 1.0, places=5, msg=k)   # a division-average fighter scores 1.0 on each
 
     def test_fade_ratio(self):

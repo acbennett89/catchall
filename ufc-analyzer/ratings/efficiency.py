@@ -205,7 +205,7 @@ class Efficiency:
             self._np = arr = (len(self.sides), fi, oi, y, e, rb, t)
         _, fi, oi, y, e, rb, t = arr
         w = np.exp(-(today - t) / self.tau)
-        ynorm = (y / rb) * w[:, None]
+        ynorm = (y / rb) * w[:, None] * (e > 0)   # a count with no exposure (a knockdown with no head strike landed) says nothing, as in the pure-Python path
         we = e * w[:, None]
         nf = len(self.ids)
         O = np.array(self.O, dtype=float) if nf else np.ones((0, ND))
