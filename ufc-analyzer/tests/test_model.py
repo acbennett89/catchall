@@ -4,7 +4,7 @@ import os, sys, unittest
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(HERE))
 
-from model import dataset, engine, features, learn, market_hist  # noqa: E402
+from model import dataset, engine, espn_hist, features, learn, market_hist  # noqa: E402
 
 
 def fight(fid, f1, f2, result="f1", method="KO/TKO", rnd=1, time="2:30", rounds=3, wc="Lightweight", stats=True):
@@ -38,6 +38,15 @@ def history():
     return events, fights, fighters
 
 
+ESPN = {"ann": {"espn": "1", "hist": [
+    ["2022-03-01", "W", 0, "ko"],     # regional win after leaving the UFC: must not count before 2022
+    ["2020-06-01", "W", 1, "sub"],    # UFC fight (excluded: not "outside")
+    ["2019-05-01", "W", 0, "dec"],
+    ["2018-05-01", "L", 0, "dec"],
+    ["2017-05-01", "W", 0, "ko"],
+]}}
+
+
 class EngineTests(unittest.TestCase):
     def test_helpers(self):
         self.assertEqual(engine.finish_seconds({"round": 2, "time": "1:30"}), 390)
@@ -46,6 +55,7 @@ class EngineTests(unittest.TestCase):
         self.assertEqual(engine.method_class("SUB"), "sub")
         self.assertEqual(engine.method_class("S-DEC"), "dec")
         self.assertEqual(engine.method_class("Overturned"), "other")
+        self.assertEqual(engine.method_class("CNC"), "ko")              # "could not continue" with a winner
         self.assertEqual(engine.weight_class("UFC Women's Flyweight Title Bout"), "w flyweight")
         self.assertEqual(engine.weight_class("Light Heavyweight Bout"), "light heavyweight")
         self.assertEqual(engine.weight_class("Heavyweight"), "heavyweight")
@@ -75,7 +85,7 @@ class EngineTests(unittest.TestCase):
 class FeatureTests(unittest.TestCase):
     def test_antisymmetric(self):
         ev, fi, fr = history()
-        rows, eng, _ = dataset.build_rows(ev, fi, fr, since="2000-01-01")
+        rows, eng, _ = dataset.build_rows(ev, fi, fr, since="2000-01-01", espn_histories=ESPN)
         r = next(r for r in rows if r["id"] == "x3")
         flipped = features.win_features(r["B"], r["A"])
         for k, v in r["x"].items():
@@ -84,7 +94,7 @@ class FeatureTests(unittest.TestCase):
 
     def test_labels_follow_orientation(self):
         ev, fi, fr = history()
-        rows, _, _ = dataset.build_rows(ev, fi, fr, since="2000-01-01")
+        rows, _, _ = dataset.build_rows(ev, fi, fr, since="2000-01-01", espn_histories=ESPN)
         for r in rows:
             if r["result"] in ("f1", "f2"):
                 winner = fi[r["id"]]["f1"] if r["result"] == "f1" else fi[r["id"]]["f2"]
@@ -92,9 +102,19 @@ class FeatureTests(unittest.TestCase):
             else:
                 self.assertIsNone(r["y"])
 
-    def test_outside_record(self):
-        self.assertEqual(features.outside_record({"record": "12-1-0"}, {"W": 2, "L": 0}), (10, 1))
-        self.assertEqual(features.outside_record({"record": "3-1-0"}, {"W": 5, "L": 2}), (0, 0))
+    def test_outside_record_is_point_in_time(self):
+        hist = ESPN["ann"]["hist"]
+        self.assertEqual(espn_hist.outside_before(hist, "2020-01-01"), (2, 1, 1))   # UFC fights and later fights excluded
+        self.assertEqual(espn_hist.outside_before(hist, "2023-01-01"), (3, 1, 2))   # the post-UFC regional win counts only after it happened
+        ev, fi, fr = history()
+        rows, _, _ = dataset.build_rows(ev, fi, fr, since="2000-01-01", espn_histories=ESPN)
+        r = next(r for r in rows if r["id"] == "x1")
+        ann = r["A"] if r["a"] == "ann" else r["B"]
+        bea = r["B"] if r["a"] == "ann" else r["A"]
+        self.assertEqual(ann["outside_known"], 1.0)
+        self.assertAlmostEqual(ann["outside_win_pct"], (2 + 3) / (2 + 1 + 4) - 0.75)   # 2-1 outside, debut fight: no fade yet
+        self.assertEqual(bea["outside_known"], 0.0)            # no ESPN history: neutral
+        self.assertEqual(bea["outside_win_pct"], 0.0)
 
     def test_debutant_profile_uses_division_priors(self):
         ev, fi, fr = history()
@@ -133,6 +153,49 @@ class MarketJoinTests(unittest.TestCase):
         self.assertEqual(j["open1"], 170)        # Bea's own line, although BFO listed Dee first
         self.assertLess(j["close_fair"], 0.5)    # Bea is the underdog
         self.assertEqual(j["worst1"], 180)       # Bea's least generous closing price
+
+
+
+
+class LedgerTests(unittest.TestCase):
+    def test_record_dedupe_and_settle(self):
+        import tempfile
+        import espn, ledger
+        tmp = tempfile.mkdtemp()
+        old_path, old_card = ledger.PATH, espn.card
+        ledger.PATH = os.path.join(tmp, "ledger.json")
+        fighters = [{"name": "Ann A", "winner": False}, {"name": "Bea B", "winner": False}]
+        fight = {"id": "f1", "status": {"state": "pre"}, "fighters": fighters}
+        card = {"id": "e1", "name": "Test Card", "date": 2e9, "fights": [fight]}
+        pred = {"market": 0.6, "p": [0.55, 0.45], "blend": [0.58, 0.42], "sides": [{"caesars": -130}, {"caesars": 110}]}
+        dec = {"action": "BET", "side": 1, "ev": 0.04, "evMarket": 0.01, "tier": "Market value"}
+        try:
+            self.assertIsNotNone(ledger.record("e1", card, fight, dec, pred))
+            self.assertIsNone(ledger.record("e1", card, fight, dec, pred))           # flagged once per fight/side
+            self.assertIsNotNone(ledger.record("e1", card, fight, dec, pred, source="user", price=115, stake=10, side=1))
+            settled = {"id": "f1", "status": {"state": "post"},
+                       "fighters": [{"name": "Ann A", "winner": False}, {"name": "Bea B", "winner": True}]}
+            espn.card = lambda eid: dict(card, fights=[settled])
+            hist = {"e1:f1": [[1, -130, 110, 0.62], [2, -140, 120, 0.55]]}             # closing fair for A = 0.55
+            rep = ledger.report(hist)
+            user = next(e for e in rep["entries"] if e["source"] == "user")
+            self.assertAlmostEqual(user["closeFair"], 0.45)
+            self.assertAlmostEqual(user["clv"], round(0.45 * 2.15 - 1, 4))
+            self.assertEqual(user["result"], "won")
+            self.assertAlmostEqual(user["profit"], 11.5)
+            self.assertEqual(rep["summary"]["your_bets"]["settled"], 1)
+        finally:
+            ledger.PATH, espn.card = old_path, old_card
+
+
+class PropMappingJS(unittest.TestCase):
+    def test_prop_labels(self):
+        import shutil, subprocess
+        node = shutil.which("node")
+        if not node:
+            self.skipTest("node not installed")
+        r = subprocess.run([node, os.path.join(HERE, "props_map.test.js")], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
 
 
 if __name__ == "__main__":

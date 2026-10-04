@@ -116,8 +116,17 @@ def search(term):
     return cache.get(("ufcs-search", term.lower()), lambda: parse_search(get(f"/statistics/fighters/search?query={q}")), ttl=86400)
 
 
-def find_id(name, first=None, last=None, espn_id=None):
-    """UFCStats fighter id for a name, or None.  Results (including misses) are remembered on disk."""
+def _wld(rec):
+    m = re.match(r"\s*(\d+)-(\d+)-(\d+)", rec or "")
+    return tuple(int(x) for x in m.groups()) if m else None
+
+
+def find_id(name, first=None, last=None, espn_id=None, record=None):
+    """UFCStats fighter id for a name, or None.  Results (including misses) are remembered on disk.
+
+    When several fighters share the name (UFCStats has two Anthony Romeros), the one whose record is
+    closest to `record` (e.g. ESPN's "7-3-0") wins.
+    """
     key = str(espn_id or name)
     hit = ids_disk.get(key, max_age=30 * 86400)
     if hit is not None:
@@ -126,17 +135,27 @@ def find_id(name, first=None, last=None, espn_id=None):
     for t in [last, first] + list(reversed(tokens(name))):
         if t and t.lower() not in [x.lower() for x in terms] and len(t) > 1:
             terms.append(t)
-    best, best_s = None, 0.0
+    scored = {}
     for t in terms[:4]:
-        cands = search(t)
-        for c in cands:
+        for c in search(t):
             # also try first name + nickname: ESPN lists some fighters by ring name ("Patricio Pitbull")
             s = max(similarity(name, c["name"]), similarity(name, f'{c["name"].split(" ")[0]} {c["nickname"]}') if c["nickname"] else 0)
-            if s > best_s:
-                best, best_s = c, s
-        if best_s >= 0.97:
+            if s > scored.get(c["id"], (0, None))[0]:
+                scored[c["id"]] = (s, c)
+        if scored and max(v[0] for v in scored.values()) >= 0.97:
             break
-    fid = best["id"] if best and best_s >= 0.86 else ""
+    fid = ""
+    if scored:
+        top = max(v[0] for v in scored.values())
+        tied = [c for s_, c in scored.values() if s_ >= top - 0.02]
+        if top >= 0.86:
+            want = _wld(record)
+            if want and len(tied) > 1:
+                def dist(c):
+                    got = _wld(c["record"])
+                    return sum(abs(a - b) for a, b in zip(got, want)) if got else 99
+                tied.sort(key=dist)
+            fid = tied[0]["id"]
     ids_disk.put(key, fid)
     return fid or None
 

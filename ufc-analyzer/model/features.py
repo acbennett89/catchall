@@ -10,6 +10,13 @@ from model.engine import weight_class
 
 # minutes of "league average" mixed into each rate (Bayesian shrinkage toward the division mean)
 PRIOR_MIN = {"rate": 15.0, "acc": 20.0}
+# division weight limits (lbs) for weight-class moves; women's divisions share the scale
+DIV_LBS = {"strawweight": 115, "flyweight": 125, "bantamweight": 135, "featherweight": 145, "lightweight": 155,
+           "welterweight": 170, "middleweight": 185, "light heavyweight": 205, "heavyweight": 265}
+
+
+def _lbs(div):
+    return DIV_LBS.get((div or "").replace("w ", "", 1))
 # fallback division means (per minute, per fighter) used before a division has history
 FALLBACK = {"sig": 3.6, "sig_a": 8.3, "td": 0.09, "td_a": 0.24, "sub": 0.035, "kd": 0.025, "ctrl": 35.0}
 
@@ -22,16 +29,6 @@ def _age(dob, day):
         return (day.toordinal() - __import__("datetime").date(y, m, d).toordinal()) / 365.25
     except Exception:
         return None
-
-
-def outside_record(attrs, ufc_results):
-    """Pro record outside the UFC: total record on UFCStats minus every UFC result we have for them."""
-    import re
-    m = re.match(r"(\d+)-(\d+)-(\d+)", (attrs or {}).get("record") or "")
-    if not m:
-        return 0, 0
-    w, l = int(m.group(1)) - ufc_results.get("W", 0), int(m.group(2)) - ufc_results.get("L", 0)
-    return max(0, w), max(0, l)
 
 
 def fighter_profile(eng, f, attrs, day, div, outside):
@@ -76,7 +73,8 @@ def fighter_profile(eng, f, attrs, day, div, outside):
     d_ctrl = (dt["ctrl"] + 60.0) / (dt["ctrl"] + da["ctrl"] + 120.0)
 
     n = f.fights
-    ow, ol = outside
+    ow, ol = outside[0], outside[1]
+    known = outside[2] if len(outside) > 2 else True
     age = _age(attrs.get("dob"), day)
     layoff = (day - f.last).days if f.last else None
     hist = f.history
@@ -96,6 +94,8 @@ def fighter_profile(eng, f, attrs, day, div, outside):
         else:
             break
     decided = f.wins + f.losses
+    last_div = hist[-1]["div"] if hist else None
+    move = (_lbs(div) - _lbs(last_div)) / 10.0 if _lbs(div) and _lbs(last_div) else 0.0
     return {
         "elo": eng.elo_now(f, day),
         "dom": f.dom,
@@ -103,7 +103,10 @@ def fighter_profile(eng, f, attrs, day, div, outside):
         "fights": n,
         "debut": 1.0 if n == 0 else 0.0,
         "win_pct": (f.wins + 2.0) / (decided + 4.0),
-        "outside_win_pct": (ow + 2.0) / (ow + ol + 4.0),
+        # outside-the-UFC win rate (shrunk toward 75%, a typical record at UFC debut), fading out over
+        # the first four UFC fights as UFC results take over; 0 when ESPN has no history for them
+        "outside_win_pct": (((ow + 3.0) / (ow + ol + 4.0)) - 0.75) * max(0.0, 1 - n / 4.0) if known else 0.0,
+        "outside_known": 1.0 if known else 0.0,
         "pro_fights": n + ow + ol,
         "age": age,
         "height": attrs.get("height"),
@@ -123,6 +126,8 @@ def fighter_profile(eng, f, attrs, day, div, outside):
         "opp_elo": f.opp_elo_sum / n if n else eng.p["elo0"],
         "title_fights": f.title_fights, "five_rounders": f.five_rounders,
         "minutes": mins,
+        "move_up": max(0.0, move), "move_down": max(0.0, -move),
+        "head_dmg": math.log1p(a["head"] + 20.0 * a["kd"]),
     }
 
 
@@ -149,7 +154,12 @@ def win_features(A, B):
         "outside_win_pct": A["outside_win_pct"] - B["outside_win_pct"],
         "win_pct": A["win_pct"] - B["win_pct"],
         "age": (age_a - age_b) if age_a and age_b else 0.0,
-        "age_over_32": (max(0, age_a - 32) - max(0, age_b - 32)) if age_a and age_b else 0.0,
+        "age_over_30": (max(0, age_a - 30) - max(0, age_b - 30)) if age_a and age_b else 0.0,
+        "age_over_34": (max(0, age_a - 34) - max(0, age_b - 34)) if age_a and age_b else 0.0,
+        "move_up": A["move_up"] - B["move_up"],
+        "move_down": A["move_down"] - B["move_down"],
+        "head_dmg": A["head_dmg"] - B["head_dmg"],
+        "log_five_rounders": math.log1p(A["five_rounders"]) - math.log1p(B["five_rounders"]),
         "reach": _d(A, B, "reach"),
         "height": _d(A, B, "height"),
         "southpaw": A["southpaw"] - B["southpaw"],
@@ -180,7 +190,8 @@ WIN_FEATURES = list(win_features(*([{
     "elo": 0, "dom": 0, "d_slpm": 0, "d_sapm": 0, "d_td15": 0, "d_tdabs15": 0, "d_ctrl": 0, "fights": 0, "debut": 0, "pro_fights": 0, "outside_win_pct": 0, "win_pct": 0, "age": None, "reach": None,
     "height": None, "southpaw": 0, "layoff": None, "slpm": 0, "sapm": 0, "str_acc": 0, "str_def": 0, "td15": 0,
     "td_acc": 0, "td_def": 0, "sub15": 0, "kd15": 0, "kd_abs15": 0, "ctrl_share": 0, "ko_loss_rate": 0,
-    "finish_rate": 0, "form": 0, "streak": 0, "opp_elo": 0}] * 2)).keys())
+    "finish_rate": 0, "form": 0, "streak": 0, "opp_elo": 0, "move_up": 0, "move_down": 0, "head_dmg": 0,
+    "title_fights": 0, "five_rounders": 0}] * 2)).keys())
 
 
 def division_of(rec):

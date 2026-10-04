@@ -140,7 +140,9 @@ def fill_missing(workers=3, log=print, since="2008-01-01"):
         for i, _ in enumerate(ex.map(look, missing), 1):
             if i % 100 == 0:
                 log(f"  searched {i}/{len(missing)}, matchups {len(matchups)}")
-                _save(matchups, visited)
+                with lock:
+                    snap = dict(matchups)
+                _save(snap, visited)
     _save(matchups, visited)
     return len(missing), len(matchups)
 

@@ -17,7 +17,7 @@ async function loadPred() {
 
 function modelFor(f) {
   const p = S.pred && S.pred.available && S.pred.fights ? S.pred.fights[f.id] : null;
-  return p && !p.error ? p : null;
+  return p && !p.error && !p.suppressed ? p : null;
 }
 
 const BASIS_LABEL = { market: "the no-vig market price", model: "the model", blend: "the market + model blend" };
@@ -47,6 +47,7 @@ function renderModel(f) {
   const pr = S.pred.fights && S.pred.fights[f.id];
   if (!pr) { el.innerHTML = `<div class="muted">No prediction for this fight.</div>`; return; }
   if (pr.error) { el.innerHTML = `<div class="err">Couldn't score this fight: ${esc(pr.error)}</div>`; return; }
+  if (pr.suppressed) { el.innerHTML = `<div class="muted">${esc(pr.suppressed)}</div>`; return; }
   const names = f.fighters.map(x => x.name);
   const ln = names.map(lastName);
   const actionable = f.status.state !== "post";
@@ -54,19 +55,22 @@ function renderModel(f) {
   const mkt = fo && fo.value && fo.value.fair;
   const sides = [0, 1].map(i => {
     const s = (pr.sides || [])[i] || {};
-    const ev = settings.basis === "blend" && s.evBlend !== undefined ? s.evBlend : s.evModel;
-    const kel = settings.basis === "blend" && s.kellyBlend !== undefined ? s.kellyBlend : s.kellyModel;
+    // highlight and size from the bet probability (market, nudged by the model only where that tested well);
+    // the raw model's EV is shown for reference but never drives a VALUE flag unless you chose the Model basis
+    const useModel = settings.basis === "model" || s.evBlend === undefined;
+    const ev = useModel ? s.evModel : s.evBlend;
+    const kel = useModel ? s.kellyModel : s.kellyBlend;
     const isValue = actionable && ev !== undefined && ev >= settings.threshold;
     return `<div class="odds-side ${i ? "blue" : "red"}${isValue ? " value" : ""}">
       <div class="os-top"><span class="os-name">${esc(names[i])}</span><span class="os-book">Model</span></div>
       <div class="os-price">${pct(pr.p[i], 0)}${isValue ? ` <span class="badge good" style="vertical-align:middle">VALUE</span>` : ""}</div>
-      <dl class="kv">
+      <dl class="kv tight">
         <dt>Model fair price</dt><dd>${esc(fmtOdds(pr.fair[i]))}</dd>
         <dt>Market fair</dt><dd>${mkt ? pct(mkt[i], 1) : "—"}</dd>
         ${pr.blend ? `<dt>Blend</dt><dd>${pct(pr.blend[i], 1)}</dd>` : ""}
         ${s.evModel !== undefined ? `<dt>EV at ${TARGET} (model)</dt><dd class="${s.evModel >= 0 ? "pos" : "neg"}">${signedPct(s.evModel)}</dd>` : ""}
         ${s.evBlend !== undefined ? `<dt>EV at ${TARGET} (blend)</dt><dd class="${s.evBlend >= 0 ? "pos" : "neg"}">${signedPct(s.evBlend)}</dd>` : ""}
-        ${ev !== undefined && ev > 0 ? `<dt>Stake (${Math.round(settings.kelly * 100)}% Kelly)</dt><dd>${money(settings.bankroll * kel * settings.kelly)}</dd>` : ""}
+        ${ev !== undefined && ev > 0 ? `<dt>Stake (${Math.round(settings.kelly * 100)}% Kelly)</dt><dd>${money(stakeFor(kel))}</dd>` : ""}
         <dt>Elo rating</dt><dd>${esc(pr.elo ? pr.elo[i] : "—")}</dd>
       </dl></div>`;
   }).join("");
@@ -83,9 +87,9 @@ function renderModel(f) {
   if (m) {
     const row = (lab, k) => `<tr><td>${lab}</td><td>${pct(m.a[k], 0)}</td><td>${pct(m.b[k], 0)}</td></tr>`;
     method = `<table class="books-table"><thead><tr><th>Outcome</th><th>${esc(ln[0])}</th><th>${esc(ln[1])}</th></tr></thead><tbody>
-      ${row("KO/TKO", "ko")}${row("Submission", "sub")}${row("Decision", "dec")}
+      ${row("KO/TKO", "ko")}${row("Submission", "sub")}${m.a.dec_u !== undefined ? row("Unanimous decision", "dec_u") + row("Split/majority decision", "dec_s") : row("Decision", "dec")}
       <tr class="target"><td>Wins</td><td>${pct(pr.p[0], 0)}</td><td>${pct(pr.p[1], 0)}</td></tr></tbody></table>
-      <div class="note-line">Goes the distance: <b>${pct(m.distance, 0)}</b>${m.over_under ? " · " + m.over_under.filter(o => o.line < f.rounds).map(o => `O/U ${o.line}: ${pct(o.over, 0)} / ${pct(o.under, 0)}`).join(" · ") : ""}</div>`;
+      <div class="note-line">Goes the distance: <b>${pct(m.distance, 0)}</b>${m.draw ? ` (draw ${pct(m.draw, 1)})` : ""}${m.over_under ? " · " + m.over_under.filter(o => o.line < f.rounds).map(o => `O/U ${o.line}: ${pct(o.over, 0)} / ${pct(o.under, 0)}`).join(" · ") : ""}</div>`;
     if (m.rounds) {
       method += `<details><summary>Finish by round</summary><table class="books-table"><thead><tr><th>Round</th><th>${esc(ln[0])}</th><th>${esc(ln[1])}</th></tr></thead><tbody>
         ${m.rounds.map(r => `<tr><td>Round ${r.round}</td><td>${pct(r.a, 1)}</td><td>${pct(r.b, 1)}</td></tr>`).join("")}</tbody></table></details>`;
@@ -104,76 +108,103 @@ function renderModel(f) {
     }).join("");
   }
   const flags = (pr.flags || []).map(x => `<div class="note-line">⚠ ${esc(x.text)}</div>`).join("");
-  el.innerHTML = `<div class="odds-grid">${sides}</div>${gap}${flags}
-    <div class="section-title" style="padding:12px 0 6px">How the model sees it ending</div>${method}${drivers}
+  const g = pr.blendState || {};
+  const away = g.hours >= 48 ? `${Math.round(g.hours / 24)} days` : `${Math.round(g.hours || 0)} hours`;
+  // which blend applies: the early-line blend a week or more out, the closing-line blend inside 12 hours, a mix between
+  const which = g.wOpen >= 0.999 ? "on early lines the model beat the market in testing, so it nudges the price"
+    : g.wOpen <= 0.001 ? "on closing lines the blend still edged the market in testing, but by little (mostly by firming up the market's favorite), so the nudge is small"
+    : `mixing the early-line blend (${Math.round(g.wOpen * 100)}%) with the smaller closing-line blend as fight night nears`;
+  const gateNote = pr.blend ? `<div class="note-line">${g.active
+      ? `Blend is live (${away} out): ${which}${g.lowExperience ? ", and the model counts for less when a fighter has under 2 UFC fights" : ""}.`
+      : `Blend = market (${away} out): the model hasn't beaten the market this close to the fight in testing, so it doesn't move the price.`}</div>` : "";
+  el.innerHTML = `${decisionBox(pr, f)}<div class="odds-grid">${sides}</div>${gap}${gateNote}${flags}
+    <div class="section-title" style="padding:12px 0 6px">How it ends${pr.methodAnchor && pr.methodAnchor !== "model" ? ` <span class="faint" style="text-transform:none;letter-spacing:0">(scaled to the ${pr.methodAnchor === "blend" ? "blended" : "market"} win chance)</span>` : ""}</div>${method}${drivers}
     ${trackRecord()}`;
+  const logBtn = $("#log-bet");
+  if (logBtn) logBtn.onclick = () => logBet(f, pr);
   const meta = $("#m-model-meta");
   if (meta) meta.textContent = S.pred.model && S.pred.model.trained_through ? `history through ${S.pred.model.trained_through}` : "";
 }
 
-/* One honest paragraph on how the model has done out of sample, from model.json's evaluation. */
+/* How the model has done on fights it never saw, from model.json (test years, then validation). */
 function trackRecord() {
-  const ev = S.pred && S.pred.model && S.pred.model.evaluation;
-  if (!ev || !ev.vs_market) return "";
-  const vm = ev.vs_market, b = ev.blend || {};
+  const M = S.pred && S.pred.model;
+  const T = M && M.evaluation && M.evaluation.test;
+  if (!T || !T.with_market) return "";
+  const wm = T.with_market, st = M.stack || {}, bt = (M.backtest || {}).test || {};
   const acc = x => x ? pct(x.accuracy, 1) : "—";
   const ll = x => x ? x.log_loss.toFixed(3) : "—";
-  let s = `<details class="track"><summary>Track record (${esc(ev.period)}, fights it never saw)</summary><div class="note-line">
-    On ${vm.model ? vm.model.n.toLocaleString() : "?"} fights with betting history: model accuracy ${acc(vm.model)} (log loss ${ll(vm.model)}),
-    closing market ${acc(vm.market_close)} (${ll(vm.market_close)}), opening market ${acc(vm.market_open)} (${ll(vm.market_open)}).
-    ${b.blend ? `Market + model blend: ${acc(b.blend)} (${ll(b.blend)}). ` : ""}Lower log loss is better.</div>`;
-  const bt = ev.backtest || {};
-  const pick = (k, lab) => {
-    const r = bt[k];
-    if (!r || !r.bets) return "";
-    const ci = r.roi_ci ? ` (95% range ${signedPct(r.roi_ci[0], 0)} to ${signedPct(r.roi_ci[1], 0)})` : "";
-    return `<li>${lab}: ${r.bets.toLocaleString()} bets, ROI ${signedPct(r.roi, 1)}${ci}</li>`;
+  const ci = x => x && x.ci ? ` (95% range ${x.ci[0] >= 0 ? "+" : ""}${x.ci[0].toFixed(3)} to ${x.ci[1] >= 0 ? "+" : ""}${x.ci[1].toFixed(3)})` : "";
+  const gateLine = (anchor, label) => {
+    const g = st[anchor];
+    if (!g) return "";
+    return `<li>${label}: blend minus market log loss ${g.test_minus_market ? g.test_minus_market.est.toFixed(4) : "—"}${ci(g.test_minus_market)} on test; ${g.gate ? "<b>live</b> (it beat the market on 2016–20 and held up since)" : "not live (it didn't beat the market on 2016–20)"}.</li>`;
   };
-  const items = [pick("model|open|0.05", "Model, bet at opening lines when EV ≥ 5%"), pick("model|worst|0.05", "Model, worst closing price, EV ≥ 5%"),
-    pick("blend|open|0.03", "Blend, opening lines, EV ≥ 3%"), pick("blend|worst|0.03", "Blend, worst closing price, EV ≥ 3%")].join("");
-  if (items) s += `<ul class="small muted" style="margin:6px 0 0 18px;padding:0">${items}</ul>`;
-  s += `<div class="note-line">The closing market is very hard to beat. Treat a model edge as a second opinion, and check it against the matchup.</div></details>`;
-  return s;
+  const btLine = (k, lab) => {
+    const r = bt[k] && bt[k].blend;
+    if (!r || !r.bets) return "";
+    const c = r.clv && k === "open" ? `; beat the closing line on ${pct(r.clv.beat_close, 0)} of bets (CLV ${signedPct(r.clv.mean, 1)})` : "";
+    return `<li>${lab}: ${r.bets.toLocaleString()} bets, ROI ${signedPct(r.roi, 1)} (95% range ${signedPct(r.roi_ci[0], 0)} to ${signedPct(r.roi_ci[1], 0)})${c}.</li>`;
+  };
+  const raw = bt.open && bt.open.raw_model;
+  return `<details class="track"><summary>Track record: ${esc(T.years)}, ${T.model ? T.model.n.toLocaleString() : "?"} fights it never saw</summary>
+    <div class="note-line">On ${wm.model ? wm.model.n.toLocaleString() : "?"} of them with betting history: model alone ${acc(wm.model)} right (log loss ${ll(wm.model)}),
+      opening line ${acc(wm.market_open)} (${ll(wm.market_open)}), closing line ${acc(wm.market_close)} (${ll(wm.market_close)}). Lower log loss is better.</div>
+    <ul class="small muted" style="margin:6px 0 0 18px;padding:0">
+      ${gateLine("open", "Early lines")}${gateLine("close", "Fight week")}
+      ${btLine("open", "Blend at opening prices, EV ≥ 3%")}${btLine("synthetic_caesars", "Blend at closing prices with a Caesars-like 4.4% margin")}
+      ${raw && raw.bets ? `<li>Model alone at opening prices: ${raw.bets.toLocaleString()} bets, ROI ${signedPct(raw.roi, 1)}. Don't bet the raw model.</li>` : ""}
+    </ul>
+    <div class="note-line">Opening prices are an upper bound: they're often from one small book days before ${TARGET} posts. The market is hard to beat; treat a model edge as a second opinion.</div></details>`;
 }
 
-/* Model probability for a Caesars prop label ("Silva wins by TKO/KO", "Over 2½ rounds", ...). */
+/* Model probability for a Caesars prop label ("Silva wins by TKO/KO", "Over 2½ rounds", ...),
+   computed from the fight's outcome table (method x round per fighter, decisions, draw). */
 function propModelProb(p, f) {
   const pr = modelFor(f);
-  if (!pr || !pr.method) return null;
+  if (!pr || !pr.method || !pr.method.a) return null;
   const m = pr.method;
-  const tokensOf = n => (n || "").toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "").split(/[^a-z0-9]+/).filter(t => t.length >= 2);
+  const R = m.rounds_scheduled || (m.rounds ? m.rounds.length : f.rounds);
+  const norm = n => (n || "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
+  const tokensOf = n => norm(n).split(/[^a-z0-9]+/).filter(t => t.length >= 2);
   const toks = f.fighters.map(x => tokensOf(x.name));
   const sideOf = who => {
     const w = tokensOf(who);
     const hit = [0, 1].filter(i => w.length && w.every(t => toks[i].includes(t)));
     return hit.length === 1 ? hit[0] : null;
   };
-  const S_ = i => (i === 0 ? m.a : m.b);
-  const roundFinish = r => (m.rounds && m.rounds[r - 1]) ? m.rounds[r - 1].a + m.rounds[r - 1].b : null;
-  const one = (label) => {
-    const L = label.replace(/½/g, ".5").trim();
+  const T = i => (i === 0 ? m.a : m.b);
+  const sum = a => a.reduce((x, y) => x + y, 0);
+  const winRound = (i, r) => (T(i).ko_r ? T(i).ko_r[r - 1] + T(i).sub_r[r - 1] : (m.rounds[r - 1] || {})[i === 0 ? "a" : "b"]);
+  const endsIn = r => winRound(0, r) + winRound(1, r);
+  const ou = line => (m.over_under || []).find(o => Math.abs(o.line - line) < 1e-6);
+  const rounds = str => str.split(/\s*(?:or|,)\s*/).map(Number).filter(n => n >= 1 && n <= R);
+  const one = label => {
+    const L = norm(label.replace(/½/g, ".5")).replace(/\s+/g, " ").trim();  // before NFKD, which splits "½"
     let x;
-    if ((x = L.match(/^either fighter wins by (?:tko\/ko|ko\/tko|ko)$/i))) return m.a.ko + m.b.ko;
-    if ((x = L.match(/^either fighter wins by submission$/i))) return m.a.sub + m.b.sub;
-    if ((x = L.match(/^(.+?) wins by (?:tko\/ko|ko\/tko|ko|tko)$/i))) { const i = sideOf(x[1]); return i === null ? null : S_(i).ko; }
-    if ((x = L.match(/^(.+?) wins by submission$/i))) { const i = sideOf(x[1]); return i === null ? null : S_(i).sub; }
-    if ((x = L.match(/^(.+?) wins by decision$/i))) { const i = sideOf(x[1]); return i === null ? null : S_(i).dec; }
-    if ((x = L.match(/^(.+?) wins inside (?:the )?distance$/i))) { const i = sideOf(x[1]); return i === null ? null : S_(i).ko + S_(i).sub; }
-    if ((x = L.match(/^not (.+?) inside (?:the )?distance$/i))) { const i = sideOf(x[1]); return i === null ? null : 1 - S_(i).ko - S_(i).sub; }
-    if ((x = L.match(/^not (.+?) by decision$/i))) { const i = sideOf(x[1]); return i === null ? null : 1 - S_(i).dec; }
-    if ((x = L.match(/^(.+?) wins in round (\d)$/i))) { const i = sideOf(x[1]); const r = m.rounds && m.rounds[+x[2] - 1]; return i === null || !r ? null : (i === 0 ? r.a : r.b); }
-    if (/^fight goes to decision$/i.test(L)) return m.distance;
-    if (/^fight doesn'?t go to decision$/i.test(L)) return 1 - m.distance;
-    if ((x = L.match(/^(over|under) (\d(?:\.5)?) rounds$/i)) && m.over_under) {
-      const o = m.over_under.find(o => Math.abs(o.line - +x[2]) < 1e-6);
-      return o ? (x[1].toLowerCase() === "over" ? o.over : o.under) : null;
-    }
-    if ((x = L.match(/^fight ends in round (\d)$/i))) return roundFinish(+x[1]);
-    if ((x = L.match(/^fight (won'?t )?starts? round (\d)$/i))) {
-      let before = 0;
-      for (let r = 1; r < +x[2]; r++) { const v = roundFinish(r); if (v === null) return null; before += v; }
-      return x[1] ? before : 1 - before;
-    }
+    if ((x = L.match(/^either fighter wins by (?:tko\/ko|ko\/tko|ko)$/))) return m.a.ko + m.b.ko;
+    if ((x = L.match(/^either fighter wins by submission$/))) return m.a.sub + m.b.sub;
+    if (/^fight is a draw$/.test(L)) return m.draw || 0;
+    if (/^fight is not a draw$/.test(L)) return 1 - (m.draw || 0);
+    if (/^fight goes to (?:a )?decision$/.test(L) || /^fight goes the distance$/.test(L)) return m.distance;
+    if (/^fight doesn'?t go to (?:a )?decision$/.test(L) || /^fight doesn'?t go the distance$/.test(L)) return 1 - m.distance;
+    if ((x = L.match(/^(over|under) (\d(?:\.5)?) rounds$/))) { const o = ou(+x[2]); return o ? (x[1] === "over" ? o.over : o.under) : null; }
+    if ((x = L.match(/^fight ends in round ([\d ,or]+)$/))) { const rs = rounds(x[1]); return rs.length ? sum(rs.map(endsIn)) : null; }
+    if ((x = L.match(/^fight doesn'?t end in round (\d)$/))) return 1 - endsIn(+x[1]);
+    if ((x = L.match(/^fight (won'?t )?starts? round (\d)$/))) { const before = sum(Array.from({ length: +x[2] - 1 }, (_, k) => endsIn(k + 1))); return x[1] ? before : 1 - before; }
+    if (/^fight ends in (?:the )?final round or goes to decision$/.test(L)) return endsIn(R) + m.distance;
+    if ((x = L.match(/^(.+?) wins by (?:tko\/ko|ko\/tko|ko|tko) in round (\d)$/))) { const i = sideOf(x[1]); return i === null || !T(i).ko_r ? null : T(i).ko_r[+x[2] - 1]; }
+    if ((x = L.match(/^(.+?) wins by submission in round (\d)$/))) { const i = sideOf(x[1]); return i === null || !T(i).sub_r ? null : T(i).sub_r[+x[2] - 1]; }
+    if ((x = L.match(/^(.+?) wins by (?:tko\/ko|ko\/tko|ko|tko)$/))) { const i = sideOf(x[1]); return i === null ? null : T(i).ko; }
+    if ((x = L.match(/^(.+?) wins by submission$/))) { const i = sideOf(x[1]); return i === null ? null : T(i).sub; }
+    if ((x = L.match(/^(.+?) wins by unanimous decision$/))) { const i = sideOf(x[1]); return i === null || T(i).dec_u === undefined ? null : T(i).dec_u; }
+    if ((x = L.match(/^(.+?) wins by (?:split|majority|split\/majority) decision$/))) { const i = sideOf(x[1]); return i === null || T(i).dec_s === undefined ? null : T(i).dec_s; }
+    if ((x = L.match(/^(.+?) wins by decision$/))) { const i = sideOf(x[1]); return i === null ? null : T(i).dec; }
+    if ((x = L.match(/^(.+?) wins inside (?:the )?distance$/))) { const i = sideOf(x[1]); return i === null ? null : T(i).ko + T(i).sub; }
+    if ((x = L.match(/^not (.+?) inside (?:the )?distance$/))) { const i = sideOf(x[1]); return i === null ? null : 1 - T(i).ko - T(i).sub; }
+    if ((x = L.match(/^not (.+?) by decision$/))) { const i = sideOf(x[1]); return i === null ? null : 1 - T(i).dec; }
+    if ((x = L.match(/^(.+?) wins in (?:the )?final round or by decision$/))) { const i = sideOf(x[1]); return i === null ? null : winRound(i, R) + T(i).dec; }
+    if ((x = L.match(/^(.+?) wins in round ([\d ,or]+)$/))) { const i = sideOf(x[1]); const rs = rounds(x[2]); return i === null || !rs.length ? null : sum(rs.map(r => winRound(i, r))); }
     return null;
   };
   let v = one(p.label);
@@ -182,4 +213,79 @@ function propModelProb(p, f) {
     v = o === null ? null : 1 - o;
   }
   return v === null || isNaN(v) ? null : Math.min(0.995, Math.max(0.005, v));
+}
+
+/* Stake suggestion: fractional Kelly, capped at 1.5% of bankroll per bet. */
+function stakeFor(kelly) {
+  const raw = settings.bankroll * kelly * settings.kelly;
+  return Math.min(raw, settings.bankroll * 0.015);
+}
+
+function decisionBox(pr, f) {
+  const d = pr.decision;
+  if (!d || f.status.state === "post") return "";
+  const cls = d.action === "BET" ? "good" : d.action === "WATCH" ? "title" : "";
+  const who = d.side !== undefined ? esc(f.fighters[d.side].name) : "";
+  const stake = d.action === "BET" && d.kelly ? ` · stake ${money(stakeFor(d.kelly))}` : "";
+  return `<div class="decision ${d.action.toLowerCase()}"><span class="badge ${cls}">${d.action}</span>${d.tier ? ` <span class="small muted">${esc(d.tier)}</span>` : ""}
+    ${d.side !== undefined ? `<b>${who}</b>` : ""}${d.ev !== undefined ? ` <span class="${d.ev >= 0 ? "pos" : "neg"}">${signedPct(d.ev)}</span>` : ""}${stake}
+    <ul>${(d.reasons || []).map(r => `<li>${esc(r)}</li>`).join("")}</ul>
+    ${d.side !== undefined ? `<button class="link-btn" id="log-bet">I bet this</button>` : ""}</div>`;
+}
+
+/* ---------- ledger ---------- */
+async function logBet(f, pr) {
+  const d = pr.decision;
+  const side = d.side;
+  const cz = pr.sides && pr.sides[side] && pr.sides[side].caesars;
+  const price = window.prompt(`Price you got on ${f.fighters[side].name} at ${TARGET} (American odds):`, cz !== undefined ? String(cz) : "");
+  if (price === null || isNaN(parseFloat(price)) || Math.abs(parseFloat(price)) < 100) return;
+  const suggested = d.kelly ? stakeFor(d.kelly).toFixed(2) : "";
+  const stake = window.prompt("Stake ($, optional):", suggested);
+  if (stake === null) return;
+  const q = new URLSearchParams({ event: S.eventId, fight: f.id, side, price: parseFloat(price) });
+  if (stake && !isNaN(parseFloat(stake))) q.set("stake", parseFloat(stake));
+  try {
+    const r = await api(`/api/ledger/add?${q}`);
+    window.alert(r.ok ? "Logged. Open the ledger (top right) to track it against the closing line." : "Couldn't log it (the fight may have started).");
+  } catch (e) { window.alert(`Couldn't log it: ${e.message}`); }
+}
+
+async function openLedger() {
+  const dlg = $("#ledger"), body = $("#ledger-body");
+  body.innerHTML = `<div class="loading">Loading…</div>`;
+  dlg.showModal();
+  try {
+    const d = await api("/api/ledger");
+    body.innerHTML = renderLedger(d);
+    body.querySelectorAll("[data-remove]").forEach(b => b.onclick = async () => {
+      if (!window.confirm("Remove this entry?")) return;
+      await api(`/api/ledger/remove?id=${encodeURIComponent(b.dataset.remove)}`);
+      openLedger();
+    });
+  } catch (e) { body.innerHTML = `<div class="err">${esc(e.message)}</div>`; }
+}
+
+function renderLedger(d) {
+  const s = d.summary || {};
+  const line = (lab, x) => x && x.entries ? `<tr><td>${lab}</td><td>${x.entries}</td><td>${x.clv !== null ? signedPct(x.clv, 1) : "—"}</td><td>${x.beatClose !== null ? pct(x.beatClose, 0) : "—"}</td><td>${x.settled}</td><td>${x.roi !== null ? signedPct(x.roi, 1) : "—"}</td></tr>` : "";
+  const rows = (d.entries || []).map(e => `<tr>
+      <td>${esc(fmtDate(e.ts))}</td><td>${esc(e.fighters[e.side])} <span class="faint">vs ${esc(lastName(e.fighters[1 - e.side]))}</span></td>
+      <td>${esc(fmtOdds(e.price))}</td><td>${esc(e.source === "user" ? "your bet" : e.action)}${e.tier ? `<br><span class="faint">${esc(e.tier)}</span>` : ""}</td>
+      <td>${e.closeFair !== null ? esc(fmtOdds(probToAm(e.closeFair))) : "—"}</td>
+      <td class="${e.clv > 0 ? "pos" : e.clv < 0 ? "neg" : ""}">${e.clv !== null ? signedPct(e.clv, 1) : "—"}</td>
+      <td>${esc(e.result || "open")}${e.profit !== null && e.profit !== undefined ? ` <span class="${e.profit >= 0 ? "pos" : "neg"}">${e.profit >= 0 ? "+" : ""}${e.profit}</span>` : ""}</td>
+      <td>${e.source === "user" ? `<button class="link-btn" data-remove="${esc(e.id)}">✕</button>` : ""}</td></tr>`).join("");
+  return `<p class="fine">Every ${TARGET} price the app flags is logged the first time it's flagged, plus the bets you log. Each is checked against the last consensus price the app saw before the fight (closing-line value) and the result. Positive CLV over a few hundred bets is the clearest sign of a real edge; ROI takes thousands.</p>
+    <div style="overflow-x:auto"><table class="books-table"><thead><tr><th></th><th>Entries</th><th>Avg CLV</th><th>Beat close</th><th>Settled</th><th>ROI</th></tr></thead><tbody>
+      ${line("Flagged BET", s.flagged_bets)}${line("Flagged WATCH", s.flagged_watch)}${line("Your bets", s.your_bets)}</tbody></table></div>
+    ${rows ? `<div style="overflow-x:auto;margin-top:10px"><table class="books-table"><thead><tr><th>Logged</th><th>Pick</th><th>Price</th><th>Type</th><th>Close</th><th>CLV</th><th>Result</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`
+      : `<div class="muted" style="margin-top:10px">Nothing logged yet. Flags are recorded automatically as cards are viewed.</div>`}`;
+}
+
+function decisionChip(f) {
+  const pr = modelFor(f);
+  const d = pr && pr.decision;
+  if (!d || f.status.state === "post" || d.action === "PASS") return "";
+  return ` <span class="badge ${d.action === "BET" ? "good" : "title"}" title="${esc((d.reasons || []).join(" "))}">${d.action}</span>`;
 }

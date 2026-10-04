@@ -37,18 +37,23 @@ def _solve(a, b):
     return [m[i][n] for i in range(n)]
 
 
-def fit_logistic(X, y, l2=1.0, w=None, intercept=False, iters=25, tol=1e-7):
-    """Newton-IRLS for L2 logistic regression.  Returns (coef, bias).  X: list of lists."""
+def fit_logistic(X, y, l2=1.0, w=None, intercept=False, iters=25, tol=1e-7, offset=None):
+    """Newton-IRLS for L2 logistic regression.  Returns (coef, bias).  X: list of lists.
+
+    offset: optional per-row fixed term added to the linear predictor (e.g. logit of the market price,
+    so the penalty shrinks the fitted coefficients toward "trust the market" rather than toward 50/50).
+    """
     n, d = len(X), len(X[0])
     w = w or [1.0] * n
+    offset = offset or [0.0] * n
     coef = [0.0] * d
     bias = 0.0
     dd = d + (1 if intercept else 0)
     for _ in range(iters):
         grad = [0.0] * dd
         hess = [[0.0] * dd for _ in range(dd)]
-        for xi, yi, wi in zip(X, y, w):
-            z = bias + sum(c * v for c, v in zip(coef, xi))
+        for xi, yi, wi, oi in zip(X, y, w, offset):
+            z = oi + bias + sum(c * v for c, v in zip(coef, xi))
             p = sigmoid(z)
             g = wi * (p - yi)
             h = wi * p * (1 - p)
@@ -142,35 +147,50 @@ def dec_odds(american):
     return 1 + american / 100.0 if american > 0 else 1 + 100.0 / -american
 
 
-def backtest(bets, threshold=0.0, stake="flat", kelly_frac=0.25):
-    """bets: list of dicts {p: model prob of side, odds: American price of side, won: 0/1}.
+def backtest(bets, threshold=0.0, stake="flat", kelly_frac=0.25, min_prob=0.0, placebo=200, seed=5):
+    """bets: dicts {p: probability of the side, odds: American price, won: 0/1, cluster: event key}.
 
-    Places a bet whenever EV = p * dec - 1 >= threshold.  Returns summary with ROI and a bootstrap CI.
+    Bets every side with EV = p * dec - 1 >= threshold (and p >= min_prob).  ROI's CI resamples whole
+    events (fights on one card share information).  The placebo percentile is where the ROI falls
+    among random picks of the same number of sides from the same pool: ~50 means no better than luck.
     """
     placed = []
     for b in bets:
         d = dec_odds(b["odds"])
         e = b["p"] * d - 1
-        if e < threshold:
+        if e < threshold or b["p"] < min_prob:
             continue
-        if stake == "kelly":
-            f = max(0.0, (b["p"] * d - 1) / (d - 1)) * kelly_frac
-        else:
-            f = 1.0
-        placed.append((f, d, b["won"], e))
+        f = max(0.0, (b["p"] * d - 1) / (d - 1)) * kelly_frac if stake == "kelly" else 1.0
+        placed.append((f, d, b["won"], e, b.get("cluster")))
     if not placed:
         return {"bets": 0}
-    staked = sum(f for f, _, _, _ in placed)
-    profit = sum(f * (d - 1) if won else -f for f, d, won, _ in placed)
-
-    def roi_of(idx):
+    staked = sum(p[0] for p in placed)
+    profit = sum(p[0] * (p[1] - 1) if p[2] else -p[0] for p in placed)
+    clusters = {}
+    for i, p in enumerate(placed):
+        clusters.setdefault(p[4] if p[4] is not None else i, []).append(i)
+    keys = list(clusters)
+    rnd = random.Random(seed)
+    rois = []
+    for _ in range(800):
+        idx = [i for _ in keys for i in clusters[keys[rnd.randrange(len(keys))]]]
         s = sum(placed[i][0] for i in idx)
-        if not s:
-            return None
-        return sum(placed[i][0] * (placed[i][1] - 1) if placed[i][2] else -placed[i][0] for i in idx) / s
-    lo, hi = bootstrap(roi_of, len(placed), reps=800)
-    return {"bets": len(placed), "staked": round(staked, 2), "profit": round(profit, 2), "roi": round(profit / staked, 4),
-            "roi_ci": [round(lo, 4), round(hi, 4)] if lo is not None else None,
-            "win_rate": round(sum(1 for p in placed if p[2]) / len(placed), 4),
-            "avg_ev": round(sum(p[3] for p in placed) / len(placed), 4),
-            "avg_odds": round(sum(p[1] for p in placed) / len(placed), 3)}
+        if s:
+            rois.append(sum(placed[i][0] * (placed[i][1] - 1) if placed[i][2] else -placed[i][0] for i in idx) / s)
+    rois.sort()
+    roi = profit / staked
+    out = {"bets": len(placed), "staked": round(staked, 2), "profit": round(profit, 2), "roi": round(roi, 4),
+           "roi_ci": [round(rois[int(0.025 * len(rois))], 4), round(rois[int(0.975 * len(rois)) - 1], 4)] if rois else None,
+           "p_roi_pos": round(sum(1 for v in rois if v > 0) / len(rois), 3) if rois else None,
+           "win_rate": round(sum(1 for p in placed if p[2]) / len(placed), 4),
+           "avg_ev": round(sum(p[3] for p in placed) / len(placed), 4),
+           "avg_odds": round(sum(p[1] for p in placed) / len(placed), 3)}
+    if placebo and len(bets) > len(placed):
+        pool = [(dec_odds(b["odds"]), b["won"]) for b in bets]
+        beat = 0
+        for _ in range(placebo):
+            pick = rnd.sample(pool, len(placed))
+            r = sum((d - 1) if w else -1 for d, w in pick) / len(pick)
+            beat += r < roi
+        out["placebo_pct"] = round(100.0 * beat / placebo, 1)
+    return out

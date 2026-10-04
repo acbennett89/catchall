@@ -230,6 +230,8 @@ dialog::backdrop { background: rgba(0,0,0,.5); }
   .odds-grid, .calc, .calc-out { gap: 8px; }
   .kv { grid-template-columns: auto minmax(0, 1fr); }
   .kv dd { overflow-wrap: anywhere; }
+  .kv.tight { grid-template-columns: minmax(0, 1fr) auto; }
+  .kv.tight dd { white-space: nowrap; overflow-wrap: normal; }
   .os-top { flex-wrap: wrap; gap: 0 6px; }
   .os-price { font-size: 22px; }
   .stat-row { grid-template-columns: 44px 1fr 86px 1fr 44px; gap: 5px; }
@@ -246,3 +248,12 @@ dialog::backdrop { background: rgba(0,0,0,.5); }
   .odds-side { padding: 9px; }
   .kv { font-size: 12px; gap: 2px 6px; }
 }
+
+/* bet decision */
+.decision { border: 1px solid var(--line); border-radius: 9px; padding: 10px 12px; margin-bottom: 12px; background: var(--panel-2); font-size: 13px; }
+.decision.bet { border-color: var(--good); background: linear-gradient(0deg, var(--good-soft), var(--good-soft)), var(--panel-2); }
+.decision.watch { border-color: color-mix(in srgb, var(--warn) 60%, var(--line)); }
+.decision ul { margin: 6px 0 0 18px; padding: 0; color: var(--muted); font-size: 12px; }
+
+#ledger { max-width: 860px; }
+.ledger-form .books-table td, .ledger-form .books-table th { white-space: nowrap; }

@@ -8,6 +8,7 @@ fighter history), UFCStats (career stats) and BestFightOdds (Caesars and every o
     /api/odds/<id>                 per fight: all books, no-vig fair price, Caesars edge, props, movement
     /api/fighter/<id>?before=<ts>  bio, career stats, record breakdown and last five fights before <ts>
     /api/predict/<id>              model win/method/round probabilities per fight, with model edge at Caesars
+    /api/ledger[/add|/remove]      forward record of flagged and placed bets, settled with CLV and results
 
     python serve.py            # http://localhost:8766  and  http://<this-pc-ip>:8766 from your phone
     python serve.py --open     # same, and open it in the browser
@@ -19,7 +20,7 @@ from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-import espn, fighters, market, modelapi  # noqa: E402
+import espn, fighters, ledger, market, modelapi  # noqa: E402
 
 ARGS = [a for a in sys.argv[1:] if not a.startswith("--")]
 PORT = int(ARGS[0]) if ARGS else 8766
@@ -89,6 +90,21 @@ def api(path, q):
         return fighters.build(parts[2], float(before) if before else None, q.get("name", [None])[0])
     if parts[:2] == ["api", "predict"] and len(parts) == 3:
         return predictions(parts[2])
+    if parts[:2] == ["api", "ledger"]:
+        if len(parts) == 3 and parts[2] == "add":
+            g = lambda k: q.get(k, [None])[0]
+            card = espn.card(g("event"))
+            f = next((x for x in card["fights"] if x["id"] == g("fight")), None)
+            if not f:
+                return {"error": "fight not found"}
+            pred = (predictions(g("event")).get("fights") or {}).get(f["id"]) or {}
+            dec = pred.get("decision") or {}
+            e = ledger.record(g("event"), card, f, dec, pred, source="user", price=int(float(g("price"))),
+                              stake=float(g("stake")) if g("stake") else None, side=int(g("side")))
+            return {"ok": bool(e), "entry": e}
+        if len(parts) == 3 and parts[2] == "remove":
+            return {"ok": ledger.remove(q.get("id", [""])[0])}
+        return ledger.report(market.history)
     if parts[:2] == ["api", "health"]:
         return {"ok": True, "now": time.time()}
     return None

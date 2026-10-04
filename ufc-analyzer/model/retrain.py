@@ -31,7 +31,8 @@ def main():
     Xa = Xs + [[-v for v in x] for x in Xs]
     ya = [r["y"] for r in rows] + [1 - r["y"] for r in rows]
     coef, _ = learn.fit_logistic(Xa, ya, l2=1.0 / C)
-    model["win"]["coef"] = [c / s for c, s in zip(coef, scale)]
+    a = model["win"].get("calibration_scale", 1.0)  # keep the shipped calibration scale
+    model["win"]["coef"] = [a * c / s for c, s in zip(coef, scale)]
     model["win"]["scale"] = scale
     model["trained_through"] = max(r["date"] for r in rows)
     model["retrained"] = time.strftime("%Y-%m-%d")

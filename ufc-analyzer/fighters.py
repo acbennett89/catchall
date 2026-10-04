@@ -154,7 +154,7 @@ def build(espn_id, before=None, name=None):
     hist = [h for h in a["history"] if h["date"] and h["date"] < before - 6 * 3600 and h.get("result")]
 
     first, last = (name.split(" ", 1) + [""])[:2] if name else ("", "")
-    fid = _safe(ufcstats.find_id, name, first, last.split(" ")[-1] if last else None, espn_id)
+    fid = _safe(ufcstats.find_id, name, first, last.split(" ")[-1] if last else None, espn_id, a.get("record"))
     uf = _safe(ufcstats.fighter, fid) if fid else None
     ufcs_rows = (uf or {}).get("fights") or []
     opponents = tuple(h["opponent"]["name"] for h in hist[:6] if h["opponent"]["name"])

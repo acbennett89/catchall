@@ -255,7 +255,7 @@ function renderList() {
     const evs = [0, 1].map(i => basisEv(f, fo, i));
     const isValue = actionable && evs.some(v => v !== null && v >= settings.threshold);
     html += `<button class="fight-row${f.id === S.fightId ? " selected" : ""}${isValue ? " value" : ""}" data-fid="${esc(f.id)}">
-      <div class="fr-head"><span>${esc(f.weightClass || "")}${f.title ? " · <b style='color:var(--warn)'>Title</b>" : ""} · ${f.rounds} rds</span><span>${statusLine(f)}</span></div>
+      <div class="fr-head"><span>${esc(f.weightClass || "")}${f.title ? " · <b style='color:var(--warn)'>Title</b>" : ""} · ${f.rounds} rds${decisionChip(f)}</span><span>${statusLine(f)}</span></div>
       ${f.fighters.map((x, i) => {
         const cls = f.status.state === "post" ? (x.winner ? "won" : (f.fighters.some(y => y.winner) ? "lost" : "")) : "";
         const ev = evs[i];
@@ -384,7 +384,7 @@ function renderOdds(f, A, B) {
         <dt>Market fair</dt><dd>${fair !== null ? `${pct(fair, 1)} <span class="muted">(${esc(fmtOdds(s.fairOdds))})</span>` : "—"}</dd>
         ${t ? `<dt>EV at ${TARGET}</dt><dd class="${t.ev >= 0 ? "pos" : "neg"}">${signedPct(t.ev)}</dd>` : ""}
         ${s.best ? `<dt>Best price</dt><dd>${esc(fmtOdds(s.best.odds))} <span class="muted">${esc(s.best.book)}</span></dd>` : ""}
-        ${t && t.ev > 0 ? `<dt>Stake (${Math.round(settings.kelly * 100)}% Kelly)</dt><dd>${money(stake)}</dd>` : ""}
+        ${t && t.ev > 0 ? `<dt>Stake (${Math.round(settings.kelly * 100)}% Kelly)</dt><dd>${money(Math.min(stake, settings.bankroll * 0.015))}</dd>` : ""}
         ${cur && cur.open !== null && cur.open !== undefined ? `<dt>Market open</dt><dd>${esc(fmtOdds(cur.open))}</dd>` : ""}
       </dl>
     </div>`;
@@ -455,7 +455,7 @@ function renderCalc(f, reset) {
         <dl class="kv"><dt>EV</dt><dd class="${e >= 0 ? "pos" : "neg"}">${signedPct(e)}</dd>
         <dt>Break-even</dt><dd>${pct(imp(o), 1)}</dd>
         <dt>Your fair price</dt><dd>${esc(fmtOdds(probToAm(prob)))}</dd>
-        <dt>Stake</dt><dd>${e > 0 ? money(settings.bankroll * k * settings.kelly) : "—"}</dd></dl></div>`;
+        <dt>Stake</dt><dd>${e > 0 ? money(stakeFor(k)) : "—"}</dd></dl></div>`;
     };
     $("#calc-out").innerHTML = box(na, p, c.oa) + box(nb, 1 - p, c.ob);
   };
@@ -672,7 +672,7 @@ function renderProps(f) {
       return `<tr class="${val ? "value" : ""}"><td>${esc(p.label)}</td><td><b>${esc(fmtOdds(p.odds))}</b></td><td>${p.fairOdds !== null ? esc(fmtOdds(p.fairOdds)) : "—"}</td><td>${evCell}</td>${modelCells}<td class="muted">${p.market !== null ? `${esc(fmtOdds(p.market))} med · ` : ""}${p.best ? `${esc(fmtOdds(p.best.odds))} ${esc(p.best.book)}` : ""}</td></tr>`;
     }).join("")}</tbody></table></div>
     ${props.length > 10 ? `<button class="link-btn" id="props-more" style="margin-top:8px">${S.showAllProps ? "Show top 10" : `Show all ${props.length}`}</button>` : ""}
-    <div class="stat-help">Sorted by market EV. "Fair" strips the vig from other books' two-way prices; one-sided props compare ${TARGET} with the median other book instead.${hasModel ? ` "Model" prices the prop from the model's method and round breakdown.` : ""}</div>`;
+    <div class="stat-help">Sorted by market EV. "Fair" strips the vig from other books' two-way prices; one-sided props compare ${TARGET} with the median other book instead.${hasModel ? ` "Model" prices the prop from the model's method and round breakdown. That breakdown beat base rates on fights it never saw, but there's no prop-price history to test it against, so treat Model EV here as a lean, not a bet signal.` : ""}</div>`;
   const more = $("#props-more");
   if (more) more.onclick = () => { S.showAllProps = !S.showAllProps; renderProps(f); };
   $("#m-props-meta").textContent = `${props.length} priced`;
@@ -712,6 +712,8 @@ function setupSettings() {
 /* ---------- boot ---------- */
 async function boot() {
   setupSettings();
+  $("#ledger-btn").onclick = openLedger;
+  $("#ledger-close").onclick = () => $("#ledger").close();
   setupSeasons();
   const h = readHash();
   if (h.fight && isMobile()) document.body.classList.add("show-matchup");

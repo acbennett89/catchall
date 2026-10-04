@@ -6,7 +6,7 @@ probabilities, method/round breakdown, the biggest drivers and data-quality flag
 """
 import datetime, json, math, os, threading, time
 
-from model import dataset, engine, features, scrape
+from model import engine, espn_hist, features, scrape
 from model.engine import sigmoid
 from model.learn import softmax
 
@@ -14,7 +14,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(HERE, "model.json")
 
 _lock = threading.Lock()
-_state = {"model": None, "engine": None, "fighters": None, "outside": None, "built": 0, "names": None}
+_state = {"model": None, "engine": None, "fighters": None, "built": 0, "names": None}
 
 
 def _load():
@@ -26,13 +26,11 @@ def _load():
         events, fights, fighters = scrape.load_dataset()
         eng = engine.Engine(model.get("engine"))
         eng.replay(events, fights)
-        totals = dataset.ufc_results(fights)
         names = {}
         for r in fights.values():
             names[r["f1"]] = r["n1"]
             names[r["f2"]] = r["n2"]
-        _state.update(model=model, engine=eng, fighters=fighters, built=time.time(), names=names,
-                      outside={fid: features.outside_record(fighters.get(fid), totals.get(fid, {})) for fid in totals})
+        _state.update(model=model, engine=eng, fighters=fighters, built=time.time(), names=names)
         return _state
 
 
@@ -69,21 +67,21 @@ def _attrs_from_espn(esp):
 
 def side_profile(st, ufcs_id, esp, day, div):
     eng, fighters = st["engine"], st["fighters"]
-    attrs = dict(fighters.get(ufcs_id) or {}) if ufcs_id else {}
-    fallback = _attrs_from_espn(esp or {})
-    for k, v in fallback.items():
-        if attrs.get(k) in (None, "") and v not in (None, ""):
-            attrs[k] = v
+    known = fighters.get(ufcs_id) if ufcs_id else None
+    # Physical attributes come from UFCStats, exactly as in training.  ESPN's bio is only used for a
+    # fighter UFCStats doesn't list yet (a debutant); filling individual gaps from ESPN for listed
+    # fighters would make live features differ from the ones the model was trained on.
+    attrs = dict(known) if known else _attrs_from_espn(esp or {})
     f = eng.fighters.get(ufcs_id) if ufcs_id else None
     if f is None:
         f = engine.Fighter(ufcs_id or "new", eng.p["elo0"])
-    if ufcs_id in st["outside"]:
-        outside = st["outside"][ufcs_id]
+    # record outside the UFC before this fight, from ESPN's dated history (the same source as training)
+    hist = (esp or {}).get("espn_hist")
+    if hist is not None:
+        w, l, _ = espn_hist.outside_before(hist, day.isoformat())
+        outside = (w, l, True)
     else:
-        # not in the UFC dataset: their whole pro record is "outside" (ESPN record like "12-2-0")
-        import re
-        m = re.match(r"(\d+)-(\d+)", (esp or {}).get("record") or attrs.get("record") or "")
-        outside = (int(m.group(1)), int(m.group(2))) if m else (0, 0)
+        outside = (0, 0, False)
     return features.fighter_profile(eng, f, attrs, day, div, outside), f, attrs
 
 
@@ -95,6 +93,19 @@ def predict(a, b, day=None, wc=None, rounds=3, title=False):
     div = engine.weight_class(wc or "")
     A, fa, _ = side_profile(st, a.get("ufcstats_id"), a, day, div)
     B, fb, _ = side_profile(st, b.get("ufcstats_id"), b, day, div)
+    # identity/staleness guard: ESPN knows of earlier UFC fights we can't see -> don't pretend they're a debutant
+    cutoff = datetime.datetime.combine(day, datetime.time()).replace(tzinfo=datetime.timezone.utc).timestamp() - 6 * 3600
+    for i, (P, f, src) in enumerate(((A, fa, a), (B, fb, b))):
+        prior = [t for t in (src.get("espn_ufc_dates") or []) if t and t < cutoff]
+        name = src.get("name") or "a fighter"
+        if prior and P["fights"] == 0:
+            return {"suppressed": f"No prediction: ESPN lists {len(prior)} earlier UFC fight(s) for {name}, but their UFCStats history couldn't be matched."}
+        if prior and f.last and datetime.datetime.fromtimestamp(max(prior), datetime.timezone.utc).date() > f.last + datetime.timedelta(days=3):
+            stale = True
+        else:
+            stale = False
+        if stale:
+            src["_stale"] = True
     x = features.win_features(A, B)
     wm = model["win"]
     contrib = {f: c * x[f] for f, c in zip(wm["feats"], wm["coef"])}
@@ -112,7 +123,17 @@ def predict(a, b, day=None, wc=None, rounds=3, title=False):
     out["flags"] = flags(A, B, fa, fb, a, b)
     out["profiles"] = [_summary(A), _summary(B)]
     out["elo"] = [round(A["elo"]), round(B["elo"])]
+    out["_ctx"] = (A, B, rounds, div)   # for re-anchoring the method breakdown (stripped before JSON)
     return out
+
+
+def anchored_method(pred, p_anchor):
+    """Method/round breakdown re-scaled to another win probability (market or blend)."""
+    mm = (_state["model"] or {}).get("method")
+    if not mm or "_ctx" not in pred:
+        return None
+    A, B, rounds, div = pred["_ctx"]
+    return method_probs(mm, A, B, p_anchor, rounds, div)
 
 
 def _am(p):
@@ -122,33 +143,58 @@ def _am(p):
 
 
 def method_probs(mm, A, B, p_a, rounds, div):
-    """P(winner wins by ko/sub/dec | winner) from a multinomial model on winner/loser profiles."""
-    res = {}
-    for side, (W, L, pw) in enumerate(((A, B, p_a), (B, A, 1 - p_a))):
+    """Full outcome table for the fight, consistent with P(A wins) = p_a.
+
+    Method given the winner comes from the multinomial model.  A draw takes a small share of the
+    decision mass (the moneyline voids on a draw, so P(A | no draw) stays p_a).  Finishes are spread
+    over rounds with method-specific hazards: with F the total finish probability and c = -ln(1 - F),
+    P(round r | method m) = (exp(-c*L[r-1]) - exp(-c*L[r])) / (1 - exp(-c)), so fights likely to end
+    early end earlier, and knockouts come earlier than submissions.
+    """
+    oc = mm.get("outcome") or {}
+    R = 5 if rounds >= 5 else 3
+    probs = []
+    for W, L in ((A, B), (B, A)):
         x = method_features(W, L, rounds)
         zs = [sum(c * x[f] for f, c in zip(mm["feats"], row)) + b for row, b in zip(mm["coef"], mm["bias"])]
-        probs = dict(zip(mm["classes"], softmax(zs)))
-        res[side] = {k: pw * v for k, v in probs.items()}
-    out = {
-        "a": {k: round(v, 4) for k, v in res[0].items()},
-        "b": {k: round(v, 4) for k, v in res[1].items()},
-    }
-    dist = sum(res[s].get("dec", 0) for s in (0, 1))
-    out["distance"] = round(dist, 4)
-    rd = mm.get("round_dist", {}).get(str(rounds)) or mm.get("round_dist", {}).get("3")
-    if rd:
-        # split each side's finish probability across rounds using the historical finish-round mix
-        rounds_out = []
-        for r_i, share in enumerate(rd["share"], 1):
-            rounds_out.append({"round": r_i,
-                               "a": round((res[0].get("ko", 0) + res[0].get("sub", 0)) * share, 4),
-                               "b": round((res[1].get("ko", 0) + res[1].get("sub", 0)) * share, 4)})
-        out["rounds"] = rounds_out
-        finish = 1 - dist
-        cdf = rd.get("cdf_half")  # P(finish happens before r.5 rounds | finish), r = 0..rounds-1
-        if cdf:
-            out["over_under"] = [{"line": i + 0.5, "under": round(finish * c, 4), "over": round(1 - finish * c, 4)}
-                                 for i, c in enumerate(cdf)]
+        probs.append(dict(zip(mm["classes"], softmax(zs))))
+    pw = (p_a, 1 - p_a)
+    dec_mass = sum(pw[s] * probs[s]["dec"] for s in (0, 1))
+    p_draw = oc.get("draw_rate", 0.0) * dec_mass
+    keep = 1 - p_draw
+    cell = [{m: keep * pw[s] * probs[s][m] for m in ("ko", "sub", "dec")} for s in (0, 1)]
+    F = sum(cell[s]["ko"] + cell[s]["sub"] for s in (0, 1))
+    lam = (oc.get("lambda") or {}).get(str(R))
+    split = oc.get("split_share", 0.22)
+    half = oc.get("first_half") or {"ko": 0.5, "sub": 0.4}
+    table = []
+    for s in (0, 1):
+        t = {"ko_r": [], "sub_r": [], "dec_u": cell[s]["dec"] * (1 - split), "dec_s": cell[s]["dec"] * split}
+        for m in ("ko", "sub"):
+            if lam and lam.get(m) and 0 < F < 1:
+                c = -math.log(1 - F)
+                L = lam[m]
+                denom = 1 - math.exp(-c)
+                t[m + "_r"] = [cell[s][m] * (math.exp(-c * L[r - 1]) - math.exp(-c * L[r])) / denom for r in range(1, R + 1)]
+            else:
+                t[m + "_r"] = [cell[s][m] / R] * R
+        table.append(t)
+    ends = [sum(table[s]["ko_r"][r] + table[s]["sub_r"][r] for s in (0, 1)) for r in range(R)]
+    out = {"rounds_scheduled": R, "draw": round(p_draw, 4)}
+    for s, key in ((0, "a"), (1, "b")):
+        t = table[s]
+        out[key] = {"ko": round(sum(t["ko_r"]), 4), "sub": round(sum(t["sub_r"]), 4),
+                    "dec": round(t["dec_u"] + t["dec_s"], 4), "dec_u": round(t["dec_u"], 4), "dec_s": round(t["dec_s"], 4),
+                    "ko_r": [round(v, 4) for v in t["ko_r"]], "sub_r": [round(v, 4) for v in t["sub_r"]]}
+    out["distance"] = round(sum(cell[s]["dec"] for s in (0, 1)) + p_draw, 4)
+    out["rounds"] = [{"round": r + 1, "a": round(table[0]["ko_r"][r] + table[0]["sub_r"][r], 4),
+                      "b": round(table[1]["ko_r"][r] + table[1]["sub_r"][r], 4)} for r in range(R)]
+    # under k.5 rounds: every finish in rounds 1..k, plus first-half finishes in round k+1
+    ou = []
+    for k in range(R):
+        under = sum(ends[:k]) + sum(table[s][m + "_r"][k] * half.get(m, 0.5) for s in (0, 1) for m in ("ko", "sub"))
+        ou.append({"line": k + 0.5, "under": round(under, 4), "over": round(1 - under, 4)})
+    out["over_under"] = ou
     return out
 
 
@@ -167,6 +213,10 @@ def flags(A, B, fa, fb, a, b):
     out = []
     for i, (P, f, src) in enumerate(((A, fa, a), (B, fb, b))):
         name = src.get("name") or ("A" if i == 0 else "B")
+        if src.get("_stale"):
+            out.append({"side": i, "text": f"{name}'s most recent UFC fight isn't in the model's history yet (it updates in the background)."})
+        if P.get("outside_known") == 0.0 and P["fights"] < 4:
+            out.append({"side": i, "text": f"No dated pro history for {name} on ESPN, so their record outside the UFC isn't used."})
         if P["fights"] == 0:
             out.append({"side": i, "text": f"{name} has no UFC fights: the model leans on their outside record and physicals."})
         elif P["minutes"] < 20:
@@ -187,7 +237,9 @@ def _summary(P):
 LABELS = {
     "elo": "Rating (Elo)", "dom": "Dominance rating", "d_strike_diff": "Recent striking margin",
     "d_grapple_diff": "Recent wrestling margin", "d_ctrl": "Recent control time", "log_fights": "UFC experience", "debut": "UFC debut", "log_pro_fights": "Pro experience",
-    "outside_win_pct": "Record outside the UFC", "win_pct": "UFC win rate", "age": "Age", "age_over_32": "Age past 32",
+    "outside_win_pct": "Record outside the UFC", "win_pct": "UFC win rate", "age": "Age", "age_over_30": "Age past 30", "age_over_34": "Age past 34",
+    "move_up": "Moving up a weight class", "move_down": "Moving down a weight class", "head_dmg": "Damage absorbed (career)",
+    "log_five_rounders": "Five-round experience",
     "reach": "Reach", "height": "Height", "southpaw": "Southpaw/switch stance", "log_layoff": "Layoff",
     "slpm": "Strikes landed/min", "sapm": "Strikes absorbed/min", "str_acc": "Striking accuracy", "str_def": "Striking defense",
     "td15": "Takedowns/15", "td_acc": "Takedown accuracy", "td_def": "Takedown defense", "sub15": "Sub attempts/15",

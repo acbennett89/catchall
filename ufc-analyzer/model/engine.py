@@ -29,7 +29,7 @@ def finish_seconds(rec):
 
 def method_class(method):
     m = (method or "").upper()
-    if "KO" in m:  # KO/TKO, TKO - Doctor's Stoppage
+    if "KO" in m or m == "CNC" or "COULD NOT CONTINUE" in m:  # KO/TKO, doctor stoppage, injury stoppage
         return "ko"
     if "SUB" in m:
         return "sub"
