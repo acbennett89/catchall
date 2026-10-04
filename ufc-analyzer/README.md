@@ -128,19 +128,19 @@ them in 2021–2026).
 | Closing line + blend | 68.7% | 0.592 |
 
 - **The blend with both models beats the market on both lines**: opening-line blend minus market
-  log loss −0.0113 (95% range −0.016 to −0.007), closing-line blend −0.0041 (−0.007 to −0.001).
-  Adding the power ratings to the blend beat the single-model blend on 2016–2020 by −0.0045 and
-  −0.0024 (both ranges exclude zero), which is what admitted it.
-- **The BET rule 4+ days out, at historical opening prices:** 1,003 bets, ROI +16.3% (95% range
-  +11% to +22%), and the closing line moved toward the pick with an average closing-line value of
-  +7.2%. On 2016–2020, where the rule was chosen, it was 551 bets at +19.2%. A filter that also
+  log loss −0.0113 (95% range −0.016 to −0.007), closing-line blend −0.0040 (−0.007 to −0.001).
+  Adding the power ratings to the blend beat the single-model blend on 2016–2020 by −0.0048 and
+  −0.0026 (both ranges exclude zero), which is what admitted it.
+- **The BET rule 4+ days out, at historical opening prices:** 1,031 bets, ROI +15.2% (95% range
+  +10% to +21%), and the closing line moved toward the pick with an average closing-line value of
+  +7.2%. On 2016–2020, where the rule was chosen, it was 541 bets at +21.6%. A filter that also
   required the models to be within 15 points of the market removed bets that paid, so it's a warning
   now instead.
-- **Fight-week blend bets** at closing prices with a Caesars-sized 4.4% margin: 674 bets, ROI +9.8%
-  (range +4% to +16%); on 2016–2020 it was 453 bets at +14.8% (+7% to +23%). With the fight model
+- **Fight-week blend bets** at closing prices with a Caesars-sized 4.4% margin: 698 bets, ROI +7.6%
+  (range +2% to +14%); on 2016–2020 it was 469 bets at +15.8% (+7% to +24%). With the fight model
   alone this was +4.5% (range −5% to +12%), which is why it used to stay WATCH.
 - Fight-week market-value bets can't be tested properly without Caesars' own price history; at the
-  best price across books (a ceiling) they returned +24% over 154 bets (range −1% to +52%).
+  best price across books (a ceiling) they returned +19% over 158 bets (range −4% to +45%).
 - **The fight model alone loses**: at closing prices with Caesars' margin it returned −12.2%. Don't
   bet a raw model number.
 
@@ -204,25 +204,24 @@ defense margins, gives the win chance.
 **What earned its place.** Each optional group was removed in turn and kept only if the model got
 worse without it on 2010–2015 and again on 2016–2020:
 
-- Kept: the additive offense-and-defense margins, **results** (Bradley-Terry strength and the
-  performance-implied win share), **schedule** (strength of schedule, luck) and **ring rust**
-  (layoff, activity, coming off a loss).
-- Dropped: **momentum** (last 5, streak, trend), the multiplicative expected-output margins (redundant
-  with the additive ones), cardio, pace, judging and record. They didn't add to what the adjusted
-  ratings already say.
+- Kept: the offense-and-defense margins in both forms (additive, and the expected output each way),
+  **schedule** (strength of schedule, luck) and **ring rust** (layoff, activity, coming off a loss).
+- Dropped: **momentum** (last 5, streak, trend), results (Bradley-Terry strength and the
+  performance-implied win share add nothing once the efficiencies are in), cardio, pace, judging and
+  record. They didn't add to what the adjusted ratings already say.
 
 **Track record (2021–2026, 2,957 fights it never saw, trained only on earlier years).**
 
 | | Picks the winner | Log loss |
 | --- | --- | --- |
-| Power ratings model | 63.7% | 0.631 |
+| Power ratings model | 64.2% | 0.631 |
 | The fight model (same fights) | 63.4% | 0.640 |
 | Opening line (2,872 fights with odds) | 66.0% | 0.618 |
 | Closing line | 68.4% | 0.595 |
 
-On the fights with odds the ratings score 0.628, within noise of the opening line (difference
-+0.010, 95% range −0.000 to +0.019) and clearly behind the close. The adjusted efficiencies are
-worth about 0.012 log loss over the same stats unadjusted; AdjEM alone picks 60% of winners.
+On the fights with odds the ratings score 0.628, just behind the opening line (difference +0.010,
+95% range +0.001 to +0.019) and clearly behind the close. The adjusted efficiencies are worth about
+0.012 log loss over the same stats unadjusted; AdjEM alone picks 60% of winners.
 
 The ratings are both a **second opinion on who wins** (the panel, the rankings) and, since adding
 them to the market blend beat the single-model blend on the validation years, **part of the bet

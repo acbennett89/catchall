@@ -173,18 +173,21 @@ stays with the market blend.
 
 - Rating settings: τ = 1,500 days (chosen on 2010–2015 and confirmed on 2016–2020 over 365–1,500),
   15 pseudo-minutes of shrinkage for raw rates; per-dimension K from the reliability analysis.
-- Groups kept by the ablation: additive offense-and-defense margins, results, schedule, ring rust.
-  Dropped: momentum, multiplicative margins, cardio, pace, judging, record.
-- 2021–2026 (2,957 fights): log loss 0.631, 63.7% right; AdjEM alone 0.657 / 60.4%; without the
-  adjusted efficiencies 0.643. On the 2,872 fights with lines: 0.628 vs opening line 0.618
-  (difference +0.010, 95% range −0.000 to +0.019) and closing line 0.595. The fight model in
-  `model/` scores 0.638 on the same fights.
+- Groups kept by the ablation: the offense-and-defense margins in both forms, schedule, ring rust.
+  Dropped: momentum, results, cardio, pace, judging, record.
+- 2021–2026 (2,957 fights): log loss 0.631, 64.2% right; AdjEM alone 0.658; without the adjusted
+  efficiencies 0.643. On the 2,872 fights with lines: 0.628 vs opening line 0.618 (difference
+  +0.010, 95% range +0.001 to +0.019) and closing line 0.595. The fight model in `model/` scores
+  0.638 on the same fights.
 - Calibration: by decile, predicted and actual agree within 2 points from 0.2 to 0.8.
 - In the market blend (`model/train.py`, two-model stacker, gated on 2016–2020): adding the ratings
-  beat the single-model blend by −0.0045 (opening) and −0.0024 (closing) log loss; blend minus
-  market −0.0113 and −0.0041 on 2021–2026. Served BET rule at historical opening prices: 1,003
-  bets, ROI +16.3% [+10.7, +22.2], CLV +7.2%; fight-week blend bets at Caesars-like prices: 674
-  bets, +9.8% [+4.0, +15.9] (2016–2020: +14.8%).
+  beat the single-model blend by −0.0048 (opening) and −0.0026 (closing) log loss; blend minus
+  market −0.0113 and −0.0040 on 2021–2026. Served BET rule at historical opening prices: 1,031
+  bets, ROI +15.2% [+9.6, +20.9], CLV +7.2%; fight-week blend bets at Caesars-like prices: 698
+  bets, +7.6% [+2.1, +13.7] (2016–2020: +15.8%).
+- Reviewed adversarially (four reviewers, four skeptics): a train/serve weight mismatch on the
+  composites was found and fixed before these numbers were produced; the validation years decide
+  both the ratings' feature groups and the blend's gate, which the test years never touch.
 
 ## Not built yet (from the design panel's longer list)
 
