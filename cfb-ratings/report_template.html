@@ -305,7 +305,7 @@ details[open] > summary { margin-bottom: 6px; }
     { k: "PenFDAllowedPG", label: "Pen 1st dn/G", title: "First downs given up by defensive penalty per game", f: v => fx(v, 2) },
     { k: "NeutralPace", label: "Neutral pace", title: "Seconds per snap, Q1-Q3, score within 14 (lower = faster)", f: v => v == null ? "—" : fx(v, 1) + " s" },
     { k: "NeutralRunRate", label: "Run %", f: v => v == null ? "—" : (v * 100).toFixed(0) + "%" },
-    { k: "LP_drives", label: "Lead-protect drives", desc: true, title: "Q4 drives tagged as clock-burning to protect a lead", f: (v, r) => `${v} <span class="rk">of ${r.Q4_lead_drives}</span>` },
+    { k: "LP_drives", label: "Lead-protect drives", desc: true, title: "Q4 drives tagged as clock-burning to protect a lead, of Q4 leading drives in usable-clock games", f: (v, r) => `${v} <span class="rk">of ${r.Q4_lead_drives}</span>` },
   ], "PenPG", 1, openTeam);
 
   /* ---------- picks ---------- */
@@ -353,11 +353,12 @@ details[open] > summary { margin-bottom: 6px; }
   function effTable(side, label, oppKey) {
     const L = side.lines;
     const tw = L.reduce((a, b) => a + b.w, 0);
-    let h = `<div class="tablewrap"><table class="mini"><thead><tr><th class="t">Opponent</th><th>Drives</th><th>Raw PPD</th><th>${oppKey === "opp_AdjD" ? "Opp AdjD" : "Opp AdjO"}</th><th>Opp adj</th><th>Venue adj</th><th>Adjusted</th></tr></thead><tbody>`;
-    L.forEach(l => { h += `<tr><td class="t">${esc(l.opp_name)}${l.opp_status && l.opp_status !== "published" ? ` <span class="rk" title="${esc(l.opp_status)}">internal*</span>` : ""}</td><td>${l.w}</td><td>${fx(l.raw, 3)}</td><td>${fx(l[oppKey], 3)}</td><td>${fx(l.opp_adjustment, 3, true)}</td><td>${fx(l.hfa_adjustment, 3, true)}</td><td>${fx(l.adjusted, 3)}</td></tr>`; });
+    const oppLabel = { opp_AdjD: "Opp AdjD", opp_AdjO: "Opp AdjO", opp_AdjSR_D: "Opp AdjSR D", opp_AdjSR_O: "Opp AdjSR O" }[oppKey] || oppKey;
+    let h = `<div class="tablewrap"><table class="mini"><thead><tr><th class="t">Opponent</th><th>Weight</th><th>Raw</th><th>${oppLabel}</th><th>Opp adj</th><th>Venue adj</th><th>Adjusted</th></tr></thead><tbody>`;
+    L.forEach(l => { h += `<tr><td class="t">${esc(l.opp_name)}${internalTag(l)}</td><td>${fx(l.w, Number.isInteger(l.w) ? 0 : 1)}</td><td>${fx(l.raw, 3)}</td><td>${fx(l[oppKey], 3)}</td><td>${fx(l.opp_adjustment, 3, true)}</td><td>${fx(l.hfa_adjustment, 3, true)}</td><td>${fx(l.adjusted, 3)}</td></tr>`; });
     h += `<tr class="prior"><td class="t">Phantom game (${esc(side.prior.division)} average)</td><td>${side.prior.weight}</td><td></td><td></td><td></td><td></td><td>${fx(side.prior.value, 3)}</td></tr></tbody></table></div>`;
-    if (L.some(l => l.opp_status && l.opp_status !== "published")) h += `<p class="note">* Internal input: the opponent is an FCS team or an FBS team below the game minimum. Its rating isn't published; it appears here only so this line can be checked.</p>`;
-    h += `<div class="formula">${label} = (Σ drives × adjusted + ${side.prior.weight} × ${fx(side.prior.value, 3)}) / (${tw} + ${side.prior.weight}) = ${fx(side.recomputed, 4)}   ${side.check_ok ? "✓ matches stored value" : "✗ MISMATCH"}</div>`;
+    if (L.some(l => l.opp_status && l.opp_status !== "published")) h += `<p class="note">* Internal input: the opponent is an FCS team or an FBS team below the game minimum. Its rating isn't published. Click "internal*" to see how it was derived.</p>`;
+    h += `<div class="formula">${label} = (Σ weight × adjusted + ${side.prior.weight} × ${fx(side.prior.value, 3)}) / (${tw} + ${side.prior.weight}) = ${fx(side.recomputed, 4)}   ${side.check_ok ? "✓ matches stored value" : "✗ MISMATCH"}</div>`;
     return h;
   }
 
@@ -386,6 +387,36 @@ details[open] > summary { margin-bottom: 6px; }
     return h + "</div></details></div>";
   }
 
+  function internalTag(l) {
+    if (!l.opp_status || l.opp_status === "published") return "";
+    return ` <button class="chip" style="padding:0 5px;font-size:11px" title="${esc(l.opp_status)}" data-internal="${esc(l.opp)}">internal*</button>`;
+  }
+
+  function wireInternal() {
+    drawer.querySelectorAll("[data-internal]").forEach(b => b.addEventListener("click", ev => { ev.stopPropagation(); openInternal(b.dataset.internal); }));
+  }
+
+  function openInternal(id) {
+    const tr = (D.internal || {})[id];
+    if (!tr) return;
+    const t = tr.team;
+    let h = `<div class="dhead"><div><h2>${esc(t.name)}</h2><div class="sub">${esc(t.division)} · ${esc(t.conference || "")} · <b>internal input</b></div></div><button class="close" id="close">Close</button></div>`;
+    h += `<p class="note">${esc(tr.note)}</p>`;
+    h += `<h3>Efficiency (internal)</h3><h4>Offense (AdjO)</h4>` + effTable(tr.efficiency.offense, "AdjO", "opp_AdjD") + `<h4>Defense (AdjD)</h4>` + effTable(tr.efficiency.defense, "AdjD", "opp_AdjO");
+    h += `<h3>Adjusted success rate (internal)</h3>` + effTable(tr.success_rate_adjusted.offense, "AdjSR_O", "opp_AdjD") + effTable(tr.success_rate_adjusted.defense, "AdjSR_D", "opp_AdjO");
+    if (tr.tempo) h += `<h3>Tempo (internal)</h3>` + tempoTable(tr.tempo);
+    drawer.innerHTML = h; drawer.hidden = false; scrim.hidden = false; drawer.scrollTop = 0;
+    document.getElementById("close").addEventListener("click", closeTeam);
+    wireInternal();
+  }
+
+  function tempoTable(tt) {
+    return `<div class="tablewrap"><table class="mini"><thead><tr><th class="t">Opponent</th><th>Poss.</th><th>Opp AdjT</th><th>Adjusted</th></tr></thead><tbody>` +
+      tt.lines.map(l => `<tr><td class="t">${esc(l.opp_name)}${internalTag(l)}</td><td>${fx(l.poss, 1)}</td><td>${fx(l.opp_AdjT, 2)}</td><td>${fx(l.adjusted, 2)}</td></tr>`).join("") +
+      `<tr class="prior"><td class="t">Phantom game (division average)</td><td></td><td></td><td>${fx(tt.prior, 2)}</td></tr></tbody></table></div>` +
+      `<div class="formula">AdjT = mean(possessions − (opp AdjT − ${fx(tt.muT, 2)})) incl. one phantom game = ${fx(tt.recomputed, 3)} ${tt.check_ok ? "✓" : "✗"}\nPossessions = (both teams' regulation drives with a real snap) / 2</div>`;
+  }
+
   function openTeam(id) {
     const r = byId[id], tr = D.traces[id];
     if (!r || !tr) return;
@@ -397,7 +428,7 @@ details[open] > summary { margin-bottom: 6px; }
         ["SOS", fx(r.SOS, 1, true)], ["Resume / game", fx(r.NetPerGame, 3, true)], ["Luck", fx(r.luck, 3, true)]].map(([k, v]) => `<div class="stat"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("") + "</div>";
     }
     h += `<h3>Schedule</h3><div class="tablewrap"><table class="mini"><thead><tr><th>Wk</th><th class="t">Opponent</th><th>Site</th><th>Result</th><th class="t">Notes</th></tr></thead><tbody>` +
-      tr.schedule.map(g => `<tr><td>${g.week}</td><td class="t">${esc(g.opp_name)} <span class="rk">${esc(g.opp_division)}${g.conf_game ? " · conf" : ""}</span></td><td>${g.site}</td><td>${g.result} ${g.us}-${g.them}${(g.garbage_pts_us || g.garbage_pts_them) ? ` <span class="rk" title="Garbage-adjusted score (offensive points on garbage-time drives removed)">adj ${fx(g.adj_us, 0)}-${fx(g.adj_them, 0)}</span>` : ""}</td><td class="t note">${g.used_in_efficiency ? (g.note ? esc(g.note).slice(0, 140) : "") : "not in efficiency model: " + esc(g.note)}</td></tr>`).join("") + "</tbody></table></div>";
+      tr.schedule.map(g => `<tr><td>${g.week}</td><td class="t">${esc(g.opp_name)} <span class="rk">${esc(g.opp_division)}${g.conf_game ? " · conf" : ""}</span></td><td>${g.site}</td><td>${g.result} ${g.us}-${g.them}${(g.garbage_pts_us || g.garbage_pts_them) ? ` <span class="rk" title="Garbage-adjusted score (offensive points on garbage-time drives removed)">adj ${fx(g.adj_us, 0)}-${fx(g.adj_them, 0)}</span>` : ""}</td><td class="t note">${g.clock && g.clock.cand != null ? (g.clock.usable ? "clock usable" : `clock not usable (${g.clock.zero}/${g.clock.cand} zero)`) : ""}${g.box_penalties ? ` · pen ${g.box_penalties.us ? g.box_penalties.us.join("-") : "—"} vs ${g.box_penalties.them ? g.box_penalties.them.join("-") : "—"}` : ""}${g.used_in_efficiency ? (g.note ? " · " + esc(g.note).slice(0, 120) : "") : " · not in efficiency model: " + esc(g.note)}</td></tr>`).join("") + "</tbody></table></div>";
     if (!r.eligible) {
       h += `<p class="note">${esc(tr.note || "")}</p>`;
     } else {
@@ -406,13 +437,15 @@ details[open] > summary { margin-bottom: 6px; }
         h += `<h3>Efficiency</h3><p class="note">Each game is adjusted for the opponent and the venue: adjusted = raw − (opponent rating − ${fx(e.mu, 3)}) − ${fx(e.h, 4)} × venue (home +1, away −1, neutral 0). The rating is the drive-weighted average plus one phantom game at the division average.</p>`;
         h += `<h4>Offense (AdjO)</h4>` + effTable(e.offense, "AdjO", "opp_AdjD");
         h += `<h4>Defense (AdjD)</h4>` + effTable(e.defense, "AdjD", "opp_AdjO");
+        const srt = tr.success_rate_adjusted;
+        if (srt) h += `<details><summary>Adjusted success rate (AdjSR) derivation</summary>` + effTable(srt.offense, "AdjSR_O", "opp_AdjSR_D") + effTable(srt.defense, "AdjSR_D", "opp_AdjSR_O") + `</details>`;
         h += `<div class="formula">AdjEM = (AdjO − AdjD) × possessions per game = (${fx(e.AdjO, 4)} − ${fx(e.AdjD, 4)}) × ${fx(e.muT, 3)} = ${fx(e.AdjEM, 2, true)}\n±SE ${fx(e.AdjEM_se, 1)} from game margins: ${e.game_margins.map(g => esc(g.opp_name) + " " + fx(g.adj_margin_per_game, 1, true)).join(", ")}</div>`;
       }
       const n = tr.network;
       h += `<h3>Win values</h3><p class="note">Primary is the beaten team's record. Secondary is its opponents' records. Tertiary is their opponents' records. Records are (W+1)/(G+2), and FCS wins are ignored. Each record leaves out games against teams higher in the tree, and ${esc(r.name)} is removed from the graph entirely. NS_win ${fx(n.refs.win, 4)} is the average network strength of every team beaten in an FBS game, so the average win is worth exactly 1.00. NS_loss ${fx(n.refs.loss, 4)} does the same for losses.</p>`;
       n.wins.forEach(w => { h += winCard(w, n, true); });
       n.losses.forEach(l => { h += winCard(l, n, false); });
-      h += `<div class="formula">Win value total ${fx(n.win_value_total, 3)} − loss cost total ${fx(n.loss_cost_total, 3)} = net resume ${fx(n.net_resume, 3, true)}\nPer game: ${fx(n.net_resume, 3, true)} / ${r.games} = ${fx(n.net_per_game, 3, true)} (the resume ranking uses this, so a sixth game isn't an advantage)</div>`;
+      h += `<div class="formula">Win value total ${fx(n.win_value_total, 3)} − loss cost total ${fx(n.loss_cost_total, 3)} = net resume ${fx(n.net_resume, 3, true)}\nPer counted game: ${fx(n.net_resume, 3, true)} / ${r.net_games} = ${fx(n.net_per_game, 3, true)} (counted games = FBS games + FCS losses; a win over an FCS team doesn't count). The resume ranking uses this.</div>`;
       const fac = tr.factors.games;
       const tot = s => fac.reduce((a, g) => { Object.keys(g[s]).forEach(k => { a[k] = (a[k] || 0) + g[s][k]; }); return a; }, {});
       const O = tot("O"), Dd = tot("D");
@@ -420,22 +453,22 @@ details[open] > summary { margin-bottom: 6px; }
       h += `<h3>Five factors</h3><div class="tablewrap"><table class="mini"><thead><tr><th class="t"></th><th>Success rate</th><th>Explosive</th><th>Yds/play</th><th>Field pos.</th><th>Pts/opp</th><th>PPD</th></tr></thead><tbody>` +
         [["Offense", O], ["Defense", Dd]].map(([k, T]) => `<tr><td class="t">${k}</td><td>${fr(T.successes, T.plays)} <span class="rk">${T.successes}/${T.plays}</span></td><td>${fr(T.explosive, T.plays)}</td><td>${fr(T.yards, T.plays, 2)}</td><td>${fr(T.start_yardline_sum, T.drives, 1)}</td><td>${fr(T.opp_points, T.scoring_opps, 2)} <span class="rk">${T.opp_points}/${T.scoring_opps}</span></td><td>${fr(T.points, T.drives)} <span class="rk">${T.points}/${T.drives}</span></td></tr>`).join("") +
         `</tbody></table></div><p class="note">Turnover margin ${fx(r.TO_margin, 2, true)} per game. Seconds per offensive play ${fx(r.sec_per_play, 1)}.</p>`;
-      if (tr.tempo) h += `<h4>Tempo</h4><div class="formula">AdjT = mean(possessions − (opp AdjT − ${fx(tr.tempo.muT, 2)})) with one phantom game at ${fx(tr.tempo.prior, 2)}\n${tr.tempo.lines.map(l => `${esc(l.opp_name)} ${fx(l.poss, 1)} → ${fx(l.adjusted, 2)}`).join(" · ")}\n= ${fx(tr.tempo.recomputed, 3)} ${tr.tempo.check_ok ? "✓" : "✗"}</div>`;
+      if (tr.tempo) h += `<h4>Tempo</h4>` + tempoTable(tr.tempo);
       const lk = tr.luck;
       h += `<h4>Luck</h4><div class="formula">Garbage-adjusted Pythag = ${fx(lk.adjPF, 0)}^${lk.exponent} / (${fx(lk.adjPF, 0)}^${lk.exponent} + ${fx(lk.adjPA, 0)}^${lk.exponent}) = ${fx(lk.pythag, 3)}; actual ${fx(lk.actual, 3)}; luck ${fx(lk.luck, 3, true)}\nRaw scores ${lk.PF}-${lk.PA}: Pythag ${fx(lk.pythag_raw, 3)}, luck ${fx(lk.luck_raw, 3, true)}</div>`;
       const st = tr.situational, lpr = st.lead_protection_rule;
-      h += `<h3>Situational football</h3><p class="note">Neutral pace: ${st.pace_rule}. Lead protection: Q4, ahead by 1–${lpr.max_lead}, at least ${lpr.min_mean_secs} s per snap over ${lpr.min_intervals}+ clean intervals, and ${Math.round(lpr.min_run_share * 100)}%+ runs over ${lpr.min_plays}+ plays. ${esc(st.weight_note)}.</p>`;
-      h += `<div class="formula">Neutral pace ${st.neutral_pace == null ? "— (not enough clean clock data)" : fx(st.neutral_pace, 1) + " s/snap"} over ${st.pace_intervals} intervals; run rate ${st.neutral_run_rate == null ? "—" : (st.neutral_run_rate * 100).toFixed(0) + "%"}\nLead-protection drives: ${st.lead_protection_drives.length} of ${st.q4_lead_drives} Q4 leading drives${st.lead_protection_drives.map(d => `\n  vs ${esc(d.opp_name)} (${esc(d.clock)}): ${esc(d.reason)}, ${fx(d.points, 0)} pts`).join("")}</div>`;
+      h += `<h3>Situational football</h3><p class="note">Neutral pace: ${st.pace_rule}. Lead protection: Q4, ahead by 1–${lpr.max_lead}, clean intervals averaging at least the team's own neutral pace + ${lpr.relative_slowdown} s (capped at ${lpr.min_mean_secs} s) over ${lpr.min_intervals}+ intervals, and ${Math.round(lpr.min_run_share * 100)}%+ runs over ${lpr.min_plays}+ plays. ${esc(st.weight_note)}.</p>`;
+      h += `<div class="formula">Neutral pace ${st.neutral_pace == null ? "— (not enough clean clock data)" : fx(st.neutral_pace, 1) + " s/snap"} over ${st.pace_intervals} intervals; run rate ${st.neutral_run_rate == null ? "—" : (st.neutral_run_rate * 100).toFixed(0) + "%"}\nLead-protection drives: ${st.lead_protection_drives.length} of ${st.q4_lead_drives} Q4 leading drives in ${st.usable_clock_games} usable-clock games${st.lead_protection_drives.map(d => `\n  vs ${esc(d.opp_name)} (${esc(d.clock)}): ${esc(d.reason)}, ${fx(d.points, 0)} pts; intervals ${(d.intervals || []).join(", ")} s`).join("")}</div>`;
       const dc = tr.discipline, cn = dc.counts || {};
       h += `<h3>Discipline</h3><p class="note">${esc(dc.rules.rating)}. ${esc(dc.rules.rates)}.</p>`;
       h += `<div class="formula">Box score: ${fx(dc.PenPG, 2)} penalties, ${fx(dc.PenYdsPG, 1)} yards per game (conference ${fx(dc.PenPG_conf, 2)}); net penalty yards ${fx(dc.NetPenYdsPG, 1, true)} per game\nOffense: ${cn.off_fouls} fouls / ${cn.off_snaps} snaps × 100 = ${fx(dc.OffPen100, 2)} (conference ${fx(dc.OffPen100_conf, 2)}); pre-snap ${cn.off_presnap} = ${fx(dc.OffPreSnap100, 2)}\nDefense: ${cn.def_fouls} fouls / ${cn.def_snaps} snaps × 100 = ${fx(dc.DefPen100, 2)} (conference ${fx(dc.DefPen100_conf, 2)}); first downs given ${cn.def_first_downs} → ${fx(dc.PenFDAllowedPG, 2)} per game</div>`;
-      h += `<details><summary>Show all ${dc.fouls.length} fouls charged to ${esc(r.name)}</summary><div class="tablewrap"><table class="mini"><thead><tr><th class="t">Opponent</th><th>Q</th><th>Clock</th><th class="t">Foul</th><th class="t">Unit</th><th>Yds</th><th class="t">Status</th><th class="t">Counted?</th><th class="t">Source</th></tr></thead><tbody>` +
-        dc.fouls.map(x => `<tr><td class="t">${esc(x.opp_name)}</td><td>${x.period}</td><td>${esc(x.clock || "")}</td><td class="t">${esc(x.category)}${x.presnap ? " <span class=\"rk\">pre-snap</span>" : ""}</td><td class="t">${esc(x.penalized_unit)}</td><td>${x.yards}</td><td class="t">${esc(x.status)}</td><td class="t note">${x.status !== "accepted" ? "no (not accepted)" : x.situational ? "no (situational)" : x.drive_why === "" ? "yes" : "no (" + esc(x.drive_why || "no drive") + ")"}</td><td class="t note">${esc(x.dialect)}/${esc(x.yards_method)}</td></tr>`).join("") + `</tbody></table></div></details>`;
+      h += `<details><summary>Show all ${dc.fouls.length} fouls charged to ${esc(r.name)}</summary><div class="tablewrap"><table class="mini"><thead><tr><th class="t">Opponent</th><th>Q</th><th>Clock</th><th class="t">Foul</th><th class="t">Unit</th><th>Yds</th><th class="t">Status</th><th>1st dn</th><th class="t">Counted?</th><th class="t">Source</th></tr></thead><tbody>` +
+        dc.fouls.map(x => `<tr><td class="t">${esc(x.opp_name)}</td><td>${x.period}</td><td>${esc(x.clock || "")}</td><td class="t">${esc(x.category)}${x.presnap ? " <span class=\"rk\">pre-snap</span>" : ""}</td><td class="t">${esc(x.penalized_unit)}</td><td>${x.yards}</td><td class="t">${esc(x.status)}</td><td>${x.first_down_awarded ? "yes" : ""}</td><td class="t note">${x.status !== "accepted" ? "no (not accepted)" : !["offense", "defense"].includes(x.penalized_unit) ? "no (special teams)" : x.situational ? "no (situational)" : x.drive_why === "" ? "yes" : "no (" + esc(x.drive_why || "no drive") + ")"}</td><td class="t note">${esc(x.dialect)}/${esc(x.yards_method)}</td></tr>`).join("") + `</tbody></table></div></details>`;
       const so = tr.sos_efficiency;
       h += `<h4>Schedule (efficiency)</h4><div class="formula">SOS = mean opponent AdjEM = ${fx(so.SOS, 2, true)}; NCSOS ${fx(so.NCSOS, 2, true)}\n${so.opponents.map(o => `${esc(o.opp_name)} ${fx(o.opp_AdjEM, 1, true)}${o.conf_game ? " (conf)" : ""}${o.opp_status && o.opp_status !== "published" ? "*" : ""}`).join(" · ")}</div>`;
       const dr = tr.drives;
-      h += `<h3>Every drive</h3><details><summary>Show ${dr.rows.length} drives with keep/exclude reasons</summary><div class="tablewrap"><table class="mini"><thead><tr><th class="t">Opponent</th><th>Side</th><th>Q</th><th>Clock</th><th>Start</th><th class="t">Result</th><th>Pts</th><th>Margin</th><th class="t">Used?</th></tr></thead><tbody>` +
-        dr.rows.map(x => { const sch = tr.schedule.find(g => g.game === x[0]); return `<tr><td class="t">${esc(sch ? sch.opp_name : x[0])}</td><td>${x[2]}</td><td>${x[3]}</td><td>${esc(x[4] || "")}</td><td>${x[5] == null ? "—" : x[5]}</td><td class="t">${esc(x[6] || "")}</td><td>${fx(x[7], 0)}</td><td>${fx(x[8], 0, true)}</td><td class="t ${x[9] ? "" : "note"}">${x[9] ? "kept" + (x[12] ? " · lead protection" : "") : esc(x[10])}</td></tr>`; }).join("") +
+      h += `<h3>Every drive</h3><details><summary>Show ${dr.rows.length} drives with keep/exclude reasons</summary><div class="tablewrap"><table class="mini"><thead><tr><th class="t">Opponent</th><th>Side</th><th>Q</th><th>Clock</th><th>Start</th><th class="t">Result</th><th>Pts</th><th>Margin</th><th class="t">Used?</th><th class="t">Clean intervals (s)</th></tr></thead><tbody>` +
+        dr.rows.map(x => { const sch = tr.schedule.find(g => g.game === x[0]); return `<tr><td class="t">${esc(sch ? sch.opp_name : x[0])}</td><td>${x[2]}</td><td>${x[3]}</td><td>${esc(x[4] || "")}</td><td>${x[5] == null ? "—" : x[5]}</td><td class="t">${esc(x[6] || "")}</td><td>${fx(x[7], 0)}</td><td>${fx(x[8], 0, true)}</td><td class="t ${x[9] ? "" : "note"}">${x[9] ? "kept" + (x[12] ? ` · lead protection, weight ${x[18]}` : "") : esc(x[10])}</td><td class="t note">${(x[17] || []).join(" ")}</td></tr>`; }).join("") +
         `</tbody></table></div></details>`;
     }
     drawer.innerHTML = h;
@@ -443,6 +476,7 @@ details[open] > summary { margin-bottom: 6px; }
     drawer.scrollTop = 0;
     document.getElementById("close").addEventListener("click", closeTeam);
     document.getElementById("close").focus();
+    wireInternal();
     history.replaceState(null, "", "#t" + id);
   }
 

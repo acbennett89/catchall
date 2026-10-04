@@ -13,8 +13,8 @@ import os
 from collections import defaultdict
 
 from efficiency import trace, trace_tempo
-from ratings import (DISCIPLINE_KEYS, HERE, is_situational_foul, load, load_config, phi, predict,
-                     rate, venue)
+from ratings import (DISCIPLINE_KEYS, HERE, drive_weight, good_clock, is_situational_foul, load,
+                     load_config, phi, predict, rate, venue)
 from validate import evaluate
 
 OUT = os.path.join(HERE, "out")
@@ -81,6 +81,12 @@ def team_trace(t, res, data, cfg, sigma, eligible):
                          "us": us, "them": them, "result": "W" if us > them else "L",
                          "conf_game": bool(g["conf_game"]),
                          "used_in_efficiency": bool(g["drives"]),
+                         "clock": {**(g.get("clock") or {}), "usable": good_clock(g, cfg)},
+                         "box_penalties": {"us": (g["box"].get(t) or {}).get("pen"),
+                                           "them": (g["box"].get(opp) or {}).get("pen"),
+                                           "rejected": [(g["box"].get(x) or {}).get("pen_raw")
+                                                        for x in (t, opp) if (g["box"].get(x) or {}).get("pen") is None
+                                                        and (g["box"].get(x) or {}).get("pen_raw")]},
                          "note": g["pbp_note"]})
     tr = {"team": {"id": t, "name": row["name"], "conference": row["conference"]},
           "summary": row, "schedule": schedule,
@@ -108,8 +114,13 @@ def team_trace(t, res, data, cfg, sigma, eligible):
             "AdjEM": row["AdjEM"], "AdjEM_se": row.get("AdjEM_se"),
             "offense": e["offense"], "defense": e["defense"], "game_margins": em_games}
         s = trace(sr, t)
+        for side, k_old, k_new in (("offense", "opp_AdjD", "opp_AdjSR_D"), ("defense", "opp_AdjO", "opp_AdjSR_O")):
+            for ln in s[side]["lines"]:
+                ln[k_new] = ln.pop(k_old)
+                ln["opp_name"] = nm(ln["opp"])
+                ln["opp_status"] = opp_status(ln["opp"], teams, eligible)
         tr["success_rate_adjusted"] = {"mu": sr["mu"], "h": sr["h"], "offense": s["offense"],
-                                       "defense": s["defense"]}
+                                       "defense": s["defense"], "AdjSR_O": sr["O"][t], "AdjSR_D": sr["D"][t]}
         if t in tempo["T"]:
             tt = trace_tempo(tempo, t)
             for ln in tt["lines"]:
@@ -155,14 +166,15 @@ def team_trace(t, res, data, cfg, sigma, eligible):
         for d in g["drives"]:
             if d["off"] == t and d.get("lp"):
                 lp_rows.append({"game": g["id"], "opp_name": nm(g["away"] if g["home"] == t else g["home"]),
-                                "drive": d["i"], "clock": d["clock"], "reason": d["lp"], "points": d["pts"]})
+                                "drive": d["i"], "clock": d["clock"], "reason": d["lp"], "points": d["pts"],
+                                "intervals": [x[2] for x in d.get("iv") or []]})
     tr["situational"] = {
         "neutral_pace": row.get("NeutralPace"), "neutral_run_rate": row.get("NeutralRunRate"),
         "pace_intervals": row.get("pace_intervals"), "min_pace_intervals": sit["min_pace_intervals"],
         "pace_rule": f"mean clean snap-to-snap seconds, Q1-Q3, score within {sit['neutral_margin']}, "
                      "not the final 2:00 of Q2, games whose clock is usable",
         "lead_protection_rule": sit["lead_protection"], "lead_protection_drives": lp_rows,
-        "q4_lead_drives": row.get("Q4_lead_drives"),
+        "q4_lead_drives": row.get("Q4_lead_drives"), "usable_clock_games": row.get("usable_clock_games"),
         "weight_note": ("weight 1.0: tagged drives count fully (default; no tested adjustment "
                         "improved accuracy)" if sit["lead_protection"]["weight"] == 1.0 else
                         f"weight {sit['lead_protection']['weight']}: tagged drives are down-weighted in AdjO/AdjD/AdjSR")}
@@ -220,10 +232,14 @@ def team_trace(t, res, data, cfg, sigma, eligible):
             drives.append([g["id"], d["i"], "O" if d["off"] == t else "D", d["period"], d["clock"],
                            None if d["start_yte"] is None else 100 - d["start_yte"],
                            d["result"], d["pts"], d["margin"], d["kept"], d["why"], len(d["plays"]),
-                           d.get("lp") or ""])
+                           d.get("lp") or "", d.get("runs"), d.get("pen_rows"), d.get("secs"),
+                           d.get("clock_src"), [x[2] for x in d.get("iv") or []],
+                           drive_weight(d, cfg) if d["kept"] else None])
     tr["drives"] = {"columns": ["game", "drive#", "side", "qtr", "clock", "start_yardline",
                                 "result", "points", "margin_at_start", "kept", "excluded_reason",
-                                "scrimmage_plays", "lead_protection"], "rows": drives}
+                                "scrimmage_plays", "lead_protection", "runs", "penalty_only_snaps",
+                                "elapsed_secs", "clock_source", "clean_intervals_s", "weight"],
+                    "rows": drives}
     return tr
 
 
@@ -254,8 +270,9 @@ def main():
     sigma = holdout["sigma"]
 
     os.makedirs(os.path.join(OUT, "traces"), exist_ok=True)
+    # Rated teams by rank, then unrated teams alphabetically (never by an unpublished rating).
     rows = sorted(res["teams"].values(),
-                  key=lambda r: (not r["eligible"], r.get("rk_AdjEM") or 999, -(r.get("AdjEM") or -99)))
+                  key=lambda r: (not r["eligible"], r.get("rk_AdjEM") or 999, r["name"]))
     with open(os.path.join(OUT, "ratings.csv"), "w", newline="") as f:
         w = csv.writer(f)
         w.writerow([c for _, c in COLUMNS])
@@ -282,6 +299,9 @@ def main():
             bad.append(r["name"])
         if not r["eligible"]:
             # The game minimum: no published rating, resume or ranking for this team.
+            for g in tr["schedule"]:
+                for k in ("garbage_pts_us", "garbage_pts_them", "adj_us", "adj_them"):
+                    g.pop(k, None)
             tr = {"team": tr["team"], "schedule": tr["schedule"], "eligibility": tr["eligibility"],
                   "summary": {k: r[k] for k in ("id", "name", "conference", "W", "L", "games", "eligible")},
                   "note": f"{r['name']} has played {r['games']} of the {cfg['min_games']} games "
@@ -289,6 +309,75 @@ def main():
                           "opponents' numbers and is not published."}
         with open(os.path.join(OUT, "traces", f"{r['id']}.json"), "w") as f:
             json.dump(tr, f, separators=(",", ":"), default=float)
+
+    # Internal-input derivations. Every FCS team and every FBS team below the game minimum
+    # appears as an opponent in some rated team's trace; its own lines are written here,
+    # labeled, with no AdjEM, rank or resume, so each rated number traces to the end.
+    idir = os.path.join(OUT, "traces", "internal")
+    os.makedirs(idir, exist_ok=True)
+    index = {}
+    for t in res["ppd"]["O"]:
+        e, s_, = trace(res["ppd"], t), trace(res["sr"], t)
+        checks = [e["offense"]["check_ok"], e["defense"]["check_ok"],
+                  s_["offense"]["check_ok"], s_["defense"]["check_ok"]]
+        tt = trace_tempo(res["tempo"], t) if t in res["tempo"]["T"] else None
+        if tt:
+            checks.append(tt["check_ok"])
+        if not all(checks):
+            bad.append(name_of(teams, t))
+        if t in eligible:
+            continue
+        for side in ("offense", "defense"):
+            for ln in e[side]["lines"] + s_[side]["lines"]:
+                ln["opp_name"] = name_of(teams, ln["opp"])
+                ln["opp_status"] = opp_status(ln["opp"], teams, eligible)
+        if tt:
+            for ln in tt["lines"]:
+                ln["opp_name"] = name_of(teams, ln["opp"])
+                ln["opp_status"] = opp_status(ln["opp"], teams, eligible)
+        div = teams.get(t, {}).get("division")
+        index[t] = name_of(teams, t)
+        with open(os.path.join(idir, f"{t}.json"), "w") as f:
+            json.dump({"team": {"id": t, "name": name_of(teams, t), "division": div,
+                                "conference": teams.get(t, {}).get("conference")},
+                       "internal": True,
+                       "note": ("Internal input, not a published rating: " +
+                                ("FCS teams are rated only to adjust FBS numbers." if div == "FCS" else
+                                 f"fewer than {cfg['min_games']} games played.") +
+                                " These lines exist so every rated team's numbers can be traced to the end."),
+                       "efficiency": {"mu": res["ppd"]["mu"], "h": res["ppd"]["h"],
+                                      "offense": e["offense"], "defense": e["defense"]},
+                       "success_rate_adjusted": {"offense": s_["offense"], "defense": s_["defense"]},
+                       "tempo": tt}, f, separators=(",", ":"), default=float)
+    with open(os.path.join(idir, "index.json"), "w") as f:
+        json.dump(index, f)
+
+    # Anchors: every input to the global constants, so they can be recomputed.
+    ppd_ = res["ppd"]
+    net_rows = []
+    for a in res["net"].fbs:
+        for b, won, gid in res["net"].fbs_games[a]:
+            net_rows.append([gid, a, b, int(won), res["net"].strength(b, a)["ns"]])
+    with open(os.path.join(OUT, "anchors.json"), "w") as f:
+        json.dump({
+            "mu": {"value": ppd_["mu"], "rule": "mean AdjO over all FBS teams (= mean FBS AdjD); "
+                                               "includes teams below the game minimum (internal)"},
+            "teams": [{"id": t, "name": name_of(teams, t), "division": ppd_["division"][t],
+                       "AdjO": ppd_["O"][t], "AdjD": ppd_["D"][t],
+                       "status": "published" if t in eligible else "internal"} for t in sorted(ppd_["O"])],
+            "phantom_game": {"weight": cfg["prior_drives"], "AdjO_by_division": ppd_["prior_O"],
+                             "AdjD_by_division": ppd_["prior_D"],
+                             "rule": "mean AdjO / AdjD of the division's teams (the teams list above)"},
+            "home_field": {"h_per_drive": ppd_["h"], "rule": "estimated by the unshrunk fit (prior 0) "
+                                                            "and held fixed; ratings.rate() reproduces it"},
+            "muT": {"value": res["muT"], "rule": "mean possessions per team per game over these games",
+                    "games": [[g["game"], g["a"], g["b"], g["poss"]] for g in res["tempo"]["games"]]},
+            "network": {**res["net"].references(),
+                        "columns": ["game", "team", "opponent", "team_won", "opponent_NS"],
+                        "rows": net_rows,
+                        "rule": "NS_win = mean opponent_NS where team_won = 1; NS_loss = mean where 0; "
+                                "NS_all = mean of all rows"},
+        }, f, separators=(",", ":"), default=float)
 
     # conference ratings (published members only)
     conf = defaultdict(list)
@@ -353,7 +442,8 @@ def main():
           f"{len(preds)} predictions for week {nxt}")
     if bad:
         raise SystemExit(f"trace self-check FAILED for: {', '.join(bad)}")
-    print("trace self-check: every AdjO, AdjD, AdjSR and AdjT reconstructs its stored value")
+    print(f"trace self-check: every AdjO, AdjD, AdjSR and AdjT reconstructs its stored value "
+          f"({len(res['ppd']['O'])} D-I teams); internal derivations: {len(index)}")
 
 
 if __name__ == "__main__":

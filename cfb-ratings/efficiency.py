@@ -154,7 +154,7 @@ def solve_tempo(games, division, prior_games=1, max_iter=500, tol=1e-9):
             break
     prior = {d: _mean(T[t] for t in teams if division[t] == d) for d in divs}
     return {"muT": muT, "T": T, "iterations": it, "converged": delta < tol, "prior": prior,
-            "prior_games": prior_games, "division": division, "by_team": by_team}
+            "prior_games": prior_games, "division": division, "by_team": by_team, "games": games}
 
 
 def trace_tempo(model, team):

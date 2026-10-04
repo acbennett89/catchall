@@ -15,25 +15,32 @@ import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-import requests
 
 SITE = "https://site.api.espn.com/apis/site/v2/sports/football/college-football"
 CORE = "https://sports.core.api.espn.com/v2/sports/football/leagues/college-football"
 FBS_GROUP, FCS_GROUP = 80, 81
 HERE = os.path.dirname(os.path.abspath(__file__))
 
-session = requests.Session()
+_session = None  # requests is imported only when downloading, so parsing/rating need no extras
+
+
+def session():
+    global _session
+    if _session is None:
+        import requests
+        _session = requests.Session()
+    return _session
 
 
 def get_json(url, tries=4):
     for i in range(tries):
         try:
-            r = session.get(url, timeout=60)
+            r = session().get(url, timeout=60)
             if r.status_code == 200:
                 return r.json()
             if r.status_code == 404:
                 return None
-        except requests.RequestException:
+        except Exception:  # network errors: retry with backoff
             pass
         time.sleep(2 ** (i + 1))
     raise RuntimeError(f"failed: {url}")

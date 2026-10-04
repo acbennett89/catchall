@@ -84,6 +84,12 @@ def main():
         tr.pop("summary", None)  # duplicated in ratings
         traces[tr["team"]["id"]] = tr
     ratings["traces"] = traces
+    internal = {}
+    for f in glob.glob(os.path.join(OUT, "traces", "internal", "*.json")):
+        if not f.endswith("index.json"):
+            tr = json.load(open(f))
+            internal[tr["team"]["id"]] = tr
+    ratings["internal"] = internal
     docs = {}
     for key, fn in (("metrics", "METRICS.md"), ("review", "ADVERSARIAL_REVIEW.md"),
                     ("trace", "TRACE.md")):

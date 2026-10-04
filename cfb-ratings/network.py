@@ -179,6 +179,7 @@ class Network:
                 row["cost"] = 1 / (1 - refs["loss"])
                 row["note"] = "loss to FCS: opponent strength treated as 0 (maximum cost)"
                 losses.append(row)
+        counted_games = len(self.fbs_games[a]) + sum(1 for _, won, _ in self.other_games[a] if not won)
         wvt = sum(r["value"] for r in wins)
         lct = sum(r["cost"] for r in losses)
         fbs_wins = [r for r in wins if not r.get("fcs")]
@@ -193,4 +194,5 @@ class Network:
             "best_win": max(fbs_wins, key=lambda r: r["value"], default=None),
             "worst_loss": max(losses, key=lambda r: r["cost"], default=None),
             "refs": refs,
+            "counted_games": counted_games,
         }

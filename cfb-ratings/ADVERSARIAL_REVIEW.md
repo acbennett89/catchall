@@ -1,15 +1,19 @@
 # Adversarial review
 
-The system was attacked in three rounds:
+The system was attacked in four rounds:
 
 1. **My own review** (§A–D). Every reading of your brief and every modelling choice was challenged with
    backtests: a full walk-forward on 2025, where ratings use only earlier weeks, and the 2026 data through week 5.
 2. **An independent reviewer** (§E). It recomputed eligibility, drive points, win values and AdjO from
-   the raw ESPN files without using this code. It confirmed the core math (661 of 661 win values matched) and found
-   three real defects. All three are fixed, and the review text was corrected where it was wrong.
+   the raw ESPN files without using this code. It confirmed the core math (all 661 published values matched: 271 win
+   values, 271 loss costs, 113 FCS wins and 6 FCS losses) and found three major and six minor defects. All three are fixed, and the review text was corrected where it was wrong.
 3. **Your follow-up request** (§F–H): penalties, garbage time and situational football. Each topic
    had a research agent and two adversarial verifiers. One reproduced the numbers; the other attacked
    the method. Their corrections are folded in below.
+4. **A final independent review** (§I) of the finished system: parser, metrics, documents, and
+   leaks of unpublished numbers. It raised 40 findings, 14 of them major. A second agent tried to refute each
+   major one: all 14 were upheld, 12 at reduced severity. All 40 are fixed. Every number in this
+   document was refreshed on the final code unless it is marked as research (see the note in §F).
 
 Differences are reported as `difference ± standard error`. |z| under about 2 is within noise, and
 where many variants were tried, the bar is higher (§G).
@@ -20,21 +24,22 @@ where many variants were tried, the bar is higher (§G).
 
 | # | Challenge | Verdict | What the system does |
 |---|-----------|---------|----------------------|
-| A1 | "1.00 = expected win" has two readings | Ambiguous brief | Opponent-quality reading. **The average FBS win is worth exactly 1.00** (corrected in round 2) |
+| A1 | "1.00 = expected win" has two readings | Ambiguous brief | Opponent-quality reading. **The average FBS win is worth exactly 1.00** (corrected in round 2; inputs in `out/anchors.json`) |
 | A2 | Raw win counts reward playing more games | Real fairness problem, no predictive gain | Records are rates, (W+1)/(G+2) |
 | A3 | Do FCS losses count? | The brief excludes only FCS wins | They count (6 teams affected) |
-| A4 | Should losses count? | Prediction can't decide it; fairness can | Both published; the resume is ranked by **net per game** |
+| A4 | Should losses count? | Prediction can't decide it; fairness can | Both published; the resume is ranked by **net per counted game** (FCS wins excluded from the count in round 4) |
 | A5 | What counts toward "5 played games"? | Literal reading | 107 of 138 rated. Below 5 games, nothing is published (fixed in round 2) |
-| B2 | Network weights | Backtested | 0.60/0.30/0.10, within noise of the optimum (tertiary = 0) |
+| B2 | Network weights | Backtested | 0.60/0.30/0.10, within noise of the optimum (tertiary = 0). The network beats win% alone only nominally |
 | B3 | Does tertiary matter? | Barely | Effective influence is about 6% of primary |
-| C1 | Does opponent adjustment help? | Yes | Walk-forward MAE 12.53 vs 14.19 raw (same games) |
-| C2 | Against the betting market | The market is better early in the season | 1.6 ± 0.5 points worse on 2026 weeks 3–5 |
-| C3 | Home field inflated by shrinkage | Confirmed (3.7 → 4.7 pts) | Two-stage estimate |
+| C1 | Does opponent adjustment help? | Yes | Walk-forward MAE 12.47 vs 14.02 raw (same games) |
+| C2 | Against the betting market | The market is better early in the season | 1.65 ± 0.54 points worse on 2026 weeks 3–5 |
+| C3 | Home field inflated by shrinkage | Confirmed (3.6 → 4.6 pts) | Two-stage estimate |
 | E | Bad ESPN running scores corrupted drive points | **Confirmed defect, fixed** | Points rebuilt from play types |
 | E | Teams under 5 games leaked through traces and predictions | **Confirmed defect, fixed** | Masked; internal inputs labeled |
 | F | Penalties | Parsed and validated; no predictive value | Published as descriptive "Discipline"; not in the rating |
-| G | Clock-burning (lead protection) | Real in pace and play-calling; no adjustment improves accuracy | Tagged and shown; opt-in weight, **off by default** |
+| G | Clock-burning (lead protection) | Real in pace and play-calling; no adjustment improves accuracy | Tagged and shown; tagged drives count **half (weight 0.5) by default**, which is accuracy-neutral. The outcome-dependent final-drive rule was removed |
 | H | Garbage time | The test can't tell the rules apart | Connelly rule kept for traceability; Luck uses garbage-adjusted scores |
+| I | Final review: 40 findings | 14 major findings upheld (12 at reduced severity) | All fixed: snap-time clocks, parser fixes, per-counted-game resume, full traceability of internal inputs and constants |
 
 ---
 
@@ -53,7 +58,7 @@ claim exact:
 
 - **NS_win** = mean network strength of every team beaten in an FBS game (0.468). The average FBS win = 1.00.
 - **NS_loss** = mean network strength of every team that won (0.535). The average FBS loss costs 1.00.
-- A unit test checks both averages on real results.
+- On the 2026 results both averages come out at exactly 1.000. Every input is listed in `out/anchors.json`, and a unit test checks the property on a small hand-built schedule.
 
 Reading 2 is covered separately: each game's opponent-adjusted margin is in the efficiency trace, and Luck (§4) compares wins with scoring.
 
@@ -78,9 +83,14 @@ Northern Illinois (Illinois State), Nevada (Montana State), UL Monroe (SE Louisi
   (+0.0002 ± 0.0047). At equal games played, W and W−L say the same thing.
 - **Fairness settles it.** Win-only can't tell 5-0 from 5-2. It gives an FCS loss no penalty, and it
   rewards games played: 5-1 USC, with 6 games, ranks 2nd on win value total, ahead of unbeaten Notre Dame
-  and Miami. There are 18 such inversions against unbeaten teams in 2026.
-- **Correction from round 2.** Net Resume *total* has the same games-played bias; USC was 4th. The
-  resume ranking is therefore **Net Resume per game**, and USC is 10th. Totals are still published.
+  and Miami. In 2026 there are 22 pairs where a team with a loss outranks an unbeaten team on win value total.
+- **Correction from round 2.** Net Resume *total* has the same games-played bias: USC is 4th, and 9 of
+  the 22 inversions remain. The resume ranking is therefore **Net Resume per game**: USC is 12th and
+  none of the 22 remain. Totals are still published.
+- **Correction from round 4.** "Per game" first meant all games. An FCS win adds 0 to Net Resume but 1
+  to that count, so it pulled every resume toward 0. That broke your rule that FCS wins don't count:
+  Buffalo's two FCS wins moved it up 12 places. The divisor is now **counted games** (FBS games plus FCS
+  losses). Buffalo is −3.641 / 3 = −1.214, 105th.
 
 ### A5. What counts toward "5 played games"?
 
@@ -116,13 +126,15 @@ strictest fairness rule is used. The reviewer confirmed it is implemented exactl
 | 0.667 / 0.333 / 0 (RPI-like) | 0.5718 | 0.5637 | 69.5% |
 | best with wP ≥ wS ≥ wT | 0.5709 (0.60/0.40/0) | 0.5637 (0.65/0.35/0) | 69.0% |
 
-The network beats win% alone. The optimum puts tertiary at 0. The chosen weights trail it by
-+0.0019 ± 0.0016 and +0.0006 ± 0.0008, which keeps your +2 structure at no measurable cost.
+The network is only nominally better than win% alone. The reviewer's paired test gives +0.0075 ± 0.0040
+log loss at ≥3 games (z 1.9) and +0.0037 ± 0.0043 at ≥5 (z 0.9), which is within noise on one season. The
+optimum puts tertiary at 0. The chosen weights trail it by +0.0019 ± 0.0016 and +0.0006 ± 0.0008, which
+keeps your +2 structure at no measurable cost.
 
 ### B3. Nominal weight isn't effective weight
 
-Across 542 FBS game sides the layers have SDs of P 0.199, S 0.115 and T 0.069. Tertiary averages
-about 25 teams, so it regresses hard toward .500. Effective influence (weight × SD) is P 0.119,
+Across 542 FBS game sides the layers have SDs of P 0.199, S 0.115 and T 0.069. Tertiary is a mean
+of about 3 branch means, each over about 3 teams (about 9 records in all), so it regresses toward .500. Effective influence (weight × SD) is P 0.119,
 S 0.035, T 0.007, so tertiary moves a win value about 6% as much as primary does.
 
 ### B4. The negative tertiary coefficient
@@ -139,7 +151,7 @@ The one-win, one-loss prior is the only change that significantly improved predi
 ### B6. The network is blind to margin and venue
 
 The two schedule measures agree only loosely (Spearman 0.83). Miami is #24 by network schedule
-strength but #89 by efficiency SOS; Texas Tech is the reverse (#70 vs #22). The **ranking uses
+strength but #89 by efficiency SOS; Texas Tech is the reverse (#70 vs #23). The **ranking uses
 AdjEM**, as KenPom does. The network is the resume, and the two correlate at 0.87.
 
 ### B7–B8
@@ -158,34 +170,34 @@ methods are compared on the same games:
 
 | MAE, points | 2025 wk 4–16 (617) | 2026 wk 3–5 (171) |
 |---|---|---|
-| **AdjEM model** | **12.53** | **12.69** |
-| Average scoring margin + home field | 13.19 | 14.23 |
-| Raw points per drive + home field | 14.19 | 17.76 |
+| **AdjEM model** | **12.47** | **12.77** |
+| Average scoring margin + home field | 13.19 | 14.27 |
+| Raw points per drive + home field | 14.02 | 17.71 |
 
-Over every predictable game, MAE is 12.48 with 72.9% of winners picked in 2025 (639 games), and 12.80
-with 81.0% in 2026 (205 games). Calibration (2025):
+Over every predictable game, MAE is 12.43 with 72.3% of winners picked in 2025 (639 games), and 12.87
+with 80.0% in 2026 (205 games). Calibration (2025, 639 games):
 
-| Predicted (bin mean) | 0.55 | 0.65 | 0.75 | 0.85 | 0.95 |
+| Predicted (bin mean) | 0.55 | 0.65 | 0.75 | 0.85 | 0.96 |
 |---|---|---|---|---|---|
-| Won | 0.62 | 0.59 | 0.70 | 0.88 | 0.94 |
+| Won | 0.60 | 0.60 | 0.72 | 0.86 | 0.94 |
 
 ### C2. Against the betting market
 
-On 2026 weeks 3–5 (205 games) the model's MAE is 12.80 against the market's 11.22, worse by
-**1.59 ± 0.54** points. ESPN keeps lines for only 55 of the 2025 games; on those the two were tied.
+On 2026 weeks 3–5 (205 games) the model's MAE is 12.87 against the market's 11.22, worse by
+**1.65 ± 0.54** points. ESPN keeps lines for only 55 of the 2025 games; on those the two were tied.
 The market uses preseason priors, injuries and recruiting; this model uses only this season's games.
 
 ### C3. Home field
 
-Estimated jointly with the shrinkage prior, home field comes out at 4.73 points; without the prior it is
-3.67. Strong teams host most games, so the shrinkage residual was being credited to home field. It is
+Estimated jointly with the shrinkage prior, home field comes out at 4.61 points; without the prior it is
+3.57. Strong teams host most games, so the shrinkage residual was being credited to home field. It is
 now estimated without shrinkage and held fixed. The reviewer confirmed this introduces no bias.
 
 ### C4. How much regression to the mean?
 
-On the current data, 2025 walk-forward MAE is 13.89 with no prior, 12.80 at 6 drives, **12.48 at 12**
-and 12.41 at 24. An earlier sweep found 36 or more drives worse. 12 and 24 are within noise of each
-other, and 12 (one phantom game) is easier to read.
+On the final code, 2025 walk-forward MAE is 13.76 with no prior, 12.71 at 6 drives, **12.43 at 12**
+and 12.37 at 24. An earlier sweep found 36 drives level with 12 on 2025 (12.44 vs 12.46) and worse on
+the 2026 holdout. 12 and 24 are within noise of each other, and 12 (one phantom game) is easier to read.
 
 ### C5. Garbage time
 
@@ -193,11 +205,12 @@ See §H.
 
 ### C6. Noise at week 5
 
-The median AdjEM standard error is **±6.8 points** (IQR 4.4–8.5). Treat ranks 5–25 as a band, not an order.
+The median AdjEM standard error is **±7.0 points** (IQR 4.4–8.5). Treat ranks 5–25 as a band, not an order.
 
 ### C7. ESPN data defects
 
-- Drive points come from rebuilt scoring plays (§E, M1).
+- Drive points come from rebuilt scoring plays (§E, M1). In 2026, ESPN's running score is wrong on 21
+  scoring plays in 8 FBS-involved games. 5 more FBS games use the running-score fallback because ESPN mislabels an extra point.
 - 4 games are dropped from efficiency in 2026; all four are FCS-only.
 - 55 games are kept with a data note, such as a corrected running score or a relabeled drive. Each note is in the trace.
 - The scoreboard API silently returns 25 games when asked for more than 500, so the fetcher fails loudly instead.
@@ -208,7 +221,8 @@ The median AdjEM standard error is **±6.8 points** (IQR 4.4–8.5). Treat ranks
   network.
 - **Overtime drives are dropped.** They start at the opponent's 25.
 - **Late-half drives are dropped by situation, not by result.** Before round 2, a late drive that
-  failed was dropped while one that scored was kept.
+  failed was dropped while one that scored was kept. Since round 4 the time used is the snap stamp,
+  not ESPN's end-of-play clock.
 - **There is no recency weighting yet.** Five games are too few to estimate one.
 
 ---
@@ -231,7 +245,7 @@ A separate reviewer wrote its own code against the raw ESPN files. It recomputed
 | Every drive of Georgia State at Kennesaw State, with exclusions | Match |
 | Full re-solve of every FBS team's AdjO / AdjD / AdjEM | Match; largest gap 3e-5 (solver tolerance) |
 | NS_ref over all 542 FBS game sides | Match |
-| All 661 published win values and loss costs, plus Net Resume | Largest gap 4e-16 |
+| All 661 published values (271 win values, 271 loss costs, 113 FCS wins, 6 FCS losses), plus Net Resume | Largest gap 4e-16 |
 | AdjO / AdjD rebuilt from trace lines | Match |
 | UTEP at New Mexico drive points | **Mismatch**: New Mexico 21 points on 5 drives vs our 13 (M1) |
 
@@ -249,24 +263,35 @@ Findings and fixes:
 | m5 | Doc/code mismatches: the μ definition, the schedule-strength definition, a validation description, a stale docstring, and the FCS-loss count. | Fixed. AdjO is now *exactly* "vs an average FBS defense" (§2). |
 | m6 | Ties were treated inconsistently. | Both modules skip ties (none exist in modern CFB). |
 
-Effect of all data fixes on prediction, paired on the same games: 2025 +0.019 ± 0.070, 2026
-−0.174 ± 0.079, pooled −0.028 ± 0.057. They are correctness fixes, neutral for accuracy.
+Effect on prediction, paired on the same games. All parser changes from the first commit through
+round 3: 2025 +0.019 ± 0.070, 2026 −0.174 ± 0.079, pooled −0.028 ± 0.057. The round-2 fixes alone:
+pooled −0.047 ± 0.065. The round-3 parser changes alone: +0.019 ± 0.027. They are correctness fixes,
+neutral for accuracy. (Round 2 of this document mislabeled the first figure as "round-2 fixes"; the
+final reviewer caught it.)
 
 ---
 
 ## F. Penalties
 
-> Measurement note for §F–H: the research numbers here were measured on the data as it stood before
-> the round-2 parser fixes (§E). Those fixes were prediction-neutral (pooled −0.028 ± 0.057), so the
-> comparisons stand, but drive counts can differ slightly from the current files. Penalty-parser
-> accuracy and the lead-protection sensitivity were re-measured on the current data.
+> **Measurement note for §F–H.** Two kinds of numbers appear here.
+> - **Research numbers** (variant tests, reliabilities, the 27% conference share, pace-by-score
+>   curves) were measured by research agents in round 3, on the parse as it stood before the round-2
+>   and round-3 parser changes. Their scripts are not in the repo, so they can't be reproduced from
+>   it; treat them as research findings. The parser changes since then were prediction-neutral
+>   (pooled −0.028 ± 0.057, §E), so the comparisons should stand, but counts can differ.
+> - **Repo numbers** were refreshed on the final code and can be regenerated: penalty-parser accuracy
+>   (`python audit_penalties.py`), the garbage-time test and share (`validate.py`, §H), usable-clock
+>   coverage, and the lead-protection weight tests (§G, §I).
 
 **Parser.** `penalties.py` reads both ESPN text dialects plus fouls embedded in other plays. Against the box score:
 
 | Season | Count exact (team-games) | Within 1 | Total fouls vs box |
 |---|---|---|---|
-| 2026 | 90.4% | 99.1% | −0.8% |
-| 2025 | 75.2% | 95.4% | −3.0% |
+| 2026 | 90.3% | 98.9% | −1.05% |
+| 2025 | 74.9% | 95.0% | −3.4% |
+
+All D-I team-games with play-by-play. `python audit_penalties.py` reproduces both rows and writes
+every team-game to `out/penalty_audit.json`.
 
 The 2025 gap is concentrated in weeks 1–8, when ESPN mixed two text dialects and dropped some fouls from the
 text. The verifier caught one corrupt box-score row ("743-37") that had inflated the reported 2025
@@ -282,7 +307,7 @@ week 5 it is 0.16–0.40, mostly noise. The steadiest metric is offensive pre-sn
 - Rates are per 100 snaps, so fast teams aren't penalized for running more plays (r = +0.32 between penalties and snaps per game).
 - Rates use only kept drives.
 - A Q4 leader's delay of game is situational, not indiscipline.
-- The conference average is shown beside each rate, since conference and crew explain about 27% of differences.
+- The conference average is shown beside each rate, since conference explains about 27% of team differences (research). ESPN's feed has no crew data, so conference stands in for crew.
 
 **Rejected:** a penalty-inclusive success rate. It scored touchdowns that counted as failures, and its
 "nullified snap" rule was a guess that ESPN's own yardage contradicted 96% of the time. Only snaps the
@@ -308,24 +333,38 @@ over a sustained drive, so it selects drives that went well (residual −0.19 / 
 late drives are the ones it can't measure (−0.77). Down-weighting tagged drives is close to cosmetic:
 at weight 0.5 no team moves more than 3 ranks, and fast and slow teams move alike (+0.09 vs +0.06).
 
-**What the system does:**
-- Each lead-protection drive is **tagged and shown** in the trace and on the page (§7.5). The rule can be checked by hand: Q4, ahead 1–21, ≥ 38 s/snap over ≥ 2 clean intervals, ≥ 60% runs.
-- A leader's **final clock-killing drive** is no longer counted as a failed possession (§1.5). ESPN often leaves its result blank.
+**What the system does (final, round 4):**
+- Each lead-protection drive is **tagged and shown** in the trace and on the page (METRICS §7.5). The rule:
+  Q4, ahead by 1–21, a usable-clock game, ≥ 60% runs over ≥ 3 plays, and ≥ 2 clean snap-to-snap
+  intervals averaging at least **the team's own neutral pace + 6 s, capped at 38 s**. The relative
+  threshold follows the research above, where a leader slows by up to 6 s/snap against its own pace.
+  It catches your example, a fast team slowing down: a 26 s/snap team is tagged at 32 s. Every
+  interval, the run count and the threshold are in the drive row, so a tag or non-tag can be checked by hand.
+- Intervals are read from the snap-time stamp in the play text ("(07:10) …"), not ESPN's clock
+  field, which is roughly end of play. The two-minute warning breaks an interval.
+- **Tagged drives count at weight 0.5 by default.** This is the adjustment you asked for. On the
+  final code it is accuracy-neutral in paired walk-forward: weight 0.5 vs 1.0 is −0.013 ± 0.017 MAE,
+  and weight 0 is −0.012 ± 0.035. It moves no team more than 5 ranks (Memphis, 37th → 42nd) or
+  1.08 AdjEM (Boise State). Set `situational.lead_protection.weight` to 1.0 to switch it off.
+- **The leader's final-drive rule was removed.** An earlier version dropped the leader's last drive
+  of the game. It almost only fired on scoreless drives: in 2025 it dropped 1 scoring drive of 308,
+  where comparable kept drives score 33% of the time. It was therefore outcome-dependent, and it
+  never improved accuracy (the reviewer measured +0.021 ± 0.027).
 - **Neutral pace** (s/snap, Q1–Q3, score within 14) is published. It is a far steadier team trait than possessions per game (split-half 0.87 vs 0.39), but as a predictor it hurt margins (+0.10 ± 0.05), so it is display only.
 - **Tempo (AdjT) is unchanged.** Q1–Q3-only possessions (+0.031 ± 0.024) and neutral-pace tempo (+0.015 ± 0.040) didn't help.
-- The **opt-in weight** `situational.lead_protection.weight` stays at 1.0 (no adjustment). Set 0.5 if you want the rating to discount clock-burning on judgment; there is no accuracy claim either way.
 
-**Caveat:** only about 60% of D-I games have a usable clock: P4 65%, G5 55%, FCS 11%. A team in
-stale-clock games can't be tagged. This is disclosed on each team's page.
-
----
+**Caveat: clock coverage.** A game's clock is usable when its snap-to-snap readings are 0 s less than
+25% of the time. In 2026 that holds for 95% of P4-vs-P4 games, 91% of P4-vs-G5, 86% of G5-vs-G5, 85% of
+FBS-vs-FCS and 15% of FCS-only games: 384 of 640 overall. Each game's status is shown in the team's
+schedule (trace and page). Q4 leading drives are counted only in usable-clock games, so "N of M" on the
+page compares like with like.
 
 ## H. Garbage time, revisited
 
 | Rule | 2025 drives flagged | MAE vs current rule | Verdict |
 |---|---|---|---|
-| **Current (Connelly margins)** | 3,253 (9.8%); 3,473 on the current parse | — | **Kept** |
-| No garbage filter | 0 | +0.012 ± 0.110 | Same |
+| **Current (Connelly margins)** | 3,584 (10.1%) on the final parse; 3,253 in the research | — | **Kept** |
+| No garbage filter | 0 | +0.027 on the final code (12.456 vs 12.429; round-3 paired SE ±0.12) | Same |
 | Time-aware sqrt rule (fit on 2025 wk 1–3) | 5,569 | +0.084 ± 0.082 | Same; flags 70% more |
 | State-only win-probability model, leader WP ≥ 0.99 (fit on wk 1–3) | — | +0.071 ± 0.072 | Same; agrees with the current rule on 96% of drives |
 | ESPN win probability ≥ 0.975 | 650 in Q1 alone | pooled +0.48 ± 0.17 | **Rejected** |
@@ -336,12 +375,51 @@ stale-clock games can't be tagged. This is disclosed on each team's page.
 - **The test can't tell the rules apart.** The verifier showed that even a perfect rule could gain at most
   0.22 MAE, below the team-clustered standard error. So the current rule is kept because you can check it
   by hand (quarter, score before the drive, four numbers), not because the data proved it best. It
-  behaves like a conservative "leader wins 99%+" rule: the leader went on to lose only 2 of 3,253 flagged drives.
+  behaves like a conservative "leader wins 99%+" rule: in the research, the leader went on to lose only 2 of 3,253 flagged drives.
 - **Leader-only exclusion was rejected as unfair.** It charges a team's defense for garbage-time points while
   dropping its own garbage-time offense, which pulls dominant and fast teams down. Its small gain disappears on cleaner targets.
 - **Garbage-adjusted results are new.** Garbage-time points were flowing straight into Pythagorean
-  W% and Luck: 8.9% of FBS points in 2025 and 12.7% in 2026. Luck now uses each game's score with the
+  W% and Luck: 8.9% of FBS teams' points in 2025 and 13.3% in 2026 (7.2% and 8.8% in FBS-vs-FBS games;
+  early-season FCS blowouts drive the 2026 figure). Luck now uses each game's score with the
   offensive points from garbage-time drives removed. Each removal is listed per game, and the raw
   version is shown beside it. Example: Rutgers' luck goes from −0.258 (raw) to −0.116 (adjusted).
-- **Fairness.** The current rule raises the fastest-pace quartile by +0.80 AdjEM in 2025 (+0.49 in 2026). Fast
-  teams have more garbage-time drives. P4 and G5 teams are affected about equally.
+- **Fairness.** The research found the rule raised the fastest-pace quartile by +0.80 AdjEM in 2025. On the
+  final 2026 data it doesn't favor fast teams: against no filter, the fastest AdjT quartile moves +0.10
+  and the slowest +0.35 (all rated teams +0.21). By neutral pace it is +0.37 for the fastest quartile and +0.54 for the slowest.
+- **Order of checks.** Since round 4, garbage time is checked before the end-of-half rule, so a late
+  garbage-time touchdown is always taken out of the garbage-adjusted score.
+
+---
+
+## I. Final independent review (round 4)
+
+Four reviewers worked on the finished system, one each on the parser, the metrics, the documents, and
+leaks of unpublished numbers. They raised 40 findings, 14 of them major. A separate verifier tried to
+refute each major finding; all 14 were upheld, 12 at reduced severity. Every finding is fixed, and
+the regression tests in `tests/test_parse.py` are built from the plays they cited.
+
+| Area | Finding | Fix |
+|---|---|---|
+| Clock | Snap-to-snap intervals and the end-of-half test read ESPN's clock field, which is about end of play. That flipped about 13% of lead-protection tags and dropped 44 drives that started with more than 60 s left. | Snap time from the "(MM:SS)" stamp in the play text, with ESPN's clock only as a fallback; both ends of an interval must come from the same source. The trace shows the clock source. |
+| Clock | The two-minute warning wasn't detected; stale 0:00 clocks dropped mid-quarter drives as end of half. | An interval that straddles 2:00 is broken. A 0:00 reading falls back to ESPN's drive start clock. |
+| Clock | Usable-clock figures in this review (P4 65%, G5 55%) were wrong, and the claimed per-team disclosure didn't exist. | Recomputed (§G). Each game's clock status is in the schedule. Q4 leading drives are counted in usable-clock games only. |
+| Parser | Text tests ran over the extra-point narrative ESPN appends to touchdowns. That deleted 11 real possessions and dozens of snaps. | The try text is cut before testing, and offensive touchdowns are protected. |
+| Parser | Lost fumbles typed "Fumble Recovery (Own)" counted as gains, some as explosive plays. | A fumble is a turnover when the defense ends with the ball. |
+| Parser | Points were credited by drive membership, not by who snapped the scoring play (FCS-only games). | A score counts for an offense only if it snapped the play. |
+| Parser | Relabeled drives kept ESPN's shifted result and elapsed time. | Both blanked on relabeled drives; the note says why. |
+| Situational | The final-drive rule was outcome-dependent, default-on and never validated; the docs said otherwise. | Removed (§G). |
+| Situational | The lead-protection weight was off by default, and the fixed 38 s rule missed a fast team slowing down. | Relative threshold (own pace + 6 s, cap 38 s); weight 0.5 by default, accuracy-neutral (§G). |
+| Situational | The Q2 cut in neutral pace was applied per drive, with a falsy-zero bug. | Applied per interval. |
+| Resume | Net Resume per game counted FCS wins in the divisor. | Divided by counted games (§A4). |
+| Traceability | Neutral pace, run rate, discipline rates, AdjSR and the lead-protection decision couldn't be rebuilt from the traces. | Each drive row now carries its intervals, run count, penalty-only snaps, clock source and weight. Each game carries clock status and box-score penalties. AdjSR has its own trace section (`trace.py --section success_rate`). |
+| Traceability | Internal ratings of unrated and FCS opponents were inputs but never derived, so 101 of 107 teams' chains stopped there. | `out/traces/internal/` holds each one's derivation, with no AdjEM, rank or resume (`trace.py --internal`, or the page's "internal*" links). |
+| Traceability | The global constants (μ, the phantom game, μT, NS_win, NS_loss) couldn't be recomputed. "Average AdjEM is 0" was false for the published table. | `out/anchors.json` lists every input. The docs say the 0 holds over all 138 FBS teams; the published 107 average −0.18. |
+| Traceability | The build self-check covered only the 138 FBS teams. | It now covers all 266 D-I teams. |
+| Leaks | Unrated teams were listed in order of their internal AdjEM. | Listed by name. |
+| Leaks | Unrated teams' garbage-adjusted scores were published per game. | Removed from their schedules. |
+| Display | The foul table said "Counted? yes" for special-teams fouls that the rates leave out. Tempo's internal inputs were unlabeled. | Both labeled correctly. |
+| Docs | Stale or wrong figures: running-score errors (8 games, not 4), tertiary breadth (9 records, not 25), "the network beats win%", 18 inversions (22), the 2025 penalty audit, the officiating-crew claim, "271 beaten FBS teams", the A1 test claim, the review's description of the round-2 fixes, and the README's dependencies. | Corrected in this document, METRICS, TRACE and README. Penalty audit and garbage numbers can now be regenerated by scripts. |
+
+**Effect of round 4 on prediction.** On the final code the 2025 walk-forward MAE is 12.43 (72.3% of
+winners) and the 2026 holdout MAE 12.87 (80.0%). The ratings changed through correctness fixes, not tuning;
+the lead-protection weight was the only modelling choice, and it is accuracy-neutral.

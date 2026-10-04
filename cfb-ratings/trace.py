@@ -5,7 +5,9 @@
     python trace.py Alabama --section efficiency
     python trace.py Alabama --drives                # every drive and why it was kept/excluded
 
-Sections: schedule, efficiency, tempo, factors, luck, situational, discipline, sos, network
+Sections: schedule, efficiency, success_rate, tempo, factors, luck, situational, discipline, sos,
+network. Opponents marked * are internal inputs; show one with:
+    python trace.py "Idaho State" --internal
 """
 import argparse
 import json
@@ -15,16 +17,26 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
-def find_team(query):
-    data = json.load(open(os.path.join(HERE, "out", "ratings.json")))
+def _match(query, items):
     q = query.lower()
-    hits = [t for t in data["teams"] if t["name"].lower() == q] or \
-           [t for t in data["teams"] if q in t["name"].lower()]
-    if not hits:
-        sys.exit(f"no FBS team matches {query!r}")
-    if len(hits) > 1 and hits[0]["name"].lower() != q:
-        sys.exit("ambiguous: " + ", ".join(t["name"] for t in hits))
-    return json.load(open(os.path.join(HERE, "out", "traces", f"{hits[0]['id']}.json")))
+    hits = [(i, n) for i, n in items if n.lower() == q] or [(i, n) for i, n in items if q in n.lower()]
+    if len(hits) > 1 and hits[0][1].lower() != q:
+        sys.exit("ambiguous: " + ", ".join(n for _, n in hits))
+    return hits[0][0] if hits else None
+
+
+def find_team(query, internal=False):
+    if internal:
+        index = json.load(open(os.path.join(HERE, "out", "traces", "internal", "index.json")))
+        tid = _match(query, list(index.items()))
+        if tid is None:
+            sys.exit(f"no internal derivation for {query!r} (rated FBS teams have full traces)")
+        return json.load(open(os.path.join(HERE, "out", "traces", "internal", f"{tid}.json")))
+    data = json.load(open(os.path.join(HERE, "out", "ratings.json")))
+    tid = _match(query, [(t["id"], t["name"]) for t in data["teams"]])
+    if tid is None:
+        sys.exit(f"no FBS team matches {query!r}; for an FCS opponent use --internal")
+    return json.load(open(os.path.join(HERE, "out", "traces", f"{tid}.json")))
 
 
 def f(x, nd=3):
@@ -41,8 +53,39 @@ def schedule(tr):
         if g.get("garbage_pts_us") or g.get("garbage_pts_them"):
             adj = (f"  [garbage-adjusted {g['adj_us']:g}-{g['adj_them']:g}: removed {g['garbage_pts_us']:g} "
                    f"of ours, {g['garbage_pts_them']:g} of theirs]")
+        ck = g.get("clock") or {}
+        clock = (f"clock {'usable' if ck.get('usable') else 'not usable'} ({ck.get('zero', 0)}/{ck.get('cand', 0)} "
+                 f"zero readings)" if ck.get("cand") is not None else "")
+        bp = g.get("box_penalties") or {}
+        pen = f"box penalties {bp.get('us')} vs {bp.get('them')}" if bp else ""
         print(f"  wk{g['week']:>2} {g['date']} {g['site']} {g['result']} {g['us']:>2}-{g['them']:<2} "
               f"{g['opp_name']} ({g['opp_division']}{', conf' if g['conf_game'] else ''}){adj}{flag}")
+        if clock or pen:
+            print(f"        {clock}; {pen}" + (f"; box rows rejected: {bp['rejected']}" if bp.get("rejected") else ""))
+
+
+def lines_table(s, label, opp_key, fmt=".3f"):
+    print(f"  {label}: adjusted = raw - (opp rating - mu) - h*venue")
+    print(f"    {'opponent':22s} {'weight':>6} {'raw':>8} {opp_key:>12} {'opp adj':>8} {'venue':>6} {'adjusted':>9}")
+    for ln in s["lines"]:
+        mark = "" if ln.get("opp_status", "published") == "published" else " *"
+        print(f"    {(ln['opp_name'][:20] + mark):22s} {ln['w']:>6g} {ln['raw']:>8{fmt}} {ln[opp_key]:>12{fmt}} "
+              f"{ln['opp_adjustment']:>+8{fmt}} {ln['hfa_adjustment']:>+6{fmt}} {ln['adjusted']:>9{fmt}}")
+    p = s["prior"]
+    tot_w = sum(ln["w"] for ln in s["lines"])
+    print(f"    {'phantom game (' + p['division'] + ' avg)':22s} {p['weight']:>6} {'':>8} {'':>12} {'':>8} {'':>6} "
+          f"{p['value']:>9{fmt}}")
+    print(f"    {label} = (sum(weight*adjusted) + {p['weight']}*{p['value']:{fmt}}) / ({tot_w:g} + {p['weight']}) "
+          f"= {s['recomputed']:.4f}   [stored {s['stored']:.4f}, check {'OK' if s['check_ok'] else 'FAIL'}]")
+
+
+def success_rate(tr):
+    s = tr.get("success_rate_adjusted")
+    if not s:
+        return
+    print("\nADJUSTED SUCCESS RATE  same model as AdjO/AdjD, play-weighted")
+    lines_table(s["offense"], "AdjSR_O", "opp_AdjSR_D" if "opp_AdjSR_D" in (s["offense"]["lines"] or [{}])[0] else "opp_AdjD")
+    lines_table(s["defense"], "AdjSR_D", "opp_AdjSR_O" if "opp_AdjSR_O" in (s["defense"]["lines"] or [{}])[0] else "opp_AdjO")
 
 
 def efficiency(tr):
@@ -50,12 +93,18 @@ def efficiency(tr):
     if not e:
         print("\nEFFICIENCY: no drive data")
         return
+    if tr.get("internal"):
+        print(f"\nEFFICIENCY (internal input)  mu = {f(e['mu'])}, h = {f(e['h'], 4)}")
+        lines_table(e["offense"], "AdjO", "opp_AdjD")
+        lines_table(e["defense"], "AdjD", "opp_AdjO")
+        print("  * opponent is itself an internal input (FCS, or FBS below the game minimum)")
+        return
     print(f"\nEFFICIENCY  mu (FBS avg PPD) = {f(e['mu'])}, home edge h = {f(e['h'], 4)} pts/drive, "
           f"muT = {f(e['muT'], 2)} drives/game")
     for side, opp_key, label in (("offense", "opp_AdjD", "AdjO"), ("defense", "opp_AdjO", "AdjD")):
         s = e[side]
         print(f"  {label}: adjusted = raw - (opp rating - mu) - h*venue")
-        print(f"    {'opponent':22s} {'drives':>6} {'raw PPD':>8} {opp_key:>9} {'opp adj':>8} "
+        print(f"    {'opponent':22s} {'weight':>6} {'raw PPD':>8} {opp_key:>9} {'opp adj':>8} "
               f"{'venue':>6} {'adjusted':>9}")
         for ln in s["lines"]:
             mark = "" if ln.get("opp_status", "published") == "published" else " *"
@@ -65,13 +114,14 @@ def efficiency(tr):
         tot_w = sum(ln["w"] for ln in s["lines"])
         print(f"    {'phantom game (' + p['division'] + ' avg)':22s} {p['weight']:>6} "
               f"{'':>8} {'':>9} {'':>8} {'':>6} {p['value']:>9.3f}")
-        print(f"    {label} = (sum(drives*adjusted) + {p['weight']}*{p['value']:.3f}) / "
+        print(f"    {label} = (sum(weight*adjusted) + {p['weight']}*{p['value']:.3f}) / "
               f"({tot_w:g} + {p['weight']}) = {s['recomputed']:.4f}   [stored {s['stored']:.4f}, "
               f"check {'OK' if s['check_ok'] else 'FAIL'}]")
+    print("  weight = kept drives, with lead-protection drives at the configured weight")
     print(f"  AdjEM = ({f(e['AdjO'], 4)} - {f(e['AdjD'], 4)}) * {f(e['muT'], 3)} = {f(e['AdjEM'], 2)} "
           f"pts/game vs an average FBS team, neutral field  (+/- {f(e['AdjEM_se'], 1)} SE)")
-    print("  * opponent rating is an internal input (FCS team, or FBS team below the game minimum),"
-          " shown only so this line can be checked")
+    print("  * opponent rating is an internal input (FCS team, or FBS team below the game minimum);"
+          ' see its own lines with: python trace.py "<opponent>" --internal')
     print("  game-level adjusted margins (basis of the SE):",
           ", ".join(f"{g['opp_name']} {g['adj_margin_per_game']:+.1f}" for g in e["game_margins"]))
 
@@ -80,9 +130,11 @@ def tempo(tr):
     t = tr.get("tempo")
     if not t:
         return
-    print(f"\nTEMPO  AdjT = mean(poss - (opp AdjT - muT)) incl. one phantom game; muT = {f(t['muT'], 2)}")
+    print(f"\nTEMPO  AdjT = mean(poss - (opp AdjT - muT)) incl. one phantom game; muT = "
+          f"{f(t.get('muT'), 2)}; poss = (both teams' regulation drives with a real snap) / 2")
     for ln in t["lines"]:
-        print(f"    {ln['opp_name'][:22]:22s} poss {ln['poss']:5.1f}  opp AdjT {ln['opp_AdjT']:5.2f}  "
+        mark = "" if ln.get("opp_status", "published") == "published" else " *"
+        print(f"    {(ln['opp_name'][:20] + mark):22s} poss {ln['poss']:5.1f}  opp AdjT {ln['opp_AdjT']:5.2f}  "
               f"adjusted {ln['adjusted']:5.2f}")
     print(f"    phantom game {t['prior']:.2f} -> AdjT {t['recomputed']:.3f} [check "
           f"{'OK' if t['check_ok'] else 'FAIL'}]")
@@ -127,11 +179,15 @@ def situational(tr):
           f"{f(s['neutral_run_rate'])} over {s['pace_intervals']} clean intervals "
           f"(published at >= {s['min_pace_intervals']}); rule: {s['pace_rule']}")
     lp = s["lead_protection_rule"]
-    print(f"  lead protection (Q4, ahead 1-{lp['max_lead']}, usable clock, >= {lp['min_mean_secs']} s/snap over "
-          f">= {lp['min_intervals']} clean intervals, >= {lp['min_run_share']:.0%} runs of >= {lp['min_plays']} plays): "
-          f"{len(s['lead_protection_drives'])} of {s['q4_lead_drives']} Q4 leading drives; {s['weight_note']}")
+    print(f"  lead protection (Q4, ahead 1-{lp['max_lead']}, usable clock, clean intervals averaging >= own neutral "
+          f"pace + {lp['relative_slowdown']} s, capped at {lp['min_mean_secs']} s, over >= {lp['min_intervals']} "
+          f"intervals, >= {lp['min_run_share']:.0%} runs of >= {lp['min_plays']} plays): "
+          f"{len(s['lead_protection_drives'])} of {s['q4_lead_drives']} Q4 leading drives in "
+          f"{s.get('usable_clock_games')} usable-clock games; {s['weight_note']}")
     for d in s["lead_protection_drives"]:
-        print(f"    vs {d['opp_name']} drive {d['drive']} ({d['clock']}): {d['reason']}, {d['points']:g} pts")
+        print(f"    vs {d['opp_name']} drive {d['drive']} ({d['clock']}): {d['reason']}, {d['points']:g} pts; "
+              f"intervals {d.get('intervals')}")
+    print("  every drive's clean intervals, runs and clock source are in --drives")
 
 
 def discipline(tr):
@@ -147,9 +203,21 @@ def discipline(tr):
           f"(conference {f(d['DefPen100_conf'], 2)}); first downs given {c.get('def_first_downs')} = "
           f"{f(d['PenFDAllowedPG'], 2)} per game")
     for x in d["fouls"]:
-        tag = "situational" if x["situational"] else (x["drive_why"] or "kept") if x["drive_why"] is not None else "n/a"
         print(f"    vs {x['opp_name'][:16]:16s} Q{x['period']} {x['clock'] or '':>5} {x['category'][:24]:24s} "
-              f"{x['penalized_unit']:8s} {x['yards']:>3} yds {x['status']:10s} [{tag}; {x['dialect']}/{x['yards_method']}]")
+              f"{x['penalized_unit']:8s} {x['yards']:>3} yds {x['status']:10s}{' 1st down' if x['first_down_awarded'] else ''} "
+              f"[{counted(x)}; {x['dialect']}/{x['yards_method']}]")
+
+
+def counted(x):
+    if x["status"] != "accepted":
+        return "not counted: not accepted"
+    if x["penalized_unit"] not in ("offense", "defense"):
+        return f"not counted: {x['penalized_unit']} unit (special teams)"
+    if x["situational"]:
+        return "not counted: situational"
+    if x["drive_why"] != "":
+        return f"not counted: {x['drive_why'] or 'no drive'}"
+    return "counted"
 
 
 def sos(tr):
@@ -165,9 +233,9 @@ def network(tr):
     w = n["weights"]
     rf = n["refs"]
     print(f"\nNETWORK WIN VALUES  NS = {w['primary']}*P + {w['secondary']}*S + {w['tertiary']}*T")
-    print(f"  anchors: NS_win {rf['win']:.4f} (mean NS of all {rf['n_wins']} beaten FBS teams -> average win = 1.00); "
-          f"NS_loss {rf['loss']:.4f} (mean NS of teams that won -> average loss costs 1.00); "
-          f"NS_all {rf['all']:.4f} (schedule)")
+    print(f"  anchors: NS_win {rf['win']:.4f} (mean NS of the beaten team over all {rf['n_wins']} FBS wins -> "
+          f"average win = 1.00); NS_loss {rf['loss']:.4f} (mean NS of the winner over all {rf['n_losses']} FBS "
+          f"losses -> average loss costs 1.00); NS_all {rf['all']:.4f} (schedule). Inputs: out/anchors.json")
     print(f"  record rate = (W + {n['record_prior']['wins']}) / (W + L + "
           f"{n['record_prior']['wins'] + n['record_prior']['losses']}); exclusion rule: {n['exclusion']}")
     for kind, rows in (("WIN", n["wins"]), ("LOSS", n["losses"])):
@@ -210,11 +278,23 @@ def drives(tr):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("team")
-    ap.add_argument("--section", choices=["schedule", "efficiency", "tempo", "factors", "luck",
+    ap.add_argument("--internal", action="store_true",
+                    help="show the internal-input derivation of an FCS team or an FBS team below the game minimum")
+    ap.add_argument("--section", choices=["schedule", "efficiency", "success_rate", "tempo", "factors", "luck",
                                           "situational", "discipline", "sos", "network"])
     ap.add_argument("--drives", action="store_true")
     a = ap.parse_args()
-    tr = find_team(a.team)
+    tr = find_team(a.team, a.internal)
+    if tr.get("internal"):
+        t = tr["team"]
+        print(f"{t['name']} ({t['division']}, {t['conference']})  INTERNAL INPUT\n{tr['note']}")
+        efficiency(tr)
+        print("\nADJUSTED SUCCESS RATE (internal input)")
+        lines_table(tr["success_rate_adjusted"]["offense"], "AdjSR_O", "opp_AdjD")
+        lines_table(tr["success_rate_adjusted"]["defense"], "AdjSR_D", "opp_AdjO")
+        if tr.get("tempo"):
+            tempo(tr)
+        return
     s = tr["summary"]
     if not s.get("eligible"):
         print(f"{s['name']} ({s['conference']})  {s['W']}-{s['L']}  NOT RATED")
@@ -226,7 +306,8 @@ def main():
     if a.drives:
         drives(tr)
         return
-    sections = {"schedule": schedule, "efficiency": efficiency, "tempo": tempo, "factors": factors,
+    sections = {"schedule": schedule, "efficiency": efficiency, "success_rate": success_rate,
+                "tempo": tempo, "factors": factors,
                 "luck": luck, "situational": situational, "discipline": discipline, "sos": sos,
                 "network": network}
     for name, fn in sections.items():

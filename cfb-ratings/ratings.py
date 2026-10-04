@@ -46,7 +46,9 @@ def side_drives(g, team, role):
     return [d for d in g["drives"] if d[role] == team]
 
 
-TEMPO_WHY = ("", "garbage time", "end of half/game", "leader's final drive")
+# Tempo counts every regulation possession with a real snap, including garbage time and
+# end-of-half drives: tempo is how many possessions a game has, not how good they were.
+TEMPO_WHY = ("", "garbage time", "end of half/game")
 
 
 def good_clock(g, cfg):
@@ -55,21 +57,53 @@ def good_clock(g, cfg):
     return bool(c.get("cand")) and c["zero"] / c["cand"] < cfg["situational"]["max_zero_clock_share"]
 
 
-def lead_protection(d, g, cfg):
-    """Clock-burning to protect a lead (the user's situational football), checkable by hand:
-    Q4, offense ahead by 1 to max_lead at the first snap, a usable game clock, clean
-    snap-to-snap intervals averaging >= min_mean_secs over >= min_intervals, and runs on
-    >= min_run_share of >= min_plays scrimmage plays. Returns the reason string or ''."""
+def neutral_intervals(d):
+    """Clean intervals from a drive that count toward neutral pace: Q1-Q3, not the final
+    2:00 of Q2 (applied to each interval's snap time)."""
+    return [x[2] for x in d.get("iv") or [] if x[0] in (1, 2, 3) and not (x[0] == 2 and x[1] <= 120)]
+
+
+def neutral_pace(games, cfg):
+    """{team: (mean s/snap, run rate, intervals)} over neutral drives in usable-clock games."""
+    sit = cfg["situational"]
+    acc = {}
+    for g in games:
+        if not good_clock(g, cfg):
+            continue
+        for d in g["drives"]:
+            if d["period"] in (1, 2, 3) and abs(d["margin"]) <= sit["neutral_margin"]:
+                a = acc.setdefault(d["off"], [[], 0, 0])
+                a[0] += neutral_intervals(d)
+                a[1] += len(d["plays"])
+                a[2] += d.get("runs", 0)
+    out = {}
+    for t, (iv, n, r) in acc.items():
+        if len(iv) >= sit["min_pace_intervals"]:
+            out[t] = (sum(iv) / len(iv), r / n if n else None, len(iv))
+        else:
+            out[t] = (None, None, len(iv))
+    return out
+
+
+def lead_protection(d, g, cfg, pace=None):
+    """Clock-burning to protect a lead (the user's situational football), checkable by hand.
+
+    Q4, offense ahead by 1 to max_lead at the first snap, a usable game clock, runs on
+    >= min_run_share of >= min_plays scrimmage plays, and clean snap-to-snap intervals
+    (>= min_intervals) averaging at least the team's threshold: its own neutral pace +
+    relative_slowdown, capped at min_mean_secs (teams without a neutral pace use the cap).
+    Returns the reason string or ''."""
     lp = cfg["situational"]["lead_protection"]
     if d["period"] != 4 or not 1 <= d["margin"] <= lp["max_lead"] or not d["plays"]:
         return ""
-    iv, plays = d.get("iv") or [], d["plays"]
-    runs = sum(1 for p in plays if p[3] == "R")
-    if (not good_clock(g, cfg) or len(iv) < lp["min_intervals"] or sum(iv) / len(iv) < lp["min_mean_secs"]
+    iv = [x[2] for x in d.get("iv") or []]
+    plays, runs = d["plays"], d.get("runs", 0)
+    threshold = lp["min_mean_secs"] if pace is None else min(lp["min_mean_secs"], pace + lp["relative_slowdown"])
+    if (not good_clock(g, cfg) or len(iv) < lp["min_intervals"] or sum(iv) / len(iv) < threshold
             or len(plays) < lp["min_plays"] or runs / len(plays) < lp["min_run_share"]):
         return ""
-    return (f"Q4, up {d['margin']:g}, {sum(iv) / len(iv):.1f} s/snap over {len(iv)} clean intervals, "
-            f"{runs}/{len(plays)} runs")
+    return (f"Q4, up {d['margin']:g}, {sum(iv) / len(iv):.1f} s/snap over {len(iv)} clean intervals "
+            f"(threshold {threshold:.1f}), {runs}/{len(plays)} runs")
 
 
 DISCIPLINE_KEYS = ("PenPG", "PenYdsPG", "NetPenYdsPG", "OffPen100", "OffPreSnap100", "DefPen100",
@@ -145,9 +179,10 @@ def rate(data, cfg, through_week=None):
                     d["kept"] = 1
     # Lead-protection tags (descriptive; they only change the ratings if the
     # configured weight is below 1.0, which is off by default -- see ADVERSARIAL_REVIEW).
+    pace = neutral_pace(games, cfg)
     for g in games:
         for d in g["drives"]:
-            d["lp"] = lead_protection(d, g, cfg) if d["kept"] else ""
+            d["lp"] = lead_protection(d, g, cfg, pace.get(d["off"], (None,))[0]) if d["kept"] else ""
     ppd_obs, sr_obs, tempo_games = [], [], []
     for g in games:
         if not g["drives"]:
@@ -263,25 +298,14 @@ def rate(data, cfg, through_week=None):
         r.update(TO_give=_rate(give, nbox), TO_take=_rate(take, nbox),
                  TO_margin=_rate(take - give, nbox))
 
-        # Neutral pace: clean snap-to-snap seconds in Q1-Q3 with the score within 14
-        # (not the final 2:00 of Q2), games with a usable clock. Display only.
-        sit = cfg["situational"]
-        iv, nplays, nruns = [], 0, 0
-        for g in mine:
-            if not good_clock(g, cfg):
-                continue
-            for d in side_drives(g, t, "off"):
-                if d["period"] in (1, 2, 3) and abs(d["margin"]) <= sit["neutral_margin"] and not (
-                        d["period"] == 2 and (clock_secs(d["clock"]) or 999) <= 120):
-                    iv += d.get("iv") or []
-                    nplays += len(d["plays"])
-                    nruns += sum(1 for p in d["plays"] if p[3] == "R")
-        enough = len(iv) >= sit["min_pace_intervals"]
-        r.update(NeutralPace=sum(iv) / len(iv) if enough else None, pace_intervals=len(iv),
-                 NeutralRunRate=nruns / nplays if enough and nplays else None,
+        # Neutral pace (display only): see neutral_pace().
+        np_, nrr, niv = pace.get(t, (None, None, 0))
+        usable = [g for g in mine if good_clock(g, cfg)]
+        r.update(NeutralPace=np_, NeutralRunRate=nrr, pace_intervals=niv,
                  LP_drives=sum(1 for g in mine for d in side_drives(g, t, "off") if d.get("lp")),
-                 Q4_lead_drives=sum(1 for g in mine for d in side_drives(g, t, "off")
-                                    if d["kept"] and d["period"] == 4 and 1 <= d["margin"] <= 21))
+                 Q4_lead_drives=sum(1 for g in usable for d in side_drives(g, t, "off")
+                                    if d["kept"] and d["period"] == 4 and 1 <= d["margin"] <= 21),
+                 usable_clock_games=len(usable))
 
         # Discipline (descriptive, not part of the rating). Per-game counts come from the
         # box score; rates come from the play-by-play on kept drives only, per 100 snaps,
@@ -305,8 +329,10 @@ def rate(data, cfg, through_week=None):
         res = net.resume(t, with_trees=False)
         r.update(WVT=res["win_value_total"], AvgWV=res["avg_win_value"],
                  LCT=res["loss_cost_total"], NetResume=res["net_resume"],
-                 # Per game, so a sixth game played isn't an advantage over five.
-                 NetPerGame=res["net_resume"] / len(mine) if mine else None,
+                 # Per counted game (FBS games and FCS losses; a win over an FCS team
+                 # doesn't count), so a sixth game played isn't an advantage over five.
+                 net_games=res["counted_games"],
+                 NetPerGame=res["net_resume"] / res["counted_games"] if res["counted_games"] else None,
                  SchedNS=res["schedule_ratio"],
                  BestWin=(res["best_win"] or {}).get("value"),
                  BestWinOpp=(res["best_win"] or {}).get("opp"),
@@ -332,8 +358,10 @@ def rate(data, cfg, through_week=None):
         for r in elig:
             if r.get(key) is not None:
                 by_conf.setdefault(r["conference"], []).append(r[key])
+        allv = [x for v in by_conf.values() for x in v]
         for r in out.values():
-            v = by_conf.get(r["conference"])
+            # Independents have no shared officiating; they get the FBS average instead.
+            v = allv if r["conference"] == "FBS Indep." else by_conf.get(r["conference"])
             r[f"{key}_conf"] = sum(v) / len(v) if v else None
 
     return {"teams": out, "ppd": ppd, "sr": sr, "tempo": tempo, "net": net, "games": games,

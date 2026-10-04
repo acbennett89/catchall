@@ -41,7 +41,8 @@
       "min_intervals": 2,
       "min_plays": 3,
       "min_run_share": 0.6,
-      "weight": 1.0
+      "weight": 0.5,
+      "relative_slowdown": 6.0
     }
   }
 }

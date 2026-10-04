@@ -119,18 +119,79 @@ class NewRules(unittest.TestCase):
                  play("d", H, down=4, clock="8:40", text="rush for 1 yard out of bounds")]  # 35 s clean
         drives = [{"team": {"id": H}, "result": "DOWNS", "plays": plays}]
         out, _, clock = parse_drives(summary(drives, []), H, A, {"home": 0, "away": 0})
-        self.assertEqual(out[0]["iv"], [40, 35])
+        self.assertEqual(out[0]["iv"], [[1, 600, 40], [1, 555, 35]])
         self.assertEqual(clock, {"cand": 2, "zero": 0})
 
-    def test_leaders_final_drive_is_excluded(self):
-        drives = [{"team": {"id": H}, "result": "TD", "plays": [td("t", H, period=4, clock="9:00")]},
-                  {"team": {"id": A}, "result": "PUNT", "plays": [play("a", A, period=4, clock="8:00")]},
-                  {"team": {"id": H}, "result": "", "plays": [
-                      play("b", H, period=4, clock="4:00"), play("c", H, down=2, period=4, clock="3:20")]}]
-        scoring = [sp("t", H, "touchdown", 0, 7)]
-        out, _, _ = parse_drives(summary(drives, scoring), H, A, {"home": 7, "away": 0})
-        self.assertEqual(out[2]["why"], "leader's final drive")
-        self.assertEqual(out[1]["why"], "")
+    def test_snap_time_stamp_beats_end_of_play_clock(self):
+        # ESPN's clock field is near the end of the play; the "(MM:SS)" stamp is the snap.
+        plays = [play("a", H, clock="7:07", text="(07:10) rush for 3 yards"),
+                 play("b", H, down=2, clock="6:24", text="(06:33) rush for 4 yards"),
+                 play("c", H, down=3, clock="5:43", text="(05:51) rush for 2 yards")]
+        drives = [{"team": {"id": H}, "result": "PUNT", "plays": plays}]
+        out, _, _ = parse_drives(summary(drives, []), H, A, {"home": 0, "away": 0})
+        self.assertEqual([x[2] for x in out[0]["iv"]], [37, 42])
+        self.assertEqual(out[0]["clock"], "7:10")
+
+    def test_two_minute_warning_breaks_an_interval(self):
+        plays = [play("a", H, period=4, clock="2:10", text="(02:10) rush for 3 yards"),
+                 play("b", H, down=2, period=4, clock="1:55", text="(01:55) rush for 4 yards")]
+        drives = [{"team": {"id": H}, "result": "PUNT", "plays": plays}]
+        out, _, _ = parse_drives(summary(drives, []), H, A, {"home": 0, "away": 0})
+        self.assertEqual(out[0]["iv"], [])
+
+    def test_try_text_does_not_delete_the_touchdown(self):
+        # "NO PLAY" and "kick" belong to the extra point, not the snap.
+        t = td("t", H, text="(05:00) J.Doe rush for 67 yards TOUCHDOWN. #91 C.Arreola kick attempt "
+                            "good. PENALTY ABC Holding 10 yards. NO PLAY")
+        drives = [{"team": {"id": H}, "result": "TD", "plays": [t]}]
+        out, _, _ = parse_drives(summary(drives, [sp("t", H, "touchdown", 0, 7)]), H, A, {"home": 7, "away": 0})
+        self.assertEqual(len(out[0]["plays"]), 1)
+        self.assertEqual(out[0]["why"], "")
+
+    def test_strip_sack_returned_for_td_is_a_turnover_not_special_teams(self):
+        p = play("f", H, typ="Fumble Recovery (Own)", down=3,
+                 text="Q.Henicle sacked, fumble, recovered by AWY, return 40 yards TOUCHDOWN, kick attempt good")
+        drives = [{"team": {"id": H}, "result": "FUMBLE TD", "plays": [play("a", H), p]}]
+        out, _, _ = parse_drives(summary(drives, [sp("f", A, "touchdown", 7, 0, typ="Fumble Return Touchdown")]),
+                                 H, A, {"home": 0, "away": 7})
+        self.assertEqual(len(out[0]["plays"]), 2)
+        self.assertEqual(out[0]["plays"][1][7], 1)   # turnover
+        self.assertEqual(out[0]["pts"], 0)
+
+    def test_lost_fumble_labeled_own_recovery_is_a_turnover(self):
+        p = play("f", H, typ="Fumble Recovery (Own)", down=3, yds=34,
+                 text="sacked for loss of 12, fumble, recovered by AWY, return 34 yards")
+        p["end"] = {"team": {"id": A}}
+        drives = [{"team": {"id": H}, "result": "FUMBLE", "plays": [play("a", H), p]}]
+        out, _, _ = parse_drives(summary(drives, []), H, A, {"home": 0, "away": 0})
+        row = out[0]["plays"][1]
+        self.assertEqual((row[4], row[5], row[6], row[7]), (0, 0, 0, 1))   # no yards, no success, turnover
+
+    def test_points_only_for_scores_the_offense_snapped(self):
+        # A defensive return TD inside a mislabeled drive is not offensive points.
+        pick = play("i", A, typ="Interception Return Touchdown", down=2, text="pass intercepted, returned for TD")
+        drives = [{"team": {"id": H}, "result": "INT TD", "plays": [play("a", H), play("b", H, down=2), pick]}]
+        out, _, _ = parse_drives(summary(drives, [sp("i", H, "touchdown", 0, 7)]), H, A, {"home": 7, "away": 0})
+        self.assertEqual(out[0]["pts"], 0)
+
+    def test_garbage_time_wins_over_end_of_half(self):
+        # A late Q2 drive by a team leading past the garbage margin is garbage time, so its
+        # points come out of garbage-adjusted scores (end-of-half would leave them in).
+        import parse
+        saved = dict(parse.CONFIG["garbage_margin"])
+        parse.CONFIG["garbage_margin"]["2"] = 5
+        try:
+            drives = [{"team": {"id": H}, "result": "TD", "plays": [td("t", H, period=2, clock="5:00")]},
+                      {"team": {"id": A}, "result": "PUNT", "plays": [play("a", A, period=2, clock="4:00")]},
+                      {"team": {"id": H}, "result": "FG", "plays": [
+                          play("b", H, period=2, clock="0:40"),
+                          play("f", H, typ="Field Goal Good", down=4, period=2, clock="0:05")]}]
+            scoring = [sp("t", H, "touchdown", 0, 7), sp("f", H, "field-goal", 0, 10, typ="Field Goal Good")]
+            out, _, _ = parse_drives(summary(drives, scoring), H, A, {"home": 10, "away": 0})
+        finally:
+            parse.CONFIG["garbage_margin"].update(saved)
+        self.assertEqual(out[2]["why"], "garbage time")
+        self.assertEqual(out[2]["pts"], 3)
 
 
 class BoxPenalties(unittest.TestCase):

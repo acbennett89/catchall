@@ -15,7 +15,7 @@ Universe: all Division I games (FBS and FCS). Only FBS teams are published.
 | # | Rule | Definition |
 |---|------|------------|
 | 0.1 | **Published teams** | FBS teams only (138 in 2026, from ESPN's 11 FBS conference rosters). |
-| 0.2 | **Eligibility** | A team is rated only after **5 completed games** against D-I opponents (FBS or FCS). Below that it gets **no published numbers**: no rating, rank, resume or prediction, and its trace shows only its schedule. These teams still count as opponents. Wherever one's internal estimate is an input to an eligible team's math, it appears in that team's trace marked "internal input". Hiding it would break traceability. The threshold is `min_games`. |
+| 0.2 | **Eligibility** | A team is rated only after **5 completed games** against D-I opponents (FBS or FCS). Below that it gets **no published rating, rank, resume or prediction**, and its own trace shows only its schedule. These teams still count as opponents, so their internal estimates feed rated teams' numbers. Wherever that happens, the value is marked "internal input". Its derivation is published separately (`out/traces/internal/`, `trace.py --internal`, or the page's "internal*" links) with no AdjEM, rank or resume, so every rated number can be traced to the end. The same applies to FCS teams. The threshold is `min_games`. |
 | 0.3 | **Efficiency model universe** | Every D-I vs D-I game. FCS teams are rated from their own FCS schedules, so a win over a strong FCS team and a win over a weak one are adjusted differently. Games against D-II/NAIA teams are dropped, as KenPom drops non-D-I games. |
 | 0.4 | **Network universe** | FBS vs FBS games only. A win over an FCS team is worth **0**, and its secondary and tertiary branches are never traversed (your rule). |
 
@@ -27,13 +27,13 @@ A "possession" is an offensive **drive**.
 
 | # | Rule | Definition | Why |
 |---|------|------------|-----|
-| 1.1 | Drive points | Each scoring play's points are **rebuilt from what the play was**: touchdown 6 plus the extra-point result, field goal 3, safety 2. When ESPN shows an extra point as "Not Available", the team's unreported extra points share whatever it still needs to reach its final score. If nothing reconciles, ESPN's running score is used only when every change is a legal score; otherwise the game is dropped from efficiency. A drive's points are the touchdowns and field goals its offense scored. | ESPN's running score was wrong in 4 FBS games (a TD credited as 1, 6, 13 or −8 points). |
+| 1.1 | Drive points | Each scoring play's points are **rebuilt from what the play was**: touchdown 6 plus the extra-point result, field goal 3, safety 2. When ESPN shows an extra point as "Not Available", the team's unreported extra points share whatever it still needs to reach its final score. If nothing reconciles, ESPN's running score is used only when every change is a legal score; otherwise the game is dropped from efficiency. A drive's points are the touchdowns and field goals its offense **itself snapped**. | ESPN's running score was wrong on 21 scoring plays in 8 FBS-involved 2026 games (e.g. a TD credited as 1, 13 or −8 points). 5 more FBS games use the running-score fallback because ESPN mislabels an extra point. |
 | 1.2 | Drive offense | The team that snapped most of the drive's plays. | ESPN mislabels some drives. |
 | 1.3 | Zero-play drives | Dropped. | Kickoff and punt-return "drives" aren't possessions. |
 | 1.4 | Overtime | Dropped. | OT drives start at the 25. |
-| 1.5 | End of half / game | Dropped if the drive's **first snap comes with 60 s or less left in Q2 or Q4**, whatever the result. Also dropped: **the leader's final regulation drive**, i.e. the last drive with real plays, starting in Q4 with the offense ahead. | Based on the situation, never the outcome. Dropping only drives that failed would inflate offense. The final drive covers clock-killing possessions that ESPN often leaves without a result. |
-| 1.6 | Garbage time | Dropped (both teams) when the margin at the first snap is more than **43 (Q1), 37 (Q2), 27 (Q3) or 21 (Q4)**. | Bill Connelly's rule. It is kept because it can be checked by hand; the alternatives tested were no better (§C5 of the review). |
-| 1.7 | Scrimmage plays | Rushes, passes, sacks and scrimmage turnovers on kept drives. Excluded: kneel-downs and spikes (whole-word match, so "McKneely" isn't a kneel), snaps the text says were nullified ("NO PLAY"), muffed punts and other special-teams fumbles, and snaps ESPN lists twice. | Standard play filter. |
+| 1.5 | End of half / game | Dropped if the drive's **first snap comes with 60 s or less left in Q2 or Q4**, whatever the result. The snap time is the "(MM:SS)" stamp that opens stat-crew play text. Without a stamp, ESPN's clock field is used (roughly end of play); a stale 0:00 reading falls back to ESPN's drive start clock. | Based on the situation, never the outcome. Dropping only drives that failed would inflate offense. |
+| 1.6 | Garbage time | Dropped (both teams) when the margin at the first snap is more than **43 (Q1), 37 (Q2), 27 (Q3) or 21 (Q4)**. Checked before 1.5, so garbage points always come out of the garbage-adjusted scores (§4). | Bill Connelly's rule. It is kept because it can be checked by hand; the alternatives tested were no better (review §H). |
+| 1.7 | Scrimmage plays | Rushes, passes, sacks and scrimmage fumbles on kept drives. Excluded: kneel-downs and spikes (whole-word match, so "McKneely" isn't a kneel), snaps the text says were nullified ("NO PLAY"), muffed punts and other special-teams fumbles, and snaps ESPN lists twice. These tests read only the snap's own text: the extra-point narrative ESPN appends to touchdowns is cut off first. A fumble is a turnover when the defense ends up with the ball, whatever ESPN's fumble label says. | Standard play filter. |
 
 Every drive in the trace carries `kept`, `excluded_reason` and, where it applies, a lead-protection tag (§7).
 
@@ -53,12 +53,12 @@ O − D to 0, then shifts O, D and μ together so that the average FBS defense e
 
 | # | Metric | Definition | Units |
 |---|--------|------------|-------|
-| 2.1 | **μ** | Points per drive an average FBS offense scores against an average FBS defense on a neutral field (2.377 through week 5). | pts/drive |
+| 2.1 | **μ** | Points per drive an average FBS offense scores against an average FBS defense on a neutral field (2.344 through week 5). It equals the mean AdjO, and the mean AdjD, over all 138 FBS teams; every input is listed in `out/anchors.json`. | pts/drive |
 | 2.2 | **AdjO** | Points per drive against an **average FBS defense**, neutral field. It equals the drive-weighted mean of game values `raw PPD − (opp AdjD − μ) − h·v`, plus one phantom game at the division mean (§2.7). | pts/drive (higher is better) |
 | 2.3 | **AdjD** | Points per drive allowed to an **average FBS offense**, built the same way. | pts/drive (lower is better) |
-| 2.4 | **AdjEM** | `(AdjO − AdjD) × μT`. Points per game better than an average FBS team on a neutral field. **This is the ranking metric.** The FBS average is exactly 0. | pts/game |
-| 2.5 | **AdjT** | Opponent-adjusted possessions per game: `Poss_g = AdjT_X + AdjT_Y − μT`. Tested against neutral-pace and Q1–Q3-only versions; neither helped, so it is kept. | drives/game |
-| 2.6 | **Home field** | `h` is estimated from the **unshrunk** fit and then held fixed. Estimating it jointly with the shrinkage prior inflated it from 3.6 to 4.7 points. It is shown per drive and as `2·h·μT` points per game. | pts |
+| 2.4 | **AdjEM** | `(AdjO − AdjD) × μT`. Points per game better than an average FBS team on a neutral field. **This is the ranking metric.** It averages exactly 0 over all 138 FBS teams, including the 31 not yet rated; the 107 published teams average −0.18. | pts/game |
+| 2.5 | **AdjT** | Opponent-adjusted possessions per game: `Poss_g = AdjT_X + AdjT_Y − μT`. A game's possessions are both teams' regulation drives with a real snap, divided by 2. That includes garbage-time and end-of-half drives, because tempo measures how many possessions a game has, not how good they were. Tested against neutral-pace and Q1–Q3-only versions; neither helped, so it is kept. | drives/game |
+| 2.6 | **Home field** | `h` is estimated from the **unshrunk** fit and then held fixed. Estimating it jointly with the shrinkage prior inflated it from 3.6 to 4.6 points. It is shown per drive and as `2·h·μT` points per game. | pts |
 | 2.7 | **Regression to the mean** | One phantom game of 12 drives at the team's division average, shown as its own line in the trace. | — |
 | 2.8 | **±SE** | The SD of the game-level adjusted margins ÷ √games. | pts/game |
 | 2.9 | **AdjSR O / D** | The same model applied to success rate, play-weighted. | % |
@@ -74,6 +74,7 @@ O − D to 0, then shifts O, D and μ together so that the average FBS defense e
 | 3.3 | **Field position** | Average drive start, in yards from the team's own goal line. |
 | 3.4 | **Finishing drives** | Points per scoring opportunity, i.e. per drive with a 1st down at or inside the opponent's 40. |
 | 3.5 | **Turnovers** | Giveaways, takeaways and margin per game, from the box score. |
+| 3.6 | **Seconds per play** | ESPN's elapsed time on kept drives ÷ their scrimmage plays (relabeled drives left out, since ESPN's time belongs to another possession). |
 
 ---
 
@@ -154,7 +155,7 @@ team costs more. A loss to an FCS team costs the maximum, `1 / (1 − NS_loss)` 
 | 6.6b | **Avg Win Value** | Win Value Total ÷ FBS wins |
 | 6.6c | **Loss Cost Total** | Σ loss costs |
 | 6.6d | **Net Resume** | Win Value Total − Loss Cost Total |
-| 6.6e | **Net Resume per game** | Net Resume ÷ games played. **This is the resume ranking**, so a sixth game played isn't an advantage over five. |
+| 6.6e | **Net Resume per game** | Net Resume ÷ counted games (FBS games plus FCS losses; a win over an FCS team doesn't count, per your rule). **This is the resume ranking**, so a sixth game played isn't an advantage over five. |
 | 6.6f | **Schedule strength** | Mean opponent NS, with FCS opponents counted as 0, ÷ NS_all (the mean over every FBS game side). 1.00 = an average FBS schedule. |
 | 6.6g | **Best win / worst loss** | Highest win value and highest loss cost, with their trees. |
 
@@ -164,15 +165,13 @@ team costs more. A loss to an FCS team costs the maximum, `1 / (1 − NS_loss)` 
 
 | # | Metric | Definition |
 |---|--------|------------|
-| 7.1 | **Clean interval** | Game-clock seconds from one snap to the very next snap by the same offense in the same quarter. Not counted when something stopped the clock: kneel or spike, incompletion, score, turnover, penalty, out of bounds, a timeout or any other row in between, a first down in the final 2:00 of a half, or a reading of 2 s or less, or over 60 s. |
-| 7.2 | **Usable clock** | A game whose snap-to-snap readings are 0 s less than 25% of the time. About 60% of D-I games qualify; FCS feeds are often stale. |
-| 7.3 | **Neutral pace** | Mean clean seconds per snap in Q1–Q3 with the score within 14 (excluding the final 2:00 of Q2), in games with a usable clock. Published once a team has at least 30 intervals. Its split-half reliability is 0.87, against 0.39 for possessions per game. **Display only.** |
+| 7.1 | **Clean interval** | Game-clock seconds from one snap to the very next snap by the same offense in the same quarter. The snap time is read from the "(MM:SS)" stamp in stat-crew text (88% of scrimmage snaps in 2026 FBS games; ESPN's narrative feed has no stamp); both ends must come from the same source. Not counted when something stopped the clock: kneel or spike, incompletion, score, turnover, penalty, out of bounds, a timeout or any other row in between, a first down in the final 2:00 of a half, the two-minute warning, or a reading of 2 s or less, or over 60 s. |
+| 7.2 | **Usable clock** | A game whose snap-to-snap readings are 0 s less than 25% of the time. In 2026: 95% of P4-vs-P4 games, 86–91% of other FBS games, 15% of FCS-only games (384 of 640 overall). Each game's status is shown in its schedule row. |
+| 7.3 | **Neutral pace** | Mean clean seconds per snap in Q1–Q3 with the score within 14 at the drive's start, leaving out any interval snapped in the final 2:00 of Q2, in usable-clock games. Published once a team has at least 30 intervals. In the round-3 research its split-half reliability was 0.87, against 0.39 for possessions per game. **Display only.** |
 | 7.4 | **Neutral run rate** | Share of runs among scrimmage plays on the same drives. |
-| 7.5 | **Lead-protection drive** | A kept drive in **Q4** with the offense **ahead by 1–21** at the first snap, in a usable-clock game, with clean intervals averaging **≥ 38.0 s/snap over ≥ 2 intervals** and **≥ 60% runs over ≥ 3 plays**. It can be checked by hand from the drive's own snaps. |
-| 7.6 | **Lead-protection weight** | Tagged drives count at `lead_protection.weight` in AdjO/AdjD/AdjSR. **The default is 1.0, i.e. no adjustment**, because none of the ~27 adjustments tested improved accuracy. Set 0.5 for a judgment-based adjustment; it moves no team more than 3 ranks. |
-| 7.7 | **Leader's final drive** | Rule 1.5: the clock-killing last drive is not a possession. |
-
----
+| 7.5 | **Lead-protection drive** | A kept drive in **Q4** with the offense **ahead by 1–21** at the first snap, in a usable-clock game, with **≥ 60% runs over ≥ 3 plays**. Its clean intervals (**≥ 2**) must average at least the team's **own neutral pace + 6 s/snap, capped at 38.0 s**. A fast team that slows down counts, and teams without a neutral pace use 38.0 s. Every input (the intervals, run count and threshold) is in the drive row. |
+| 7.6 | **Lead-protection weight** | Tagged drives count at **0.5** in AdjO, AdjD and AdjSR. **This is the situational adjustment you asked for, and it is on by default.** Walk-forward it is accuracy-neutral (−0.013 ± 0.017 MAE vs no adjustment), so it changes how a clock-burning drive counts without costing prediction. Set `situational.lead_protection.weight` to 1.0 to turn it off, or 0 to drop those drives. |
+| 7.7 | **Leader's final drive (removed)** | An earlier version dropped the leader's last drive of the game. It fired almost only on scoreless drives, so it was outcome-dependent, and it didn't improve accuracy. It was replaced by 7.5–7.6 (review §I). |
 
 ## 8. Discipline (penalties; descriptive, not in the rating)
 
@@ -181,20 +180,20 @@ table. It reads both ESPN text dialects and fouls embedded in other plays. The f
 clock, offense, penalized team and unit, foul category, pre-snap flag, yards, status
 (accepted/declined/offsetting), first down awarded, and the drive's keep status. Provenance fields
 record how each value was read (dialect, team method, yards method, status inferred).
-It matches the box-score count exactly for 90% of 2026 team-games (99% within one).
+It matches the box-score count exactly for 90.3% of 2026 team-games (98.9% within one); 2025 is 74.9% (95.0%). `python audit_penalties.py` reproduces these and writes every team-game to `out/penalty_audit.json`.
 
 | # | Metric | Definition |
 |---|--------|------------|
 | 8.1 | **Pen/G, Pen Yds/G** | Accepted penalties and yards per game, from the box score. A box row is rejected if it shows more than 30 fouls or more than 25 yards per foul. |
 | 8.2 | **Net Pen Yds/G** | Opponents' penalty yards minus the team's own, per game. |
 | 8.3 | **Off Pen /100** | Accepted offensive fouls per 100 offensive snaps (scrimmage plays plus penalty-only snaps) on kept drives. |
-| 8.4 | **Off Pre-snap /100** | The pre-snap subset: false start, delay of game, illegal formation/shift/motion/substitution. |
+| 8.4 | **Off Pre-snap /100** | The pre-snap subset: false start, delay of game, illegal formation, shift, motion, procedure, substitution and snap, encroachment, and offside. |
 | 8.5 | **Def Pen /100** | Accepted defensive fouls per 100 defensive snaps, on kept drives. |
-| 8.6 | **Pen 1st downs allowed / G** | Accepted defensive fouls that gave a first down, on kept drives. |
+| 8.6 | **Pen 1st downs allowed / G** | Accepted defensive fouls that gave a first down, on kept drives, per game with play-by-play. |
 | 8.7 | **Situational fouls** | A Q4 leader's offensive delay of game is clock management. It is shown in the trace but left out of the rates. |
-| 8.8 | **Conference average** | Shown beside each rate, because conference and officiating crew explain about 27% of the differences between teams. |
+| 8.8 | **Conference average** | Shown beside each rate: the mean over the conference's rated teams. FBS Independents show the FBS average. Officiating differs by conference: the research found conference explains about 27% of team differences. ESPN's feed carries no crew data, so conference stands in for crew. Kicking- and return-unit fouls are listed but aren't in any rate. |
 
-No penalty metric enters the rating. None of the 22 variants tested improved predictions, because
+No penalty metric enters the rating. In the round-3 research, none of the 22 variants tested improved predictions, because
 penalty yards and first downs already show up in points per drive.
 
 ---
@@ -212,6 +211,7 @@ penalty yards and first downs already show up in points per drive.
 | # | Output | Definition |
 |---|--------|------------|
 | 10.1 | **Next-week predictions** | `Margin = (AdjEM_A − AdjEM_B)·Poss/μT + 2h·Poss·home`, with `P(win) = Φ(margin / σ)`. Only games whose FBS teams are all rated. |
+| 10.3 | **Anchors** | `out/anchors.json` lists every input to μ, the phantom-game values, μT and NS_win/NS_loss/NS_all, so the global constants can be recomputed. |
 | 10.2 | **Conference ratings** | Average AdjEM of rated members. |
 
 ---
@@ -229,6 +229,6 @@ penalty yards and first downs already show up in points per drive.
 | `record_prior` | 1 W, 1 L | Laplace prior on records |
 | `exclusion` | path | `path`, `parent` (RPI), or `none` |
 | `fcs_losses_count` | true | FCS losses count as losses |
-| `situational.lead_protection` | 38.0 s, 2 intervals, 60% runs of 3 plays, lead ≤ 21, **weight 1.0** | §7.5–7.6 |
+| `situational.lead_protection` | own pace + 6 s (cap 38.0 s), 2 intervals, 60% runs of 3 plays, lead ≤ 21, **weight 0.5** | §7.5–7.6 |
 | `situational.neutral_margin`, `min_pace_intervals`, `max_zero_clock_share` | 14, 30, 0.25 | §7.2–7.3 |
 | `explosive` | rush 12 / pass 16 | Explosive-play thresholds |

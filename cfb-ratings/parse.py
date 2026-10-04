@@ -60,19 +60,51 @@ def garbage(period, margin):
 KNEEL = re.compile(r"\bkneel(s|ed|ing|down)?\b|\btakes a knee\b")   # not "McKneely"/"Kneeland"
 SPIKE = re.compile(r"\bspiked?\b")
 NULLIFIED = re.compile(r"\bno play\b|\bnullified\b")                    # stat-crew text says so
+# ESPN appends the try (extra point / two-point) to a touchdown's text, including any penalty
+# on the try ("... kick attempt good ... PENALTY ... NO PLAY"); tests on the snap itself must
+# not read it.
+TRY = re.compile(r"\([^()]*\b(kick|pat|two-point|2-point|two point)\b[^()]*\)|"
+                 r"\b(kick attempt|pass attempt|rush attempt|run attempt|two-point|two point|"
+                 r"2-pt|2pt conversion|extra point)\b", re.I)
+SPECIAL_TEAMS = re.compile(r"\bpunt(s|ed|er)?\b|\bkick ?off|\bkicked off\b|\bon-?side\b|\bmuff", re.I)
+STAMP = re.compile(r"^\s*\((\d{1,2}):(\d{2})\)")
 
 
-def classify(p):
-    """Return (kind, yards, success, explosive, turnover, td) for a scrimmage play, or None."""
+def play_body(text):
+    """The snap's own text, without the appended try narrative."""
+    m = TRY.search(text)
+    return text[:m.start()] if m else text
+
+
+def snap_secs(p):
+    """Seconds left in the quarter at the snap, and where that came from.
+
+    Stat-crew text starts with the snap time, "(07:10) ..."; that is used when present.
+    Otherwise ESPN's clock field, which is closer to the clock when the play ended
+    (narrative feeds carry no stamp)."""
+    m = STAMP.match(p.get("text") or "")
+    if m:
+        return int(m.group(1)) * 60 + int(m.group(2)), "stamp"
+    return clock_secs((p.get("clock") or {}).get("displayValue")), "end-of-play"
+
+
+def classify(p, dfn=None, scorer=None):
+    """Return (kind, yards, success, explosive, turnover, td) for a scrimmage play, or None.
+
+    scorer: team credited if this play is a scoring play. An offensive touchdown is never
+    dropped by the nullified / special-teams tests (those words belong to the try)."""
     t = p["type"]["text"]
     text = p.get("text", "").lower()
-    if t not in SCRIMMAGE or KNEEL.search(text) or SPIKE.search(text):
+    body = play_body(text)
+    if t not in SCRIMMAGE or KNEEL.search(body) or SPIKE.search(body):
         return None
+    off = (p.get("start", {}).get("team") or {}).get("id")
+    protect = scorer is not None and scorer == off
     # A snap the text says was wiped out by a penalty did not happen (both sides alike).
-    if NULLIFIED.search(text):
+    if not protect and NULLIFIED.search(body):
         return None
     # Fumbles and safeties on punts/kickoffs (muffs, return safeties) are special teams.
-    if t in FUMBLE | {"Safety"} and ("punt" in text or "kick" in text):
+    if not protect and t in FUMBLE | {"Safety"} and SPECIAL_TEAMS.search(body):
         return None
     start = p.get("start", {})
     down, dist = start.get("down", 0), start.get("distance", 0)
@@ -83,9 +115,19 @@ def classify(p):
     elif t in PASS:
         kind = "P"
     else:
-        kind = "P" if (" pass" in text or "sacked" in text) else "R"
-    turnover = t in TURNOVER
-    td = t in OFFENSIVE_TD
+        kind = "P" if (" pass" in body or "sacked" in body) else "R"
+    if t in FUMBLE:
+        # ESPN's fumble labels don't say who recovered; possession does.
+        end_team = (p.get("end", {}).get("team") or {}).get("id")
+        if scorer is not None:
+            turnover = scorer != off
+        elif end_team and dfn:
+            turnover = end_team == dfn
+        else:
+            turnover = t in TURNOVER
+    else:
+        turnover = t in TURNOVER
+    td = t in OFFENSIVE_TD or (t in FUMBLE and scorer is not None and scorer == off)
     yds = 0 if turnover else int(p.get("statYardage", 0) or 0)
     need = {1: 0.5, 2: 0.7}.get(down, 1.0) * dist
     success = (not turnover) and (td or yds >= need)
@@ -140,7 +182,8 @@ def score_rows(summary, side, final, play_drive):
         if sp["id"] not in play_drive:
             return None, f"scoring play {sp['id']} not found in any drive", []
         pts, unknown = typed_points(sp, playmap.get(sp["id"]))
-        rows.append({"id": sp["id"], "drive": play_drive[sp["id"]], "team": tid,
+        snap = ((playmap.get(sp["id"]) or {}).get("start", {}).get("team") or {}).get("id")
+        rows.append({"id": sp["id"], "drive": play_drive[sp["id"]], "team": tid, "snap": snap,
                      "type": (sp.get("scoringType") or {}).get("name"), "pts": pts,
                      "pat_unknown": unknown, "espn_after": (sp["awayScore"], sp["homeScore"])})
     method = "play type"
@@ -208,22 +251,24 @@ def is_snap(p, off):
 
 def clean_intervals(plays, off, scoring_ids):
     """Game-clock seconds from each snap to the very next snap, kept only when nothing
-    stopped the clock in between. Returns (clean intervals, candidates, zero-second count).
+    stopped the clock in between. Returns ([[quarter, snap clock, seconds], ...],
+    candidates, zero-second count).
 
-    Skipped: kneels/spikes, incompletions, scores, turnovers, a penalty on the snap,
-    out of bounds, anything other than a snap by the same offense in the same quarter
-    coming next (timeouts, penalties, reviews, end of quarter), a first down in the final
-    2:00 of Q2/Q4 (when first downs stop the clock), and readings of 2 s or less or over
-    60 s (clock not updated).
+    Both ends use the same clock source (snap stamps when the text has them). Skipped:
+    kneels/spikes, incompletions, scores, turnovers, a penalty on the snap, out of
+    bounds, anything other than a snap by the same offense in the same quarter coming
+    next (timeouts, penalties, reviews, end of quarter), a first down in the final 2:00
+    of Q2/Q4 (first downs stop the clock then), the two-minute warning, and readings of
+    2 s or less or over 60 s (clock not updated).
     """
     out, cand, zero = [], 0, 0
     for j, p in enumerate(plays):
         if not is_snap(p, off):
             continue
-        text = (p.get("text") or "").lower()
+        text = play_body((p.get("text") or "").lower())
         t = p["type"]["text"]
         per = p.get("period", {}).get("number")
-        clk = clock_secs(p.get("clock", {}).get("displayValue"))
+        clk, src = snap_secs(p)
         nxt = plays[j + 1] if j + 1 < len(plays) else None
         end = p.get("end", {})
         first_down = "1st down" in text or (end.get("down") == 1 and (end.get("team") or {}).get("id") == off
@@ -234,14 +279,16 @@ def clean_intervals(plays, off, scoring_ids):
                 or nxt is None or not is_snap(nxt, off) or nxt.get("period", {}).get("number") != per
                 or (first_down and per in (2, 4) and clk is not None and clk <= 120)):
             continue
-        c2 = clock_secs(nxt.get("clock", {}).get("displayValue"))
-        if clk is None or c2 is None:
+        c2, src2 = snap_secs(nxt)
+        if clk is None or c2 is None or src != src2:
+            continue
+        if per in (2, 4) and clk > 120 >= c2:   # the two-minute warning stops the clock
             continue
         iv = clk - c2
         cand += 1
         zero += iv == 0
         if 2 < iv <= 60:
-            out.append(iv)
+            out.append([per, clk, iv])
     return out, cand, zero
 
 
@@ -260,6 +307,7 @@ def parse_drives(summary, home_id, away_id, final):
 
     eoh = CONFIG["end_of_half_seconds"]
     scoring_ids = {r["id"] for r in rows}
+    scorer = {r["id"]: r["team"] for r in rows}
     clock_cand = clock_zero = 0
     drives, score = [], {"away": 0, "home": 0}
     for i, d in enumerate(prev):
@@ -271,7 +319,8 @@ def parse_drives(summary, home_id, away_id, final):
         if off not in side:
             continue
         if off != label:
-            notes.append(f"drive {i}: offense relabeled from plays (ESPN said team {label})")
+            notes.append(f"drive {i}: offense relabeled from plays (ESPN said team {label}); "
+                         "ESPN's result and elapsed time for it are not used")
         dfn = home_id if off == away_id else away_id
         raw, seen = [], set()
         for p in d.get("plays", []):
@@ -294,49 +343,53 @@ def parse_drives(summary, home_id, away_id, final):
             if p.get("start", {}).get("team", {}).get("id") not in (off, None):
                 continue
             st = p.get("start", {})
-            c = classify(p)
+            c = classify(p, dfn, scorer.get(p["id"]))
             if c is None:
                 continue
             if first is None:
                 first = p
             plays.append([st["down"], st["distance"], st["yardsToEndzone"], *c])
-        # Offensive points: touchdowns and field goals the offense scored. Safeties
+        # Offensive points: touchdowns and field goals the offense itself snapped. Safeties
         # credited to the offense come from punt/kick returns, i.e. special teams.
-        pts = sum(r["pts"] for r in drive_rows if r["team"] == off and r["type"] != "safety")
-        result = d.get("result")
+        pts = sum(r["pts"] for r in drive_rows if r["team"] == off and r["type"] != "safety"
+                  and r["snap"] in (off, None))
+        relabeled = off != label
+        # On a relabeled drive ESPN's result text and elapsed time describe another possession.
+        result = None if relabeled else d.get("result")
         period = first["period"]["number"] if first else d.get("start", {}).get("period", {}).get("number", 0)
-        clock = (first or {}).get("clock", {}).get("displayValue")
-        left = clock_secs(clock)
+        left, clock_src = snap_secs(first) if first else (None, "")
+        if clock_src == "end-of-play" and not left:
+            # a stale 0:00 reading: use ESPN's drive start clock instead
+            start_clk = clock_secs((d.get("start", {}).get("clock") or {}).get("displayValue"))
+            if start_clk and d.get("start", {}).get("period", {}).get("number") == period:
+                left, clock_src = start_clk, "drive start"
+        clock = f"{left // 60}:{left % 60:02d}" if left is not None else None
         margin = pre[side[off]] - pre[side[dfn]]
         # Decided by the situation at the drive's first snap, never by how it ended,
-        # so failed and successful late drives are treated alike.
+        # so failed and successful late drives are treated alike. Garbage time is checked
+        # first so its points are always removed from garbage-adjusted scores.
         if not plays:
             why = "no scrimmage plays"
         elif period >= 5:
             why = "overtime"
-        elif period in (2, 4) and left is not None and left <= eoh:
-            why = "end of half/game"
         elif garbage(period, margin):
             why = "garbage time"
+        elif period in (2, 4) and left is not None and left <= eoh:
+            why = "end of half/game"
         else:
             why = ""
         drives.append({
-            "i": i, "off": off, "def": dfn, "period": period, "clock": clock,
+            "i": i, "off": off, "def": dfn, "period": period, "clock": clock, "clock_src": clock_src,
             "start_yte": plays[0][2] if plays else None,
             "result": result, "pts": pts, "margin": margin,
-            "secs": clock_secs(d.get("timeElapsed", {}).get("displayValue")),
+            "secs": None if relabeled else clock_secs(d.get("timeElapsed", {}).get("displayValue")),
             "kept": int(not why), "why": why,
             # [down, dist, yards_to_endzone, kind, yds, success, explosive, turnover, td]
             "plays": plays,
-            "iv": intervals,       # clean snap-to-snap game-clock seconds (pace)
+            "iv": intervals,       # [quarter, snap clock, seconds] clean snap-to-snap intervals
             "pen_rows": pen_rows,  # snaps that were only a penalty (pre-snap fouls etc.)
+            "runs": sum(1 for x in plays if x[3] == "R"),
         })
-    # The leader's last regulation drive is clock-killing by definition (the user's
-    # "burning clock to protect a lead"); ESPN often leaves its result blank, so it is
-    # identified by position and score, not by the result text.
-    live = [d for d in drives if d["plays"] and d["period"] <= 4]
-    if live and live[-1]["period"] == 4 and live[-1]["margin"] > 0 and live[-1]["why"] == "":
-        live[-1]["why"], live[-1]["kept"] = "leader's final drive", 0
     return drives, "; ".join(notes), {"cand": clock_cand, "zero": clock_zero}
 
 
