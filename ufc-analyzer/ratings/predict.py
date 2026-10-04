@@ -63,7 +63,7 @@ def state_on(day):
     pool = ratings.pool_as_of(ledger, day)
     table = ratings.compute(ledger, day, pool=pool)
     priors = profile.Priors(ledger, day)
-    last_div = {f: bs[-1].div for f, bs in ledger.log.items()}
+    last_div = {f: usual_division(bs) for f, bs in ledger.log.items()}
     hit = {"ledger": ledger, "table": table, "priors": priors, "last_div": last_div, "pool": pool}
     hit["power"] = power_table(st["model"], hit, day)
     hit["ranks"] = ranks_from_power(hit["power"], last_div)
@@ -121,6 +121,12 @@ def power_table(model, sd, day):
     return out
 
 
+def usual_division(bouts):
+    """The division a fighter belongs to: the most common of their last three bouts, ignoring catchweights."""
+    recent = [b.div for b in bouts[-3:] if b.div != "catch"] or [b.div for b in bouts[-3:]]
+    return max(set(recent), key=lambda d: (recent.count(d), recent[::-1].index(d) * -1)) if recent else "catch"
+
+
 def ranks_from_power(power, last_div):
     by = {}
     for f, v in power.items():
@@ -170,20 +176,26 @@ def card(P, sd, fid):
     keep["adj"] = {k: round(v, 3) for k, v in P["adj"].items() if isinstance(v, (int, float))}
     keep["power"] = round(sd["power"].get(fid, 0.0), 3)
     keep["rank"] = sd["ranks"].get(fid)
-    keep["style"] = style_of(P)
+    keep["style"] = style_of(P, sd["priors"].get(P.get("div")))
     return keep
 
 
-def style_of(P):
-    """Soft style archetype from the stat mix."""
+def style_of(P, prior=None):
+    """Soft style archetype from the stat mix, each score relative to the division average (1.0 =
+    average): a fighter is a "wrestler" for attempting and landing takedowns and holding control well
+    above the division, a "kicker" for a leg-strike share well above it, and so on."""
+    pr = prior or {}
+    rel = lambda v, k, d: v / ((pr.get(k) or d) or d)
     s = {}
-    s["wrestler"] = min(1.0, P["td_att_15"] / 4.0) * 0.6 + min(1.0, P["ctrl_15"] / 6.0) * 0.4
-    s["grappler"] = min(1.0, P["sub_15"] / 1.5) * 0.6 + P["share_ground"] * 0.4
-    s["volume_striker"] = min(1.0, P["attempts_pm"] / 10.0) * P["share_dist"]
-    s["power_striker"] = min(1.0, P["kd_15"] / 0.8) * 0.6 + P["ko_win_share"] * 0.4
-    s["kicker"] = P["share_leg"] * 2.0
-    s["clinch"] = P["share_clinch"] * 2.5
-    s["counter"] = (1 - min(1.0, P["attempts_pm"] / 10.0)) * P["sig_acc"] * P["share_dist"]
+    s["wrestler"] = 0.5 * rel(P["td_att_15"], "td_a_15", 3.5) + 0.5 * rel(P["ctrl_15"] * 60, "ctrl_15", 170)   # prior ctrl is seconds per 15
+    s["grappler"] = 0.6 * rel(P["sub_15"], "sub_15", 0.4) + 0.4 * rel(P["ground_15"], "ground_15", 0.4)
+    s["volume_striker"] = rel(P["attempts_pm"] * 15, "sig_a_15", 130) * (0.5 + 0.5 * P["share_dist"])
+    s["power_striker"] = 0.6 * rel(P["kd_15"], "kd_15", 0.3) + 0.4 * rel(P["ko_win_share"], "ko_win_share", 0.35)
+    s["kicker"] = rel(P["leg_15"], "leg_15", 5.0)
+    s["clinch"] = rel(P["clinch_15"] if "clinch_15" in P else P["share_clinch"] * P["slpm"] * 15, "clinch_15", 5.0)
+    # counter striker: below-average volume with above-average accuracy and defense (average fighter = 1.0)
+    avg_def = 1 - (pr.get("sig_acc") or 0.46)
+    s["counter"] = (1.5 - 0.5 * min(2.0, rel(P["attempts_pm"] * 15, "sig_a_15", 130))) * rel(P["sig_acc"], "sig_acc", 0.46) * (P["sig_def"] / avg_def)
     top = sorted(s.items(), key=lambda kv: -kv[1])
     return {"scores": {k: round(v, 2) for k, v in s.items()}, "primary": top[0][0], "secondary": top[1][0]}
 

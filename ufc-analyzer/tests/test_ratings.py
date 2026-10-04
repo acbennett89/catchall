@@ -126,6 +126,26 @@ class ProfileTests(unittest.TestCase):
         self.assertEqual(R["ann"]["of"], 4)
 
 
+class ServingHelpersTests(unittest.TestCase):
+    def test_usual_division_ignores_catchweights(self):
+        from ratings import predict
+        L = engine.Ledger().replay(history() + [fight("x9", "2021-09-01", "ann", "bea", stats(), stats(), wc="Catch Weight")])
+        self.assertEqual(predict.usual_division(L.log["ann"]), "lightweight")
+        self.assertEqual(predict.usual_division([]), "catch")
+
+    def test_style_is_relative_to_division(self):
+        from ratings import predict
+        L = engine.Ledger().replay(history())
+        day = datetime.date(2022, 1, 1)
+        P = profile.Priors(L, day)
+        dee = profile.raw_profile(L, "dee", {}, day, "lightweight", priors=P)   # takedowns and control well above the others
+        self.assertEqual(predict.style_of(dee, P.get("lightweight"))["primary"], "wrestler")
+        avg = profile.raw_profile(L, "nobody", {}, day, "lightweight", priors=P)
+        s = predict.style_of(avg, P.get("lightweight"))["scores"]
+        for k in ("wrestler", "power_striker", "kicker", "counter"):
+            self.assertAlmostEqual(s[k], 1.0, places=5, msg=k)   # a division-average fighter scores 1.0 on each
+
+
 class RoundsParserTests(unittest.TestCase):
     def test_parse_rounds_fixture(self):
         with open(os.path.join(HERE, "fixtures", "ufcstats_fight_rounds.html"), encoding="utf-8") as f:

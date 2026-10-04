@@ -167,6 +167,54 @@ model.odds_history`, `python -m model.espn_hist` refresh the data in `model/data
 model.train` tunes, evaluates walk-forward, fits the blends, runs the backtests, and rewrites
 `model/model.json`.
 
+## Power ratings (a KenPom for fighters)
+
+A second, independent model, built the way KenPom rates college basketball teams: every fighter gets
+**opponent-adjusted** efficiency ratings, a strength of schedule, a luck number and a power rating,
+and fights are predicted from the differences. The full list of what it captures per fighter is in
+`ratings/SPEC.md`. In the app it's the **Power ratings** panel under the model prediction: win
+chance, power rating and division rank for both fighters, their style, the ratings page (adjusted
+and raw numbers side by side, the better one in green), what's driving the pick by area, and a
+**Division rankings** table of every active fighter.
+
+**How it works.** A "possession" is a minute of cage time. For each of seven things a fighter does
+(significant strikes, head strikes, knockdowns, takedowns, control time, submission attempts, ground
+strikes) the model computes what they produce per minute and what they allow, then adjusts each
+fight's rate by how good that opponent is at preventing it and iterates until the ratings are
+consistent, exactly as KenPom adjusts offensive and defensive efficiency for the schedule played. On
+top of that: pace, cardio from the round-by-round data (`ratings/data/rounds.json.gz`, scraped for
+every UFC fight), chin and durability, finishing, judging, experience, the regional record before
+the UFC, physical attributes, ring rust and momentum. A logistic regression on the differences
+between the two fighters gives the win chance, and each fighter's **power rating** is the model's
+log-odds of beating an average fighter in their division (rust neutralized), which is what the
+rankings sort by.
+
+**What earned its place.** Each optional group was removed in turn and kept only if the model got
+worse without it on 2010–2015 and again on 2016–2020:
+
+- Kept: **ring rust** (layoff, activity, coming off a loss) and **schedule** (strength of schedule,
+  luck).
+- Dropped: **momentum** (last 5, streak, trend), cardio, pace, judging, record, and the style-matchup
+  interactions. They didn't add to what the adjusted ratings already say.
+- The opponent adjustment itself is worth about 0.004 log loss over the same stats unadjusted; the
+  single composite rating alone picks 58% of winners, the full model 63%.
+
+**Track record (2021–2026, 2,957 fights it never saw, trained only on earlier years).**
+
+| | Picks the winner | Log loss |
+| --- | --- | --- |
+| Power ratings model | 63.0% | 0.641 |
+| The market-blend model's fight model (same fights) | 63.4% | 0.640 |
+| Opening line | 65.9% | 0.618 |
+| Closing line | 68.5% | 0.595 |
+
+Two independent approaches land in the same place, and both lose to the betting market. So the
+ratings are a **second opinion on who wins, not a bet signal**: the BET rule stays with the market
+blend. The useful read is disagreement: when the ratings, the other model and the market don't line
+up, that's the fight to look into. Retrain with `python -m ratings.dataset` then `python -m
+ratings.train` (numpy and scikit-learn); the server keeps the ratings current from new results
+without retraining.
+
 ## Data sources and refresh
 
 | What | Source | Refresh |

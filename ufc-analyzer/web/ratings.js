@@ -72,16 +72,17 @@ function renderRatings(f) {
   const fo = fightOdds(f);
   const mkt = fo && fo.value && fo.value.fair;
   const P = r.profiles;
-  const rankTxt = i => r.rank[i] ? `#${r.rank[i].rank} of ${r.rank[i].of} ${esc(divShort(r.rank[i].div))} · ${ordinal(r.rank[i].pct)} pct` : "unranked";
+  const rankTxt = i => r.rank[i] ? `#${r.rank[i].rank} of ${r.rank[i].of}` : "unranked";
   const sides = [0, 1].map(i => `<div class="odds-side ${i ? "blue" : "red"}">
       <div class="os-top"><span class="os-name">${esc(names[i])}</span><span class="os-book">Rating</span></div>
       <div class="os-price">${pct(r.p[i], 0)}<span class="small muted" style="font-weight:500"> to win</span></div>
       <dl class="kv tight">
         <dt>Power rating</dt><dd>${(r.power[i] >= 0 ? "+" : "") + r.power[i].toFixed(2)}</dd>
-        <dt>Division rank</dt><dd>${rankTxt(i)}</dd>
-        <dt>Style</dt><dd>${esc(styleName(P[i].style.primary))}<span class="muted"> / ${esc(styleName(P[i].style.secondary))}</span></dd>
+        <dt>${r.rank[i] ? esc(divShort(r.rank[i].div)) + " rank" : "Rank"}</dt><dd>${rankTxt(i)}</dd>
+        ${r.rank[i] ? `<dt>Percentile</dt><dd>${ordinal(r.rank[i].pct)}</dd>` : ""}
         ${mkt ? `<dt>Market</dt><dd>${pct(mkt[i], 1)}</dd>` : ""}
-      </dl></div>`).join("");
+      </dl>
+      <div class="small muted" style="margin-top:6px">${esc(styleName(P[i].style.primary))} <span class="faint">/ ${esc(styleName(P[i].style.secondary))}</span></div></div>`).join("");
   let gap = "";
   if (mkt) {
     const d = r.p[0] - mkt[0];
@@ -90,7 +91,8 @@ function renderRatings(f) {
   }
   // the ratings page: adjusted numbers side by side, better one highlighted
   const row = (label, va, vb, better, fmt, help) => {
-    const a = va === null || va === undefined || isNaN(va), b = vb === null || vb === undefined || isNaN(vb);
+    const miss = v => v === null || v === undefined || (typeof v === "number" && isNaN(v));
+    const a = miss(va), b = miss(vb);
     const winA = !a && !b && better !== null && (better ? va > vb : va < vb), winB = !a && !b && better !== null && (better ? vb > va : vb < va);
     return `<tr><td title="${esc(help || "")}">${esc(label)}</td><td class="${winA ? "best" : ""}">${a ? "—" : esc(fmt(va))}</td><td class="${winB ? "best" : ""}">${b ? "—" : esc(fmt(vb))}</td></tr>`;
   };

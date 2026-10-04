@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.dirname(HERE))
 from ratings import features, learn  # noqa: E402
 from ratings.features import ALL_FEATURES, GROUP, matchup  # noqa: E402
 
-OUT = os.path.join(HERE, "model.json")
+OUT = os.environ.get("RATINGS_OUT") or os.path.join(HERE, "model.json")
 TUNE = list(range(2010, 2016))
 VAL = list(range(2016, 2021))
 TRAIN_FROM = 2009

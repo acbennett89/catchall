@@ -13,8 +13,10 @@ import datetime
 from ratings import engine
 from ratings.engine import per_min, recency_weight
 
+import os
 POOL_YEARS = 4
-HALF_LIFE = 540.0
+HALF_LIFE = float(os.environ.get("RATINGS_HALF_LIFE", 540.0))
+PRIOR_MIN = float(os.environ.get("RATINGS_PRIOR_MIN", 30.0))
 
 # name -> (stat key, per-15 scale?) ; offense = fighter's own, defense = what they allow
 ADJ_STATS = {
@@ -49,7 +51,7 @@ def compute(ledger, day, pool=None, half_life=HALF_LIFE):
     for name, (key, scale) in ADJ_STATS.items():
         prior = league_rate(allb, key, scale)
         res = engine.adjust(lambda f: logs[f], pool, lambda b, k=key, s=scale: per_min(k, b) * s,
-                            lambda b, k=key, s=scale: per_min(k, b, "them") * s, prior, day, half_life=half_life)
+                            lambda b, k=key, s=scale: per_min(k, b, "them") * s, prior, day, half_life=half_life, prior_minutes=PRIOR_MIN)
         adj[name] = res
         for f, (o, d) in res.items():
             out[f]["adj_" + name + "_o"] = o

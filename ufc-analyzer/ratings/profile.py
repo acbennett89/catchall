@@ -10,8 +10,9 @@ import datetime, math
 from ratings import engine
 from ratings.engine import recency_weight
 
-HALF_LIFE = 540.0      # days: a fight 18 months ago counts half
-PRIOR_MIN = 30.0       # minutes of division-average pseudo-exposure
+import os
+HALF_LIFE = float(os.environ.get("RATINGS_HALF_LIFE", 540.0))   # days: a fight 18 months ago counts half
+PRIOR_MIN = float(os.environ.get("RATINGS_PRIOR_MIN", 30.0))    # minutes of division-average pseudo-exposure
 LAYOFF_BUCKETS = ((90, "<90"), (180, "90-180"), (365, "180-365"), (730, "365-730"), (10 ** 9, ">730"))
 
 # stats that are "per minute of cage time" rates (landed/absorbed/attempted), per 15 minutes in the output
@@ -131,6 +132,7 @@ def raw_profile(ledger, fid, attrs, day, div, prior_div=None, priors=None, outsi
     out["sig_acc"] = wrate(bouts, day, lambda b, s: s.get("sig"), lambda b, s: s.get("sig_a"), pr("sig_acc"), prior_w=60)
     out["sig_def"] = 1 - wrate(bouts, day, lambda b, s: s.get("sig"), lambda b, s: s.get("sig_a"), pr("sig_acc"), prior_w=60, side="them")
     out["head_15"], out["body_15"], out["leg_15"] = per15["head"], per15["body"], per15["leg"]
+    out["clinch_15"], out["dist_15"] = per15["clinch"], per15["dist"]
     out["head_abs_15"] = against["head"]
     out["kd_15"] = per15["kd"]
     out["kd_abs_15"] = against["kd"]
