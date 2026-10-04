@@ -7,6 +7,7 @@ fighter history), UFCStats (career stats) and BestFightOdds (Caesars and every o
     /api/event/<id>                the card with live status (refresh every ~15s while live)
     /api/odds/<id>                 per fight: all books, no-vig fair price, Caesars edge, props, movement
     /api/fighter/<id>?before=<ts>  bio, career stats, record breakdown and last five fights before <ts>
+    /api/predict/<id>              model win/method/round probabilities per fight, with model edge at Caesars
 
     python serve.py            # http://localhost:8766  and  http://<this-pc-ip>:8766 from your phone
     python serve.py --open     # same, and open it in the browser
@@ -18,7 +19,7 @@ from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-import espn, fighters, market  # noqa: E402
+import espn, fighters, market, modelapi  # noqa: E402
 
 ARGS = [a for a in sys.argv[1:] if not a.startswith("--")]
 PORT = int(ARGS[0]) if ARGS else 8766
@@ -35,6 +36,8 @@ def warm(event_id, card):
             return
         warmed[event_id] = time.time()
     warm_pool.submit(_quiet, market.card_odds, event_id)
+    if modelapi.available():
+        warm_pool.submit(_quiet, predictions, event_id)
     for f in card["fights"]:
         for x in f["fighters"]:
             warm_pool.submit(_quiet, fighters.build, x["id"], card["date"], x["name"])
@@ -45,6 +48,28 @@ def _quiet(fn, *a):
         fn(*a)
     except Exception as e:
         print(time.strftime("%H:%M:%S"), f"warm-up {fn.__module__}.{fn.__name__}{a[:1]} failed: {e}", flush=True)
+
+
+def predictions(event_id):
+    try:
+        odds = market.card_odds(event_id)
+    except Exception:
+        odds = None
+    return modelapi.predictions(event_id, odds)
+
+
+def keep_model_current():
+    """Top up the fight history with newly completed events (UFCStats), then rebuild fighter states."""
+    from model import predict as model_predict, scrape as model_scrape
+    while True:
+        try:
+            added = model_scrape.update()
+            if added and added[1]:
+                model_predict.reload()
+                print(time.strftime("%H:%M:%S"), f"model: added {added[1]} fights from {added[0]} new events", flush=True)
+        except Exception as e:
+            print(time.strftime("%H:%M:%S"), f"model: history update failed ({e}); using what's on disk", flush=True)
+        time.sleep(6 * 3600)
 
 
 def api(path, q):
@@ -62,6 +87,8 @@ def api(path, q):
     if parts[:2] == ["api", "fighter"] and len(parts) == 3:
         before = q.get("before", [None])[0]
         return fighters.build(parts[2], float(before) if before else None, q.get("name", [None])[0])
+    if parts[:2] == ["api", "predict"] and len(parts) == 3:
+        return predictions(parts[2])
     if parts[:2] == ["api", "health"]:
         return {"ok": True, "now": time.time()}
     return None
@@ -122,6 +149,8 @@ if __name__ == "__main__":
     ip = lan_ip()
     if ip:
         print(f"On your phone (same Wi-Fi):  http://{ip}:{PORT}", flush=True)
+    if modelapi.available() and "--no-update" not in sys.argv:
+        threading.Thread(target=keep_model_current, daemon=True).start()
     if "--open" in sys.argv:
         threading.Timer(0.8, webbrowser.open, [f"http://localhost:{PORT}"]).start()
     try:

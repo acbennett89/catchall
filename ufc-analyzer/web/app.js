@@ -8,11 +8,12 @@ const store = {
   get(k) { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch (e) { return {}; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* private mode */ } },
 };
-const settings = Object.assign({ bankroll: 1000, kelly: 0.25, threshold: 0.02, format: "american" }, store.get("fa-settings"));
+const settings = Object.assign({ bankroll: 1000, kelly: 0.25, threshold: 0.02, format: "american", basis: "market" }, store.get("fa-settings"));
 
 const S = {
   season: null, events: [], eventId: null, card: null, odds: null, fightId: null,
   fighters: {}, cardAt: 0, oddsAt: 0, timers: {}, calc: {}, showAllProps: false, oddsErr: null,
+  pred: null, predAt: 0, predErr: null,
 };
 
 /* ---------- odds math (mirrors value.py) ---------- */
@@ -102,7 +103,7 @@ function setupSeasons() {
 /* ---------- card + odds polling ---------- */
 function selectEvent(id, fightId) {
   if (S.eventId !== id) {
-    S.card = null; S.odds = null; S.fightId = fightId || null; S.oddsErr = null;
+    S.card = null; S.odds = null; S.fightId = fightId || null; S.oddsErr = null; S.pred = null; S.predErr = null;
     clearTimeout(S.timers.card); clearTimeout(S.timers.odds);
   }
   S.eventId = id;
@@ -153,6 +154,7 @@ async function loadOdds() {
     S.odds = o; S.oddsAt = Date.now(); S.oddsErr = o.error || null;
     renderList();
     updateMatchup(true);
+    loadPred();
   } catch (e) {
     S.oddsErr = e.message;
   }
@@ -250,7 +252,7 @@ function renderList() {
     const cz = fo && fo.lines[TARGET];
     const fair = fo && fo.value && fo.value.fair;
     const actionable = f.status.state !== "post";
-    const evs = [0, 1].map(i => sideEv(fo, i));
+    const evs = [0, 1].map(i => basisEv(f, fo, i));
     const isValue = actionable && evs.some(v => v !== null && v >= settings.threshold);
     html += `<button class="fight-row${f.id === S.fightId ? " selected" : ""}${isValue ? " value" : ""}" data-fid="${esc(f.id)}">
       <div class="fr-head"><span>${esc(f.weightClass || "")}${f.title ? " · <b style='color:var(--warn)'>Title</b>" : ""} · ${f.rounds} rds</span><span>${statusLine(f)}</span></div>
@@ -265,7 +267,7 @@ function renderList() {
       ${fair ? `<div class="fr-bar" title="Market fair: ${esc(pct(fair[0]))} / ${esc(pct(fair[1]))}"><span style="width:${(fair[0] * 100).toFixed(1)}%"></span></div>` : ""}
     </button>`;
   }
-  html += `<div class="small faint" style="padding:4px 2px">Odds column = ${TARGET} moneyline. % = ${TARGET} EV vs. the no-vig market price${S.oddsErr ? `<br><span class="err">Odds: ${esc(S.oddsErr)}</span>` : ""}</div>`;
+  html += `<div class="small faint" style="padding:4px 2px">Odds column = ${TARGET} moneyline. % = ${TARGET} EV vs. ${BASIS_LABEL[settings.basis] || BASIS_LABEL.market}${S.oddsErr ? `<br><span class="err">Odds: ${esc(S.oddsErr)}</span>` : ""}</div>`;
   const scroll = el.scrollTop;
   el.innerHTML = html;
   el.scrollTop = scroll;
@@ -293,7 +295,8 @@ function renderMatchup() {
     <button class="back-btn" id="back-btn">← Card</button>
     <section class="panel" id="m-head"></section>
     <section class="panel"><h3><span>${TARGET} moneyline vs. market</span><span class="small" id="m-odds-meta"></span></h3><div class="panel-body" id="m-odds"></div></section>
-    <section class="panel"><h3><span>Your number</span><button class="link-btn" id="calc-reset">Reset to market</button></h3><div class="panel-body" id="m-calc"></div></section>
+    <section class="panel"><h3><span>Model prediction</span><span class="small" id="m-model-meta"></span></h3><div class="panel-body" id="m-model"></div></section>
+    <section class="panel"><h3><span>Your number</span><button class="link-btn" id="calc-reset">Reset</button></h3><div class="panel-body" id="m-calc"></div></section>
     <section class="panel"><h3>Matchup notes</h3><div class="panel-body" id="m-notes"></div></section>
     <section class="panel"><h3>Tale of the tape</h3><div class="panel-body" id="m-tape"></div></section>
     <section class="panel"><h3><span>Career stats</span><span class="small">UFCStats</span></h3><div class="panel-body" id="m-stats"></div></section>
@@ -311,6 +314,7 @@ function updateMatchup(oddsChanged, fightersChanged) {
   const [A, B] = f.fighters.map(getFighter);
   renderHead(f, A, B);
   renderOdds(f, A, B);
+  if (oddsChanged || !$("#m-model").innerHTML) renderModel(f);
   const calcFocused = document.activeElement && $("#m-calc") && $("#m-calc").contains(document.activeElement);
   if (!calcFocused && (oddsChanged || !$("#m-calc").innerHTML)) renderCalc(f);
   if (fightersChanged || oddsChanged) {
@@ -419,11 +423,11 @@ function renderCalc(f, reset) {
   const el = $("#m-calc");
   const fo = fightOdds(f);
   const cz = fo && fo.lines[TARGET];
-  const fair = fo && fo.value && fo.value.fair;
+  const start = basisProb(f);
   let c = S.calc[f.id];
   if (!c || reset || !c.touched) {
     c = S.calc[f.id] = {
-      p: fair ? Math.round(fair[0] * 1000) / 10 : 50,
+      p: start !== null ? Math.round(start * 1000) / 10 : 50,
       oa: cz && cz[0] !== null ? cz[0] : "",
       ob: cz && cz[1] !== null ? cz[1] : "",
     };
@@ -436,7 +440,7 @@ function renderCalc(f, reset) {
     <label>${esc(nb)} price at ${TARGET}<input id="calc-ob" inputmode="numeric" value="${esc(c.ob)}" placeholder="e.g. +130"></label>
     <div class="calc-out" id="calc-out"></div>
   </div>
-  <div class="note-line">Drag to your own read; type in a live ${TARGET} price to check it mid-event. Prices are American odds.</div>`;
+  <div class="note-line">Starts at ${esc(BASIS_LABEL[settings.basis] || BASIS_LABEL.market)}; drag to your own read, or type a live ${TARGET} price to check it mid-event. Prices are American odds.</div>`;
   const upd = () => {
     c.p = +$("#calc-p").value;
     c.oa = $("#calc-oa").value.trim();
@@ -655,15 +659,20 @@ function renderProps(f) {
   }
   const show = S.showAllProps ? props : props.slice(0, 10);
   const actionable = f.status.state !== "post";
-  el.innerHTML = `<div style="overflow-x:auto"><table class="props-table"><thead><tr><th>Bet</th><th>${TARGET}</th><th>Fair</th><th>EV</th><th>Other books</th></tr></thead><tbody>
+  const hasModel = !!modelFor(f);
+  el.innerHTML = `<div style="overflow-x:auto"><table class="props-table"><thead><tr><th>Bet</th><th>${TARGET}</th><th>Fair</th><th>EV</th>${hasModel ? "<th>Model</th><th>Model EV</th>" : ""}<th>Other books</th></tr></thead><tbody>
     ${show.map(p => {
-      const val = actionable && p.ev !== null && p.ev >= settings.threshold;
+      const mp = hasModel ? propModelProb(p, f) : null;
+      const mev = mp !== null ? evAt(mp, p.odds) : null;
+      const useEv = settings.basis === "market" ? p.ev : (mev !== null ? mev : p.ev);
+      const val = actionable && useEv !== null && useEv >= settings.threshold;
+      const modelCells = hasModel ? `<td>${mp !== null ? esc(fmtOdds(probToAm(mp))) : "—"}</td><td>${mev !== null ? `<span class="${mev >= 0 ? "pos" : "neg"}">${signedPct(mev)}</span>` : "—"}</td>` : "";
       const evCell = p.ev !== null ? `<span class="${p.ev >= 0 ? "pos" : "neg"}">${signedPct(p.ev)}</span>` :
         (p.vsMarket !== null ? `<span class="muted" title="No two-way market to strip the vig from; this compares ${TARGET}'s payout with the median of other books.">${p.vsMarket >= 0 ? "pays +" : "pays "}${(p.vsMarket * 100).toFixed(0)}%</span>` : "—");
-      return `<tr class="${val ? "value" : ""}"><td>${esc(p.label)}</td><td><b>${esc(fmtOdds(p.odds))}</b></td><td>${p.fairOdds !== null ? esc(fmtOdds(p.fairOdds)) : "—"}</td><td>${evCell}</td><td class="muted">${p.market !== null ? `${esc(fmtOdds(p.market))} med · ` : ""}${p.best ? `${esc(fmtOdds(p.best.odds))} ${esc(p.best.book)}` : ""}</td></tr>`;
+      return `<tr class="${val ? "value" : ""}"><td>${esc(p.label)}</td><td><b>${esc(fmtOdds(p.odds))}</b></td><td>${p.fairOdds !== null ? esc(fmtOdds(p.fairOdds)) : "—"}</td><td>${evCell}</td>${modelCells}<td class="muted">${p.market !== null ? `${esc(fmtOdds(p.market))} med · ` : ""}${p.best ? `${esc(fmtOdds(p.best.odds))} ${esc(p.best.book)}` : ""}</td></tr>`;
     }).join("")}</tbody></table></div>
     ${props.length > 10 ? `<button class="link-btn" id="props-more" style="margin-top:8px">${S.showAllProps ? "Show top 10" : `Show all ${props.length}`}</button>` : ""}
-    <div class="stat-help">Sorted by EV. "Fair" strips the vig from other books' two-way prices; one-sided props compare ${TARGET} with the median other book instead.</div>`;
+    <div class="stat-help">Sorted by market EV. "Fair" strips the vig from other books' two-way prices; one-sided props compare ${TARGET} with the median other book instead.${hasModel ? ` "Model" prices the prop from the model's method and round breakdown.` : ""}</div>`;
   const more = $("#props-more");
   if (more) more.onclick = () => { S.showAllProps = !S.showAllProps; renderProps(f); };
   $("#m-props-meta").textContent = `${props.length} priced`;
@@ -685,6 +694,7 @@ function setupSettings() {
     $("#set-kelly").value = String(settings.kelly);
     $("#set-threshold").value = String(settings.threshold);
     $("#set-format").value = settings.format;
+    $("#set-basis").value = settings.basis;
     dlg.showModal();
   };
   dlg.addEventListener("close", () => {
@@ -692,6 +702,7 @@ function setupSettings() {
     settings.kelly = +$("#set-kelly").value;
     settings.threshold = +$("#set-threshold").value;
     settings.format = $("#set-format").value;
+    settings.basis = $("#set-basis").value;
     store.set("fa-settings", settings);
     renderList();
     if (currentFight()) { renderMatchup(); }
