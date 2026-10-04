@@ -124,12 +124,14 @@ def decide(p_bet, p_mkt, p_model, odds_view, stk, low_experience, stale):
 
     Every BET needs EV >= 3% at the bet probability, the side above 20%, a fair price from 3+ books and
     Caesars within 8 points of it.  If the plain market price alone gives EV >= 3%, that's market value,
-    a BET at any time.  Otherwise the edge comes from the blend, which is a BET only 4+ days out, with
-    the opening-line blend live, both fighters with 2+ UFC fights and both fighters' latest fights in the
-    history.  That is the rule backtested in model.json (backtest.*.served_rule): on 2016-2020 the blend
-    beat opening lines at their own prices with this filter, while no fight-week version beat zero.  A
-    model-market gap over 15 points gets a check-the-news note rather than a block: in testing those
-    were the early bets that paid.
+    a BET at any time.  Otherwise the edge comes from the blend, which needs both fighters with 2+ UFC
+    fights and both fighters' latest fights in the history.  With the single fight model, blend edges
+    were a BET only 4+ days out (the opening-line blend beat early prices on 2016-2020; no fight-week
+    version beat zero).  With the power-ratings model in the blend (model.json stack.*.uses_ratings),
+    fight-week blend bets at Caesars-like prices also paid on 2016-2020 (and held on 2021+), so they are
+    BETs too.  Both rules are backtested in model.json (backtest.*.served_rule).  A model-market gap
+    over 15 points gets a check-the-news note rather than a block: in testing those were the early bets
+    that paid.
     """
     lines = {bk: tuple(v) for bk, v in (odds_view.get("lines") or {}).items()}
     v = odds_view.get("value") or {}
@@ -156,11 +158,13 @@ def decide(p_bet, p_mkt, p_model, odds_view, stk, low_experience, stale):
     blend_made = ev_mkt < BET_EV <= ev
     notes = []
     if blend_made:
-        if not early:
+        if not early and not stk.get("uses_ratings"):
             blocks.append(f"At the plain market price this is {ev_mkt * 100:+.1f}%. Inside 4 days of the fight only market "
                           f"value counts: the blend hasn't beaten fight-week prices in testing.")
-        elif not stk.get("open_gate"):
+        elif early and not stk.get("open_gate"):
             blocks.append("The early-line blend isn't live.")
+        elif not early and not stk.get("close_gate"):
+            blocks.append("The closing-line blend isn't live.")
         if low_experience:
             blocks.append("A fighter has fewer than 2 UFC fights; blend bets on newcomers didn't hold up in testing.")
         if stale:
@@ -223,7 +227,7 @@ def fight_prediction(card, f, odds_view=None):
     stk = stacker(meta, {"date": f.get("date") or card.get("date")})   # hours to this fight's segment
     low = min(pred["profiles"][0]["fights"] or 0, pred["profiles"][1]["fights"] or 0) < 2
     stale = any("isn't in the model's history" in x["text"] for x in pred.get("flags", []))
-    pred["blendState"] = {"hours": stk["hours"], "wOpen": stk["w_open"], "active": stk["active"],
+    pred["blendState"] = {"hours": stk["hours"], "wOpen": stk["w_open"], "active": stk["active"], "usesRatings": stk["uses_ratings"],
                           "openGate": stk["open_gate"], "closeGate": stk["close_gate"], "lowExperience": low}
     pred["methodAnchor"] = "model"
     if odds_view:

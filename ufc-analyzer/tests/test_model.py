@@ -260,7 +260,10 @@ class ServingTests(unittest.TestCase):
         d = modelapi.decide(0.66, 0.60, 0.66, view, early, False, False)
         self.assertEqual((d["action"], d["side"], d["tier"]), ("BET", 0, "Early-line blend"))   # tested at opening prices
         d = modelapi.decide(0.66, 0.60, 0.66, view, late, False, False)
-        self.assertEqual(d["action"], "WATCH")      # inside 4 days only market value is a BET
+        self.assertEqual(d["action"], "WATCH")      # inside 4 days only market value is a BET with the single-model blend
+        late_r = dict(late, uses_ratings=True, close_gate=True)
+        d = modelapi.decide(0.66, 0.60, 0.66, view, late_r, False, False)
+        self.assertEqual((d["action"], d["tier"]), ("BET", "Blend (fight week)"))   # with the ratings model in the blend, tested at fight-week prices
         d = modelapi.decide(0.66, 0.60, 0.66, view, early, True, False)
         self.assertEqual(d["action"], "WATCH")      # a fighter with under 2 UFC fights
         d = modelapi.decide(0.66, 0.60, 0.85, view, early, False, False)

@@ -91,19 +91,21 @@ decision, with round-by-round finish chances.
 - *Bet probability*: the market, adjusted by a blend that beat the market in testing. Two blends
   were fitted, one on opening lines and one on closing lines; a week or more out the opening-line
   blend applies, inside 12 hours the closing one, and in between a mix. The blend pulls toward the
-  model (less for fighters with under 2 UFC fights) and also firms up favorites a little, because
-  past lines have underpriced favorites, so it can move a price even when the model agrees with the
-  market.
+  two models, the fight model and the **power ratings** (below; they carry most of the weight), less
+  for fighters with under 2 UFC fights, and also firms up favorites a little, because past lines have
+  underpriced favorites, so it can move a price even when the models agree with the market.
 
 Every **BET** needs EV of 3% or more at Caesars using the bet probability, a side above 20%, a fair
 price from 3+ books and Caesars within 8 points of the market. On top of that:
 
 - **Market value** (EV of 3% or more even at the plain market price) is a BET at any time.
-- **Early-line blend** (the edge only exists with the blend) is a BET only **4 or more days before
-  the fight**, when both fighters have 2+ UFC fights and both fighters' latest fights are in the
-  model's history. If the model and market are more than 15 points apart, the app tells you to check
-  for news (injury, weight cut, late replacement) first.
-- Inside 4 days, a blend-only edge stays **WATCH**: the blend hasn't beaten fight-week prices.
+- **Blend edges** (the edge only exists with the blend) are BETs when both fighters have 2+ UFC
+  fights and both fighters' latest fights are in the model's history: **early-line blend** 4 or more
+  days out, **fight-week blend** inside that. If the models and market are more than 15 points
+  apart, the app tells you to check for news (injury, weight cut, late replacement) first.
+- With the single fight model, fight-week blend edges never beat zero in testing and stayed WATCH;
+  adding the power ratings changed that (numbers below), so the app allows them whenever the shipped
+  blend carries the ratings.
 
 **WATCH** means positive EV that doesn't clear the bar. Stakes are quarter Kelly, capped at 1.5% of
 your bankroll. The settings menu has a **Value basis** option (market, model, or blend) that changes
@@ -125,18 +127,22 @@ them in 2021–2026).
 | Opening line + blend | 67.0% | 0.611 |
 | Closing line + blend | 68.7% | 0.592 |
 
-- **The BET rule 4+ days out, at historical opening prices:** 779 bets, ROI +17.0% (95% range +11%
-  to +24%), positive every year, and the closing line moved toward the pick on 64% of them (average
-  closing-line value +6.9%). On 2016–2020, where the rule was chosen, it was 268 bets at +16.9%.
-  The 2+ UFC fights filter helped there. A filter that also required the model to be within 15
-  points of the market removed the bets that paid (+1.3%), so it's a warning now instead.
-- **Fight week:** against closing lines the blend's gain is small (log loss −0.0025, range −0.005 to
-  −0.0005) and comes mostly from firming up favorites. Blend bets at closing prices with a
-  Caesars-sized 4.4% margin returned +4.5% (range −5% to +12%): not a reliable edge, hence WATCH.
-  Fight-week market-value bets can't be tested properly without Caesars' own price history; at the
-  best price across books (a ceiling) they returned +13% over 139 bets (range −14% to +37%).
-- **The model alone loses**: at closing prices with Caesars' margin it returned −12.2%. Don't bet
-  the raw model number.
+- **The blend with both models beats the market on both lines**: opening-line blend minus market
+  log loss −0.0113 (95% range −0.016 to −0.007), closing-line blend −0.0041 (−0.007 to −0.001).
+  Adding the power ratings to the blend beat the single-model blend on 2016–2020 by −0.0045 and
+  −0.0024 (both ranges exclude zero), which is what admitted it.
+- **The BET rule 4+ days out, at historical opening prices:** 1,003 bets, ROI +16.3% (95% range
+  +11% to +22%), and the closing line moved toward the pick with an average closing-line value of
+  +7.2%. On 2016–2020, where the rule was chosen, it was 551 bets at +19.2%. A filter that also
+  required the models to be within 15 points of the market removed bets that paid, so it's a warning
+  now instead.
+- **Fight-week blend bets** at closing prices with a Caesars-sized 4.4% margin: 674 bets, ROI +9.8%
+  (range +4% to +16%); on 2016–2020 it was 453 bets at +14.8% (+7% to +23%). With the fight model
+  alone this was +4.5% (range −5% to +12%), which is why it used to stay WATCH.
+- Fight-week market-value bets can't be tested properly without Caesars' own price history; at the
+  best price across books (a ceiling) they returned +24% over 154 bets (range −1% to +52%).
+- **The fight model alone loses**: at closing prices with Caesars' margin it returned −12.2%. Don't
+  bet a raw model number.
 
 Read the early-line result as an upper bound. Historical opening lines are often one small book's
 first number, and by the time Caesars posts, the market may already have moved toward what the
@@ -177,43 +183,53 @@ chance, power rating and division rank for both fighters, their style, the ratin
 and raw numbers side by side, the better one in green), what's driving the pick by area, and a
 **Division rankings** table of every active fighter.
 
-**How it works.** A "possession" is a minute of cage time. For each of seven things a fighter does
-(significant strikes, head strikes, knockdowns, takedowns, control time, submission attempts, ground
-strikes) the model computes what they produce per minute and what they allow, then adjusts each
-fight's rate by how good that opponent is at preventing it and iterates until the ratings are
-consistent, exactly as KenPom adjusts offensive and defensive efficiency for the schedule played. On
-top of that: pace, cardio from the round-by-round data (`ratings/data/rounds.json.gz`, scraped for
-every UFC fight), chin and durability, finishing, judging, experience, the regional record before
-the UFC, physical attributes, ring rust and momentum. A logistic regression on the differences
-between the two fighters gives the win chance, and each fighter's **power rating** is the model's
-log-odds of beating an average fighter in their division (rust neutralized), which is what the
-rankings sort by.
+**How it works.** A "possession" is a minute of cage time. For each of 14 things a fighter does
+(significant strikes and attempts, total, head, distance, clinch and ground strikes, knockdowns,
+takedowns and attempts, control time, submission attempts, finishes, and power as knockdowns per head
+strike) the model computes an offensive ratio (output against an average opponent) and a defensive
+ratio (what an average opponent produces against them), relative to a decayed division-era baseline,
+adjusting every fight for how good that opponent is at the same thing and iterating until all the
+ratings agree, exactly as KenPom adjusts offensive and defensive efficiency for the schedule played.
+Cage-point weights fitted once on 2008–2015 (a knockdown 0.35, a submission attempt 0.38, a takedown
+0.12, a minute of control 0.07, a significant strike 0.025, in log-odds per 15 minutes) turn the
+ratios into **AdjO**, **AdjD** and **AdjEM = AdjO − AdjD**, so sigmoid(AdjEM) is a fighter's chance
+of beating an average fighter in the division. Rankings sort by AdjEM, which is rust-, momentum- and
+results-neutral. Beside it: a results-only Bradley-Terry strength, strength of schedule, luck (wins
+beyond what each fight's stat line implied), pace and cardio from the round-by-round data
+(`ratings/data/rounds.json.gz`, scraped for every UFC fight), chin and durability, finishing,
+experience, the regional record before the UFC, physical attributes, ring rust and momentum. A
+logistic regression on the differences between the two fighters, led by the adjusted offense and
+defense margins, gives the win chance.
 
 **What earned its place.** Each optional group was removed in turn and kept only if the model got
 worse without it on 2010–2015 and again on 2016–2020:
 
-- Kept: **ring rust** (layoff, activity, coming off a loss) and **schedule** (strength of schedule,
-  luck).
-- Dropped: **momentum** (last 5, streak, trend), cardio, pace, judging, record, and the style-matchup
-  interactions. They didn't add to what the adjusted ratings already say.
-- The opponent adjustment itself is worth about 0.004 log loss over the same stats unadjusted; the
-  single composite rating alone picks 58% of winners, the full model 63%.
+- Kept: the additive offense-and-defense margins, **results** (Bradley-Terry strength and the
+  performance-implied win share), **schedule** (strength of schedule, luck) and **ring rust**
+  (layoff, activity, coming off a loss).
+- Dropped: **momentum** (last 5, streak, trend), the multiplicative expected-output margins (redundant
+  with the additive ones), cardio, pace, judging and record. They didn't add to what the adjusted
+  ratings already say.
 
 **Track record (2021–2026, 2,957 fights it never saw, trained only on earlier years).**
 
 | | Picks the winner | Log loss |
 | --- | --- | --- |
-| Power ratings model | 63.0% | 0.641 |
-| The market-blend model's fight model (same fights) | 63.4% | 0.640 |
-| Opening line | 65.9% | 0.618 |
-| Closing line | 68.5% | 0.595 |
+| Power ratings model | 63.7% | 0.631 |
+| The fight model (same fights) | 63.4% | 0.640 |
+| Opening line (2,872 fights with odds) | 66.0% | 0.618 |
+| Closing line | 68.4% | 0.595 |
 
-Two independent approaches land in the same place, and both lose to the betting market. So the
-ratings are a **second opinion on who wins, not a bet signal**: the BET rule stays with the market
-blend. The useful read is disagreement: when the ratings, the other model and the market don't line
-up, that's the fight to look into. Retrain with `python -m ratings.dataset` then `python -m
-ratings.train` (numpy and scikit-learn); the server keeps the ratings current from new results
-without retraining.
+On the fights with odds the ratings score 0.628, within noise of the opening line (difference
++0.010, 95% range −0.000 to +0.019) and clearly behind the close. The adjusted efficiencies are
+worth about 0.012 log loss over the same stats unadjusted; AdjEM alone picks 60% of winners.
+
+The ratings are both a **second opinion on who wins** (the panel, the rankings) and, since adding
+them to the market blend beat the single-model blend on the validation years, **part of the bet
+probability** the BET rule uses (see the prediction model section). Retrain with
+`python -m ratings.cagepoints`, `python -m ratings.dataset`, `python -m ratings.train` (numpy and
+scikit-learn), then `python -m model.train` to refit the blend; the server keeps the ratings current
+from new results without retraining.
 
 ## Data sources and refresh
 

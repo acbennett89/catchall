@@ -115,13 +115,15 @@ function renderModel(f) {
   // which blend applies: the early-line blend a week or more out, the closing-line blend inside 12 hours, a mix between
   const moved = mkt && pr.blend ? ` Here it moves ${esc(ln[0])} ${(pr.blend[0] - mkt[0] >= 0 ? "+" : "−")}${Math.abs((pr.blend[0] - mkt[0]) * 100).toFixed(1)} points.` : "";
   const early = (g.hours || 0) >= 96;
-  const canBet = early && g.openGate && !g.lowExperience;   // what decide() allows for a blend-only edge
-  const betNote = canBet ? "a blend edge can be a BET until 4 days out"
+  const withRatings = !!g.usesRatings;
+  const canBet = !g.lowExperience && (early ? g.openGate : (withRatings && g.closeGate));   // what decide() allows for a blend-only edge
+  const betNote = canBet ? (early ? "a blend edge can be a BET" : "a blend edge can be a BET (the power-ratings model is in the blend, which paid at fight-week prices in testing)")
     : g.lowExperience ? "a fighter has under 2 UFC fights, so only market value can be a BET here"
     : early ? "the early-line blend isn't live, so only market value can be a BET" : "inside 4 days only market value is a BET";
-  const which = g.wOpen >= 0.999 ? `on early lines the blend (market plus model) beat the market in testing; ${betNote}`
-    : g.wOpen <= 0.001 ? `on closing lines the blend edged the market only slightly in testing, mostly by firming up favorites; ${betNote}`
-    : `mixing the early-line blend (${Math.round(g.wOpen * 100)}%) with the weaker closing-line blend as fight night nears; ${betNote}`;
+  const models = withRatings ? "the blend (market plus the fight model and the power ratings)" : "the blend (market plus model)";
+  const which = g.wOpen >= 0.999 ? `on early lines ${models} beat the market in testing; ${betNote}`
+    : g.wOpen <= 0.001 ? `on closing lines ${models} beat the market in testing${withRatings ? "" : ", only slightly, mostly by firming up favorites"}; ${betNote}`
+    : `mixing the early-line blend (${Math.round(g.wOpen * 100)}%) with the closing-line blend as fight night nears; ${betNote}`;
   const gateNote = pr.blend ? `<div class="note-line">${g.active
       ? `Blend is live (${away} out): ${which}.${g.lowExperience ? " The model also counts for less in the blend when a fighter has under 2 UFC fights." : ""}${moved}`
       : `Blend = market (${away} out): the model hasn't beaten the market this close to the fight in testing, so it doesn't move the price.`}</div>` : "";
@@ -159,8 +161,11 @@ function trackRecord() {
     <ul class="small muted" style="margin:6px 0 0 18px;padding:0">
       ${gateLine("open", "Blend on early lines")}${gateLine("close", "Blend on closing lines")}
       ${e && e.bets ? `<li><b>This app's BET rule 4+ days out</b> (blend edge, both fighters with 2+ UFC fights), at historical opening prices: ${roi(e)}${e.clv ? `; the closing line moved toward the pick on ${pct(e.clv.beat_close, 0)} of them (CLV ${signedPct(e.clv.mean, 1)})` : ""}.${ev && ev.bets ? ` The rule was picked on 2016–20 (${roi(ev)}).` : ""}</li>` : ""}
-      ${fw && fw.bets ? `<li>Inside 4 days only market value is a BET. There's no ${TARGET} price history, so the best price across books stands in (a ceiling): ${roi(fw)}.</li>` : ""}
-      ${syn && syn.bets ? `<li>Blend bets at closing prices with a ${TARGET}-like 4.4% margin: ${roi(syn)}. Not a reliable edge, which is why fight-week blend edges stay WATCH.</li>` : ""}
+      ${fw && fw.bets ? `<li>Fight-week market value (${TARGET} at least 3% better than the consensus): no ${TARGET} price history exists, so the best price across books stands in (a ceiling): ${roi(fw)}.</li>` : ""}
+      ${syn && syn.bets ? (st.close && st.close.uses_ratings
+        ? `<li><b>Fight-week blend bets</b> at closing prices with a ${TARGET}-like 4.4% margin (the power ratings are in the blend): ${roi(syn)}; chosen on 2016–20 where it returned ${sv.fight_week_blend_synthetic ? signedPct(sv.fight_week_blend_synthetic.roi, 1) : "—"}.</li>`
+        : `<li>Blend bets at closing prices with a ${TARGET}-like 4.4% margin: ${roi(syn)}. Not a reliable edge, which is why fight-week blend edges stay WATCH.</li>`) : ""}
+      ${st.open && st.open.uses_ratings ? `<li>The blend carries two models: the fight model and the power ratings (weights ${st.open.coef ? st.open.coef[0].toFixed(2) + " and " + st.open.coef[3].toFixed(2) : ""} on early lines). Adding the ratings beat the single-model blend on 2016–20 by ${st.open.val_s2r_minus_single ? st.open.val_s2r_minus_single.est.toFixed(4) : "—"} log loss${ci(st.open.val_s2r_minus_single)}.</li>` : ""}
       ${raw && raw.bets ? `<li>Model alone at opening prices: ${roi(raw)}. Don't bet the raw model.</li>` : ""}
     </ul>
     <div class="note-line">Opening prices are an upper bound: they're often one small book's first number, and ${TARGET}'s early lines may already have moved. The forward ledger (top right) is the real test.</div></details>`;
