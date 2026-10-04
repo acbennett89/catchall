@@ -57,7 +57,7 @@ O − D to 0, then shifts O, D and μ together so that the average FBS defense e
 | 2.1 | **μ** | Points per drive an average FBS offense scores against an average FBS defense on a neutral field (2.344 in 2026 through week 5; each season's value is in its page header and `anchors.json`). It equals the mean AdjO, and the mean AdjD, over all 138 FBS teams; every input is listed in `out/2026/anchors.json`. | pts/drive |
 | 2.2 | **AdjO** | Points per drive against an **average FBS defense**, neutral field. It equals the drive-weighted mean of game values `raw PPD − (opp AdjD − μ) − h·v`, plus one phantom game at the division mean (§2.7). | pts/drive (higher is better) |
 | 2.3 | **AdjD** | Points per drive allowed to an **average FBS offense**, built the same way. | pts/drive (lower is better) |
-| 2.4 | **AdjEM** | `(AdjO − AdjD) × μT`. Points per game better than an average FBS team on a neutral field. **This is the power rating and the ranking metric** (the page's "Power" column). It averages exactly 0 over all FBS teams, including any not yet rated (in 2026 through week 5: 138 teams, of which the 107 published average −0.18). | pts/game |
+| 2.4 | **AdjEM** | `(AdjO − AdjD) × μT`. Points per game better than an average FBS team on a neutral field. **This is the power rating and the ranking metric** (the page's "Power" column). It averages exactly 0 over all FBS teams, including tentative teams (in 2026 through week 5: 138 teams, of which the 107 ranked average −0.18). | pts/game |
 | 2.5 | **AdjT** | Opponent-adjusted possessions per game: `Poss_g = AdjT_X + AdjT_Y − μT`. A game's possessions are both teams' regulation drives with a real snap, divided by 2. That includes garbage-time and end-of-half drives, because tempo measures how many possessions a game has, not how good they were. Tested against neutral-pace and Q1–Q3-only versions; neither helped, so it is kept. | drives/game |
 | 2.6 | **Home field** | `h` is estimated from the **unshrunk** fit and then held fixed. Estimating it jointly with the shrinkage prior inflated it from 3.6 to 4.6 points. It is shown per drive and as `2·h·μT` points per game. | pts |
 | 2.7 | **Regression to the mean** | One phantom game of 12 drives at the team's division average, shown as its own line in the trace. | — |
@@ -181,19 +181,19 @@ table. It reads both ESPN text dialects and fouls embedded in other plays. The f
 clock, offense, penalized team and unit, foul category, pre-snap flag, yards, status
 (accepted/declined/offsetting), first down awarded, and the drive's keep status. Provenance fields
 record how each value was read (dialect, team method, yards method, status inferred).
-It matches the box-score count exactly for 90.3% of 2026 team-games (98.9% within one); 2025 is 74.7% (94.9%), and 2024 is 53.8% (82.8%), with 10.9% of 2024's box-score fouls missing from ESPN's play-by-play. Each season's figures are shown on that season's Discipline tab, since the per-100-snap rates run low by the share of missing fouls. `python audit_penalties.py` reproduces these and writes every team-game to `out/penalty_audit.json`.
+It matches the box-score count exactly for 90.3% of 2026 team-games (98.9% within one); 2025 is 74.7% (94.9%), 2024 is 53.8% (82.8%), 2023 52.3% (81.8%) and 2022 55.5% (77.7%), with 10.9%, 14.2% and 19.7% of those seasons' box-score fouls missing from ESPN's play-by-play. Each season's figures are shown on that season's Discipline tab, since the per-100-snap rates run low by the share of missing fouls. `python audit_penalties.py` reproduces these and writes every team-game to `out/penalty_audit.json`.
 
 | # | Metric | Definition |
 |---|--------|------------|
 | 8.1 | **Pen/G, Pen Yds/G** | Accepted penalties and yards per game, from the box score. A box row is rejected if it shows more than 30 fouls or more than 25 yards per foul. |
 | 8.2 | **Net Pen Yds/G** | Opponents' penalty yards minus the team's own, per game. |
-| 8.3 | **Off Pen /100** | Accepted offensive fouls per 100 offensive snaps (scrimmage plays plus penalty-only snaps) on kept drives. A game whose play-by-play lists no penalties at all while the box score shows fouls is left out of every per-snap rate, snaps included (4 games in 2024, 1 in 2025); the trace names it. |
+| 8.3 | **Off Pen /100** | Accepted offensive fouls per 100 offensive snaps (scrimmage plays plus penalty-only snaps) on kept drives. A game whose play-by-play lists no penalties at all while the box score shows fouls is left out of every per-snap rate, snaps included (15 games in 2022, 6 in 2023, 4 in 2024, 1 in 2025); the trace names it. |
 | 8.4 | **Off Pre-snap /100** | The pre-snap subset: false start, delay of game, illegal formation, shift, motion, procedure, substitution and snap, encroachment, and offside. |
 | 8.5 | **Def Pen /100** | Accepted defensive fouls per 100 defensive snaps, on kept drives. |
-| 8.5b | **Coverage** | The team's accepted fouls found in ESPN's play-by-play ÷ its box-score fouls, over the games the rates use. Below 100% the per-snap rates (8.3–8.6) read low by about the shortfall; the page marks teams under 90%. In 2024 41 of 134 FBS teams are under 90% (range about 75% to 110%); 2023, 49 of 133; 2022, 21 of 131; 2025, 4; 2026, none. |
+| 8.5b | **Coverage** | The team's accepted fouls found in ESPN's play-by-play ÷ its box-score fouls, over the games the rates use. Below 100% the per-snap rates (8.3–8.6) read low by about the shortfall; the page marks teams under 90%. In 2024 41 of 134 FBS teams are under 90% (range about 75% to 110%); 2023, 49 of 133 (range 35% to 106%); 2022, 21 of 131 (33% to 109%); 2025, 4; 2026, none. |
 | 8.6 | **Pen 1st downs allowed / G** | Accepted defensive fouls that gave a first down, on kept drives, per game with play-by-play. |
 | 8.7 | **Situational fouls** | A Q4 leader's offensive delay of game is clock management. It is shown in the trace but left out of the rates. |
-| 8.8 | **Conference average** | Shown beside each rate: the mean over the conference's rated teams. FBS Independents show the FBS average. Officiating differs by conference: the research found conference explains about 27% of team differences. ESPN's feed carries no crew data, so conference stands in for crew. Kicking- and return-unit fouls are listed but aren't in any rate. |
+| 8.8 | **Conference average** | Shown beside each rate: the mean over the conference's ranked (5+ game) teams; tentative teams are left out. FBS Independents show the FBS average. Officiating differs by conference: the research found conference explains about 27% of team differences. ESPN's feed carries no crew data, so conference stands in for crew. Kicking- and return-unit fouls are listed but aren't in any rate. |
 
 No penalty metric enters the rating. In the round-3 research, none of the 22 variants tested improved predictions, because
 penalty yards and first downs already show up in points per drive.
@@ -204,7 +204,7 @@ penalty yards and first downs already show up in points per drive.
 
 | # | Metric | Definition |
 |---|--------|------------|
-| 9.1 | **Walk-forward test** | For each week of 2025 (4–16) and 2026 (3–5), fit only on earlier weeks and predict that week. Reported as MAE and straight-up accuracy against raw-PPD and scoring-margin baselines, and against the sportsbook line where ESPN has one. |
+| 9.1 | **Walk-forward test** | For each week of 2025 (4–16) and 2026 (3–5), and with the default model only 2024 (4–16), 2023 and 2022 (4–15), fit only on earlier weeks and predict that week. Reported as MAE and straight-up accuracy against raw-PPD and scoring-margin baselines, and against the sportsbook line where ESPN has one. |
 | 9.2 | **Network backtest** | 2025, rolling weekly: log loss and accuracy for each weight set and rule variant, with paired standard errors. |
 | 9.3 | **σ** | Out-of-sample margin error from this season's walk-forward test. Used to turn margins into win probabilities. |
 
@@ -212,9 +212,9 @@ penalty yards and first downs already show up in points per drive.
 
 | # | Output | Definition |
 |---|--------|------------|
-| 10.1 | **Next-week predictions** | `Margin = (AdjEM_A − AdjEM_B)·Poss/μT + 2h·Poss·home`, with `P(win) = Φ(margin / σ)`. Only games whose FBS teams are all rated. |
+| 10.1 | **Next-week predictions** | `Margin = (AdjEM_A − AdjEM_B)·Poss/μT + 2h·Poss·home`, with `P(win) = Φ(margin / σ)`. Every next-week game with an FBS team. Games involving a team with a tentative rating (under 5 games) are included and marked T. |
 | 10.3 | **Anchors** | `out/<season>/anchors.json` lists every input to μ, the phantom-game values, μT and NS_win/NS_loss/NS_all, so the global constants can be recomputed. |
-| 10.2 | **Conference ratings** | Average AdjEM of rated members. |
+| 10.2 | **Conference ratings** | Average AdjEM of ranked members; tentative teams are left out. |
 
 ---
 
@@ -222,7 +222,7 @@ penalty yards and first downs already show up in points per drive.
 
 | Parameter | Default | Meaning |
 |-----------|---------|---------|
-| `min_games` | 5 | Games required for a published rating |
+| `min_games` | 5 | Games required for an official rating and rank; below it the rating is tentative (§0.2) |
 | `garbage_margin` | 43 / 37 / 27 / 21 | Garbage-time margins by quarter |
 | `end_of_half_seconds` | 60 | Drives whose first snap comes this late in Q2/Q4 are dropped |
 | `prior_drives` / `prior_plays` | 12 / 65 | Phantom game size (§2.7) |

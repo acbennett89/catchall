@@ -4,7 +4,7 @@
       out/<season>/ratings.csv               one row per FBS team (5+ games ranked; fewer = tentative, unranked)
       out/<season>/ratings.json              same rows + model constants, conferences, predictions
       out/<season>/traces/<id>.json          every number for one team, back to drives and plays
-      out/<season>/traces/internal/<id>.json derivations of internal inputs (FCS, unrated FBS)
+      out/<season>/traces/internal/<id>.json derivations of internal inputs (FCS teams)
       out/<season>/anchors.json              every input to the global constants
 """
 import argparse
@@ -336,9 +336,9 @@ def main():
         with open(os.path.join(out_dir, "traces", f"{r['id']}.json"), "w") as f:
             json.dump(tr, f, separators=(",", ":"), default=float)
 
-    # Internal-input derivations. Every FCS team and every FBS team below the game minimum
-    # appears as an opponent in some rated team's trace; its own lines are written here,
-    # labeled, with no AdjEM, rank or resume, so each rated number traces to the end.
+    # Internal-input derivations. Every FCS team appears as an opponent in some FBS team's
+    # trace; its own lines are written here, labeled, with no AdjEM, rank or resume, so each
+    # FBS number traces to the end. (Tentative FBS teams have full traces of their own.)
     idir = os.path.join(out_dir, "traces", "internal")
     os.makedirs(idir, exist_ok=True)
     index = {}
@@ -351,7 +351,7 @@ def main():
             checks.append(tt["check_ok"])
         if not all(checks):
             bad.append(name_of(teams, t))
-        if t in eligible:
+        if teams.get(t, {}).get("division") == "FBS":
             continue
         for side in ("offense", "defense"):
             for ln in e[side]["lines"] + s_[side]["lines"]:
@@ -387,7 +387,7 @@ def main():
     with open(os.path.join(out_dir, "anchors.json"), "w") as f:
         json.dump({
             "mu": {"value": ppd_["mu"], "rule": "mean AdjO over all FBS teams (= mean FBS AdjD); "
-                                               "includes teams below the game minimum (internal)"},
+                                               "includes tentative teams below the game minimum"},
             "teams": [{"id": t, "name": name_of(teams, t), "division": ppd_["division"][t],
                        "AdjO": ppd_["O"][t], "AdjD": ppd_["D"][t],
                        "status": "published" if t in eligible else

@@ -7,7 +7,8 @@
     python trace.py Indiana --season 2025           # another season (default: config.json)
 
 Sections: schedule, efficiency, success_rate, tempo, factors, luck, situational, discipline, sos,
-network. Opponents marked * are internal inputs; show one with:
+network. Opponents marked T have a tentative rating (fewer than 5 games; run trace.py on them
+normally). Opponents marked * are FCS internal inputs; show one with:
     python trace.py "Idaho State" --internal
 """
 import argparse
@@ -31,12 +32,13 @@ def find_team(query, internal=False):
     if internal:
         rated = json.load(open(os.path.join(OUT, "ratings.json")))["teams"]
         hit = next((t for t in rated if t["name"].lower() == query.lower()), None)
-        if hit and hit.get("eligible"):
-            sys.exit(f"{hit['name']} is rated in {os.path.basename(OUT)}; run without --internal")
+        if hit:
+            kind = "rated" if hit.get("eligible") else "tentatively rated"
+            sys.exit(f"{hit['name']} is {kind} in {os.path.basename(OUT)}; run without --internal")
         index = json.load(open(os.path.join(OUT, "traces", "internal", "index.json")))
         tid = _match(query, list(index.items()))
         if tid is None:
-            sys.exit(f"no internal derivation for {query!r} (rated FBS teams have full traces)")
+            sys.exit(f"no internal derivation for {query!r} (FBS teams have full traces; run without --internal)")
         return json.load(open(os.path.join(OUT, "traces", "internal", f"{tid}.json")))
     data = json.load(open(os.path.join(OUT, "ratings.json")))
     tid = _match(query, [(t["id"], t["name"]) for t in data["teams"]])
@@ -70,11 +72,17 @@ def schedule(tr):
             print(f"        {clock}; {pen}" + (f"; box rows rejected: {bp['rejected']}" if bp.get("rejected") else ""))
 
 
+def mark_of(status):
+    """T = tentative FBS opponent (its own trace is published); * = FCS internal input."""
+    status = status or "published"
+    return " T" if status.startswith("tentative") else " *" if status.startswith("internal") else ""
+
+
 def lines_table(s, label, opp_key, fmt=".3f"):
     print(f"  {label}: adjusted = raw - (opp rating - mu) - h*venue")
     print(f"    {'opponent':22s} {'weight':>6} {'raw':>8} {opp_key:>12} {'opp adj':>8} {'venue':>6} {'adjusted':>9}")
     for ln in s["lines"]:
-        mark = "" if ln.get("opp_status", "published") == "published" else " *"
+        mark = mark_of(ln.get("opp_status"))
         print(f"    {(ln['opp_name'][:20] + mark):22s} {ln['w']:>6g} {ln['raw']:>8{fmt}} {ln[opp_key]:>12{fmt}} "
               f"{ln['opp_adjustment']:>+8{fmt}} {ln['hfa_adjustment']:>+6{fmt}} {ln['adjusted']:>9{fmt}}")
     p = s["prior"]
@@ -103,7 +111,7 @@ def efficiency(tr):
         print(f"\nEFFICIENCY (internal input)  mu = {f(e['mu'])}, h = {f(e['h'], 4)}")
         lines_table(e["offense"], "AdjO", "opp_AdjD")
         lines_table(e["defense"], "AdjD", "opp_AdjO")
-        print("  * opponent is itself an internal input (FCS, or FBS below the game minimum)")
+        print("  * opponent is itself an internal input (FCS); T = tentative FBS opponent")
         return
     print(f"\nEFFICIENCY  mu (FBS avg PPD) = {f(e['mu'])}, home edge h = {f(e['h'], 4)} pts/drive, "
           f"muT = {f(e['muT'], 2)} drives/game")
@@ -113,7 +121,7 @@ def efficiency(tr):
         print(f"    {'opponent':22s} {'weight':>6} {'raw PPD':>8} {opp_key:>9} {'opp adj':>8} "
               f"{'venue':>6} {'adjusted':>9}")
         for ln in s["lines"]:
-            mark = "" if ln.get("opp_status", "published") == "published" else " *"
+            mark = mark_of(ln.get("opp_status"))
             print(f"    {(ln['opp_name'][:20] + mark):22s} {ln['w']:>6g} {ln['raw']:>8.3f} {ln[opp_key]:>9.3f} "
                   f"{ln['opp_adjustment']:>+8.3f} {ln['hfa_adjustment']:>+6.3f} {ln['adjusted']:>9.3f}")
         p = s["prior"]
@@ -126,8 +134,8 @@ def efficiency(tr):
     print("  weight = kept drives, with lead-protection drives at the configured weight")
     print(f"  AdjEM = ({f(e['AdjO'], 4)} - {f(e['AdjD'], 4)}) * {f(e['muT'], 3)} = {f(e['AdjEM'], 2)} "
           f"pts/game vs an average FBS team, neutral field  (+/- {f(e['AdjEM_se'], 1)} SE)")
-    print("  * opponent rating is an internal input (FCS team, or FBS team below the game minimum);"
-          ' see its own lines with: python trace.py "<opponent>" --internal')
+    print('  T = tentative FBS opponent (fewer than 5 games): python trace.py "<opponent>"')
+    print('  * = FCS internal input: python trace.py "<opponent>" --internal')
     print("  game-level adjusted margins (basis of the SE):",
           ", ".join(f"{g['opp_name']} {g['adj_margin_per_game']:+.1f}" for g in e["game_margins"]))
 
@@ -139,7 +147,7 @@ def tempo(tr):
     print(f"\nTEMPO  AdjT = mean(poss - (opp AdjT - muT)) incl. one phantom game; muT = "
           f"{f(t.get('muT'), 2)}; poss = (both teams' regulation drives with a real snap) / 2")
     for ln in t["lines"]:
-        mark = "" if ln.get("opp_status", "published") == "published" else " *"
+        mark = mark_of(ln.get("opp_status"))
         print(f"    {(ln['opp_name'][:20] + mark):22s} poss {ln['poss']:5.1f}  opp AdjT {ln['opp_AdjT']:5.2f}  "
               f"adjusted {ln['adjusted']:5.2f}")
     print(f"    phantom game {t['prior']:.2f} -> AdjT {t['recomputed']:.3f} [check "
@@ -230,7 +238,7 @@ def sos(tr):
     s = tr["sos_efficiency"]
     print(f"\nSOS (efficiency) = mean opponent AdjEM = {f(s['SOS'], 2)};  NCSOS = {f(s['NCSOS'], 2)}")
     for o in s["opponents"]:
-        mark = "" if o.get("opp_status", "published") == "published" else "  * internal input"
+        mark = {" T": "  T tentative", " *": "  * internal input"}.get(mark_of(o.get("opp_status")), "")
         print(f"    {o['opp_name'][:22]:22s} AdjEM {o['opp_AdjEM']:+6.2f}{'  (conf)' if o['conf_game'] else ''}{mark}")
 
 
@@ -285,7 +293,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("team")
     ap.add_argument("--internal", action="store_true",
-                    help="show the internal-input derivation of an FCS team or an FBS team below the game minimum")
+                    help="show the internal-input derivation of an FCS opponent")
     ap.add_argument("--section", choices=["schedule", "efficiency", "success_rate", "tempo", "factors", "luck",
                                           "situational", "discipline", "sos", "network"])
     ap.add_argument("--drives", action="store_true")

@@ -1,6 +1,6 @@
 # Adversarial review
 
-The system was attacked in four rounds:
+The system was attacked in five rounds:
 
 1. **My own review** (§A–D). Every reading of your brief and every modelling choice was challenged with
    backtests: a full walk-forward on 2025, where ratings use only earlier weeks, and the 2026 data through week 5.
@@ -28,19 +28,20 @@ where many variants were tried, the bar is higher (§G).
 | A2 | Raw win counts reward playing more games | Real fairness problem, no predictive gain | Records are rates, (W+1)/(G+2) |
 | A3 | Do FCS losses count? | The brief excludes only FCS wins | They count (6 teams affected) |
 | A4 | Should losses count? | Prediction can't decide it; fairness can | Both published; the resume is ranked by **net per counted game** (FCS wins excluded from the count in round 4) |
-| A5 | What counts toward "5 played games"? | Literal reading | 107 of 138 rated. Below 5 games, nothing is published (fixed in round 2) |
+| A5 | What counts toward "5 played games"? | Literal reading | 107 of 138 ranked after week 5 of 2026. Below 5 games a team gets a **tentative** rating: full numbers and trace, marked T, never ranked (your request after round 5; round 2 had hidden them) |
 | B2 | Network weights | Backtested | 0.60/0.30/0.10, within noise of the optimum (tertiary = 0). The network beats win% alone only nominally |
 | B3 | Does tertiary matter? | Barely | Effective influence is about 6% of primary |
 | C1 | Does opponent adjustment help? | Yes | Walk-forward MAE 12.47 vs 14.02 raw (same games) |
-| C2 | Against the betting market | The market is better early in the season | 1.65 ± 0.54 points worse on 2026 weeks 3–5 |
+| C2 | Against the betting market | The market is better, most of all early in the season | 1.65 ± 0.54 points worse on 2026 weeks 3–5; 1.05 ± 0.23 worse over 2022 weeks 4–15 |
 | C3 | Home field inflated by shrinkage | Confirmed (3.6 → 4.6 pts) | Two-stage estimate |
 | E | Bad ESPN running scores corrupted drive points | **Confirmed defect, fixed** | Points rebuilt from play types |
-| E | Teams under 5 games leaked through traces and predictions | **Confirmed defect, fixed** | Masked; internal inputs labeled |
+| E | Teams under 5 games leaked through traces and predictions | **Confirmed defect, fixed** | Masked in round 2; since your request after round 5 they are published as tentative, labeled and unranked (A5) |
 | F | Penalties | Parsed and validated; no predictive value | Published as descriptive "Discipline"; not in the rating |
 | G | Clock-burning (lead protection) | Real in pace and play-calling; no adjustment improves accuracy | Tagged and shown; tagged drives count **half (weight 0.5) by default**, which is accuracy-neutral. The outcome-dependent final-drive rule was removed |
 | H | Garbage time | The test can't tell the rules apart | Connelly rule kept for traceability; Luck uses garbage-adjusted scores |
 | I | Final review: 40 findings | 14 major findings upheld (12 at reduced severity) | All fixed: snap-time clocks, parser fixes, per-counted-game resume, full traceability of internal inputs and constants |
 | J | Season picker and 2024 (round 5): 25 findings | 22 confirmed, 2 partly, 1 refuted | All fixed; 2024 published with a data note (7% of FBS games lack drives, no snap stamps, penalties 54% exact) |
+| K | Power column, tentative ratings, 2022–2023 (round 6): 30 findings | 23 confirmed, 4 partly, 3 duplicates | All fixed (§K). 2022 is the one season where average margin out-predicts the model |
 
 ---
 
@@ -99,7 +100,7 @@ The literal reading is any completed D-I game: 107 of 138 teams after week 5. Co
 would rate 17.
 
 **Correction from round 2.** The reviewer found that teams under the minimum still had full ratings in
-their trace files, on the web page and in 24 predictions. Now:
+their trace files, on the web page and in 24 predictions. Round 2 then hid them:
 - an ineligible team's trace shows only its schedule;
 - predictions involving it are dropped (58 → 34);
 - inside an eligible team's trace, an ineligible opponent's rating is an unavoidable input, so it is
@@ -108,6 +109,7 @@ their trace files, on the web page and in 24 predictions. Now:
 **Change at your request (after round 5).** Teams under 5 games now get a **tentative** rating: the
 same numbers and full trace, marked T, never ranked, with tentative predictions marked too. The
 5-game rule still decides who is ranked. Nothing in the model changed, so accuracy is unaffected.
+All 58 week-6 predictions are now published; the 24 involving a tentative team are marked T.
 
 ---
 
@@ -184,8 +186,9 @@ with 80.0% in 2026 (205 games). **2024 is weaker:** 13.09 with 71.5% (631 games)
 ties average scoring margin there, though it still beats raw points per drive by 2 points. ESPN's 2024
 play-by-play leaves 7% of FBS games without usable drives and has no snap-time stamps (§J), so treat
 2024 ratings as less precise. A stricter parser that recovered some of those games did not change this
-(13.12 vs 13.14). **2023** behaves like 2025 (12.80 vs 13.34; 73.0% of 614 games picked). **2022** is
-the one season where average scoring margin beats the model (12.84 vs 13.06; 69.1% picked): ESPN's
+(13.12 vs 13.14). **2023** behaves like 2025: 12.82 with 73.0% of winners (614 games), and 12.80 vs
+13.34 on the same games. **2022** is the one season where average scoring margin beats the model:
+13.13 with 69.1% (606 games), and 12.84 vs 13.06 on the same games: ESPN's
 2022 play-by-play leaves 11% of FBS games without usable drives (the scores-only baseline still sees
 them), and none has snap-time stamps. Opponent adjustment still beats raw points per drive in every
 season, by 1.3 to 4.9 points. Calibration (2025, 639 games):
@@ -198,6 +201,9 @@ season, by 1.3 to 4.9 points. Calibration (2025, 639 games):
 
 On 2026 weeks 3–5 (205 games) the model's MAE is 12.87 against the market's 11.22, worse by
 **1.65 ± 0.54** points. ESPN keeps lines for only 55 of the 2025 games; on those the two were tied.
+It keeps lines for 604 of the 606 predictable 2022 games (weeks 4–15): there the model is worse by
+**1.05 ± 0.23** (13.09 vs 12.04), and the edge holds all season (weeks 4–7 +1.08 ± 0.45, 8–11
++1.14 ± 0.32, 12–15 +0.85 ± 0.41). 2023 and 2024 have no lines.
 The market uses preseason priors, injuries and recruiting; this model uses only this season's games.
 
 ### C3. Home field
@@ -242,7 +248,8 @@ The median AdjEM standard error is **±7.0 points** (IQR 4.4–8.5). Treat ranks
 
 ## D. What would change these conclusions
 
-- **More seasons.** Every backtest uses one season, and the weight optimum is flat.
+- **More seasons.** The network backtest uses one season (2025), and the weight optimum is flat; the
+  efficiency walk-forward now covers 2022–2025 plus the 2026 holdout.
 - **A preseason prior** would close most of the gap to the market, at the cost of putting
   non-2026 information into a 2026 rating.
 
@@ -267,7 +274,7 @@ Findings and fixes:
 | # | Finding | Fix |
 |---|---|---|
 | M1 | ESPN's running score on scoring plays is sometimes wrong even when the final reconciles. TD drives were credited 1, 6, 13 or −8 points, changing 19 ranks. My review wrongly called one case "a missed PAT". | Points are rebuilt from play type plus extra-point result and reconciled to the final (§1.1); parser tests added. UTEP–New Mexico now gives New Mexico 21 points on 5 drives, matching the reviewer. |
-| M2 | Teams under 5 games were published through traces, the page and predictions. | Masked (A5). |
+| M2 | Teams under 5 games were published through traces, the page and predictions. | Masked (A5). Reversed at your request after round 5: published as tentative, marked T, never ranked. |
 | M3 | "Average win = 1.00" was false (0.934). | Re-anchored (A1). |
 | m1 | 17 drives had the wrong team label (ESPN). | Offense taken from who snapped the plays. |
 | m2 | A punt-return safety counted as offensive points; 22 muffed punts counted as rushes; 13 snaps were listed twice. | All three excluded. |
@@ -303,12 +310,14 @@ final reviewer caught it.)
 | 2026 | 90.3% | 98.9% | −1.05% |
 | 2025 | 74.7% | 94.9% | −3.45% |
 | 2024 | 53.8% | 82.8% | −10.9% |
+| 2023 | 52.3% | 81.8% | −14.2% |
+| 2022 | 55.5% | 77.7% | −19.7% |
 
 All D-I team-games with play-by-play, regular season. `python audit_penalties.py` reproduces every
 row and writes each team-game to `out/penalty_audit.json`. 2024 was added with the season picker. Its
 shortfall comes from ESPN, not the parser: in a sample of 400 games the box scores show 5,149 fouls but
-only 4,802 plays mention a penalty, and four games list none at all. Those four are left out of the
-per-snap rates (METRICS 8.3), and each season's audit is printed on its Discipline tab.
+only 4,802 plays mention a penalty, and four games list none at all. Games like that are left out of the
+per-snap rates (METRICS 8.3: 15 in 2022, 6 in 2023, 4 in 2024, 1 in 2025), and each season's audit is printed on its Discipline tab.
 
 The 2025 gap is concentrated in weeks 1–8, when ESPN mixed two text dialects and dropped some fouls from the
 text. The verifier caught one corrupt box-score row ("743-37") that had inflated the reported 2025
@@ -430,10 +439,10 @@ the regression tests in `tests/test_parse.py` are built from the plays they cite
 | Resume | Net Resume per game counted FCS wins in the divisor. | Divided by counted games (§A4). |
 | Traceability | Neutral pace, run rate, discipline rates, AdjSR and the lead-protection decision couldn't be rebuilt from the traces. | Each drive row now carries its intervals, run count, penalty-only snaps, clock source and weight. Each game carries clock status and box-score penalties. AdjSR has its own trace section (`trace.py --section success_rate`). |
 | Traceability | Internal ratings of unrated and FCS opponents were inputs but never derived, so 101 of 107 teams' chains stopped there. | `out/<season>/traces/internal/` holds each one's derivation, with no AdjEM, rank or resume (`trace.py --internal`, or the page's "internal*" links). |
-| Traceability | The global constants (μ, the phantom game, μT, NS_win, NS_loss) couldn't be recomputed. "Average AdjEM is 0" was false for the published table. | `out/<season>/anchors.json` lists every input. The docs say the 0 holds over all 138 FBS teams; the published 107 average −0.18. |
+| Traceability | The global constants (μ, the phantom game, μT, NS_win, NS_loss) couldn't be recomputed. "Average AdjEM is 0" was false for the ranked table. | `out/<season>/anchors.json` lists every input. The docs say the 0 holds over all 138 FBS teams; the published 107 average −0.18. |
 | Traceability | The build self-check covered only the 138 FBS teams. | It now covers all 266 D-I teams. |
-| Leaks | Unrated teams were listed in order of their internal AdjEM. | Listed by name. |
-| Leaks | Unrated teams' garbage-adjusted scores were published per game. | Removed from their schedules. |
+| Leaks | Unrated teams were listed in order of their internal AdjEM. | Listed by name. (Superseded after round 5: they are now published as tentative at your request, A5.) |
+| Leaks | Unrated teams' garbage-adjusted scores were published per game. | Removed from their schedules. (Superseded after round 5, A5.) |
 | Display | The foul table said "Counted? yes" for special-teams fouls that the rates leave out. Tempo's internal inputs were unlabeled. | Both labeled correctly. |
 | Docs | Stale or wrong figures: running-score errors (8 games, not 4), tertiary breadth (9 records, not 25), "the network beats win%", 18 inversions (22), the 2025 penalty audit, the officiating-crew claim, "271 beaten FBS teams", the A1 test claim, the review's description of the round-2 fixes, and the README's dependencies. | Corrected in this document, METRICS, TRACE and README. Penalty audit and garbage numbers can now be regenerated by scripts. |
 
@@ -445,25 +454,31 @@ the lead-protection weight was the only modelling choice, and it is accuracy-neu
 
 ## J. Seasons: the season picker and 2024 (round 5)
 
-The page now switches between seasons (2024, 2025, 2026). Each season is rated on its **regular season**,
+The page now switches between seasons (2022–2026; 2022 and 2023 were added after round 5). Each season is rated on its **regular season**,
 conference title games and Army–Navy included. ESPN files the FCS playoff rounds among regular-season
-weeks; `parse.py` flags them and `ratings.load()` sets them aside (17 games in 2025, 20 in 2024).
+weeks; `parse.py` flags them and `ratings.load()` sets them aside (17 games in 2025, 20 each in 2024, 2023 and 2022).
 Removing them from 2025 moved its validation by at most 0.0006 MAE.
 
 **Data coverage differs by season** and is printed on each season's page:
 
 | Season | FBS games with usable drives | Snap-time stamps (kept drives) | Penalties exact vs box | Teams under 90% penalty coverage |
 |---|---|---|---|---|
+| 2022 | 758 of 854 (89%) | ~0% | 55.5% | 21 of 131 |
+| 2023 | 830 of 868 (96%) | ~0% | 52.3% | 49 of 133 |
 | 2024 | 810 of 873 (93%) | ~0% | 53.8% | 41 of 134 |
 | 2025 | 871 of 888 (98%) | 37% | 74.7% | 4 of 136 |
-| 2026 (wk 1–5) | 390 of 390 | 88% | 90.3% | 0 of 107 |
-| 2023 | 830 of 868 (96%) | ~0% | 52.3% | 49 of 133 |
-| 2022 | 758 of 854 (89%) | ~0% | 55.5% | 21 of 131 |
+| 2026 (wk 1–5) | 390 of 390 | 88% | 90.3% | 0 of 138 |
 
-In 2024 the missing drives come from ESPN: some scoring plays appear in the scoring summary but in no
-drive, so the parser drops the game from efficiency rather than guess. Those games still count in
-records, win values and the resume. Without snap stamps the clock rules run on the end-of-play clock,
-so 2024 neutral pace and lead-protection tags are not comparable with 2026.
+The missing drives come from ESPN: some scoring plays appear in the scoring summary but in no drive, so
+the parser drops the game from efficiency rather than guess, and some games have no play-by-play at all
+(in 2022, 29 of the 68 FBS-vs-FBS games without drives). Those games still count in records, win values
+and the resume. Without snap stamps the clock rules run on the end-of-play clock, so 2022–2024 neutral
+pace and lead-protection tags are not comparable with 2026.
+
+**2022 home field (1.5 points) is partly a coverage artifact.** Home field is estimated from every D-I
+game with drives. In 2022, 26% of FCS-only games have no drives, and the home team won more of the
+dropped games (58.9%) than of the kept ones (52.5%). Estimated from games involving an FBS team alone,
+2022 home field is about 2.1 points, in line with other seasons. Don't read 1.5 as a finding about 2022.
 
 Three reviewers (page behavior, data pipeline, docs and 2024 data) and three verifiers checked the
 work. Findings and fixes:
@@ -481,4 +496,27 @@ work. Findings and fixes:
 | Pipeline | 2024 penalties weren't audited, and four games with no penalties in the play-by-play deflated rates. | Every season is audited; those games are left out of the rates; a per-team Coverage column marks teams under 90%. |
 | Docs | 2026 figures read as general; stale counts; 2024 validation missing. | Labeled, refreshed, and the 2024 row added to §C1. |
 | CLI | `trace.py --internal` on a team rated that season gave "ambiguous". | It says the team is rated. |
+
+---
+
+## K. Power column, tentative ratings, 2022 and 2023 (round 6)
+
+You asked for a visible power-rating column, tentative ratings for teams under 5 games, and the 2022
+and 2023 seasons. Three reviewers (page, data and labels, docs) and three verifiers checked the result:
+30 findings, 23 confirmed, 4 partly, 3 duplicates of the same footnote problem.
+
+| Area | Finding | Fix |
+|---|---|---|
+| Page | Trace footnotes still called a tentative opponent "not published" and pointed to an "internal*" chip that wasn't there. | Separate notes: "tentative" (published, provisional, opens its trace) and "*" (FCS internal input); the SOS line marks (T) and * apart. |
+| Page | The "Show tentative" checkbox showed in finished seasons; its label wrapped. | Hidden when a season has no tentative teams; no wrapping. |
+| Page | Pinned rank/team cells lost the row highlight and covered the focus outline. | They take the hover and focus highlight. |
+| Page | The Win values "Power rk" column sorted tentative teams to the bottom; tied ≈slots kept the wrong order. | Tentative rows sort where they would slot, ties by the column's own metric. |
+| Page | Before any team reaches 5 games every row would read "≈1" and drawers "about 1 of 0". | Tentative teams are then ordered among themselves. |
+| Page | No viewport tag for local viewing on phones; very narrow phones could clip Power. | Viewport tag added; team names truncate under 380px. |
+| Pipeline | Internal "not a published rating" derivations were still written for the 31 tentative FBS teams. | Internal derivations are FCS-only; tentative teams have full traces. |
+| CLI | `trace.py` marked tentative opponents as internal inputs and sent readers to `--internal`. | T for tentative, * for FCS; `--internal` on any FBS team points to its trace. |
+| Docs | Summary rows, A5, E/M2, §I, METRICS 2.4/8.8/9.1/10.1/10.2/11 and TRACE still described masking. | Rewritten for tentative ratings (history kept, marked superseded). |
+| Docs | 2022/2023 missing from the penalty audit, coverage table, validation prose; 2022 market comparison missing. | Added; the market's edge in 2022 lasts all season (§C2). |
+| Data | 2022 home field of 1.5 points. | Explained as a coverage artifact (§J). |
+| Tests | Nothing guarded the tentative rules. | `tests/test_outputs.py` checks every built season: ranks 1..N for ranked teams only, tentative teams unranked with full traces, FCS-only internal derivations, opponent labels and prediction flags. |
 

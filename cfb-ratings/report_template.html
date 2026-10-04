@@ -1,4 +1,5 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FBS Efficiency Ratings</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -79,7 +80,13 @@ table.grid tbody tr:hover, table.grid tbody tr:hover td { background: var(--acce
 .tent { font-family: var(--display); font-weight: 600; font-size: 11px; letter-spacing: .04em; color: var(--gold); border: 1px solid var(--gold); border-radius: 2px; padding: 0 3px; margin-left: 4px; vertical-align: 1px; }
 .tentv { font-style: italic; opacity: .8; }
 .tentnote { border-left: 3px solid var(--gold); padding-left: 10px; color: var(--ink); }
-.tog { display: inline-flex; gap: 6px; align-items: center; font-size: 14px; color: var(--muted); cursor: pointer; }
+.tog { display: inline-flex; gap: 6px; align-items: center; font-size: 14px; color: var(--muted); cursor: pointer; white-space: nowrap; flex: none; }
+.tog[hidden] { display: none; }
+#tbl tbody tr:hover td, #tbl-resume tbody tr:hover td, #tbl-disc tbody tr:hover td,
+#tbl tbody tr:focus-visible td, #tbl-resume tbody tr:focus-visible td, #tbl-disc tbody tr:focus-visible td { background: var(--accent-soft); }
+@media (max-width: 380px) {
+  #tbl td:nth-child(2), #tbl-resume td:nth-child(2), #tbl-disc td:nth-child(1) { max-width: 9em; overflow: hidden; text-overflow: ellipsis; }
+}
 .rk { color: var(--muted); font-size: 11px; margin-left: 3px; }
 .pos { color: var(--pos); } .neg { color: var(--neg); }
 .em { font-weight: 500; }
@@ -266,11 +273,14 @@ details[open] > summary { margin-bottom: 6px; }
   /* ---------- column definitions ---------- */
   // Tentative = fewer than the game minimum: shown with a T, never ranked; ≈n is where it would slot.
   const tag = r => r.tentative ? `<span class="tent" title="Tentative: ${r.games} of ${M.min_games} games played. Same model, fully traced, but provisional and unranked.">T</span>` : "";
-  const rankCell = (key, slotKey) => ({ k: key, label: "Rk", title: "Official rank (5+ games). ≈n: where a tentative team would slot.",
-    sortv: r => r.tentative ? r[slotKey] - 0.5 : r[key], f: (v, r) => r.tentative ? `<span class="rk" title="Tentative: would rank about here">≈${r[slotKey]}</span>` : (v == null ? "—" : v) });
+  // Sort value: a tentative team sits just ahead of the ranked team it would displace; tied
+  // tentative teams order by the column's own metric (Power, or resume per game).
+  const slotSort = (slotKey, metric) => r => r.tentative ? r[slotKey] - 0.5 - (r[metric] ?? -1e3) * 1e-6 : r[slotKey === "_slot" ? "rk_AdjEM" : "rk_NetPerGame"];
+  const rankCell = (key, slotKey, metric) => ({ k: key, label: "Rk", title: "Official rank (5+ games). ≈n: where a tentative team would slot.",
+    sortv: slotSort(slotKey, metric), f: (v, r) => r.tentative ? `<span class="rk" title="Tentative: would rank about here">≈${r[slotKey]}</span>` : (v == null ? "—" : v) });
   const teamCell = { k: "name", label: "Team", text: true, f: (v, r) => esc(v) + tag(r) };
   const ratingCols = [
-    rankCell("rk_AdjEM", "_slot"),
+    rankCell("rk_AdjEM", "_slot", "AdjEM"),
     teamCell,
     { k: "AdjEM", label: "Power", desc: true, title: "Power rating (AdjEM): points per game better than an average FBS team on a neutral field", f: (v, r) => `<span class="em ${cls(v)}${r.tentative ? " tentv" : ""}">${fx(v, 1, true)}</span>` },
     { k: "AdjEM_se", label: "±SE", title: "Standard error from game-to-game spread", f: v => `<span class="rk">${fx(v, 1)}</span>` },
@@ -285,7 +295,7 @@ details[open] > summary { margin-bottom: 6px; }
     { k: "luck", label: "Luck", desc: true, title: "Actual W% minus Pythagorean W%", f: v => `<span class="${cls(v)}">${fx(v, 3, true)}</span>` },
   ];
   const resumeCols = [
-    rankCell("rk_NetPerGame", "_rslot"),
+    rankCell("rk_NetPerGame", "_rslot", "NetPerGame"),
     teamCell,
     { k: "W", label: "W-L", f: (v, r) => `${r.W}-${r.L}`, sortv: r => r.W - r.L, desc: true },
     { k: "WVT", label: "Win value total", desc: true, f: v => fx(v, 2) },
@@ -296,7 +306,7 @@ details[open] > summary { margin-bottom: 6px; }
     { k: "SchedNS", label: "Sched strength", desc: true, title: "Average opponent network strength (FCS = 0) / NS_all; 1.00 = average FBS schedule", f: v => fx(v, 3) },
     { k: "BestWin", label: "Best win", desc: true, f: (v, r) => v == null ? "—" : `${fx(v, 3)} <span class="rk">${esc(nm(r.BestWinOpp))}</span>` },
     { k: "WorstLoss", label: "Worst loss", desc: true, f: (v, r) => v == null ? "—" : `${fx(v, 3)} <span class="rk">${esc(nm(r.WorstLossOpp))}</span>` },
-    { k: "rk_AdjEM", label: "Power rk", f: (v, r) => r.tentative ? `<span class="rk">≈${r._slot}</span>` : (v == null ? "—" : v) },
+    { k: "rk_AdjEM", label: "Power rk", sortv: slotSort("_slot", "AdjEM"), f: (v, r) => r.tentative ? `<span class="rk">≈${r._slot}</span>` : (v == null ? "—" : v) },
   ];
   const vsConf = (v, r, key, d) => v == null ? "—" : `${fx(v, d)} <span class="rk">${fx(r[key + "_conf"], d)}</span>`;
   const discCols = [
@@ -360,10 +370,13 @@ details[open] > summary { margin-bottom: 6px; }
     } else dq.textContent = "";
 
     rated = D.teams.filter(t => t.AdjEM != null);
-    const official = rated.filter(t => !t.tentative);
+    // ≈n = where a tentative team would slot among ranked teams. Before any team has reached the
+    // minimum there is nobody to slot against, so tentative teams are ordered among themselves.
+    const official = rated.filter(t => !t.tentative), tentativeOnly = !official.length;
+    const base = tentativeOnly ? rated : official;
     rated.filter(t => t.tentative).forEach(t => {
-      t._slot = 1 + official.filter(x => x.AdjEM > t.AdjEM).length;
-      t._rslot = 1 + official.filter(x => x.NetPerGame != null && x.NetPerGame > (t.NetPerGame ?? -1e9)).length;
+      t._slot = 1 + base.filter(x => x !== t && x.AdjEM > t.AdjEM).length;
+      t._rslot = 1 + base.filter(x => x !== t && x.NetPerGame != null && x.NetPerGame > (t.NetPerGame ?? -1e9)).length;
     });
     document.getElementById("tent-tog").hidden = !rated.some(t => t.tentative);
     q.value = "";
@@ -469,7 +482,8 @@ details[open] > summary { margin-bottom: 6px; }
     let h = `<div class="tablewrap"><table class="mini"><thead><tr><th class="t">Opponent</th><th>Weight</th><th>Raw</th><th>${oppLabel}</th><th>Opp adj</th><th>Venue adj</th><th>Adjusted</th></tr></thead><tbody>`;
     L.forEach(l => { h += `<tr><td class="t">${esc(l.opp_name)}${internalTag(l)}</td><td>${fx(l.w, Number.isInteger(l.w) ? 0 : 1)}</td><td>${fx(l.raw, 3)}</td><td>${fx(l[oppKey], 3)}</td><td>${fx(l.opp_adjustment, 3, true)}</td><td>${fx(l.hfa_adjustment, 3, true)}</td><td>${fx(l.adjusted, 3)}</td></tr>`; });
     h += `<tr class="prior"><td class="t">Phantom game (${esc(side.prior.division)} average)</td><td>${side.prior.weight}</td><td></td><td></td><td></td><td></td><td>${fx(side.prior.value, 3)}</td></tr></tbody></table></div>`;
-    if (L.some(l => l.opp_status && l.opp_status !== "published")) h += `<p class="note">* Internal input: the opponent is an FCS team or an FBS team below the game minimum. Its rating isn't published. Click "internal*" to see how it was derived.</p>`;
+    if (L.some(l => (l.opp_status || "").startsWith("tentative"))) h += `<p class="note">Tentative: an FBS opponent with fewer than ${M.min_games} games. Its rating is published but provisional and unranked; click "tentative" to open its trace.</p>`;
+    if (L.some(l => (l.opp_status || "").startsWith("internal"))) h += `<p class="note">* Internal input: the opponent is an FCS team, rated only to adjust FBS numbers. Click "internal*" to see how its rating was derived.</p>`;
     h += `<div class="formula">${label} = (Σ weight × adjusted + ${side.prior.weight} × ${fx(side.prior.value, 3)}) / (${tw} + ${side.prior.weight}) = ${fx(side.recomputed, 4)}   ${side.check_ok ? "✓ matches stored value" : "✗ MISMATCH"}</div>`;
     return h;
   }
@@ -564,7 +578,7 @@ details[open] > summary { margin-bottom: 6px; }
     if (!r || !tr) return;
     if (drawer.hidden) lastFocus = document.activeElement;
     let h = `<div class="dhead"><div><h2>${esc(r.name)}</h2><div class="sub">${esc(r.conference)} · ${r.W}-${r.L} · ${r.games} games` +
-      (r.tentative ? ` · <b>tentative</b>, would rank about ${r._slot} of ${M.eligible}` : r.eligible ? ` · ranked <b>${r.rk_AdjEM}</b> of ${M.eligible}` : "") + `</div></div><button class="close" id="close">Close</button></div>`;
+      (r.tentative ? (M.eligible ? ` · <b>tentative</b>, would rank about ${r._slot} of ${M.eligible}` : ` · <b>tentative</b>, ${r._slot} of ${M.tentative} by Power (no team has ${M.min_games} games yet)`) : r.eligible ? ` · ranked <b>${r.rk_AdjEM}</b> of ${M.eligible}` : "") + `</div></div><button class="close" id="close">Close</button></div>`;
     if (r.tentative) h += `<p class="note tentnote">${esc(tr.note || "")}</p>`;
     if (r.AdjEM != null) {
       h += `<div class="statrow">` + [["Power (AdjEM)", fx(r.AdjEM, 1, true) + " ± " + fx(r.AdjEM_se, 1)], ["AdjO", fx(r.AdjO, 2)], ["AdjD", fx(r.AdjD, 2)], ["AdjT", fx(r.AdjT, 1)],
@@ -606,7 +620,8 @@ details[open] > summary { margin-bottom: 6px; }
       h += `<details><summary>Show all ${dc.fouls.length} fouls charged to ${esc(r.name)}</summary><div class="tablewrap"><table class="mini"><thead><tr><th class="t">Opponent</th><th>Q</th><th>Clock</th><th class="t">Foul</th><th class="t">Unit</th><th>Yds</th><th class="t">Status</th><th>1st dn</th><th class="t">Counted?</th><th class="t">Source</th></tr></thead><tbody>` +
         dc.fouls.map(x => `<tr><td class="t">${esc(x.opp_name)}</td><td>${x.period}</td><td>${esc(x.clock || "")}</td><td class="t">${esc(x.category)}${x.presnap ? " <span class=\"rk\">pre-snap</span>" : ""}</td><td class="t">${esc(x.penalized_unit)}</td><td>${x.yards}</td><td class="t">${esc(x.status)}</td><td>${x.first_down_awarded ? "yes" : ""}</td><td class="t note">${x.status !== "accepted" ? "no (not accepted)" : !["offense", "defense"].includes(x.penalized_unit) ? "no (special teams)" : x.situational ? "no (situational)" : x.drive_why === "" ? "yes" : "no (" + esc(x.drive_why || "no drive") + ")"}</td><td class="t note">${esc(x.dialect)}/${esc(x.yards_method)}</td></tr>`).join("") + `</tbody></table></div></details>`;
       const so = tr.sos_efficiency;
-      h += `<h4>Schedule (efficiency)</h4><div class="formula">SOS = mean opponent AdjEM = ${fx(so.SOS, 2, true)}; NCSOS ${fx(so.NCSOS, 2, true)}\n${so.opponents.map(o => `${esc(o.opp_name)} ${fx(o.opp_AdjEM, 1, true)}${o.conf_game ? " (conf)" : ""}${o.opp_status && o.opp_status !== "published" ? "*" : ""}`).join(" · ")}</div>`;
+      h += `<h4>Schedule (efficiency)</h4><div class="formula">SOS = mean opponent AdjEM = ${fx(so.SOS, 2, true)}; NCSOS ${fx(so.NCSOS, 2, true)}\n${so.opponents.map(o => `${esc(o.opp_name)} ${fx(o.opp_AdjEM, 1, true)}${o.conf_game ? " (conf)" : ""}${(o.opp_status || "").startsWith("tentative") ? " (T)" : (o.opp_status || "").startsWith("internal") ? "*" : ""}`).join(" · ")}
+(T) tentative FBS opponent; * FCS opponent (internal input)</div>`;
       const dr = tr.drives;
       h += `<h3>Every drive</h3><details><summary>Show ${dr.rows.length} drives with keep/exclude reasons</summary><div class="tablewrap"><table class="mini"><thead><tr><th class="t">Opponent</th><th>Side</th><th>Q</th><th>Clock</th><th>Start</th><th class="t">Result</th><th>Pts</th><th>Margin</th><th class="t">Used?</th><th class="t">Clean intervals (s)</th></tr></thead><tbody>` +
         dr.rows.map(x => { const sch = tr.schedule.find(g => g.game === x[0]); return `<tr><td class="t">${esc(sch ? sch.opp_name : x[0])}</td><td>${x[2]}</td><td>${x[3]}</td><td>${esc(x[4] || "")}</td><td>${x[5] == null ? "—" : x[5]}</td><td class="t">${esc(x[6] || "")}</td><td>${fx(x[7], 0)}</td><td>${fx(x[8], 0, true)}</td><td class="t ${x[9] ? "" : "note"}">${x[9] ? "kept" + (x[12] ? ` · lead protection, weight ${x[18]}` : "") : esc(x[10])}</td><td class="t note">${(x[17] || []).join(" ")}</td></tr>`; }).join("") +
