@@ -173,18 +173,22 @@ Conference games are zero-sum, so conference strength enters only through non-co
 Walk-forward results, using earlier weeks only. Baselines exist only for FBS-vs-FBS games, so all
 methods are compared on the same games:
 
-| MAE, points | 2025 wk 4–16 (617) | 2026 wk 3–5 (171) | 2024 wk 4–16 (611) |
-|---|---|---|---|
-| **AdjEM model** | **12.47** | **12.77** | **13.11** |
-| Average scoring margin + home field | 13.19 | 14.27 | 13.10 |
-| Raw points per drive + home field | 14.02 | 17.71 | 15.12 |
+| MAE, points | 2025 wk 4–16 (617) | 2026 wk 3–5 (171) | 2024 wk 4–16 (611) | 2023 wk 4–15 (597) | 2022 wk 4–15 (584) |
+|---|---|---|---|---|---|
+| **AdjEM model (Power)** | **12.47** | **12.77** | **13.11** | **12.80** | **13.06** |
+| Average scoring margin + home field | 13.19 | 14.27 | 13.10 | 13.34 | 12.84 |
+| Raw points per drive + home field | 14.02 | 17.71 | 15.12 | 14.06 | 15.05 |
 
 Over every predictable game, MAE is 12.43 with 72.3% of winners picked in 2025 (639 games), and 12.87
 with 80.0% in 2026 (205 games). **2024 is weaker:** 13.09 with 71.5% (631 games), and the model only
 ties average scoring margin there, though it still beats raw points per drive by 2 points. ESPN's 2024
 play-by-play leaves 7% of FBS games without usable drives and has no snap-time stamps (§J), so treat
 2024 ratings as less precise. A stricter parser that recovered some of those games did not change this
-(13.12 vs 13.14). Calibration (2025, 639 games):
+(13.12 vs 13.14). **2023** behaves like 2025 (12.80 vs 13.34; 73.0% of 614 games picked). **2022** is
+the one season where average scoring margin beats the model (12.84 vs 13.06; 69.1% picked): ESPN's
+2022 play-by-play leaves 11% of FBS games without usable drives (the scores-only baseline still sees
+them), and none has snap-time stamps. Opponent adjustment still beats raw points per drive in every
+season, by 1.3 to 4.9 points. Calibration (2025, 639 games):
 
 | Predicted (bin mean) | 0.55 | 0.65 | 0.75 | 0.85 | 0.96 |
 |---|---|---|---|---|---|
@@ -453,6 +457,8 @@ Removing them from 2025 moved its validation by at most 0.0006 MAE.
 | 2024 | 810 of 873 (93%) | ~0% | 53.8% | 41 of 134 |
 | 2025 | 871 of 888 (98%) | 37% | 74.7% | 4 of 136 |
 | 2026 (wk 1–5) | 390 of 390 | 88% | 90.3% | 0 of 107 |
+| 2023 | 830 of 868 (96%) | ~0% | 52.3% | 49 of 133 |
+| 2022 | 758 of 854 (89%) | ~0% | 55.5% | 21 of 131 |
 
 In 2024 the missing drives come from ESPN: some scoring plays appear in the scoring summary but in no
 drive, so the parser drops the game from efficiency rather than guess. Those games still count in

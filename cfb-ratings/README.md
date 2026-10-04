@@ -36,7 +36,7 @@ python audit_penalties.py                     # parsed penalties vs box scores -
 python -m unittest discover -s tests          # network, solver, parser and penalty tests
 ```
 
-**Seasons.** Parsed data is committed for 2024, 2025 and 2026, and `config.json` `"season"` picks the
+**Seasons.** Parsed data is committed for 2022 through 2026, and `config.json` `"season"` picks the
 default season. To add a year, run `fetch.py --season YYYY --weeks 1-16`, `parse.py --season YYYY`
 and `build.py --season YYYY`, then `report.py`; the page's season picker lists every season in `out/`.
 The ratings cover the **regular season**, conference championship games and Army–Navy included.
