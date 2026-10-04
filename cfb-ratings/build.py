@@ -15,6 +15,10 @@ import math
 import os
 from collections import defaultdict
 
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+from audit_penalties import audit
 from efficiency import trace, trace_tempo
 from ratings import (DISCIPLINE_KEYS, HERE, drive_weight, good_clock, is_situational_foul, load,
                      load_config, phi, predict, rate, venue)
@@ -260,6 +264,11 @@ def label_tree(resume, teams):
                 d["name"] = name_of(teams, d["team"])
 
 
+def eastern_date(iso):
+    """ESPN stamps kickoffs in UTC; a late kickoff is the previous day on the US calendar."""
+    return datetime.fromisoformat(iso.replace("Z", "+00:00")).astimezone(ZoneInfo("America/New_York")).date().isoformat()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--season", type=int, help="season to build (default: config.json)")
@@ -408,18 +417,24 @@ def main():
         p = predict(res, u["home"], u["away"], u["neutral"])
         if p is None:
             continue
-        preds.append({"game": u["id"], "date": u["date"][:10], "home": name_of(teams, u["home"]),
+        preds.append({"game": u["id"], "date": eastern_date(u["date"]), "home": name_of(teams, u["home"]),
                       "away": name_of(teams, u["away"]), "neutral": bool(u["neutral"]),
                       "home_margin": p["margin"], "home_win_prob": phi(p["margin"] / sigma),
                       "possessions": p["poss"], "em_diff_per_drive": p["em_diff_drive"],
                       "hfa_per_drive": p["hfa_drive"]})
     preds.sort(key=lambda x: x["date"])
 
+    cal = data.get("calendar", {})
     meta = {
         "season": cfg["season"], "through_week": last_week,
-        # No regular-season games left to play: the table is the season's final regular-season one.
-        "regular_season_complete": not upcoming,
-        "last_game_date": max(g["date"] for g in res["games"])[:10],
+        # Final only when every week on ESPN's regular-season calendar was downloaded and no game
+        # is left to play; otherwise the page says "through week N".
+        "regular_season_complete": bool(not upcoming and cal.get("regular_season_weeks")
+                                        and max(cal.get("weeks_fetched") or [0]) >= cal["regular_season_weeks"]),
+        "calendar": cal,
+        "last_game_date": eastern_date(max(g["date"] for g in res["games"])),
+        # Parsed play-by-play fouls vs ESPN box scores, this season (python audit_penalties.py).
+        "penalty_audit": audit(cfg["season"])[0],
         "excluded_postseason": data.get("excluded_postseason", []),
         "games_used": len(res["games"]),
         "games_with_drives": sum(1 for g in res["games"] if g["drives"]),

@@ -7,6 +7,7 @@ tables, and every team's full trace, load from out/site/<season>/ when needed. S
 folder to view it locally: python -m http.server -d out/site
 """
 import glob
+import hashlib
 import html
 import json
 import math
@@ -90,11 +91,22 @@ def season_dirs():
     return sorted(found, reverse=True)
 
 
+def dump_named(obj, folder, stem):
+    """Write obj as <stem>_<content hash>.json and return the file name. A rebuilt file gets a
+    new name, so a browser can never pair a new page with a cached old data file."""
+    text = json.dumps(obj, separators=(",", ":"), default=float)
+    name = f"{stem}_{hashlib.sha1(text.encode()).hexdigest()[:10]}.json"
+    with open(os.path.join(folder, name), "w") as f:
+        f.write(text)
+    return name
+
+
 def write_season(season, site):
     """Write one season's table and its traces as files beside the page.
 
     The table (every ranked number) is small; the traces (every game, drive, foul and +2 tree)
-    are large, so they go in chunks of about 1.5 MB that the page fetches when a team opens."""
+    are large, so they go in chunks of about 1.5 MB that the page fetches when a team opens.
+    Returns the table and its file name."""
     src = os.path.join(OUT, str(season))
     table = json.load(open(os.path.join(src, "ratings.json")))
     traces = {}
@@ -117,15 +129,10 @@ def write_season(season, site):
     dst = os.path.join(site, str(season))
     shutil.rmtree(dst, ignore_errors=True)
     os.makedirs(dst)
-    for k, c in enumerate(chunks):
-        with open(os.path.join(dst, f"traces_{k}.json"), "w") as f:
-            json.dump(c, f, separators=(",", ":"), default=float)
-    with open(os.path.join(dst, "internal.json"), "w") as f:
-        json.dump(internal, f, separators=(",", ":"), default=float)
+    table["trace_files"] = [dump_named(c, dst, f"traces_{k}") for k, c in enumerate(chunks)]
     table["trace_chunk"] = where
-    with open(os.path.join(dst, "table.json"), "w") as f:
-        json.dump(table, f, separators=(",", ":"), default=float)
-    return table
+    table["internal_file"] = dump_named(internal, dst, "internal")
+    return table, dump_named(table, dst, "table")
 
 
 def main():
@@ -139,9 +146,9 @@ def main():
         default = seasons[0]
     tables, index = {}, []
     for season in seasons:
-        t = write_season(season, site)
+        t, table_file = write_season(season, site)
         m = t["meta"]
-        index.append({"season": season, "complete": m.get("regular_season_complete", False),
+        index.append({"season": season, "table": table_file, "complete": m.get("regular_season_complete", False),
                       "through_week": m["through_week"], "rated": m["eligible"], "fbs": m["fbs_teams"]})
         if season == default:
             tables[str(season)] = t  # the default season is inline so the page renders without a fetch

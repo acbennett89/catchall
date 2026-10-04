@@ -117,7 +117,7 @@ details[open] > summary { margin-bottom: 6px; }
 .doc h3 { font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: .03em; font-size: 22px; margin: 24px 0 6px; text-wrap: balance; }
 .doc h4 { font-family: var(--display); font-weight: 600; font-size: 18px; margin: 18px 0 4px; }
 .doc p, .doc li { max-width: 72ch; }
-.doc code { font-family: var(--data); font-size: .88em; background: var(--accent-soft); padding: 0 3px; border-radius: 2px; }
+.doc code { font-family: var(--data); font-size: .88em; background: var(--accent-soft); padding: 0 3px; border-radius: 2px; overflow-wrap: anywhere; }
 .doc pre { background: var(--surface); border: 1px solid var(--line); padding: 10px 12px; overflow-x: auto; }
 .doc pre code { background: none; padding: 0; font-size: 12.5px; }
 .doc table.doc th, .doc table.doc td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: top; font-size: 14px; }
@@ -164,7 +164,7 @@ details[open] > summary { margin-bottom: 6px; }
       <div class="tablewrap"><table class="grid" id="tbl-resume"></table></div>
     </section>
     <section id="tab-discipline" hidden>
-      <div class="controls"><span class="hint">Descriptive only. None of these enter the rating: 22 penalty variants were tested and none improved predictions. Per-game counts come from the box score. Rates are per 100 snaps on the same drives the ratings use, with a Q4 leader's delay of game left out. The conference average sits beside each rate, because officiating differs by conference. Neutral pace is seconds per snap in Q1–Q3 with the score within 14. Early in a season these values are noisy.</span></div>
+      <div class="controls"><span class="hint" id="disc-hint">Descriptive only. None of these enter the rating: 22 penalty variants were tested and none improved predictions. Per-game counts come from the box score. Rates are per 100 snaps on the same drives the ratings use, with a Q4 leader's delay of game left out. The conference average sits beside each rate, because officiating differs by conference. Neutral pace is seconds per snap in Q1–Q3 with the score within 14. Early in a season these values are noisy.</span></div>
       <div class="tablewrap"><table class="grid" id="tbl-disc"></table></div>
     </section>
     <section id="tab-picks" hidden>
@@ -211,6 +211,7 @@ details[open] > summary { margin-bottom: 6px; }
     tabs.forEach(x => x.setAttribute("aria-selected", String(x.dataset.tab === name)));
     document.querySelectorAll("main > section").forEach(s => { s.hidden = s.id !== "tab-" + name; });
     try { localStorage.setItem("cfb-tab", name); } catch (e) {}
+    if (current != null && drawer.hidden) setHash();
   }
   tabs.forEach(b => b.addEventListener("click", () => showTab(b.dataset.tab)));
 
@@ -240,7 +241,7 @@ details[open] > summary { margin-bottom: 6px; }
       }));
       if (onRow) el.querySelectorAll("tbody tr").forEach(tr => {
         tr.addEventListener("click", () => onRow(tr.dataset.id));
-        tr.addEventListener("keydown", e => { if (e.key === "Enter") onRow(tr.dataset.id); });
+        tr.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); onRow(tr.dataset.id); } });
       });
     }
     render();
@@ -337,6 +338,9 @@ details[open] > summary { margin-bottom: 6px; }
 
     buildTable(document.getElementById("tbl-resume"), rated, resumeCols, "rk_NetPerGame", 1, openTeam);
     buildTable(document.getElementById("tbl-disc"), rated, discCols, "PenPG", 1, openTeam);
+    const pa = M.penalty_audit, dh = document.getElementById("disc-hint");
+    dh.dataset.base = dh.dataset.base || dh.textContent;
+    dh.textContent = dh.dataset.base + (pa ? ` This season, fouls parsed from the play-by-play match the box-score count exactly in ${Math.round(pa.count_exact * 100)}% of team-games (${Math.round(pa.count_within_1 * 100)}% within one), and ${fx(-pa.total_count_vs_box * 100, 1)}% of box-score fouls are missing from the play-by-play, so the per-100-snap rates run that much low. Games whose play-by-play lists no penalties at all are left out of the rates.` : "");
 
     const P = D.predictions || [];
     document.getElementById("picks-hint").textContent = P.length
@@ -354,29 +358,37 @@ details[open] > summary { margin-bottom: 6px; }
   /* ---------- season picker ---------- */
   const yr = document.getElementById("yr");
   SEASONS.forEach(s => { const o = document.createElement("option"); o.value = s.season; o.textContent = s.season; yr.appendChild(o); });
+  // Links always name the season (#s2026-t87), so a shared link keeps meaning the same year
+  // after the default season moves on. A tab other than Ratings rides along (#s2025-resume).
   function setHash(teamId) {
-    const parts = [];
-    if (current !== BOOT.default) parts.push("s" + current);
+    const parts = ["s" + current];
     if (teamId) parts.push("t" + teamId);
-    history.replaceState(null, "", parts.length ? "#" + parts.join("-") : location.pathname + location.search);
+    else if (activeTab !== "ratings") parts.push(activeTab);
+    history.replaceState(null, "", "#" + parts.join("-"));
   }
+  const status = document.getElementById("season-status");
+  // Resolves true once `season` is showing, false if it could not be loaded.
   function setSeason(season) {
-    if (season === current) return Promise.resolve();
-    const status = document.getElementById("season-status");
+    if (season === current) return Promise.resolve(true);
+    const hadFocus = document.activeElement === yr;
     status.textContent = "loading…";
     yr.disabled = true;
     const ready = TABLES[season] ? Promise.resolve(TABLES[season])
-      : loadFile(`${season}/table.json`).then(t => (TABLES[season] = t));
+      : loadFile(`${season}/${SEASONS.find(x => x.season === season).table}`).then(t => (TABLES[season] = t));
     return ready.then(t => {
       yr.disabled = false;
+      if (hadFocus) yr.focus();
       closeTeam(true);
       D = t; M = D.meta; N = D.names; current = season; yr.value = String(season);
       byId = {}; D.teams.forEach(x => { byId[x.id] = x; });
       renderSeason();
       setHash();
+      return true;
     }).catch(() => {
       yr.disabled = false; yr.value = String(current);
-      status.textContent = `could not load ${season}; reload and try again`;
+      if (hadFocus) yr.focus();
+      status.textContent = (M ? seasonStatus(M) + " · " : "") + `could not load ${season}; reload and try again`;
+      return false;
     });
   }
   yr.addEventListener("change", () => setSeason(+yr.value));
@@ -384,8 +396,10 @@ details[open] > summary { margin-bottom: 6px; }
   /* ---------- drawer ---------- */
   const drawer = document.getElementById("drawer"), scrim = document.getElementById("scrim");
   let lastFocus = null;
+  let wantDrawer = null;  // the drawer the user asked for last; late loads for anything else are dropped
   function closeTeam(quiet) {
     const wasOpen = !drawer.hidden;
+    wantDrawer = null;
     drawer.hidden = true; scrim.hidden = true;
     if (quiet === true) return;
     setHash();
@@ -452,31 +466,32 @@ details[open] > summary { margin-bottom: 6px; }
     drawer.querySelectorAll("[data-internal]").forEach(b => b.addEventListener("click", ev => { ev.stopPropagation(); openInternal(b.dataset.internal); }));
   }
 
-  function showLoading(msg) {
-    drawer.innerHTML = `<div class="dhead"><div><h2>Loading…</h2><div class="sub">${esc(msg)}</div></div><button class="close" id="close">Close</button></div>`;
+  function showLoading(msg, title = "Loading…") {
+    drawer.innerHTML = `<div class="dhead"><div><h2>${esc(title)}</h2><div class="sub">${esc(msg)}</div></div><button class="close" id="close">Close</button></div>`;
     drawer.hidden = false; scrim.hidden = false;
     document.getElementById("close").addEventListener("click", closeTeam);
   }
   // Full traces ship as files beside the page and load the first time a team is opened.
   function openInternal(id) {
+    const season = current, tok = wantDrawer = `${season}:i${id}`;
     D.internal = D.internal || {};
     if (D.internal[id]) return openInternalNow(id);
-    const season = current;
     showLoading("Fetching the internal derivation");
-    loadFile(`${season}/internal.json`).then(o => { TABLES[season].internal = o; if (season === current && !drawer.hidden) openInternalNow(id); })
-      .catch(() => showLoading("Could not load this season's internal derivations. Reload the page and try again."));
+    loadFile(`${season}/${D.internal_file}`).then(o => { TABLES[season].internal = o; if (wantDrawer === tok) openInternalNow(id); })
+      .catch(() => { if (wantDrawer === tok) showLoading("Could not load this season's internal derivations. Reload the page and try again.", "Not loaded"); });
   }
   function openTeam(id) {
+    const season = current, tok = wantDrawer = `${season}:t${id}`;
     D.traces = D.traces || {};
     if (D.traces[id]) return openTeamNow(id);
-    const k = (D.trace_chunk || {})[id], season = current;
+    const k = (D.trace_chunk || {})[id];
     if (k == null) return;
-    lastFocus = document.activeElement;
+    if (drawer.hidden) lastFocus = document.activeElement;
     showLoading("Fetching every game, drive and win value for this team");
-    loadFile(`${season}/traces_${k}.json`).then(o => {
+    loadFile(`${season}/${D.trace_files[k]}`).then(o => {
       Object.assign(TABLES[season].traces = TABLES[season].traces || {}, o);
-      if (season === current && !drawer.hidden) openTeamNow(id);
-    }).catch(() => showLoading(`Could not load this team's trace. Reload the page and try again.`));
+      if (wantDrawer === tok) openTeamNow(id);
+    }).catch(() => { if (wantDrawer === tok) showLoading("Could not load this team's trace. Reload the page and try again.", "Not loaded"); });
   }
 
   function openInternalNow(id) {
@@ -544,7 +559,7 @@ details[open] > summary { margin-bottom: 6px; }
       h += `<div class="formula">Neutral pace ${st.neutral_pace == null ? "— (not enough clean clock data)" : fx(st.neutral_pace, 1) + " s/snap"} over ${st.pace_intervals} intervals; run rate ${st.neutral_run_rate == null ? "—" : (st.neutral_run_rate * 100).toFixed(0) + "%"}\nLead-protection drives: ${st.lead_protection_drives.length} of ${st.q4_lead_drives} Q4 leading drives in ${st.usable_clock_games} usable-clock games${st.lead_protection_drives.map(d => `\n  vs ${esc(d.opp_name)} (${esc(d.clock)}): ${esc(d.reason)}, ${fx(d.points, 0)} pts; intervals ${(d.intervals || []).join(", ")} s`).join("")}</div>`;
       const dc = tr.discipline, cn = dc.counts || {};
       h += `<h3>Discipline</h3><p class="note">${esc(dc.rules.rating)}. ${esc(dc.rules.rates)}.</p>`;
-      h += `<div class="formula">Box score: ${fx(dc.PenPG, 2)} penalties, ${fx(dc.PenYdsPG, 1)} yards per game (conference ${fx(dc.PenPG_conf, 2)}); net penalty yards ${fx(dc.NetPenYdsPG, 1, true)} per game\nOffense: ${cn.off_fouls} fouls / ${cn.off_snaps} snaps × 100 = ${fx(dc.OffPen100, 2)} (conference ${fx(dc.OffPen100_conf, 2)}); pre-snap ${cn.off_presnap} = ${fx(dc.OffPreSnap100, 2)}\nDefense: ${cn.def_fouls} fouls / ${cn.def_snaps} snaps × 100 = ${fx(dc.DefPen100, 2)} (conference ${fx(dc.DefPen100_conf, 2)}); first downs given ${cn.def_first_downs} → ${fx(dc.PenFDAllowedPG, 2)} per game</div>`;
+      h += `<div class="formula">Box score: ${fx(dc.PenPG, 2)} penalties, ${fx(dc.PenYdsPG, 1)} yards per game (conference ${fx(dc.PenPG_conf, 2)}); net penalty yards ${fx(dc.NetPenYdsPG, 1, true)} per game\nOffense: ${cn.off_fouls} fouls / ${cn.off_snaps} snaps × 100 = ${fx(dc.OffPen100, 2)} (conference ${fx(dc.OffPen100_conf, 2)}); pre-snap ${cn.off_presnap} = ${fx(dc.OffPreSnap100, 2)}\nDefense: ${cn.def_fouls} fouls / ${cn.def_snaps} snaps × 100 = ${fx(dc.DefPen100, 2)} (conference ${fx(dc.DefPen100_conf, 2)}); first downs given ${cn.def_first_downs} → ${fx(dc.PenFDAllowedPG, 2)} per game${(cn.pbp_gap_games || []).length ? `\nLeft out of the rates: ${cn.pbp_gap_games.length} game(s) whose play-by-play lists no penalties although the box score shows fouls (${cn.pbp_gap_games.map(esc).join(", ")})` : ""}</div>`;
       h += `<details><summary>Show all ${dc.fouls.length} fouls charged to ${esc(r.name)}</summary><div class="tablewrap"><table class="mini"><thead><tr><th class="t">Opponent</th><th>Q</th><th>Clock</th><th class="t">Foul</th><th class="t">Unit</th><th>Yds</th><th class="t">Status</th><th>1st dn</th><th class="t">Counted?</th><th class="t">Source</th></tr></thead><tbody>` +
         dc.fouls.map(x => `<tr><td class="t">${esc(x.opp_name)}</td><td>${x.period}</td><td>${esc(x.clock || "")}</td><td class="t">${esc(x.category)}${x.presnap ? " <span class=\"rk\">pre-snap</span>" : ""}</td><td class="t">${esc(x.penalized_unit)}</td><td>${x.yards}</td><td class="t">${esc(x.status)}</td><td>${x.first_down_awarded ? "yes" : ""}</td><td class="t note">${x.status !== "accepted" ? "no (not accepted)" : !["offense", "defense"].includes(x.penalized_unit) ? "no (special teams)" : x.situational ? "no (situational)" : x.drive_why === "" ? "yes" : "no (" + esc(x.drive_why || "no drive") + ")"}</td><td class="t note">${esc(x.dialect)}/${esc(x.yards_method)}</td></tr>`).join("") + `</tbody></table></div></details>`;
       const so = tr.sos_efficiency;
@@ -563,17 +578,33 @@ details[open] > summary { margin-bottom: 6px; }
     setHash(id);
   }
 
-  // Deep links: #resume (a tab), #s2025 (a season), #t333 or #s2025-t333 (a team's derivation).
+  // Deep links, dash-joined in any order: s2025 (season), t333 (a team's derivation), a tab name.
+  // A link without a season means the default season (links made before seasons existed).
+  const TAB_NAMES = tabs.map(b => b.dataset.tab);
+  function route(hash) {
+    const want = {};
+    hash.replace(/^#/, "").split("-").forEach(tok => {
+      if (/^s\d{4}$/.test(tok)) want.season = +tok.slice(1);
+      else if (/^t\d+$/.test(tok)) want.team = tok.slice(1);
+      else if (TAB_NAMES.includes(tok)) want.tab = tok;
+    });
+    let season = want.season == null ? BOOT.default : want.season, note = "";
+    if (!SEASONS.some(x => x.season === season)) {
+      note = `no ratings for ${season}`;
+      season = current == null ? BOOT.default : current;
+      want.team = null;
+    }
+    const first = current == null ? setSeason(BOOT.default) : Promise.resolve(true);
+    return first.then(() => setSeason(season)).then(ok => {
+      if (want.tab) showTab(want.tab);
+      if (note) status.textContent = seasonStatus(M) + " · " + note;
+      if (ok && want.team && byId[want.team]) openTeam(want.team);
+    });
+  }
   let start = "ratings";
   try { start = localStorage.getItem("cfb-tab") || "ratings"; } catch (e) {}
-  const hash = location.hash.slice(1);
-  if (["ratings", "resume", "discipline", "picks", "metrics", "review", "trace"].includes(hash)) start = hash;
-  const link = /^(?:s(\d{4}))?-?(?:t(\d+))?$/.exec(hash) || [];
-  const wanted = SEASONS.some(x => x.season === +link[1]) ? +link[1] : BOOT.default;
   showTab(start);
-  setSeason(BOOT.default).then(() => wanted === BOOT.default ? null : setSeason(wanted)).then(() => {
-    showTab(start);
-    if (link[2] && byId[link[2]]) openTeam(link[2]);
-  });
+  route(location.hash);
+  window.addEventListener("hashchange", () => route(location.hash));
 })();
 </script>

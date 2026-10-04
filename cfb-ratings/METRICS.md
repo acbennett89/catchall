@@ -181,13 +181,13 @@ table. It reads both ESPN text dialects and fouls embedded in other plays. The f
 clock, offense, penalized team and unit, foul category, pre-snap flag, yards, status
 (accepted/declined/offsetting), first down awarded, and the drive's keep status. Provenance fields
 record how each value was read (dialect, team method, yards method, status inferred).
-It matches the box-score count exactly for 90.3% of 2026 team-games (98.9% within one); 2025 is 74.9% (95.0%). `python audit_penalties.py` reproduces these and writes every team-game to `out/penalty_audit.json`.
+It matches the box-score count exactly for 90.3% of 2026 team-games (98.9% within one); 2025 is 74.7% (94.9%), and 2024 is 53.8% (82.8%), with 10.9% of 2024's box-score fouls missing from ESPN's play-by-play. Each season's figures are shown on that season's Discipline tab, since the per-100-snap rates run low by the share of missing fouls. `python audit_penalties.py` reproduces these and writes every team-game to `out/penalty_audit.json`.
 
 | # | Metric | Definition |
 |---|--------|------------|
 | 8.1 | **Pen/G, Pen Yds/G** | Accepted penalties and yards per game, from the box score. A box row is rejected if it shows more than 30 fouls or more than 25 yards per foul. |
 | 8.2 | **Net Pen Yds/G** | Opponents' penalty yards minus the team's own, per game. |
-| 8.3 | **Off Pen /100** | Accepted offensive fouls per 100 offensive snaps (scrimmage plays plus penalty-only snaps) on kept drives. |
+| 8.3 | **Off Pen /100** | Accepted offensive fouls per 100 offensive snaps (scrimmage plays plus penalty-only snaps) on kept drives. A game whose play-by-play lists no penalties at all while the box score shows fouls is left out of every per-snap rate, snaps included (4 games in 2024, 1 in 2025); the trace names it. |
 | 8.4 | **Off Pre-snap /100** | The pre-snap subset: false start, delay of game, illegal formation, shift, motion, procedure, substitution and snap, encroachment, and offside. |
 | 8.5 | **Def Pen /100** | Accepted defensive fouls per 100 defensive snaps, on kept drives. |
 | 8.6 | **Pen 1st downs allowed / G** | Accepted defensive fouls that gave a first down, on kept drives, per game with play-by-play. |

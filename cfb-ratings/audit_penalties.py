@@ -1,10 +1,11 @@
 """Check the parsed penalty table against ESPN box-score totals, team-game by team-game.
 
-    python audit_penalties.py            -> out/penalty_audit.json (+ summary printed)
+    python audit_penalties.py            -> out/penalty_audit.json (+ summary printed), every parsed season
 
 A box row is skipped when it fails the sanity check in parse.box_penalties (one 2025
 row reads '743-37'). Only accepted fouls count, as in the box score.
 """
+import glob
 import json
 import os
 
@@ -40,11 +41,10 @@ def audit(season):
 
 def main():
     out = {}
-    for season in (2026, 2025):
-        try:
-            summary, rows = audit(season)
-        except FileNotFoundError:
-            continue
+    seasons = sorted((int(os.path.basename(os.path.dirname(p)))
+                      for p in glob.glob(os.path.join(HERE, "data", "*", "games.json.gz"))), reverse=True)
+    for season in seasons:
+        summary, rows = audit(season)
         out[season] = {"summary": summary, "team_games": rows}
         print(season, {k: (round(v, 4) if isinstance(v, float) else v) for k, v in summary.items()})
     with open(os.path.join(HERE, "out", "penalty_audit.json"), "w") as f:

@@ -53,6 +53,23 @@ PLAYOFF_NOTE = re.compile(r"championship\s*-\s*(first round|second round|third r
                           r"semifinals?|finals?)|college football playoff", re.I)
 
 
+def season_calendar(season):
+    """ESPN's regular-season calendar (in every scoreboard payload) and the weeks downloaded.
+
+    build.py calls a season final only when every regular-season week is in the cache and no
+    game is left to play, so a partial download can't pass for a finished season."""
+    files = sorted(glob.glob(os.path.join(HERE, "cache", str(season), "scoreboards", "*.gz")))
+    out = {"weeks_fetched": sorted({int(re.search(r"w(\d+)_", f).group(1)) for f in files})}
+    for f in files:
+        for lg in read_gz(f).get("leagues", []):
+            for c in lg.get("calendar", []):
+                if isinstance(c, dict) and str(c.get("value")) == "2" and c.get("entries"):
+                    last = c["entries"][-1]
+                    out.update(regular_season_weeks=int(last["value"]), regular_season_end=last.get("endDate"))
+                    return out
+    return out
+
+
 def postseason_reason(e):
     """Why ESPN's event is postseason, or "" for a regular-season game."""
     if (e.get("season") or {}).get("type") == 3:
@@ -490,6 +507,7 @@ def build(season):
     os.makedirs(out, exist_ok=True)
     with gzip.open(os.path.join(out, "games.json.gz"), "wt", encoding="utf-8") as f:
         json.dump({"season": season, "teams": members, "games": games, "upcoming": upcoming,
+                   "calendar": season_calendar(season),
                    "penalty_fields": list(TABLE_FIELDS) + ["drive_why"]},
                   f, separators=(",", ":"))
     return games

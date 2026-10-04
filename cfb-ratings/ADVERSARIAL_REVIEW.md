@@ -288,10 +288,14 @@ final reviewer caught it.)
 | Season | Count exact (team-games) | Within 1 | Total fouls vs box |
 |---|---|---|---|
 | 2026 | 90.3% | 98.9% | −1.05% |
-| 2025 | 74.9% | 95.0% | −3.4% |
+| 2025 | 74.7% | 94.9% | −3.45% |
+| 2024 | 53.8% | 82.8% | −10.9% |
 
-All D-I team-games with play-by-play. `python audit_penalties.py` reproduces both rows and writes
-every team-game to `out/penalty_audit.json`.
+All D-I team-games with play-by-play, regular season. `python audit_penalties.py` reproduces every
+row and writes each team-game to `out/penalty_audit.json`. 2024 was added with the season picker. Its
+shortfall comes from ESPN, not the parser: in a sample of 400 games the box scores show 5,149 fouls but
+only 4,802 plays mention a penalty, and four games list none at all. Those four are left out of the
+per-snap rates (METRICS 8.3), and each season's audit is printed on its Discipline tab.
 
 The 2025 gap is concentrated in weeks 1–8, when ESPN mixed two text dialects and dropped some fouls from the
 text. The verifier caught one corrupt box-score row ("743-37") that had inflated the reported 2025

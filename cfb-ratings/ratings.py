@@ -130,10 +130,20 @@ def is_situational_foul(row, f, drives_by_i):
             and row[f["period"]] == 4 and d is not None and d["margin"] > 0)
 
 
+def penalty_gap(g):
+    """True when ESPN's play-by-play lists no penalties although the box score shows fouls.
+
+    Such a game would add snaps but no fouls to the per-100-snap rates (four 2024 games have
+    16 and 12 box-score fouls and an empty penalty list), so the rates leave it out."""
+    box = sum((b.get("pen") or [0])[0] for b in g["box"].values())
+    return box > 0 and not g.get("penalties")
+
+
 def discipline(t, mine, fields, cfg):
     f = {k: i for i, k in enumerate(fields)}
     pen_n = pen_y = box_games = net_y = net_games = 0
     off_snaps = def_snaps = off_f = off_pre = def_f = fd = pbp_games = 0
+    gap_games = []
     for g in mine:
         opp = g["away"] if g["home"] == t else g["home"]
         own_box, opp_box = (g["box"].get(t) or {}).get("pen"), (g["box"].get(opp) or {}).get("pen")
@@ -142,6 +152,9 @@ def discipline(t, mine, fields, cfg):
             if opp_box:
                 net_y, net_games = net_y + opp_box[1] - own_box[1], net_games + 1
         if not g["drives"] or "penalties" not in g:
+            continue
+        if penalty_gap(g):
+            gap_games.append(g["id"])
             continue
         pbp_games += 1
         by_i = {d["i"]: d for d in g["drives"]}
@@ -170,7 +183,8 @@ def discipline(t, mine, fields, cfg):
             "DefPen100": per100(def_f, def_snaps), "PenFDAllowedPG": _rate(fd, pbp_games),
             "pen_counts": {"box_games": box_games, "off_fouls": off_f, "off_presnap": off_pre,
                            "def_fouls": def_f, "def_first_downs": fd, "off_snaps": off_snaps,
-                           "def_snaps": def_snaps, "pbp_games": pbp_games}}
+                           "def_snaps": def_snaps, "pbp_games": pbp_games,
+                           "pbp_gap_games": gap_games}}
 
 
 def drive_weight(d, cfg):
