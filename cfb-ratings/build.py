@@ -1,7 +1,7 @@
 """Build the published ratings and a full derivation trace for every FBS team.
 
     python build.py [--season 2025]      (default: config.json "season")
-      out/<season>/ratings.csv               one row per FBS team (eligible teams ranked)
+      out/<season>/ratings.csv               one row per FBS team (5+ games ranked; fewer = tentative, unranked)
       out/<season>/ratings.json              same rows + model constants, conferences, predictions
       out/<season>/traces/<id>.json          every number for one team, back to drives and plays
       out/<season>/traces/internal/<id>.json derivations of internal inputs (FCS, unrated FBS)
@@ -27,7 +27,7 @@ from validate import evaluate
 
 COLUMNS = [
     ("rk_AdjEM", "Rk"), ("name", "Team"), ("conference", "Conf"), ("W", "W"), ("L", "L"),
-    ("games", "G"), ("eligible", "Eligible"),
+    ("games", "G"), ("eligible", "Eligible"), ("status", "Status"),
     ("AdjEM", "AdjEM"), ("AdjEM_se", "AdjEM_SE"), ("AdjO", "AdjO"), ("rk_AdjO", "AdjO_Rk"),
     ("AdjD", "AdjD"), ("rk_AdjD", "AdjD_Rk"), ("AdjT", "AdjT"), ("AdjSR_O", "AdjSR_O"),
     ("AdjSR_D", "AdjSR_D"), ("PPD_O", "PPD_O"), ("PPD_D", "PPD_D"),
@@ -62,7 +62,7 @@ def opp_status(opp, teams, eligible):
     if teams.get(opp, {}).get("division") != "FBS":
         return "internal: FCS team (FCS teams are rated only to adjust FBS numbers)"
     if opp not in eligible:
-        return "internal: FBS team below the game minimum (not a published rating)"
+        return "tentative: FBS team below the game minimum (provisional rating, no official rank)"
     return "published"
 
 
@@ -298,18 +298,21 @@ def main():
     sigma = holdout["sigma"]
 
     os.makedirs(os.path.join(out_dir, "traces"), exist_ok=True)
-    # Rated teams by rank, then unrated teams alphabetically (never by an unpublished rating).
+    # Teams with 5+ games are rated and ranked. Teams below the minimum get a TENTATIVE rating:
+    # the same numbers, published and traced, but marked provisional and never ranked.
+    for r in res["teams"].values():
+        r["tentative"] = not r["eligible"]
+        r["status"] = "rated" if r["eligible"] else "tentative"
     rows = sorted(res["teams"].values(),
-                  key=lambda r: (not r["eligible"], r.get("rk_AdjEM") or 999, r["name"]))
+                  key=lambda r: (not r["eligible"], r.get("rk_AdjEM") or 999,
+                                 -(r.get("AdjEM") if r.get("AdjEM") is not None else -999), r["name"]))
     with open(os.path.join(out_dir, "ratings.csv"), "w", newline="") as f:
         w = csv.writer(f)
         w.writerow([c for _, c in COLUMNS])
-        identity = {"name", "conference", "W", "L", "games", "eligible"}
         for r in rows:
             out = []
             for k, _ in COLUMNS:
-                # The 5-game rule: teams below it get no published numbers.
-                v = r.get(k) if (r["eligible"] or k in identity) else None
+                v = r.get(k)
                 if k in ("BestWinOpp", "WorstLossOpp") and v:
                     v = name_of(teams, v)
                 out.append(round(v, 4) if isinstance(v, float) else v)
@@ -326,15 +329,10 @@ def main():
         if not all(checks):
             bad.append(r["name"])
         if not r["eligible"]:
-            # The game minimum: no published rating, resume or ranking for this team.
-            for g in tr["schedule"]:
-                for k in ("garbage_pts_us", "garbage_pts_them", "adj_us", "adj_them"):
-                    g.pop(k, None)
-            tr = {"team": tr["team"], "schedule": tr["schedule"], "eligibility": tr["eligibility"],
-                  "summary": {k: r[k] for k in ("id", "name", "conference", "W", "L", "games", "eligible")},
-                  "note": f"{r['name']} has played {r['games']} of the {cfg['min_games']} games "
-                          "required for a rating. Its internal estimate is used only to adjust its "
-                          "opponents' numbers and is not published."}
+            tr["tentative"] = True
+            tr["note"] = (f"Tentative: {r['name']} has played {r['games']} of the {cfg['min_games']} games "
+                          "a full rating needs. These numbers use the same model and are fully traced, "
+                          "but rest on few games, so they are provisional and carry no official rank.")
         with open(os.path.join(out_dir, "traces", f"{r['id']}.json"), "w") as f:
             json.dump(tr, f, separators=(",", ":"), default=float)
 
@@ -392,7 +390,9 @@ def main():
                                                "includes teams below the game minimum (internal)"},
             "teams": [{"id": t, "name": name_of(teams, t), "division": ppd_["division"][t],
                        "AdjO": ppd_["O"][t], "AdjD": ppd_["D"][t],
-                       "status": "published" if t in eligible else "internal"} for t in sorted(ppd_["O"])],
+                       "status": "published" if t in eligible else
+                                 "tentative" if teams[t]["division"] == "FBS" else "internal"}
+                      for t in sorted(ppd_["O"])],
             "phantom_game": {"weight": cfg["prior_drives"], "AdjO_by_division": ppd_["prior_O"],
                              "AdjD_by_division": ppd_["prior_D"],
                              "rule": "mean AdjO / AdjD of the division's teams (the teams list above)"},
@@ -423,13 +423,14 @@ def main():
         if u["week"] != nxt:
             continue
         fbs_sides = [x for x in (u["home"], u["away"]) if teams[x]["division"] == "FBS"]
-        if not fbs_sides or any(x not in eligible for x in fbs_sides):
-            continue  # a prediction would expose an unpublished rating
+        if not fbs_sides:
+            continue
         p = predict(res, u["home"], u["away"], u["neutral"])
         if p is None:
             continue
         preds.append({"game": u["id"], "date": eastern_date(u["date"]), "home": name_of(teams, u["home"]),
                       "away": name_of(teams, u["away"]), "neutral": bool(u["neutral"]),
+                      "tentative": any(x not in eligible for x in fbs_sides),
                       "home_margin": p["margin"], "home_win_prob": phi(p["margin"] / sigma),
                       "possessions": p["poss"], "em_diff_per_drive": p["em_diff_drive"],
                       "hfa_per_drive": p["hfa_drive"]})
@@ -456,6 +457,7 @@ def main():
         "net_refs": res["net"].references(), "net_weights": cfg["net_weights"],
         "min_games": cfg["min_games"],
         "eligible": sum(r["eligible"] for r in res["teams"].values()),
+        "tentative": sum(not r["eligible"] for r in res["teams"].values()),
         "fbs_teams": len(res["teams"]),
         "solver": {"ppd_iterations": res["ppd"]["iterations"], "ppd_converged": res["ppd"]["converged"],
                    "sr_iterations": res["sr"]["iterations"], "tempo_iterations": res["tempo"]["iterations"]},
@@ -468,9 +470,7 @@ def main():
                            "warning": g["pbp_note"]}
                           for g in res["games"] if g["pbp_note"] and g["drives"]],
     }
-    published = [r if r["eligible"] else
-                 {k: r[k] for k in ("id", "name", "conference", "W", "L", "games", "eligible")}
-                 for r in rows]
+    published = rows
     with open(os.path.join(out_dir, "ratings.json"), "w") as f:
         json.dump({"meta": meta, "teams": published, "conferences": conferences,
                    "predictions": preds, "names": {k: v.get("name", k) for k, v in teams.items()}},

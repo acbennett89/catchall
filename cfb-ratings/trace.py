@@ -308,13 +308,13 @@ def main():
             tempo(tr)
         return
     s = tr["summary"]
-    if not s.get("eligible"):
-        print(f"{s['name']} ({s['conference']})  {s['W']}-{s['L']}  NOT RATED")
+    if tr.get("tentative"):
+        print(f"{s['name']} ({s['conference']})  {s['W']}-{s['L']}  TENTATIVE (no official rank)  "
+              f"Power (AdjEM) {f(s.get('AdjEM'), 2)}")
         print(tr["note"])
-        schedule(tr)
-        return
-    print(f"{s['name']} ({s['conference']})  {s['W']}-{s['L']}  rank "
-          f"{s.get('rk_AdjEM', 'unranked')}  AdjEM {f(s.get('AdjEM'), 2)}")
+    else:
+        print(f"{s['name']} ({s['conference']})  {s['W']}-{s['L']}  rank "
+              f"{s.get('rk_AdjEM', 'unranked')}  Power (AdjEM) {f(s.get('AdjEM'), 2)}")
     if a.drives:
         drives(tr)
         return

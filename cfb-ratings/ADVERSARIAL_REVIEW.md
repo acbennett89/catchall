@@ -105,6 +105,10 @@ their trace files, on the web page and in 24 predictions. Now:
 - inside an eligible team's trace, an ineligible opponent's rating is an unavoidable input, so it is
   marked "internal input, not a published rating".
 
+**Change at your request (after round 5).** Teams under 5 games now get a **tentative** rating: the
+same numbers and full trace, marked T, never ranked, with tentative predictions marked too. The
+5-game rule still decides who is ranked. Nothing in the model changed, so accuracy is unaffected.
+
 ---
 
 ## B. The +2 network

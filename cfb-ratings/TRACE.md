@@ -60,9 +60,9 @@ phantom game (FBS avg)     12                                        2.344
   Dame is credited +0.652.
 - **Venue** is −h × venue, with h = 0.1544: a home game gives it back, a road game adds it.
 - **Adjusted** is raw plus both adjustments.
-- **The asterisk:** North Carolina has played only 4 games, so its rating is not published. It
-  appears here as an internal input. `python trace.py "North Carolina" --internal` shows how
-  its 2.238 was derived, so this line can still be checked to the end.
+- **The asterisk:** North Carolina has played only 4 games, so its rating is tentative (no official
+  rank). Its own trace (`python trace.py "North Carolina"`, or its row on the page, marked T) shows
+  how its 2.238 was derived, so this line can still be checked to the end.
 - **AdjO** = (9×4.430 + 6×5.042 + 8.5×3.301 + 5×5.349 + 9×4.371 + 12×2.344) / (37.5 + 12) = **3.8867**. The trace
   recomputes this sum and checks it against the stored rating; `build.py` fails if any team's doesn't match.
 

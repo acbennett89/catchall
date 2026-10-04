@@ -31,7 +31,7 @@ python report.py                              # -> out/site/ (one page, a season
 python -m http.server -d out/site             # view it at http://localhost:8000
 python trace.py "Notre Dame"                  # print any team's full derivation
 python trace.py Indiana --season 2025         # ...for another season
-python trace.py "North Carolina" --internal   # derivation of an unrated opponent's internal input
+python trace.py "Idaho State" --internal      # derivation of an FCS opponent's internal input
 python audit_penalties.py                     # parsed penalties vs box scores -> out/penalty_audit.json
 python -m unittest discover -s tests          # network, solver, parser and penalty tests
 ```
