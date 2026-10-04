@@ -228,10 +228,13 @@ five years at a Caesars-like line (the no-vig price re-vigged to a 4.4% hold, si
 history isn't published), skipping picks that side with an opening favourite of -350 or heavier, and
 groups every fight by the opening favourite's price, and again by the underdog's, to compare how often
 the ratings, the opening line and the closing line named the winner (the underdog table also shows
-the fights where the ratings took the dog and what those bets made). At opening prices a flat $10 on each of the 2,180 picks
-since October 2021 made about +$1,260 (ROI +5.8%, 95% range +$550 to +$1,990); at closing prices the
-same picks made +$200 (ROI +0.9%, range -$470 to +$900), so the edge is in beating the opener, not
-the close. Options: `--since`, `--stake`, `--max-fav`, `--hold`.
+the fights where the ratings took the dog and what those bets made, at the open and at the close). At
+opening prices a flat $10 on each of the 2,180 picks since October 2021 made about +$1,260 (ROI
++5.8%, 95% range +$550 to +$1,990); at closing prices the same picks made +$200 (ROI +0.9%, range
+-$470 to +$900), and at the least generous closing price of any book -$620, so the edge is in beating
+the opener, not the close. The opener is one early book's first price and Caesars usually lists later,
+so a fight-week bet lands nearer the closing figures. Options: `--since`, `--stake`, `--max-fav`,
+`--hold`, `--by fav|dog|both`.
 
 The ratings are both a **second opinion on who wins** (the panel, the rankings) and, since adding
 them to the market blend beat the single-model blend on the validation years, **part of the bet

@@ -232,10 +232,10 @@ class ServingHelpersTests(unittest.TestCase):
 
 
 class FlatBetTests(unittest.TestCase):
-    def _fight(self, p1, y1, open_, close_fair=None, date="2024-01-06"):
+    def _fight(self, p1, y1, open_, close_fair=None, date="2024-01-06", worst=(None, None)):
         o1, o2 = open_
         a, b = (1 / flatbet.dec_odds(o1), 1 / flatbet.dec_odds(o2))
-        return {"id": f"{p1}{y1}{o1}", "date": date, "year": 2024, "p1": p1, "y1": y1, "open": open_,
+        return {"id": f"{p1}{y1}{o1}", "date": date, "year": 2024, "p1": p1, "y1": y1, "open": open_, "worst": worst,
                 "open_fair": a / (a + b), "close_fair": close_fair if close_fair is not None else a / (a + b)}
 
     def test_prices(self):
@@ -261,8 +261,12 @@ class FlatBetTests(unittest.TestCase):
         self.assertEqual(order, [100, 300, "short", "pickem"])
 
     def test_picks_settle_and_skip(self):
+        self.assertEqual(flatbet.five_years_before("2026-10-03"), "2021-10-03")
+        self.assertEqual(flatbet.five_years_before("2028-02-29"), "2023-02-28")
+        self.assertEqual((flatbet.money(0.3), flatbet.money(-0.3), flatbet.money(-12.6)), ("$0", "$0", "-$13"))
+        self.assertEqual((flatbet.roi(5.0, 10, 10), flatbet.roi(0.0, 10, 0)), ("+5.0%", "-"))
         recs = flatbet.picks([
-            self._fight(0.62, 1, (-180, 155)),        # pick f1 (the favourite), wins
+            self._fight(0.62, 1, (-180, 155), worst=(-200, 150)),   # pick f1 (the favourite), wins
             self._fight(0.40, 0, (-180, 155)),        # pick f2 (the dog), wins
             self._fight(0.55, 0, (-180, 155)),        # pick f1, loses
             self._fight(0.80, 1, (-400, 310)),        # sides with a -400 favourite: skipped
@@ -276,6 +280,9 @@ class FlatBetTests(unittest.TestCase):
         self.assertAlmostEqual(recs[1]["pnl"]["listed"], 15.5)
         self.assertEqual(recs[2]["pnl"]["listed"], -10)
         self.assertEqual(recs[0]["pnl"]["open"], 10 * (flatbet.dec_odds(flatbet.synth_price(recs[0]["open_fair"])) - 1))
+        self.assertAlmostEqual(recs[0]["pnl"]["worst"], 5.0)                # -200 at the stingiest book
+        self.assertIsNone(recs[1]["pnl"]["worst"])                           # no closing range recorded
+        self.assertEqual(recs[2]["pnl"]["worst"], None)
         bets = [r for r in recs if r["bet"]]
         self.assertEqual(len(bets), 5)
         self.assertGreater(flatbet.total(bets, "listed"), 0)
