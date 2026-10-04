@@ -30,5 +30,18 @@
   },
   "exclusion": "path",
   "layer_mode": "rate",
-  "end_of_half_seconds": 60
+  "end_of_half_seconds": 60,
+  "situational": {
+    "max_zero_clock_share": 0.25,
+    "neutral_margin": 14,
+    "min_pace_intervals": 30,
+    "lead_protection": {
+      "max_lead": 21,
+      "min_mean_secs": 38.0,
+      "min_intervals": 2,
+      "min_plays": 3,
+      "min_run_share": 0.6,
+      "weight": 1.0
+    }
+  }
 }

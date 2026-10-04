@@ -5,7 +5,7 @@
     python trace.py Alabama --section efficiency
     python trace.py Alabama --drives                # every drive and why it was kept/excluded
 
-Sections: schedule, efficiency, tempo, factors, luck, sos, network
+Sections: schedule, efficiency, tempo, factors, luck, situational, discipline, sos, network
 """
 import argparse
 import json
@@ -37,8 +37,12 @@ def schedule(tr):
           f"{'ELIGIBLE' if e['eligible'] else 'NOT ELIGIBLE (not ranked)'}")
     for g in tr["schedule"]:
         flag = "" if g["used_in_efficiency"] else "  [not in efficiency model: " + g["note"] + "]"
+        adj = ""
+        if g.get("garbage_pts_us") or g.get("garbage_pts_them"):
+            adj = (f"  [garbage-adjusted {g['adj_us']:g}-{g['adj_them']:g}: removed {g['garbage_pts_us']:g} "
+                   f"of ours, {g['garbage_pts_them']:g} of theirs]")
         print(f"  wk{g['week']:>2} {g['date']} {g['site']} {g['result']} {g['us']:>2}-{g['them']:<2} "
-              f"{g['opp_name']} ({g['opp_division']}{', conf' if g['conf_game'] else ''}){flag}")
+              f"{g['opp_name']} ({g['opp_division']}{', conf' if g['conf_game'] else ''}){adj}{flag}")
 
 
 def efficiency(tr):
@@ -55,14 +59,14 @@ def efficiency(tr):
               f"{'venue':>6} {'adjusted':>9}")
         for ln in s["lines"]:
             mark = "" if ln.get("opp_status", "published") == "published" else " *"
-            print(f"    {(ln['opp_name'][:20] + mark):22s} {ln['w']:>6} {ln['raw']:>8.3f} {ln[opp_key]:>9.3f} "
+            print(f"    {(ln['opp_name'][:20] + mark):22s} {ln['w']:>6g} {ln['raw']:>8.3f} {ln[opp_key]:>9.3f} "
                   f"{ln['opp_adjustment']:>+8.3f} {ln['hfa_adjustment']:>+6.3f} {ln['adjusted']:>9.3f}")
         p = s["prior"]
         tot_w = sum(ln["w"] for ln in s["lines"])
         print(f"    {'phantom game (' + p['division'] + ' avg)':22s} {p['weight']:>6} "
               f"{'':>8} {'':>9} {'':>8} {'':>6} {p['value']:>9.3f}")
         print(f"    {label} = (sum(drives*adjusted) + {p['weight']}*{p['value']:.3f}) / "
-              f"({tot_w} + {p['weight']}) = {s['recomputed']:.4f}   [stored {s['stored']:.4f}, "
+              f"({tot_w:g} + {p['weight']}) = {s['recomputed']:.4f}   [stored {s['stored']:.4f}, "
               f"check {'OK' if s['check_ok'] else 'FAIL'}]")
     print(f"  AdjEM = ({f(e['AdjO'], 4)} - {f(e['AdjD'], 4)}) * {f(e['muT'], 3)} = {f(e['AdjEM'], 2)} "
           f"pts/game vs an average FBS team, neutral field  (+/- {f(e['AdjEM_se'], 1)} SE)")
@@ -110,9 +114,42 @@ def factors(tr):
 
 def luck(tr):
     l = tr["luck"]
-    print(f"\nLUCK  Pythag = PF^{l['exponent']} / (PF^{l['exponent']} + PA^{l['exponent']}) with "
-          f"PF {l['PF']}, PA {l['PA']} = {f(l['pythag'])};  actual {f(l['actual'])};  "
-          f"luck = {f(l['luck'])}")
+    e = l["exponent"]
+    print(f"\nLUCK  ({l['rule']})")
+    print(f"  Pythag = PF^{e} / (PF^{e} + PA^{e}) with garbage-adjusted PF {l['adjPF']:g}, PA {l['adjPA']:g} "
+          f"= {f(l['pythag'])};  actual {f(l['actual'])};  luck = {f(l['luck'])}")
+    print(f"  raw scores (PF {l['PF']}, PA {l['PA']}): Pythag {f(l['pythag_raw'])}, luck {f(l['luck_raw'])}")
+
+
+def situational(tr):
+    s = tr["situational"]
+    print(f"\nSITUATIONAL  neutral pace {f(s['neutral_pace'], 1)} s/snap, neutral run rate "
+          f"{f(s['neutral_run_rate'])} over {s['pace_intervals']} clean intervals "
+          f"(published at >= {s['min_pace_intervals']}); rule: {s['pace_rule']}")
+    lp = s["lead_protection_rule"]
+    print(f"  lead protection (Q4, ahead 1-{lp['max_lead']}, usable clock, >= {lp['min_mean_secs']} s/snap over "
+          f">= {lp['min_intervals']} clean intervals, >= {lp['min_run_share']:.0%} runs of >= {lp['min_plays']} plays): "
+          f"{len(s['lead_protection_drives'])} of {s['q4_lead_drives']} Q4 leading drives; {s['weight_note']}")
+    for d in s["lead_protection_drives"]:
+        print(f"    vs {d['opp_name']} drive {d['drive']} ({d['clock']}): {d['reason']}, {d['points']:g} pts")
+
+
+def discipline(tr):
+    d = tr["discipline"]
+    c = d["counts"] or {}
+    print(f"\nDISCIPLINE  ({d['rules']['rating']})")
+    print(f"  {d['rules']['per_game']}: {f(d['PenPG'], 2)} penalties, {f(d['PenYdsPG'], 1)} yards per game "
+          f"(conference {f(d['PenPG_conf'], 2)}); net penalty yards per game {f(d['NetPenYdsPG'], 1)}")
+    print(f"  {d['rules']['rates']}:")
+    print(f"    offense {c.get('off_fouls')} fouls / {c.get('off_snaps')} snaps = {f(d['OffPen100'], 2)} per 100 "
+          f"(conference {f(d['OffPen100_conf'], 2)}); pre-snap {c.get('off_presnap')} = {f(d['OffPreSnap100'], 2)}")
+    print(f"    defense {c.get('def_fouls')} fouls / {c.get('def_snaps')} snaps = {f(d['DefPen100'], 2)} per 100 "
+          f"(conference {f(d['DefPen100_conf'], 2)}); first downs given {c.get('def_first_downs')} = "
+          f"{f(d['PenFDAllowedPG'], 2)} per game")
+    for x in d["fouls"]:
+        tag = "situational" if x["situational"] else (x["drive_why"] or "kept") if x["drive_why"] is not None else "n/a"
+        print(f"    vs {x['opp_name'][:16]:16s} Q{x['period']} {x['clock'] or '':>5} {x['category'][:24]:24s} "
+              f"{x['penalized_unit']:8s} {x['yards']:>3} yds {x['status']:10s} [{tag}; {x['dialect']}/{x['yards_method']}]")
 
 
 def sos(tr):
@@ -174,7 +211,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("team")
     ap.add_argument("--section", choices=["schedule", "efficiency", "tempo", "factors", "luck",
-                                          "sos", "network"])
+                                          "situational", "discipline", "sos", "network"])
     ap.add_argument("--drives", action="store_true")
     a = ap.parse_args()
     tr = find_team(a.team)
@@ -190,7 +227,8 @@ def main():
         drives(tr)
         return
     sections = {"schedule": schedule, "efficiency": efficiency, "tempo": tempo, "factors": factors,
-                "luck": luck, "sos": sos, "network": network}
+                "luck": luck, "situational": situational, "discipline": discipline, "sos": sos,
+                "network": network}
     for name, fn in sections.items():
         if a.section in (None, name):
             fn(tr)

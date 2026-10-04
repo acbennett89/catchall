@@ -13,7 +13,8 @@ import os
 from collections import defaultdict
 
 from efficiency import trace, trace_tempo
-from ratings import HERE, load, load_config, phi, predict, rate, venue
+from ratings import (DISCIPLINE_KEYS, HERE, is_situational_foul, load, load_config, phi, predict,
+                     rate, venue)
 from validate import evaluate
 
 OUT = os.path.join(HERE, "out")
@@ -27,7 +28,14 @@ COLUMNS = [
     ("SR_O", "SR_O"), ("SR_D", "SR_D"), ("XPL_O", "Explosive_O"), ("XPL_D", "Explosive_D"),
     ("YPP_O", "YPP_O"), ("YPP_D", "YPP_D"), ("FP_O", "FieldPos_O"), ("FP_D", "FieldPos_D"),
     ("FIN_O", "PtsPerOpp_O"), ("FIN_D", "PtsPerOpp_D"), ("TO_margin", "TO_Margin_pg"),
-    ("sec_per_play", "SecPerPlay"), ("pythag", "PythagW%"), ("luck", "Luck"),
+    ("sec_per_play", "SecPerPlay"), ("NeutralPace", "NeutralPace_s_per_snap"),
+    ("NeutralRunRate", "NeutralRunRate"), ("LP_drives", "LeadProtectionDrives"),
+    ("adjPF", "PF_garbage_adj"), ("adjPA", "PA_garbage_adj"),
+    ("pythag", "PythagW%_garbage_adj"), ("luck", "Luck"), ("luck_raw", "Luck_raw_scores"),
+    ("PenPG", "Pen_pg"), ("PenYdsPG", "PenYds_pg"), ("NetPenYdsPG", "NetPenYds_pg"),
+    ("OffPen100", "OffPen_per100"), ("OffPen100_conf", "OffPen_per100_confavg"),
+    ("OffPreSnap100", "OffPreSnap_per100"), ("DefPen100", "DefPen_per100"),
+    ("DefPen100_conf", "DefPen_per100_confavg"), ("PenFDAllowedPG", "PenFirstDownsAllowed_pg"),
     ("SOS", "SOS_AdjEM"), ("rk_SOS", "SOS_Rk"), ("NCSOS", "NCSOS_AdjEM"),
     ("OppO", "Opp_AdjO"), ("OppD", "Opp_AdjD"),
     ("WVT", "WinValueTotal"), ("AvgWV", "AvgWinValue"), ("LCT", "LossCostTotal"),
@@ -62,7 +70,11 @@ def team_trace(t, res, data, cfg, sigma, eligible):
         home = g["home"] == t
         opp = g["away"] if home else g["home"]
         us, them = (g["home_pts"], g["away_pts"]) if home else (g["away_pts"], g["home_pts"])
+        g_us = sum(d["pts"] for d in g["drives"] if d["off"] == t and d["why"] == "garbage time")
+        g_them = sum(d["pts"] for d in g["drives"] if d["def"] == t and d["why"] == "garbage time")
         schedule.append({"game": g["id"], "week": g["week"], "date": g["date"][:10],
+                         "garbage_pts_us": g_us, "garbage_pts_them": g_them,
+                         "adj_us": us - g_us, "adj_them": them - g_them,
                          "opp": opp, "opp_name": nm(opp),
                          "opp_division": teams.get(opp, {}).get("division"),
                          "site": "N" if g["neutral"] else ("H" if home else "A"),
@@ -130,9 +142,52 @@ def team_trace(t, res, data, cfg, sigma, eligible):
         "PtsPerOpp": "opp_points / scoring_opps (drives with a 1st down at or inside opp 40)",
         "TO_margin": "(taken - given) / games"}, "games": fac}
 
-    tr["luck"] = {"PF": row["PF"], "PA": row["PA"], "exponent": cfg["pythag_exp"],
-                  "pythag": row["pythag"], "actual": row["W"] / row["games"] if row["games"] else None,
-                  "luck": row["luck"]}
+    tr["luck"] = {"PF": row["PF"], "PA": row["PA"], "adjPF": row["adjPF"], "adjPA": row["adjPA"],
+                  "exponent": cfg["pythag_exp"], "pythag": row["pythag"], "pythag_raw": row["pythag_raw"],
+                  "actual": row["W"] / row["games"] if row["games"] else None,
+                  "luck": row["luck"], "luck_raw": row["luck_raw"],
+                  "rule": "garbage-adjusted score = final score minus offensive points on garbage-time "
+                          "drives (per-game removals listed in the schedule)"}
+
+    sit = cfg["situational"]
+    lp_rows = []
+    for g in mine:
+        for d in g["drives"]:
+            if d["off"] == t and d.get("lp"):
+                lp_rows.append({"game": g["id"], "opp_name": nm(g["away"] if g["home"] == t else g["home"]),
+                                "drive": d["i"], "clock": d["clock"], "reason": d["lp"], "points": d["pts"]})
+    tr["situational"] = {
+        "neutral_pace": row.get("NeutralPace"), "neutral_run_rate": row.get("NeutralRunRate"),
+        "pace_intervals": row.get("pace_intervals"), "min_pace_intervals": sit["min_pace_intervals"],
+        "pace_rule": f"mean clean snap-to-snap seconds, Q1-Q3, score within {sit['neutral_margin']}, "
+                     "not the final 2:00 of Q2, games whose clock is usable",
+        "lead_protection_rule": sit["lead_protection"], "lead_protection_drives": lp_rows,
+        "q4_lead_drives": row.get("Q4_lead_drives"),
+        "weight_note": ("weight 1.0: tagged drives count fully (default; no tested adjustment "
+                        "improved accuracy)" if sit["lead_protection"]["weight"] == 1.0 else
+                        f"weight {sit['lead_protection']['weight']}: tagged drives are down-weighted in AdjO/AdjD/AdjSR")}
+
+    pf = {k: i for i, k in enumerate(data.get("penalty_fields") or [])}
+    fouls = []
+    for g in mine:
+        if "penalties" not in g:
+            continue
+        by_i = {d["i"]: d for d in g["drives"]}
+        for rw in g["penalties"]:
+            if rw[pf["penalized_team_id"]] != t:
+                continue
+            fouls.append({"game": g["id"], "opp_name": nm(g["away"] if g["home"] == t else g["home"]),
+                          **{k: rw[pf[k]] for k in ("period", "clock", "category", "penalized_unit",
+                                                    "presnap", "yards", "status", "first_down_awarded",
+                                                    "dialect", "yards_method", "drive_why")},
+                          "situational": is_situational_foul(rw, pf, by_i)})
+    tr["discipline"] = {k: row.get(k) for k in DISCIPLINE_KEYS}
+    tr["discipline"].update({f"{k}_conf": row.get(f"{k}_conf") for k in DISCIPLINE_KEYS},
+                            counts=row.get("pen_counts"), fouls=fouls,
+                            rules={"per_game": "box score accepted penalties (sanity-checked)",
+                                   "rates": "accepted fouls on kept drives per 100 snaps; a Q4 "
+                                            "leader's offensive delay of game is situational and "
+                                            "left out", "rating": "descriptive only; not in the rating"})
 
     sos_lines = []
     for g in mine:
@@ -164,10 +219,11 @@ def team_trace(t, res, data, cfg, sigma, eligible):
                 continue
             drives.append([g["id"], d["i"], "O" if d["off"] == t else "D", d["period"], d["clock"],
                            None if d["start_yte"] is None else 100 - d["start_yte"],
-                           d["result"], d["pts"], d["margin"], d["kept"], d["why"], len(d["plays"])])
+                           d["result"], d["pts"], d["margin"], d["kept"], d["why"], len(d["plays"]),
+                           d.get("lp") or ""])
     tr["drives"] = {"columns": ["game", "drive#", "side", "qtr", "clock", "start_yardline",
                                 "result", "points", "margin_at_start", "kept", "excluded_reason",
-                                "scrimmage_plays"], "rows": drives}
+                                "scrimmage_plays", "lead_protection"], "rows": drives}
     return tr
 
 

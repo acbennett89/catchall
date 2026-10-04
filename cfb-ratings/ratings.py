@@ -13,6 +13,7 @@ from collections import defaultdict
 
 from efficiency import solve, solve_tempo, trace, trace_tempo
 from network import Network
+from parse import clock_secs
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -45,6 +46,90 @@ def side_drives(g, team, role):
     return [d for d in g["drives"] if d[role] == team]
 
 
+TEMPO_WHY = ("", "garbage time", "end of half/game", "leader's final drive")
+
+
+def good_clock(g, cfg):
+    """ESPN's game clock is usable for pace when fewer than 25% of snap-to-snap readings are 0 s."""
+    c = g.get("clock") or {}
+    return bool(c.get("cand")) and c["zero"] / c["cand"] < cfg["situational"]["max_zero_clock_share"]
+
+
+def lead_protection(d, g, cfg):
+    """Clock-burning to protect a lead (the user's situational football), checkable by hand:
+    Q4, offense ahead by 1 to max_lead at the first snap, a usable game clock, clean
+    snap-to-snap intervals averaging >= min_mean_secs over >= min_intervals, and runs on
+    >= min_run_share of >= min_plays scrimmage plays. Returns the reason string or ''."""
+    lp = cfg["situational"]["lead_protection"]
+    if d["period"] != 4 or not 1 <= d["margin"] <= lp["max_lead"] or not d["plays"]:
+        return ""
+    iv, plays = d.get("iv") or [], d["plays"]
+    runs = sum(1 for p in plays if p[3] == "R")
+    if (not good_clock(g, cfg) or len(iv) < lp["min_intervals"] or sum(iv) / len(iv) < lp["min_mean_secs"]
+            or len(plays) < lp["min_plays"] or runs / len(plays) < lp["min_run_share"]):
+        return ""
+    return (f"Q4, up {d['margin']:g}, {sum(iv) / len(iv):.1f} s/snap over {len(iv)} clean intervals, "
+            f"{runs}/{len(plays)} runs")
+
+
+DISCIPLINE_KEYS = ("PenPG", "PenYdsPG", "NetPenYdsPG", "OffPen100", "OffPreSnap100", "DefPen100",
+                   "PenFDAllowedPG")
+
+
+def is_situational_foul(row, f, drives_by_i):
+    """A Q4 leader's offensive delay of game is clock management, not indiscipline."""
+    d = drives_by_i.get(row[f["drive_index"]])
+    return (row[f["category"]] == "Delay of Game" and row[f["penalized_unit"]] == "offense"
+            and row[f["period"]] == 4 and d is not None and d["margin"] > 0)
+
+
+def discipline(t, mine, fields, cfg):
+    f = {k: i for i, k in enumerate(fields)}
+    pen_n = pen_y = box_games = net_y = net_games = 0
+    off_snaps = def_snaps = off_f = off_pre = def_f = fd = pbp_games = 0
+    for g in mine:
+        opp = g["away"] if g["home"] == t else g["home"]
+        own_box, opp_box = (g["box"].get(t) or {}).get("pen"), (g["box"].get(opp) or {}).get("pen")
+        if own_box:
+            pen_n, pen_y, box_games = pen_n + own_box[0], pen_y + own_box[1], box_games + 1
+            if opp_box:
+                net_y, net_games = net_y + opp_box[1] - own_box[1], net_games + 1
+        if not g["drives"] or "penalties" not in g:
+            continue
+        pbp_games += 1
+        by_i = {d["i"]: d for d in g["drives"]}
+        for d in g["drives"]:
+            if d["kept"]:
+                n = len(d["plays"]) + d.get("pen_rows", 0)
+                if d["off"] == t:
+                    off_snaps += n
+                else:
+                    def_snaps += n
+        for row in g["penalties"]:
+            if (row[f["status"]] != "accepted" or row[f["penalized_team_id"]] != t
+                    or row[f["drive_why"]] != "" or is_situational_foul(row, f, by_i)):
+                continue
+            unit = row[f["penalized_unit"]]
+            if unit == "offense":
+                off_f += 1
+                off_pre += bool(row[f["presnap"]])
+            elif unit == "defense":
+                def_f += 1
+                fd += bool(row[f["first_down_awarded"]])
+    per100 = lambda a, b: 100 * a / b if b else None
+    return {"PenPG": _rate(pen_n, box_games), "PenYdsPG": _rate(pen_y, box_games),
+            "NetPenYdsPG": _rate(net_y, net_games),
+            "OffPen100": per100(off_f, off_snaps), "OffPreSnap100": per100(off_pre, off_snaps),
+            "DefPen100": per100(def_f, def_snaps), "PenFDAllowedPG": _rate(fd, pbp_games),
+            "pen_counts": {"box_games": box_games, "off_fouls": off_f, "off_presnap": off_pre,
+                           "def_fouls": def_f, "def_first_downs": fd, "off_snaps": off_snaps,
+                           "def_snaps": def_snaps, "pbp_games": pbp_games}}
+
+
+def drive_weight(d, cfg):
+    return cfg["situational"]["lead_protection"]["weight"] if d.get("lp") else 1.0
+
+
 def rate(data, cfg, through_week=None):
     teams = data["teams"]
     division = {t: v["division"] for t, v in teams.items()}
@@ -58,20 +143,27 @@ def rate(data, cfg, through_week=None):
             for d in g["drives"]:
                 if d["why"] == "garbage time":
                     d["kept"] = 1
+    # Lead-protection tags (descriptive; they only change the ratings if the
+    # configured weight is below 1.0, which is off by default -- see ADVERSARIAL_REVIEW).
+    for g in games:
+        for d in g["drives"]:
+            d["lp"] = lead_protection(d, g, cfg) if d["kept"] else ""
     ppd_obs, sr_obs, tempo_games = [], [], []
     for g in games:
         if not g["drives"]:
             continue
         for team, opp in ((g["home"], g["away"]), (g["away"], g["home"])):
             kept = [d for d in g["drives"] if d["off"] == team and d["kept"]]
-            if kept:
+            w = sum(drive_weight(d, cfg) for d in kept)
+            if w:
                 ppd_obs.append({"game": g["id"], "off": team, "def": opp, "v": venue(g, team),
-                                "w": len(kept), "y": sum(d["pts"] for d in kept) / len(kept)})
-            plays = [p for d in kept for p in d["plays"]]
-            if plays:
+                                "w": w, "y": sum(drive_weight(d, cfg) * d["pts"] for d in kept) / w})
+            pw = sum(drive_weight(d, cfg) * len(d["plays"]) for d in kept)
+            if pw:
                 sr_obs.append({"game": g["id"], "off": team, "def": opp, "v": venue(g, team),
-                               "w": len(plays), "y": sum(p[5] for p in plays) / len(plays)})
-        poss = [d for d in g["drives"] if d["why"] in ("", "garbage time", "end of half/game")]
+                               "w": pw, "y": sum(drive_weight(d, cfg) * p[5] for d in kept
+                                                 for p in d["plays"]) / pw})
+        poss = [d for d in g["drives"] if d["why"] in TEMPO_WHY]
         n_home = sum(1 for d in poss if d["off"] == g["home"])
         n_away = sum(1 for d in poss if d["off"] == g["away"])
         if n_home and n_away:
@@ -102,11 +194,15 @@ def rate(data, cfg, through_week=None):
         mine = [g for g in games if t in (g["home"], g["away"])]
         r = {"id": t, "name": teams[t].get("name", t), "conference": teams[t]["conference"],
              "games": len(mine), "eligible": len(mine) >= cfg["min_games"]}
-        w = l = cw = cl = pf = pa = 0
+        w = l = cw = cl = pf = pa = apf = apa = 0
         for g in mine:
             us, them = (g["home_pts"], g["away_pts"]) if g["home"] == t else (g["away_pts"], g["home_pts"])
             pf += us
             pa += them
+            # Garbage-adjusted score: final score minus offensive points scored on
+            # garbage-time drives (each removed drive is listed in the trace).
+            apf += us - sum(d["pts"] for d in g["drives"] if d["off"] == t and d["why"] == "garbage time")
+            apa += them - sum(d["pts"] for d in g["drives"] if d["def"] == t and d["why"] == "garbage time")
             if us == them:
                 continue  # ties can't happen in modern CFB; network.py skips them too
             won = us > them
@@ -116,9 +212,12 @@ def rate(data, cfg, through_week=None):
                 cw += won
                 cl += not won
         e = cfg["pythag_exp"]
-        pyth = pf ** e / (pf ** e + pa ** e) if pf + pa else None
-        r.update(W=w, L=l, confW=cw, confL=cl, PF=pf, PA=pa,
-                 pythag=pyth, luck=(w / len(mine) - pyth) if mine and pyth is not None else None)
+        pyth_raw = pf ** e / (pf ** e + pa ** e) if pf + pa else None
+        pyth = apf ** e / (apf ** e + apa ** e) if apf + apa else None
+        r.update(W=w, L=l, confW=cw, confL=cl, PF=pf, PA=pa, adjPF=apf, adjPA=apa,
+                 pythag=pyth, luck=(w / len(mine) - pyth) if mine and pyth is not None else None,
+                 pythag_raw=pyth_raw,
+                 luck_raw=(w / len(mine) - pyth_raw) if mine and pyth_raw is not None else None)
 
         # efficiency
         if t in ppd["O"]:
@@ -164,6 +263,31 @@ def rate(data, cfg, through_week=None):
         r.update(TO_give=_rate(give, nbox), TO_take=_rate(take, nbox),
                  TO_margin=_rate(take - give, nbox))
 
+        # Neutral pace: clean snap-to-snap seconds in Q1-Q3 with the score within 14
+        # (not the final 2:00 of Q2), games with a usable clock. Display only.
+        sit = cfg["situational"]
+        iv, nplays, nruns = [], 0, 0
+        for g in mine:
+            if not good_clock(g, cfg):
+                continue
+            for d in side_drives(g, t, "off"):
+                if d["period"] in (1, 2, 3) and abs(d["margin"]) <= sit["neutral_margin"] and not (
+                        d["period"] == 2 and (clock_secs(d["clock"]) or 999) <= 120):
+                    iv += d.get("iv") or []
+                    nplays += len(d["plays"])
+                    nruns += sum(1 for p in d["plays"] if p[3] == "R")
+        enough = len(iv) >= sit["min_pace_intervals"]
+        r.update(NeutralPace=sum(iv) / len(iv) if enough else None, pace_intervals=len(iv),
+                 NeutralRunRate=nruns / nplays if enough and nplays else None,
+                 LP_drives=sum(1 for g in mine for d in side_drives(g, t, "off") if d.get("lp")),
+                 Q4_lead_drives=sum(1 for g in mine for d in side_drives(g, t, "off")
+                                    if d["kept"] and d["period"] == 4 and 1 <= d["margin"] <= 21))
+
+        # Discipline (descriptive, not part of the rating). Per-game counts come from the
+        # box score; rates come from the play-by-play on kept drives only, per 100 snaps,
+        # with situational fouls (a Q4 leader's offensive delay of game) left out.
+        r.update(discipline(t, mine, data.get("penalty_fields") or [], cfg))
+
         # KenPom-style SOS
         opp_em, opp_o, opp_d, nc_em = [], [], [], []
         for g in mine:
@@ -194,12 +318,23 @@ def rate(data, cfg, through_week=None):
     elig = [r for r in out.values() if r["eligible"] and r.get("AdjEM") is not None]
     for key, rev in (("AdjEM", True), ("AdjO", True), ("AdjD", False), ("AdjT", True),
                      ("SOS", True), ("NCSOS", True), ("NetResume", True), ("NetPerGame", True), ("WVT", True),
-                     ("Luck", True), ("SchedNS", True)):
+                     ("Luck", True), ("SchedNS", True), ("NeutralPace", False),
+                     ("PenPG", False), ("OffPen100", False), ("DefPen100", False)):
         src = "luck" if key == "Luck" else key
         ranked = sorted((r for r in elig if r.get(src) is not None),
                         key=lambda r: r[src], reverse=rev)
         for i, r in enumerate(ranked, 1):
             r[f"rk_{key}"] = i
+
+    # conference averages beside each discipline value (officiating differs by conference)
+    for key in DISCIPLINE_KEYS:
+        by_conf = {}
+        for r in elig:
+            if r.get(key) is not None:
+                by_conf.setdefault(r["conference"], []).append(r[key])
+        for r in out.values():
+            v = by_conf.get(r["conference"])
+            r[f"{key}_conf"] = sum(v) / len(v) if v else None
 
     return {"teams": out, "ppd": ppd, "sr": sr, "tempo": tempo, "net": net, "games": games,
             "muT": muT, "hfa_points": 2 * ppd["h"] * muT, "through_week": through_week}
