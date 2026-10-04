@@ -111,12 +111,13 @@ which probability drives the card list's EV column and the "Your number" calcula
 basis the model panel flags the raw model's edges too, at your own risk.
 
 **Track record (from `model/model.json`; open "Track record" in the panel for the live numbers).**
-Rating settings were tuned on 2010–2015, every go/no-go decision (each blend, and the BET rule's
-filters) was made on 2016–2020, and the headline numbers are 2021–2026: 2,957 fights the model never
-saw, each predicted with coefficients fitted only on earlier years. Closing lines that included
-in-fight prices (53 fights) were dropped.
+Rating settings were tuned on 2010–2015. Each blend had to beat the market on 2016–2020 and not
+lose to it on 2021–2026, and the BET rule's filters were chosen on 2016–2020. The headline numbers
+are 2021–2026: 2,957 fights the model never saw, each predicted with coefficients fitted only on
+earlier years. Closing lines that included in-fight prices were dropped (53 fights in all, 49 of
+them in 2021–2026).
 
-| 2021–2026, fights with odds (2,872) | Picks the winner | Log loss (lower is better) |
+| 2021–2026, fights with odds (2,872; 2,918 for the opening-line blend) | Picks the winner | Log loss (lower is better) |
 | --- | --- | --- |
 | Model alone | 63.8% | 0.638 |
 | Opening line | 65.9% | 0.618 |

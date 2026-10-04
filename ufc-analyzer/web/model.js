@@ -111,15 +111,19 @@ function renderModel(f) {
   }
   const flags = (pr.flags || []).map(x => `<div class="note-line">⚠ ${esc(x.text)}</div>`).join("");
   const g = pr.blendState || {};
-  const away = g.hours >= 48 ? `${Math.round(g.hours / 24)} days` : `${Math.round(g.hours || 0)} hours`;
+  const away = g.hours >= 48 ? `${Math.floor(g.hours / 24)} days` : `${Math.round(g.hours || 0)} hours`;   // floor: "4 days" means 96+ hours
   // which blend applies: the early-line blend a week or more out, the closing-line blend inside 12 hours, a mix between
   const moved = mkt && pr.blend ? ` Here it moves ${esc(ln[0])} ${(pr.blend[0] - mkt[0] >= 0 ? "+" : "−")}${Math.abs((pr.blend[0] - mkt[0]) * 100).toFixed(1)} points.` : "";
   const early = (g.hours || 0) >= 96;
-  const which = g.wOpen >= 0.999 ? "on early lines the blend (market plus model) beat the market in testing, so a blend edge can be a BET"
-    : g.wOpen <= 0.001 ? "on closing lines the blend edged the market only slightly in testing, mostly by firming up favorites, so only market value is a BET now"
-    : `mixing the early-line blend (${Math.round(g.wOpen * 100)}%) with the weaker closing-line blend as fight night nears; ${early ? "a blend edge can still be a BET until 4 days out" : "inside 4 days only market value is a BET"}`;
+  const canBet = early && g.openGate && !g.lowExperience;   // what decide() allows for a blend-only edge
+  const betNote = canBet ? "a blend edge can be a BET until 4 days out"
+    : g.lowExperience ? "a fighter has under 2 UFC fights, so only market value can be a BET here"
+    : early ? "the early-line blend isn't live, so only market value can be a BET" : "inside 4 days only market value is a BET";
+  const which = g.wOpen >= 0.999 ? `on early lines the blend (market plus model) beat the market in testing; ${betNote}`
+    : g.wOpen <= 0.001 ? `on closing lines the blend edged the market only slightly in testing, mostly by firming up favorites; ${betNote}`
+    : `mixing the early-line blend (${Math.round(g.wOpen * 100)}%) with the weaker closing-line blend as fight night nears; ${betNote}`;
   const gateNote = pr.blend ? `<div class="note-line">${g.active
-      ? `Blend is live (${away} out): ${which}${g.lowExperience ? ", and the model counts for less when a fighter has under 2 UFC fights" : ""}.${moved}`
+      ? `Blend is live (${away} out): ${which}.${g.lowExperience ? " The model also counts for less in the blend when a fighter has under 2 UFC fights." : ""}${moved}`
       : `Blend = market (${away} out): the model hasn't beaten the market this close to the fight in testing, so it doesn't move the price.`}</div>` : "";
   el.innerHTML = `${decisionBox(pr, f)}<div class="odds-grid">${sides}</div>${gap}${gateNote}${flags}
     <div class="section-title" style="padding:12px 0 6px">How it ends${pr.methodAnchor && pr.methodAnchor !== "model" ? ` <span class="faint" style="text-transform:none;letter-spacing:0">(scaled to the ${pr.methodAnchor === "blend" ? "blended" : "market"} win chance)</span>` : ""}</div>${method}${drivers}
@@ -155,7 +159,7 @@ function trackRecord() {
     <ul class="small muted" style="margin:6px 0 0 18px;padding:0">
       ${gateLine("open", "Blend on early lines")}${gateLine("close", "Blend on closing lines")}
       ${e && e.bets ? `<li><b>This app's BET rule 4+ days out</b> (blend edge, both fighters with 2+ UFC fights), at historical opening prices: ${roi(e)}${e.clv ? `; the closing line moved toward the pick on ${pct(e.clv.beat_close, 0)} of them (CLV ${signedPct(e.clv.mean, 1)})` : ""}.${ev && ev.bets ? ` The rule was picked on 2016–20 (${roi(ev)}).` : ""}</li>` : ""}
-      ${fw && fw.bets ? `<li>In fight week only market value is a BET. There's no ${TARGET} price history, so the best price across books stands in (a ceiling): ${roi(fw)}.</li>` : ""}
+      ${fw && fw.bets ? `<li>Inside 4 days only market value is a BET. There's no ${TARGET} price history, so the best price across books stands in (a ceiling): ${roi(fw)}.</li>` : ""}
       ${syn && syn.bets ? `<li>Blend bets at closing prices with a ${TARGET}-like 4.4% margin: ${roi(syn)}. Not a reliable edge, which is why fight-week blend edges stay WATCH.</li>` : ""}
       ${raw && raw.bets ? `<li>Model alone at opening prices: ${roi(raw)}. Don't bet the raw model.</li>` : ""}
     </ul>

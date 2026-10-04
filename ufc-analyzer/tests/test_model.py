@@ -274,6 +274,11 @@ class ServingTests(unittest.TestCase):
         d = modelapi.decide(0.66, 0.60, 0.58, view, early, False, False)
         self.assertTrue(any("firming up favorites" in r for r in d["reasons"]))   # model below market: say so
 
+    def test_card_day_is_the_us_date(self):
+        import calendar, datetime, modelapi
+        self.assertEqual(modelapi.card_day(calendar.timegm((2025, 12, 14, 0, 0, 0))), datetime.date(2025, 12, 13))   # US Saturday night
+        self.assertEqual(modelapi.card_day(calendar.timegm((2025, 10, 25, 14, 0, 0))), datetime.date(2025, 10, 25))  # Abu Dhabi afternoon
+
     def test_pending_bouts(self):
         from model import scrape
         row = ('<tr class="b-fight-details__table-row" data-link="http://ufcstats.com/fight-details/{fid}">'

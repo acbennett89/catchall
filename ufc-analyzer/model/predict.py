@@ -57,14 +57,15 @@ def _state_on(st, day):
     return hit
 
 
-def scheduled_rounds(a_id, b_id, day):
-    """Scheduled rounds for a bout already in the history (UFCStats), dated within a day of `day`."""
+def history_bout(a_id, b_id, day):
+    """(date, scheduled rounds) of this bout if it's already in the history (UFCStats), within a day of `day`."""
     if not a_id or not b_id:
         return None
     st = _load()
     for date, rounds in st.get("pairs", {}).get(frozenset((a_id, b_id)), []):
-        if abs((engine.parse_day(date) - day).days) <= 1:
-            return rounds
+        d = engine.parse_day(date)
+        if abs((d - day).days) <= 1:
+            return d, rounds
     return None
 
 

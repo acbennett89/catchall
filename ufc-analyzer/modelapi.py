@@ -69,6 +69,15 @@ def _resolve_with_history(uid, name, espn_ufc_fights):
     return max(cands, key=lambda fid: (eng.fighters[fid].fights, eng.fighters[fid].last or datetime.date.min))
 
 
+US_EASTERN = datetime.timezone(datetime.timedelta(hours=-5))   # fixed offset: no tz database needed on Windows
+
+
+def card_day(ts):
+    """The card's date as UFCStats dates events (the US date), whatever the host's timezone: a US card
+    starting at 00:00 UTC is still Saturday's card."""
+    return datetime.datetime.fromtimestamp(ts, US_EASTERN).date() if ts else datetime.date.today()
+
+
 def stacker(model_meta, card, now=None):
     """Blend coefficients for this far out from the fight.
 
@@ -192,11 +201,15 @@ def _sides(pred, lines):
 
 
 def fight_prediction(card, f, odds_view=None):
-    day = datetime.date.fromtimestamp(card["date"]) if card.get("date") else datetime.date.today()
+    day = card_day(card.get("date"))
     a, b = (_espn_side(x) for x in f["fighters"])
-    # scheduled rounds: UFCStats' own record once the bout is in the history (ESPN only guesses 5 for
-    # title fights and main events, and misses five-round co-mains)
-    rounds = _predict.scheduled_rounds(a["ufcstats_id"], b["ufcstats_id"], day) or f.get("rounds") or 3
+    # a bout already in the history: its UFCStats date is the cutoff (so its own result never feeds the
+    # prediction) and its scheduled rounds are UFCStats' (ESPN only guesses 5 for title fights and main
+    # events, and misses five-round co-mains)
+    hist = _predict.history_bout(a["ufcstats_id"], b["ufcstats_id"], day)
+    if hist:
+        day = min(day, hist[0])
+    rounds = (hist[1] if hist else None) or f.get("rounds") or 3
     pred = _predict.predict(a, b, day=day, wc=f.get("weightClass"), rounds=rounds, title=f.get("title"))
     pred["ufcstatsIds"] = [a["ufcstats_id"], b["ufcstats_id"]]
     if pred.get("suppressed"):
