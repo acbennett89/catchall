@@ -40,6 +40,7 @@ where many variants were tried, the bar is higher (§G).
 | G | Clock-burning (lead protection) | Real in pace and play-calling; no adjustment improves accuracy | Tagged and shown; tagged drives count **half (weight 0.5) by default**, which is accuracy-neutral. The outcome-dependent final-drive rule was removed |
 | H | Garbage time | The test can't tell the rules apart | Connelly rule kept for traceability; Luck uses garbage-adjusted scores |
 | I | Final review: 40 findings | 14 major findings upheld (12 at reduced severity) | All fixed: snap-time clocks, parser fixes, per-counted-game resume, full traceability of internal inputs and constants |
+| J | Season picker and 2024 (round 5): 25 findings | 22 confirmed, 2 partly, 1 refuted | All fixed; 2024 published with a data note (7% of FBS games lack drives, no snap stamps, penalties 54% exact) |
 
 ---
 
@@ -168,14 +169,18 @@ Conference games are zero-sum, so conference strength enters only through non-co
 Walk-forward results, using earlier weeks only. Baselines exist only for FBS-vs-FBS games, so all
 methods are compared on the same games:
 
-| MAE, points | 2025 wk 4–16 (617) | 2026 wk 3–5 (171) |
-|---|---|---|
-| **AdjEM model** | **12.47** | **12.77** |
-| Average scoring margin + home field | 13.19 | 14.27 |
-| Raw points per drive + home field | 14.02 | 17.71 |
+| MAE, points | 2025 wk 4–16 (617) | 2026 wk 3–5 (171) | 2024 wk 4–16 (611) |
+|---|---|---|---|
+| **AdjEM model** | **12.47** | **12.77** | **13.11** |
+| Average scoring margin + home field | 13.19 | 14.27 | 13.10 |
+| Raw points per drive + home field | 14.02 | 17.71 | 15.12 |
 
 Over every predictable game, MAE is 12.43 with 72.3% of winners picked in 2025 (639 games), and 12.87
-with 80.0% in 2026 (205 games). Calibration (2025, 639 games):
+with 80.0% in 2026 (205 games). **2024 is weaker:** 13.09 with 71.5% (631 games), and the model only
+ties average scoring margin there, though it still beats raw points per drive by 2 points. ESPN's 2024
+play-by-play leaves 7% of FBS games without usable drives and has no snap-time stamps (§J), so treat
+2024 ratings as less precise. A stricter parser that recovered some of those games did not change this
+(13.12 vs 13.14). Calibration (2025, 639 games):
 
 | Predicted (bin mean) | 0.55 | 0.65 | 0.75 | 0.85 | 0.96 |
 |---|---|---|---|---|---|
@@ -427,3 +432,43 @@ the regression tests in `tests/test_parse.py` are built from the plays they cite
 **Effect of round 4 on prediction.** On the final code the 2025 walk-forward MAE is 12.43 (72.3% of
 winners) and the 2026 holdout MAE 12.87 (80.0%). The ratings changed through correctness fixes, not tuning;
 the lead-protection weight was the only modelling choice, and it is accuracy-neutral.
+
+---
+
+## J. Seasons: the season picker and 2024 (round 5)
+
+The page now switches between seasons (2024, 2025, 2026). Each season is rated on its **regular season**,
+conference title games and Army–Navy included. ESPN files the FCS playoff rounds among regular-season
+weeks; `parse.py` flags them and `ratings.load()` sets them aside (17 games in 2025, 20 in 2024).
+Removing them from 2025 moved its validation by at most 0.0006 MAE.
+
+**Data coverage differs by season** and is printed on each season's page:
+
+| Season | FBS games with usable drives | Snap-time stamps (kept drives) | Penalties exact vs box | Teams under 90% penalty coverage |
+|---|---|---|---|---|
+| 2024 | 810 of 873 (93%) | ~0% | 53.8% | 41 of 134 |
+| 2025 | 871 of 888 (98%) | 37% | 74.7% | 4 of 136 |
+| 2026 (wk 1–5) | 390 of 390 | 88% | 90.3% | 0 of 107 |
+
+In 2024 the missing drives come from ESPN: some scoring plays appear in the scoring summary but in no
+drive, so the parser drops the game from efficiency rather than guess. Those games still count in
+records, win values and the resume. Without snap stamps the clock rules run on the end-of-play clock,
+so 2024 neutral pace and lead-protection tags are not comparable with 2026.
+
+Three reviewers (page behavior, data pipeline, docs and 2024 data) and three verifiers checked the
+work. Findings and fixes:
+
+| Area | Finding | Fix |
+|---|---|---|
+| Page | Enter on a row opened the drawer and closed it at once. | The keystroke no longer reaches the Close button. |
+| Page | A slow or failed trace load could replace or reopen a drawer the user had left. | Each drawer request carries a token; late results for anything else are dropped. |
+| Page | Links didn't name the default season, were read only at load, and an unknown season silently fell back. | Links always carry the season (`#s2026-t87`), follow `hashchange`, and say when a season isn't available. |
+| Page | The season select lost keyboard focus; long paths scrolled sideways on phones. | Focus is kept; paths wrap. |
+| Page | Opening the file from disk broke every drill-down with a "reload" message that couldn't help. | The page says to serve the folder; TRACE.md too. |
+| Pipeline | "Regular season final" depended on how many weeks were downloaded. | It now requires every week of ESPN's regular-season calendar and no game left. |
+| Pipeline | Dates were UTC, so late kickoffs showed the next day. | US Eastern. |
+| Pipeline | Data files kept their names across rebuilds, so a cached file could pair with a new page. | Files are named by content hash. |
+| Pipeline | 2024 penalties weren't audited, and four games with no penalties in the play-by-play deflated rates. | Every season is audited; those games are left out of the rates; a per-team Coverage column marks teams under 90%. |
+| Docs | 2026 figures read as general; stale counts; 2024 validation missing. | Labeled, refreshed, and the 2024 row added to §C1. |
+| CLI | `trace.py --internal` on a team rated that season gave "ambiguous". | It says the team is rated. |
+
