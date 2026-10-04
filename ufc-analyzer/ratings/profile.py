@@ -11,8 +11,8 @@ from ratings import engine
 from ratings.engine import recency_weight
 
 import os
-HALF_LIFE = float(os.environ.get("RATINGS_HALF_LIFE", 540.0))   # days: a fight 18 months ago counts half
-PRIOR_MIN = float(os.environ.get("RATINGS_PRIOR_MIN", 30.0))    # minutes of division-average pseudo-exposure
+HALF_LIFE = float(os.environ.get("RATINGS_HALF_LIFE", 1500.0))  # days: a fight four years ago counts half (tuned on 2010-2015)
+PRIOR_MIN = float(os.environ.get("RATINGS_PRIOR_MIN", 15.0))     # minutes of division-average pseudo-exposure
 LAYOFF_BUCKETS = ((90, "<90"), (180, "90-180"), (365, "180-365"), (730, "365-730"), (10 ** 9, ">730"))
 
 # stats that are "per minute of cage time" rates (landed/absorbed/attempted), per 15 minutes in the output

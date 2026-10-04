@@ -4,7 +4,7 @@ rating cards with division rank, and a division leaderboard.
     predictions(event_id) -> {"fights": {fight_id: {...}}, "model": {metadata + evaluation}}
     leaderboard(div)      -> ranked active fighters of a division
 """
-import datetime, time
+import datetime, math, time
 
 import espn, ufcstats
 from model import espn_hist
@@ -72,7 +72,8 @@ def fight_prediction(card, f):
     rounds = (hist[1] if hist else None) or f.get("rounds") or 3
     div = fightdata.division(f.get("weightClass") or "")
     if div == "catch":
-        div = st["ledger"].log.get(a["ufcstats_id"], [None])[-1].div if st["ledger"].log.get(a["ufcstats_id"]) else "catch"
+        sd = _predict.state_on(day)
+        div = sd["last_div"].get(a["ufcstats_id"]) or sd["last_div"].get(b["ufcstats_id"]) or "catch"
     pred = _predict.predict(a["ufcstats_id"], b["ufcstats_id"], day=day, div=div, rounds=rounds, title=bool(f.get("title")), attrs=attrs, outside=outside)
     pred["ids"] = [a["ufcstats_id"], b["ufcstats_id"]]
     pred["names"] = [a["name"], b["name"]]
@@ -102,24 +103,39 @@ def predictions(event_id):
         meta = dict(_predict._load()["model"])
         summary = {k: meta.get(k) for k in ("built", "trained_through", "fights", "windows", "evaluation", "ablation", "blend_model_for_comparison", "description")}
         summary["importance"] = (meta.get("win") or {}).get("importance", [])[:15]
+        summary["cagepoints"] = _cagepoints()
         return {"available": True, "fights": out, "model": summary, "at": int(time.time() * 1000)}
     return cache.get(("ratings", event_id), load, ttl=600)
 
 
+def _cagepoints():
+    try:
+        from ratings import cagepoints
+        c = cagepoints.load()
+        return {k: round(v, 4) for k, v in c.items()} if c else None
+    except Exception:
+        return None
+
+
 def leaderboard(div=None, top=25):
+    """Active fighters of a division ranked by adjusted efficiency margin (qualified first, provisional
+    fighters listed after with no rank)."""
     if not available():
         return {"available": False}
     st = _predict._load()
     sd = _predict.state_on(datetime.date.today())
+    R = sd["R"]
     rows = []
     for fid, rk in sd["ranks"].items():
         if div and rk["div"] != div:
             continue
-        bouts = sd["ledger"].log.get(fid) or []
+        bouts = R.ledger.log.get(fid) or []
+        e = R.eff_profile(fid, rk["div"], sd["day"].toordinal())
         rows.append({"id": fid, "name": st["names"].get(fid), "div": rk["div"], "rank": rk["rank"], "of": rk["of"], "pct": rk["pct"],
-                     "power": round(sd["power"][fid], 3), "fights": len(bouts), "last": bouts[-1].date if bouts else None,
-                     "adj": {k: round(v, 2) for k, v in (sd["table"].get(fid) or {}).items() if k.startswith(("net_", "sos", "luck"))}})
-    rows.sort(key=lambda r: (r["div"], r["rank"]))
+                     "adjem": round(e["adjem"], 2), "adjo": round(e["adjo"], 2), "adjd": round(e["adjd"], 2), "pyth": round(1 / (1 + math.exp(-e["adjem"])), 3),
+                     "bt": round(e["bt"], 2), "sos": round(e["sos"], 2), "luck": round(e["luck"], 2), "tier": sd["tier"][fid]["tier"],
+                     "fights": len(bouts), "last": bouts[-1].date if bouts else None})
+    rows.sort(key=lambda r: (r["div"], r["rank"] is None, r["rank"] or 0, -r["adjem"]))
     if div:
         rows = rows[:top]
-    return {"available": True, "divisions": sorted({r["div"] for r in sd["ranks"].values()}), "rows": rows, "asof": sd["ledger"].as_of}
+    return {"available": True, "divisions": sorted({r["div"] for r in sd["ranks"].values()}), "rows": rows, "asof": R.as_of}

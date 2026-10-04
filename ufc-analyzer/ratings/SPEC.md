@@ -11,19 +11,25 @@ plus tempo, strength of schedule and luck, then predicts games from the ratings.
 
 | KenPom | This model |
 | --- | --- |
-| Possession | A minute of cage time (rates are per minute or per 15 minutes) |
-| Offensive efficiency | Significant strikes landed per minute, takedowns per 15, control minutes per 15, knockdowns per 15, submission attempts per 15, head strikes per minute, ground strikes per minute |
-| Defensive efficiency | The same things allowed to opponents |
-| Opponent adjustment | Each fight's rate is scaled by how much better or worse than average the opponent is at preventing it, iterated to consistency (`engine.adjust`) |
+| Possession | A minute of shared cage time (both fighters always have the same minutes). Rates are per minute or per 15 minutes; power and chin use head strikes as the exposure |
+| Points | **Cage points**: a weight per thing a fighter does, fitted once on 2008–2015 from what wins fights (`ratings/cagepoints.py`): a knockdown is worth 0.35, a submission attempt 0.38, a takedown 0.12, a minute of control 0.07, a significant strike 0.025 (+0.011 if to the head, +0.021 on the ground), in log-odds per 15 minutes |
+| Offensive efficiency (AdjO) | Cage points per 15 minutes the fighter would produce against an average opponent of the division |
+| Defensive efficiency (AdjD) | Cage points per 15 minutes an average opponent would produce against the fighter (lower is better) |
+| Opponent adjustment | For each of 14 dimensions (sig. strikes, attempts, total strikes, head, distance, clinch and ground strikes, knockdowns, takedowns, takedown attempts, control, submission attempts, finishes, power) a fighter's offensive ratio O and defensive ratio D: expected count = exposure × division-era baseline × O × D(opponent). Observed / expected is shrunk toward 1.0 with K minutes of prior per dimension and iterated until every rating is consistent with everyone else's (`ratings/efficiency.py`) |
+| League averages per season | Division-era baselines: decayed per-division rates, frozen into each fight at fight time, so a 2012 fight is judged against 2012 output (output has risen ~50% since 2009) |
 | Tempo | Pace: both fighters' significant-strike attempts per minute |
-| AdjEM | Composite rating from the adjusted margins, and the model's **power rating** (log-odds of beating a division-average fighter) |
-| SOS | Recency-weighted mean rating of opponents faced |
-| Luck | Win rate beyond what the per-fight stat margins say |
-| Log5 / Pythagorean | Logistic predictor on fighter differences |
+| AdjEM | AdjO − AdjD. Rust-, momentum- and results-neutral; what division rankings sort by |
+| Pythagorean win% | Pyth = sigmoid(AdjEM): the chance of beating an average fighter in the division (cage points are in log-odds units) |
+| SOS | Decayed mean of opponents' AdjEM |
+| Luck | Wins beyond what each fight's own stat line implied (the same fitted in-fight model) |
+| Resume | A results-only Bradley-Terry strength, decayed and ridge-shrunk, shown beside AdjEM and used by the predictor |
+| Log5 / game predictor | Ratings only: log5 of both fighters' Pyth. The full predictor: a logistic regression on antisymmetric matchup features, led by the expected output each way per dimension (A's offense × B's defense), plus physical, experience, durability, schedule and ring-rust terms |
 
-Every number is point in time: computed from fights strictly before the fight date, with recency
-weighting (half-life 18 months), exposure weighting (minutes) and shrinkage toward the division
-average while the sample is small (30 minutes of pseudo-exposure).
+Every number is point in time: computed from fights strictly before the fight date (same-day cards
+never see each other), with exponential decay (τ = 1,500 days; a fight four years ago counts 37%),
+and shrinkage toward the division while the sample is small. Ratings carry a data tier
+(provisional < 15 effective minutes, developing 15–45, established 45+); only established fighters
+or those with 3+ fights and 30+ minutes are ranked.
 
 ## Per-fighter stats, metrics and considerations
 
@@ -57,9 +63,8 @@ round-by-round data.
 | Head, body, leg landed /15; head strikes absorbed pm | Damage proxies |
 | Knockdowns /15 for and against | |
 | Distance net rate | Landed − absorbed at distance pm |
-| **Adj striking offense / defense** | SLpM against an average defense; SApM from an average offense |
-| **Adj head strikes landed / absorbed** | |
-| **Adj knockdown rate / knockdowns taken** | |
+| **Adjusted ratios, offense and defense** | For sig. strikes, attempts, total strikes, head, distance, clinch and ground strikes, knockdowns: an index (100 = division-era average) and the rate against an average opponent |
+| **Power / chin** | Knockdowns per 100 head strikes landed (offense) and per 100 absorbed (defense), opponent-adjusted |
 
 ### Grappling (raw and adjusted)
 | Metric | Definition |
@@ -69,10 +74,8 @@ round-by-round data.
 | Control minutes /15 for and against, control margin | |
 | Submission attempts /15 for and against, reversals /15 | |
 | Ground strikes landed / absorbed pm | |
-| **Adj takedown offense / defense** | |
-| **Adj control / control conceded** | |
-| **Adj submission threat / exposure** | |
-| **Adj ground striking for / against** | |
+| **Adjusted ratios, offense and defense** | Takedowns, takedown attempts, control minutes, submission attempts, ground strikes: index and rate against an average opponent |
+| **Finishes** | Finish wins per 15 minutes at risk (offense) and being finished (defense), opponent-adjusted |
 
 ### Damage and durability
 | Metric | Definition |
@@ -108,8 +111,10 @@ round-by-round data.
 | UFC fights, rounds, minutes; pro fights; years in the UFC; debut flag | |
 | Record outside the UFC | Wins, losses and finish share before this fight, from ESPN's dated history (faded out by 4 UFC fights) |
 | Title fights, main events, five-round fights | |
-| **Strength of schedule** | Recency-weighted mean rating of opponents; SOS of the last 3 |
-| Division rank and percentile | By power rating among active fighters (a UFC fight in the last 4 years) |
+| **AdjO, AdjD, AdjEM, Pyth** | The composites above |
+| **Results strength** | Bradley-Terry on results only; performance-implied win share (mean of P(win | stat line) over the fighter's fights) |
+| **Strength of schedule** | Decayed mean of opponents' AdjEM; SOS of the last 3 |
+| Division rank, percentile, tier | By AdjEM among qualified active fighters (a UFC fight in the last 4 years); data tier and effective minutes |
 
 ### Ring rust
 | Metric | Definition |
@@ -135,12 +140,14 @@ removing it makes the walk-forward log loss worse on 2010–2015 and on 2016–2
 ### Matchup and context
 | Term | Definition |
 | --- | --- |
-| Wrestling vs takedown defense | A's adjusted takedown offense × (1 − B's takedown defense), minus the reverse |
-| Volume vs striking defense | |
-| Power vs chin | Knockdown rate × opponent's KO-loss share |
-| Submissions vs ground game | |
-| Reach at distance | Reach edge weighted by how much both fight at distance |
-| Five rounds × cardio, five rounds × rating | Championship-round context |
+| (see Matchup above) | Style-versus-style effects are native to the expected-output terms |
+
+### Matchup
+| Term | Definition |
+| --- | --- |
+| Expected output each way | For each dimension: baseline × O_A × D_B minus baseline × O_B × D_A (A's offense against B's defense, and the reverse): the native style interaction, in natural units |
+| Offense-and-defense margin | The additive alternative, baseline × ((O_A − O_B) − (D_A − D_B)); the ablation keeps whichever form helps |
+| Five rounds × cardio, five rounds × AdjEM | Championship-round context |
 
 ## Predictor
 

@@ -27,7 +27,8 @@ TUNE = list(range(2010, 2016))
 VAL = list(range(2016, 2021))
 TRAIN_FROM = 2009
 C_GRID = (0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0)
-OPTIONAL_GROUPS = ("rust", "momentum", "cardio", "matchup", "schedule", "judging", "record", "pace")
+# tested in this order; a group is dropped when the model does no worse without it on TUNE and VAL
+OPTIONAL_GROUPS = ("margins_add", "margins_mult", "results", "schedule", "rust", "momentum", "cardio", "judging", "record", "pace")
 
 
 def logit(p):
@@ -165,8 +166,8 @@ def main(rows_path=None):
     # 3. out-of-sample predictions on every year with the kept features, plus baselines
     years = TUNE + VAL + TEST
     preds = walk_forward(rows, kept, C, years)
-    rating_only = walk_forward(rows, ["rating"], 1.0, years)
-    raw_only = walk_forward(rows, [f for f in kept if GROUP[f] not in ("adjusted", "schedule")], C, years)
+    rating_only = walk_forward(rows, ["adjem"], 1.0, years)
+    raw_only = walk_forward(rows, [f for f in kept if GROUP[f] not in ("composite", "margins_mult", "margins_add", "results", "schedule")], C, years)
     ev = {}
     for name, yrs in (("val", VAL), ("test", TEST)):
         rs = [r for r in rows if r["year"] in yrs]

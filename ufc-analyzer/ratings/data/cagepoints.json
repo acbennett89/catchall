@@ -1,0 +1,29 @@
+{
+ "stats": [
+  "sig",
+  "head",
+  "ground",
+  "kd",
+  "td",
+  "ctrl",
+  "sub",
+  "tot"
+ ],
+ "coef": [
+  0.02482,
+  0.01124,
+  0.02139,
+  0.34597,
+  0.12214,
+  0.07319,
+  0.37878,
+  0.00832
+ ],
+ "fit_years": [
+  2008,
+  2015
+ ],
+ "n": 2618,
+ "accuracy": 0.8801,
+ "note": "logit per unit of per-15-minute margin; control in minutes"
+}

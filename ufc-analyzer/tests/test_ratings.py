@@ -4,7 +4,8 @@ import datetime, os, sys, unittest
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(HERE))
 
-from ratings import engine, features, fightdata, profile, ratings, rounds  # noqa: E402
+from ratings import dataset, efficiency, engine, features, fightdata, profile, rounds  # noqa: E402
+from ratings.efficiency import DIMS, DIM_INDEX, Efficiency, BradleyTerry, side_vectors  # noqa: E402
 
 
 def stats(sig=30, sig_a=60, td=1, td_a=2, kd=0, ctrl=60, sub=0, ground=2):
@@ -22,7 +23,7 @@ def fight(fid, date, f1, f2, s1, s2, result="f1", method="U-DEC", rnd=3, time="5
 
 
 def history():
-    """ann beats everyone; bea beats cat; cat loses a lot; dee is a wrestler with one fight."""
+    """ann beats everyone; bea beats cat; cat loses a lot; dee is a wrestler with two fights."""
     return sorted([
         fight("x1", "2020-01-01", "ann", "bea", stats(50, 90), stats(30, 80)),
         fight("x2", "2020-01-01", "cat", "dee", stats(20, 60), stats(25, 50, td=4, td_a=6, ctrl=300), result="f2", method="SUB", rnd=2, time="3:00"),
@@ -30,6 +31,15 @@ def history():
         fight("x4", "2021-01-01", "bea", "cat", stats(40, 80), stats(35, 90)),
         fight("x5", "2021-06-01", "ann", "dee", stats(45, 80), stats(20, 60, td=2, td_a=5, ctrl=200)),
     ], key=lambda r: (r["date"], r["event"]))
+
+
+def replay(fights, until="2100-01-01"):
+    R = dataset.Replay(infight={"sig": 0.03, "kd": 0.4, "td": 0.1, "ctrl": 0.08})
+    for r in fights:
+        if r["date"] >= until:
+            break
+        R.apply(r, datetime.date.fromisoformat(r["date"]).toordinal())
+    return R
 
 
 class LedgerTests(unittest.TestCase):
@@ -50,29 +60,75 @@ class LedgerTests(unittest.TestCase):
         self.assertEqual(len(L.log["ann"]), 3)
 
 
-class AdjustTests(unittest.TestCase):
-    def test_offense_rises_against_good_defense(self):
-        """Same raw output against a stingier opponent must rate higher after adjustment."""
-        L = engine.Ledger().replay(history())
-        day = datetime.date(2022, 1, 1)
-        pool = ["ann", "bea", "cat", "dee"]
-        prior = 3.0
-        adj = engine.adjust(lambda f: L.before(f, day), pool, lambda b: engine.per_min("sig", b), lambda b: engine.per_min("sig", b, "them"), prior, day)
-        self.assertGreater(adj["ann"][0], adj["cat"][0])              # ann lands more than cat
-        self.assertLess(adj["ann"][1], adj["cat"][1])                 # and allows less
-        # cat's opponents (ann, bea, dee) are good defenders, so her adjusted offense beats her raw rate
-        raw_cat = sum((b.me["sig"] or 0) for b in L.log["cat"]) / sum(b.minutes for b in L.log["cat"])
-        self.assertGreater(adj["cat"][0], min(raw_cat, prior) * 0.9)
-        # debutant = prior
-        adj2 = engine.adjust(lambda f: L.before(f, day), pool + ["zed"], lambda b: engine.per_min("sig", b), lambda b: engine.per_min("sig", b, "them"), prior, day)
-        self.assertAlmostEqual(adj2["zed"][0], prior)
+class EfficiencyTests(unittest.TestCase):
+    def test_side_vectors(self):
+        y, e = side_vectors(stats(30, 60, kd=1, ctrl=120), stats(), 10.0, True)
+        self.assertEqual(y[DIM_INDEX["sig"]], 30)
+        self.assertEqual(y[DIM_INDEX["ctrl"]], 2.0)                   # minutes
+        self.assertEqual((y[DIM_INDEX["fin"]], e[DIM_INDEX["fin"]]), (1.0, 10.0))
+        self.assertEqual((y[DIM_INDEX["pow"]], e[DIM_INDEX["pow"]]), (1.0, 18))   # knockdowns per head strike landed
 
-    def test_fade_ratio(self):
-        self.assertIsNone(engine.fade_ratio([10], 300))
-        self.assertIsNone(engine.fade_ratio([10, 3], 330))             # 30 seconds into round 2: too little
-        self.assertAlmostEqual(engine.fade_ratio([10, 10, 10], 900), 1.0)
-        self.assertLess(engine.fade_ratio([20, 5, 5], 900), 1.0)       # fading
-        self.assertGreater(engine.fade_ratio([0, 10, 10], 900), 1.0)   # slow start, no blow-up
+    def test_offense_rises_against_good_defense_and_debutant_is_average(self):
+        R = replay(history())
+        t = datetime.date(2022, 1, 1).toordinal()
+        R.converge(t)
+        E = R.eff
+        k = DIM_INDEX["sig"]
+        Oann, Dann = E.ratios("ann")
+        Ocat, Dcat = E.ratios("cat")
+        self.assertGreater(Oann[k], Ocat[k])              # ann lands more
+        self.assertLess(Dann[k], Dcat[k])                 # and allows less (lower is better)
+        self.assertEqual(E.ratios("zed"), ([1.0] * len(DIMS), [1.0] * len(DIMS)))   # unknown fighter = average
+        ao, ad, em = E.composite("ann", "lightweight")
+        self.assertGreater(em, E.composite("cat", "lightweight")[2])
+        # cat's opponents (ann, bea, dee) are better than average defenders, so her adjusted offense sits
+        # above her raw observed/expected against average defense
+        raw = [s for s in E.sides if E.ids[s[0]] == "cat"]
+        obs = sum(s[2][k] / s[4][k] for s in raw); exp_avg = sum(s[3][k] for s in raw)
+        self.assertGreater(Ocat[k], (obs + E.K[k]) / (exp_avg + E.K[k]) * 0.99)
+
+    def test_numpy_and_python_sweeps_agree(self):
+        try:
+            import numpy  # noqa: F401
+        except Exception:
+            self.skipTest("numpy not installed")
+        import copy
+        R = replay(history())
+        t = datetime.date(2022, 1, 1).toordinal()
+        E1, E2 = R.eff, copy.deepcopy(R.eff)
+        E1._sweep_np(t, 30, 1e-9)
+        E2._sweep_py(t, 30, 1e-9)
+        for a, b in zip(E1.O, E2.O):
+            for x, y in zip(a, b):
+                self.assertAlmostEqual(x, y, places=9)
+
+    def test_baselines_are_point_in_time(self):
+        """A fight added later never changes the baseline frozen into an earlier side."""
+        R = replay(history(), until="2021-01-01")
+        rb_before = R.eff.sides[0][4][:]
+        R.apply(fight("x9", "2021-02-01", "ann", "bea", stats(90, 120), stats(80, 120)), datetime.date(2021, 2, 1).toordinal())
+        self.assertEqual(R.eff.sides[0][4], rb_before)
+        self.assertGreater(R.eff.rbar("lightweight")[DIM_INDEX["sig"]], rb_before[DIM_INDEX["sig"]])   # the new high-output fight lifts today's baseline
+
+    def test_bradley_terry(self):
+        bt = BradleyTerry()
+        t = datetime.date(2021, 1, 1).toordinal()
+        for i in range(3):
+            bt.add("ann", "cat", 1.0, t)
+            bt.add("cat", "bea", 1.0, t)
+        bt.sweep(t, n=30)
+        self.assertGreater(bt.get("ann"), bt.get("cat"))
+        self.assertGreater(bt.get("cat"), bt.get("bea"))
+        self.assertAlmostEqual(bt.get("ann") + bt.get("cat") + bt.get("bea"), 0.0, places=6)   # ridge keeps the mean at zero
+
+    def test_luck_and_sos(self):
+        R = replay(history())
+        t = datetime.date(2022, 1, 1).toordinal()
+        R.converge(t)
+        p = R.eff_profile("cat", "lightweight", t)
+        self.assertLess(p["luck"], 0.1)                                   # cat has not outperformed her stat lines
+        self.assertGreater(p["sos"], R.eff_profile("ann", "lightweight", t)["sos"] - 10)   # finite, computed
+        self.assertEqual(set(p["O"]), {d[0] for d in DIMS})
 
 
 class ProfileTests(unittest.TestCase):
@@ -98,32 +154,33 @@ class ProfileTests(unittest.TestCase):
         self.assertEqual(zed["debut"], 1.0)
         self.assertAlmostEqual(zed["slpm"], P.get("lightweight")["sig_15"] / 15)   # a debutant sits at the prior
 
-    def test_features_are_antisymmetric(self):
-        L = engine.Ledger().replay(history())
-        day = datetime.date(2022, 1, 1)
-        P = profile.Priors(L, day)
-        T = ratings.compute(L, day, pool=["ann", "bea", "cat", "dee"])
-        A = profile.raw_profile(L, "ann", {"dob": "1992-01-01", "height": 70, "reach": 72, "stance": "Orthodox"}, day, "lightweight", priors=P)
-        B = profile.raw_profile(L, "cat", {"dob": "1995-01-01", "height": 68, "reach": 70, "stance": "Southpaw"}, day, "lightweight", priors=P)
-        A["adj"], B["adj"] = T["ann"], T["cat"]
-        x, y = features.matchup(A, B, 5), features.matchup(B, A, 5)
+    def test_rows_and_features_are_antisymmetric(self):
+        data = {"fights": history(), "fighters": {"ann": {"dob": "1992-01-01", "height": 70, "reach": 72, "stance": "Orthodox"},
+                                                  "cat": {"dob": "1995-01-01", "height": 68, "reach": 70, "stance": "Southpaw"}}, "espn": {}}
+        rows, R = dataset.build_rows(data, since="2020-06-01", log=lambda *a: None, replay=replay([]))
+        self.assertEqual([r["id"] for r in rows], ["x3", "x4", "x5"])
+        r = rows[0]                                                     # ann vs cat on 2020-06-01: only x1 and x2 are known
+        self.assertEqual({r["A"]["fights"], r["B"]["fights"]}, {1})
+        x, y = features.matchup(r["A"], r["B"], 5), features.matchup(r["B"], r["A"], 5)
         for k in x:
             self.assertAlmostEqual(x[k], -y[k], places=9, msg=k)
         self.assertEqual(set(x), set(features.ALL_FEATURES))
-        self.assertGreater(x["rating"], 0)   # ann rates above cat, whom she knocked out
+        a_is_ann = r["a"] == "ann"
+        self.assertGreater(x["adjem"] if a_is_ann else -x["adjem"], 0)   # ann (won x1 big) rates above cat (lost x2)
+        self.assertGreater(x["mult_sig"] if a_is_ann else -x["mult_sig"], 0)
 
-    def test_ranks_and_sos(self):
-        L = engine.Ledger().replay(history())
+    def test_ranks_and_tiers(self):
+        from ratings import predict
+        R = replay(history())
         day = datetime.date(2022, 1, 1)
-        T = ratings.compute(L, day, pool=["ann", "bea", "cat", "dee"])
-        self.assertGreater(T["ann"]["rating"], T["cat"]["rating"])
-        # strength of schedule is the recency-weighted mean of the opponents' ratings
-        opp = [(b.opp, engine.recency_weight((day - b.day).days, ratings.HALF_LIFE)) for b in L.log["cat"]]
-        self.assertAlmostEqual(T["cat"]["sos"], sum(w * T[o]["rating"] for o, w in opp) / sum(w for _, w in opp))
-        self.assertGreater(T["ann"]["luck"], -0.5)
-        R = ratings.ranks(T, L, day, lambda f: "lightweight")
-        self.assertEqual(R["ann"]["rank"], 1)
-        self.assertEqual(R["ann"]["of"], 4)
+        R.converge(day.toordinal())
+        tiers = {f: predict.tier_of(R, f, day) for f in ("ann", "bea", "cat", "dee")}
+        self.assertEqual(tiers["ann"]["tier"], "developing")                # 3 fights, ~37 minutes
+        adjem = {f: R.eff.composite(f, "lightweight")[2] for f in tiers}
+        rk = predict.ranks(adjem, {f: "lightweight" for f in tiers}, tiers)
+        self.assertEqual(rk["ann"]["rank"], 1)
+        self.assertIsNone(rk["dee"]["rank"])                                # 2 fights: unranked
+        self.assertEqual(rk["ann"]["active"], 4)
 
 
 class ServingHelpersTests(unittest.TestCase):
@@ -144,6 +201,13 @@ class ServingHelpersTests(unittest.TestCase):
         s = predict.style_of(avg, P.get("lightweight"))["scores"]
         for k in ("wrestler", "power_striker", "kicker", "counter"):
             self.assertAlmostEqual(s[k], 1.0, places=5, msg=k)   # a division-average fighter scores 1.0 on each
+
+    def test_fade_ratio(self):
+        self.assertIsNone(engine.fade_ratio([10], 300))
+        self.assertIsNone(engine.fade_ratio([10, 3], 330))             # 30 seconds into round 2: too little
+        self.assertAlmostEqual(engine.fade_ratio([10, 10, 10], 900), 1.0)
+        self.assertLess(engine.fade_ratio([20, 5, 5], 900), 1.0)       # fading
+        self.assertGreater(engine.fade_ratio([0, 10, 10], 900), 1.0)   # slow start, no blow-up
 
 
 class RoundsParserTests(unittest.TestCase):

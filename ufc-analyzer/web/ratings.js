@@ -20,22 +20,11 @@ function ratingFor(f) {
   return r && !r.error ? r : null;
 }
 
-const RATING_ROWS = [
-  // [label, key, how to read, higher is better?, format]
-  ["Adj. striking offense", "adj_sig_o", "sig. strikes landed per minute against an average defense", true, v => v.toFixed(2)],
-  ["Adj. striking defense", "adj_sig_d", "sig. strikes absorbed per minute from an average offense", false, v => v.toFixed(2)],
-  ["Adj. head strikes landed", "adj_head_o", "per minute", true, v => v.toFixed(2)],
-  ["Adj. head strikes absorbed", "adj_head_d", "per minute", false, v => v.toFixed(2)],
-  ["Adj. knockdowns", "adj_kd_o", "per 15 minutes", true, v => v.toFixed(2)],
-  ["Adj. knockdowns taken", "adj_kd_d", "per 15 minutes", false, v => v.toFixed(2)],
-  ["Adj. takedowns", "adj_td_o", "per 15 minutes against an average defense", true, v => v.toFixed(2)],
-  ["Adj. takedowns conceded", "adj_td_d", "per 15 minutes", false, v => v.toFixed(2)],
-  ["Adj. control time", "adj_ctrl_o", "minutes per 15", true, v => v.toFixed(1)],
-  ["Adj. control conceded", "adj_ctrl_d", "minutes per 15", false, v => v.toFixed(1)],
-  ["Adj. submission threat", "adj_sub_o", "attempts per 15", true, v => v.toFixed(2)],
-  ["Adj. submission exposure", "adj_sub_d", "attempts faced per 15", false, v => v.toFixed(2)],
-  ["Strength of schedule", "sos", "average rating of opponents faced", true, v => (v >= 0 ? "+" : "") + v.toFixed(2)],
-  ["Luck", "luck", "wins beyond what the fight stats say", null, v => (v >= 0 ? "+" : "") + v.toFixed(2)],
+// adjusted dimensions shown on the ratings page: [dimension key, label, unit]
+const ADJ_DIMS = [
+  ["sig", "Sig. strikes", "/15"], ["head", "Head strikes", "/15"], ["dist", "Distance strikes", "/15"], ["clinch", "Clinch strikes", "/15"],
+  ["ground", "Ground strikes", "/15"], ["kd", "Knockdowns", "/15"], ["pow", "Power (KD per 100 head strikes)", ""], ["td", "Takedowns", "/15"],
+  ["td_a", "Takedown attempts", "/15"], ["ctrl", "Control", "min/15"], ["sub", "Sub attempts", "/15"], ["fin", "Finishes", "/15"],
 ];
 
 const RAW_ROWS = [
@@ -72,14 +61,17 @@ function renderRatings(f) {
   const fo = fightOdds(f);
   const mkt = fo && fo.value && fo.value.fair;
   const P = r.profiles;
-  const rankTxt = i => r.rank[i] ? `#${r.rank[i].rank} of ${r.rank[i].of}` : "unranked";
+  const rankTxt = i => r.rank[i] && r.rank[i].rank ? `#${r.rank[i].rank} of ${r.rank[i].of}` : "unranked";
+  const tierTxt = i => r.tier[i] ? `${r.tier[i].tier}, ${Math.round(r.tier[i].effective_minutes)} min` : "";
   const sides = [0, 1].map(i => `<div class="odds-side ${i ? "blue" : "red"}">
       <div class="os-top"><span class="os-name">${esc(names[i])}</span><span class="os-book">Rating</span></div>
       <div class="os-price">${pct(r.p[i], 0)}<span class="small muted" style="font-weight:500"> to win</span></div>
       <dl class="kv tight">
-        <dt>Power rating</dt><dd>${(r.power[i] >= 0 ? "+" : "") + r.power[i].toFixed(2)}</dd>
+        <dt title="Adjusted efficiency margin: cage points per 15 minutes vs an average opponent (log-odds)">AdjEM</dt><dd>${(r.adjem[i] >= 0 ? "+" : "") + r.adjem[i].toFixed(2)}</dd>
+        <dt>Beats an average ${r.rank[i] ? esc(divShort(r.rank[i].div)) : "fighter"}</dt><dd>${pct(P[i].adj.pyth, 0)}</dd>
         <dt>${r.rank[i] ? esc(divShort(r.rank[i].div)) + " rank" : "Rank"}</dt><dd>${rankTxt(i)}</dd>
         ${r.rank[i] ? `<dt>Percentile</dt><dd>${ordinal(r.rank[i].pct)}</dd>` : ""}
+        <dt>Data</dt><dd>${esc(tierTxt(i))}</dd>
         ${mkt ? `<dt>Market</dt><dd>${pct(mkt[i], 1)}</dd>` : ""}
       </dl>
       <div class="small muted" style="margin-top:6px">${esc(styleName(P[i].style.primary))} <span class="faint">/ ${esc(styleName(P[i].style.secondary))}</span></div></div>`).join("");
@@ -96,10 +88,28 @@ function renderRatings(f) {
     const winA = !a && !b && better !== null && (better ? va > vb : va < vb), winB = !a && !b && better !== null && (better ? vb > va : vb < va);
     return `<tr><td title="${esc(help || "")}">${esc(label)}</td><td class="${winA ? "best" : ""}">${a ? "—" : esc(fmt(va))}</td><td class="${winB ? "best" : ""}">${b ? "—" : esc(fmt(vb))}</td></tr>`;
   };
-  const adjRows = RATING_ROWS.map(([label, key, help, better, fmt]) => row(label, P[0].adj[key], P[1].adj[key], better, fmt, help)).join("");
+  // adjusted page: offense and defense per dimension as an index (100 = division average) with the natural rate
+  const idx = (v, better) => `<span title="100 = division-era average">${v}</span>`;
+  const adjCell = (P, k, side) => { const o = P.adj[side === "o" ? "index_o" : "index_d"][k], n = P.adj[side === "o" ? "o15" : "d15"][k]; return o === undefined ? "—" : `${o} <span class="faint">(${n})</span>`; };
+  const adjRows = ADJ_DIMS.map(([k, label, unit]) => {
+    const oa = P[0].adj.index_o[k], ob = P[1].adj.index_o[k], da = P[0].adj.index_d[k], db = P[1].adj.index_d[k];
+    return `<tr><td>${esc(label)} <span class="faint">offense${unit ? " " + esc(unit) : ""}</span></td><td class="${oa > ob ? "best" : ""}">${adjCell(P[0], k, "o")}</td><td class="${ob > oa ? "best" : ""}">${adjCell(P[1], k, "o")}</td></tr>
+      <tr><td>${esc(label)} <span class="faint">defense (lower is better)</span></td><td class="${da < db ? "best" : ""}">${adjCell(P[0], k, "d")}</td><td class="${db < da ? "best" : ""}">${adjCell(P[1], k, "d")}</td></tr>`;
+  }).join("");
+  const comp = [["AdjO (cage points /15 vs avg)", p => p.adj.adjo, true, v => v.toFixed(2)], ["AdjD (allowed, lower is better)", p => p.adj.adjd, false, v => v.toFixed(2)],
+    ["AdjEM", p => p.adj.adjem, true, v => (v >= 0 ? "+" : "") + v.toFixed(2)], ["Results strength (Bradley-Terry)", p => p.adj.bt, true, v => (v >= 0 ? "+" : "") + v.toFixed(2)],
+    ["Strength of schedule", p => p.adj.sos, true, v => (v >= 0 ? "+" : "") + v.toFixed(2)], ["Luck (wins beyond the stat lines)", p => p.adj.luck, null, v => (v >= 0 ? "+" : "") + v.toFixed(2)],
+    ["Performance-implied win share", p => p.adj.pyth_share, true, v => pct(v, 0)]];
+  const compRows = comp.map(([label, get, better, fmt]) => row(label, get(P[0]), get(P[1]), better, fmt)).join("");
   const rawRows = RAW_ROWS.map(([label, get, better, fmt]) => row(label, get(P[0]), get(P[1]), better, fmt)).join("");
-  const table = `<table class="books-table ratings-table"><thead><tr><th>Opponent-adjusted</th><th>${esc(ln[0])}</th><th>${esc(ln[1])}</th></tr></thead><tbody>${adjRows}</tbody>
-    <thead><tr><th>Raw</th><th></th><th></th></tr></thead><tbody>${rawRows}</tbody></table>`;
+  const ex = r.expected || {};
+  const exRows = ADJ_DIMS.filter(([k]) => k !== "pow" && k !== "fin").map(([k, label, unit]) => `<tr><td>${esc(label)}${unit ? ` <span class="faint">${esc(unit)}</span>` : ""}</td><td>${ex.a_on_b ? ex.a_on_b[k] : "—"}</td><td>${ex.b_on_a ? ex.b_on_a[k] : "—"}</td><td class="muted">${ex.baseline ? ex.baseline[k] : ""}</td></tr>`).join("");
+  const table = `<table class="books-table ratings-table"><thead><tr><th>Composite</th><th>${esc(ln[0])}</th><th>${esc(ln[1])}</th></tr></thead><tbody>${compRows}</tbody>
+    <thead><tr><th>Opponent-adjusted (index, rate)</th><th></th><th></th></tr></thead><tbody>${adjRows}</tbody>
+    <thead><tr><th>Raw</th><th></th><th></th></tr></thead><tbody>${rawRows}</tbody></table>
+    <div class="section-title" style="padding:12px 0 6px">How the fight looks <span class="faint" style="text-transform:none;letter-spacing:0">(expected per 15 minutes)</span></div>
+    <table class="books-table"><thead><tr><th></th><th>${esc(ln[0])} on ${esc(ln[1])}</th><th>${esc(ln[1])} on ${esc(ln[0])}</th><th>avg</th></tr></thead><tbody>${exRows}</tbody></table>
+    ${r.log5 ? `<div class="note-line">Ratings only (log5 of each fighter's chance against an average opponent): ${esc(ln[0])} ${pct(r.log5[0], 0)}, ${esc(ln[1])} ${pct(r.log5[1], 0)}. The full model above adds physical, experience, durability and ring-rust terms.</div>` : ""}`;
   // drivers by group and the biggest single terms
   const groups = Object.entries(r.groups || {});
   const gmax = Math.max(...groups.map(([, v]) => Math.abs(v)), 0.01);
@@ -136,7 +146,7 @@ function ratingsRecord() {
     <div class="note-line">On ${wm.model ? wm.model.n.toLocaleString() : "?"} of them with betting history: ratings model ${acc(wm.model)} right (log loss ${ll(wm.model)}),
       opening line ${acc(wm.market_open)} (${ll(wm.market_open)}), closing line ${acc(wm.market_close)} (${ll(wm.market_close)}). Lower log loss is better.
       Ratings minus opening line ${wm.model_minus_open ? wm.model_minus_open.est.toFixed(4) : "—"}${ci(wm.model_minus_open)}; minus closing line ${wm.model_minus_close ? wm.model_minus_close.est.toFixed(4) : "—"}${ci(wm.model_minus_close)}.</div>
-    ${T.rating_only ? `<div class="note-line">The single opponent-adjusted rating alone: ${acc(T.rating_only)} right (${ll(T.rating_only)}); without any opponent adjustment: ${acc(T.without_adjusted)} (${ll(T.without_adjusted)}).</div>` : ""}
+    ${T.rating_only ? `<div class="note-line">AdjEM alone (the KenPom number): ${acc(T.rating_only)} right (${ll(T.rating_only)}); without the opponent-adjusted efficiencies: ${acc(T.without_adjusted)} (${ll(T.without_adjusted)}).</div>` : ""}
     ${other ? `<div class="note-line">The app's other model (the market blend's fight model, same years): ${acc(other.model)} right (${ll(other.model)}).</div>` : ""}
     ${kept.length || dropped.length ? `<div class="note-line">Tested on 2010–2020 and kept: ${esc(kept.join(", ") || "none")}. Dropped because they didn't help: ${esc(dropped.join(", ") || "none")}.</div>` : ""}
     <div class="note-line">This is a second opinion on who wins, not a bet signal: the BET rule above uses the market blend, which has a tested edge. Where the two models and the market disagree, that's the fight to look at.</div></details>`;
@@ -149,11 +159,11 @@ async function openRankings(div) {
   try {
     const d = await api(`/api/leaderboard?div=${encodeURIComponent(div || "")}&top=40`);
     const sel = `<select id="rank-div">${(d.divisions || []).map(x => `<option value="${esc(x)}"${x === div ? " selected" : ""}>${esc(divName(x))}</option>`).join("")}</select>`;
-    const rows = (d.rows || []).map(r => `<tr><td>${r.rank}</td><td>${esc(r.name || r.id)}</td><td>${(r.power >= 0 ? "+" : "") + r.power.toFixed(2)}</td><td>${r.fights}</td><td>${esc(r.last || "")}</td>
-      <td>${r.adj.net_strike !== undefined ? (r.adj.net_strike >= 0 ? "+" : "") + r.adj.net_strike.toFixed(2) : "—"}</td><td>${r.adj.net_td !== undefined ? (r.adj.net_td >= 0 ? "+" : "") + r.adj.net_td.toFixed(2) : "—"}</td><td>${r.adj.sos !== undefined ? (r.adj.sos >= 0 ? "+" : "") + r.adj.sos.toFixed(2) : "—"}</td></tr>`).join("");
-    body.innerHTML = `<p class="fine">Active fighters (a UFC fight in the last 4 years), ranked by power rating: the model's log-odds of beating an average fighter in the division, as of ${esc(d.asof || "")}. Striking and takedown margins are per minute / per 15 against average opposition; SOS is the average rating of opponents faced.</p>
+    const sg = v => (v >= 0 ? "+" : "") + v.toFixed(2);
+    const rows = (d.rows || []).map(r => `<tr class="${r.rank ? "" : "off"}"><td>${r.rank || "—"}</td><td>${esc(r.name || r.id)}${r.rank ? "" : ` <span class="faint">(${esc(r.tier)})</span>`}</td><td><b>${sg(r.adjem)}</b></td><td>${pct(r.pyth, 0)}</td><td>${r.adjo.toFixed(1)}</td><td>${r.adjd.toFixed(1)}</td><td>${sg(r.bt)}</td><td>${sg(r.sos)}</td><td>${sg(r.luck)}</td><td>${r.fights}</td><td>${esc(r.last || "")}</td></tr>`).join("");
+    body.innerHTML = `<p class="fine">Active fighters (a UFC fight in the last 4 years) ranked by <b>AdjEM</b>, the adjusted efficiency margin: cage points per 15 minutes a fighter produces against an average opponent of the division minus what they allow, with every number adjusted for the quality of opposition faced (as of ${esc(d.asof || "")}). "Pyth" is the chance of beating an average fighter in the division. Fighters with too little data are listed unranked. Ratings are rust- and momentum-neutral: they say how good a fighter is, not how they'll do this week.</p>
       <div style="margin:6px 0">${sel}</div>
-      <div style="overflow-x:auto"><table class="books-table"><thead><tr><th>#</th><th>Fighter</th><th>Power</th><th>Fights</th><th>Last</th><th>Strike mgn</th><th>TD mgn</th><th>SOS</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+      <div style="overflow-x:auto"><table class="books-table"><thead><tr><th>#</th><th>Fighter</th><th>AdjEM</th><th>Pyth</th><th>AdjO</th><th>AdjD</th><th>Results</th><th>SOS</th><th>Luck</th><th>Fights</th><th>Last</th></tr></thead><tbody>${rows}</tbody></table></div>`;
     $("#rank-div").onchange = e => openRankings(e.target.value);
   } catch (e) { body.innerHTML = `<div class="err">${esc(e.message)}</div>`; }
 }
@@ -162,7 +172,7 @@ function styleName(s) {
   return { wrestler: "wrestler", grappler: "submission grappler", volume_striker: "volume striker", power_striker: "power striker", kicker: "kicker", clinch: "clinch fighter", counter: "counter striker" }[s] || s;
 }
 function groupName(g) {
-  return { adjusted: "Adjusted ratings", schedule: "Schedule & luck", striking: "Striking", grappling: "Grappling", durability: "Durability", finishing: "Finishing", judging: "Judging", record: "Record",
+  return { margins_mult: "Matchup (expected output each way)", margins_add: "Adjusted offense & defense", composite: "Efficiency margin (AdjEM)", results: "Results & performance", adjusted: "Adjusted ratings", schedule: "Schedule & luck", striking: "Striking", grappling: "Grappling", durability: "Durability", finishing: "Finishing", judging: "Judging", record: "Record",
     pace: "Pace", cardio: "Cardio", physical: "Physical", experience: "Experience", rust: "Ring rust", momentum: "Momentum", matchup: "Style matchup", other: "Other" }[g] || g;
 }
 function divName(d) { return (d || "").replace(/^w /, "women's ").replace(/\b\w/g, c => c.toUpperCase()); }

@@ -1,31 +1,32 @@
-"""Matchup features for the ratings predictor: differences (A minus B) of the per-fighter metrics, so
-the model is antisymmetric (swapping the fighters flips every sign), plus a few interaction terms
-(style vs style) that are also built to flip sign.
+"""Matchup features for the ratings predictor: antisymmetric in the two fighters (swapping them flips
+every sign), so a model with no intercept gives P(A) = 1 - P(B) exactly.
 
-Groups are named so ablations can switch whole groups off (ring rust, momentum, cardio, physical...).
+Groups are named so ablations can switch whole groups off (ring rust, momentum, cardio, ...).
+
+  margins_mult  expected output of A on B minus B on A, per dimension: rbar x (O_A D_B - O_B D_A).
+                The native style interaction (a wrestler's takedowns against this opponent's takedown
+                defense), in natural units per minute.
+  margins_add   rbar x ((O_A - O_B) - (D_A - D_B)): the additive alternative, kept if it tests better.
+  composite     AdjEM, AdjO and AdjD differences (cage points per 15).
+  results       Bradley-Terry strength (results only) and the performance-implied win share.
 """
 import math
 
-# (feature name, group, function of one fighter's profile P -> number or None)
+from ratings.efficiency import DIMS
+
+DIM_KEYS = [d[0] for d in DIMS]
 _log = lambda v: math.log(max(v, 1e-6))
 
 PER_FIGHTER = [
-    # --- opponent-adjusted ratings (the KenPom core)
-    ("rating", "adjusted", lambda P: P["adj"].get("rating")),
-    ("adj_sig_o", "adjusted", lambda P: P["adj"].get("adj_sig_o")),
-    ("adj_sig_d", "adjusted", lambda P: -(P["adj"].get("adj_sig_d") or 0) if P["adj"] else None),
-    ("adj_head_o", "adjusted", lambda P: P["adj"].get("adj_head_o")),
-    ("adj_head_d", "adjusted", lambda P: -(P["adj"].get("adj_head_d") or 0) if P["adj"] else None),
-    ("adj_kd_o", "adjusted", lambda P: P["adj"].get("adj_kd_o")),
-    ("adj_kd_d", "adjusted", lambda P: -(P["adj"].get("adj_kd_d") or 0) if P["adj"] else None),
-    ("adj_td_o", "adjusted", lambda P: P["adj"].get("adj_td_o")),
-    ("adj_td_d", "adjusted", lambda P: -(P["adj"].get("adj_td_d") or 0) if P["adj"] else None),
-    ("adj_ctrl_o", "adjusted", lambda P: P["adj"].get("adj_ctrl_o")),
-    ("adj_ctrl_d", "adjusted", lambda P: -(P["adj"].get("adj_ctrl_d") or 0) if P["adj"] else None),
-    ("adj_sub_o", "adjusted", lambda P: P["adj"].get("adj_sub_o")),
-    ("adj_sub_d", "adjusted", lambda P: -(P["adj"].get("adj_sub_d") or 0) if P["adj"] else None),
-    ("sos", "schedule", lambda P: P["adj"].get("sos")),
-    ("luck", "schedule", lambda P: P["adj"].get("luck")),
+    # --- composites and results
+    ("adjem", "composite", lambda P: P["eff"]["adjem"]),
+    ("adjo", "composite", lambda P: P["eff"]["adjo"]),
+    ("adjd", "composite", lambda P: -P["eff"]["adjd"]),
+    ("bt", "results", lambda P: P["eff"]["bt"]),
+    ("pyth_share", "results", lambda P: P["eff"]["pyth_share"]),
+    ("sos", "schedule", lambda P: P["eff"]["sos"]),
+    ("luck", "schedule", lambda P: P["eff"]["luck"]),
+    ("log_eff_min", "schedule", lambda P: math.log1p(P["eff"]["eff_min"])),
     # --- raw striking
     ("str_diff", "striking", lambda P: P["str_diff"]),
     ("sig_acc", "striking", lambda P: P["sig_acc"]),
@@ -68,6 +69,7 @@ PER_FIGHTER = [
     ("log_ufc_fights", "experience", lambda P: math.log1p(P["ufc_fights"])),
     ("log_pro_fights", "experience", lambda P: math.log1p(P["pro_fights"])),
     ("outside_win_pct", "experience", lambda P: (P["outside_win_pct"] - 0.75) * P["outside_known"] * max(0.0, 1 - P["ufc_fights"] / 4)),
+    ("outside_finish", "experience", lambda P: (P["outside_finish_share"] - 0.5) * P["outside_known"] * max(0.0, 1 - P["ufc_fights"] / 4)),
     ("title_fights", "experience", lambda P: math.log1p(P["title_fights"])),
     ("five_round_fights", "experience", lambda P: math.log1p(P["five_round_fights"])),
     ("debut", "experience", lambda P: P["debut"]),
@@ -85,36 +87,14 @@ PER_FIGHTER = [
     ("streak", "momentum", lambda P: max(-5, min(5, P["streak"]))),
     ("last3_finishes", "momentum", lambda P: P["last3_finishes"]),
     ("str_diff_trend", "momentum", lambda P: P["str_diff_trend"]),
-    ("sos_last3", "momentum", lambda P: P["adj"].get("sos_last3")),
+    ("sos_last3", "momentum", lambda P: P["eff"]["sos_last3"]),
 ]
 
-# interaction terms: f(A, B) - f(B, A), so they flip sign with the orientation
-def _wrestler_vs_td_def(A, B):
-    return A["adj"].get("adj_td_o", 0) * (1 - B["td_def"])
-
-def _volume_vs_defense(A, B):
-    return A["attempts_pm"] * (1 - B["sig_def"])
-
-def _power_vs_chin(A, B):
-    return A["kd_15"] * B["ko_loss_share"]
-
-def _sub_vs_ground(A, B):
-    return A["sub_15"] * B["share_ground"]
-
-def _reach_vs_dist(A, B):
-    return ((A["reach"] or 0) - (B["reach"] or 0)) * (A["share_dist"] + B["share_dist"]) / 2 if A["reach"] and B["reach"] else 0.0
-
-INTERACTIONS = [
-    ("wrestler_vs_td_def", "matchup", _wrestler_vs_td_def),
-    ("volume_vs_defense", "matchup", _volume_vs_defense),
-    ("power_vs_chin", "matchup", _power_vs_chin),
-    ("sub_vs_ground", "matchup", _sub_vs_ground),
-    ("reach_vs_distance", "matchup", _reach_vs_dist),
-]
-
-FEATURES = [n for n, _, _ in PER_FIGHTER] + [n for n, _, _ in INTERACTIONS]
+MARGIN_DIMS = [k for k in DIM_KEYS if k not in ("fin", "pow")] + ["fin", "pow"]
+FEATURES = [n for n, _, _ in PER_FIGHTER] + ["mult_" + k for k in MARGIN_DIMS] + ["add_" + k for k in MARGIN_DIMS]
 GROUP = {n: g for n, g, _ in PER_FIGHTER}
-GROUP.update({n: g for n, g, _ in INTERACTIONS})
+GROUP.update({"mult_" + k: "margins_mult" for k in MARGIN_DIMS})
+GROUP.update({"add_" + k: "margins_add" for k in MARGIN_DIMS})
 
 
 def matchup(A, B, rounds=3, title=False):
@@ -122,19 +102,19 @@ def matchup(A, B, rounds=3, title=False):
     x = {}
     for name, _, fn in PER_FIGHTER:
         va, vb = fn(A), fn(B)
-        if va is None or vb is None:
-            x[name] = 0.0   # unknown on either side: no information about the difference
-        else:
-            x[name] = float(va) - float(vb)
-    for name, _, fn in INTERACTIONS:
-        x[name] = float(fn(A, B)) - float(fn(B, A))
-    # context terms stay antisymmetric by multiplying a symmetric context with an antisymmetric difference
+        x[name] = 0.0 if va is None or vb is None else float(va) - float(vb)   # unknown on either side: no information
+    ea, eb = A["eff"].get("exp_on_opp") or {}, B["eff"].get("exp_on_opp") or {}
+    rb = A["eff"].get("rb") or {}
+    for k in MARGIN_DIMS:
+        x["mult_" + k] = (ea.get(k, 0.0) - eb.get(k, 0.0)) * (15.0 if k != "pow" else 100.0)
+        x["add_" + k] = rb.get(k, 0.0) * ((A["eff"]["O"][k] - B["eff"]["O"][k]) - (A["eff"]["D"][k] - B["eff"]["D"][k])) * (15.0 if k != "pow" else 100.0)
+    # context terms: a symmetric context times an antisymmetric difference stays antisymmetric
     five = 1.0 if rounds >= 5 else 0.0
     x["five_x_cardio"] = five * (x["fade"] + x["champ_round_min"])
-    x["five_x_rating"] = five * x["rating"]
+    x["five_x_adjem"] = five * x["adjem"]
     return x
 
 
-ALL_FEATURES = FEATURES + ["five_x_cardio", "five_x_rating"]
+ALL_FEATURES = FEATURES + ["five_x_cardio", "five_x_adjem"]
 GROUP["five_x_cardio"] = "cardio"
-GROUP["five_x_rating"] = "adjusted"
+GROUP["five_x_adjem"] = "composite"
