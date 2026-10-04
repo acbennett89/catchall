@@ -1,0 +1,33 @@
+{
+  "season": 2026,
+  "min_games": 5,
+  "garbage_margin": {
+    "1": 43,
+    "2": 37,
+    "3": 27,
+    "4": 21
+  },
+  "explosive": {
+    "rush": 12,
+    "pass": 16
+  },
+  "prior_drives": 12,
+  "prior_plays": 65,
+  "pythag_exp": 2.37,
+  "net_weights": {
+    "primary": 0.6,
+    "secondary": 0.3,
+    "tertiary": 0.1
+  },
+  "record_prior": {
+    "wins": 1,
+    "losses": 1
+  },
+  "fcs_losses_count": true,
+  "solver": {
+    "max_iter": 500,
+    "tol": 1e-09
+  },
+  "exclusion": "path",
+  "layer_mode": "rate"
+}

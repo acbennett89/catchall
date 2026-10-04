@@ -1,0 +1,424 @@
+<title>FBS Efficiency Ratings 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one dense, sortable ratings table (KenPom-style) with a slide-in derivation
+   drawer per team; docs live in tabs. Chalk-on-turf palette, stadium-signage display type. */
+:root {
+  --bg: #f2f4f0;
+  --surface: #fbfcfa;
+  --ink: #17201b;
+  --muted: #5a675f;
+  --line: #d3dbd4;
+  --accent: #1c6a44;
+  --accent-soft: #dcebe1;
+  --gold: #946100;
+  --pos: #1c6a44;
+  --neg: #a2352a;
+  --scrim: rgba(15, 22, 18, .38);
+  --display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --body: "Barlow", "Segoe UI", system-ui, sans-serif;
+  --data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1411; --surface: #141c17; --ink: #e3ebe5; --muted: #93a399; --line: #2a3630;
+    --accent: #5cc48d; --accent-soft: #1b2e23; --gold: #e2aa45; --pos: #5cc48d; --neg: #f0806f;
+    --scrim: rgba(0, 0, 0, .55); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1411; --surface: #141c17; --ink: #e3ebe5; --muted: #93a399; --line: #2a3630;
+  --accent: #5cc48d; --accent-soft: #1b2e23; --gold: #e2aa45; --pos: #5cc48d; --neg: #f0806f;
+  --scrim: rgba(0, 0, 0, .55); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.45; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-inline: 16px; padding-block: 20px 48px; }
+header.top { display: grid; gap: 10px; padding-bottom: 14px; border-bottom: 2px solid var(--ink); }
+.brand { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+h1 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 5vw, 46px); letter-spacing: .01em;
+     text-transform: uppercase; margin: 0; line-height: 1; text-wrap: balance; }
+.season { font-family: var(--display); font-weight: 600; font-size: 20px; color: var(--accent); letter-spacing: .06em; text-transform: uppercase; }
+.meta { margin: 0; color: var(--muted); font-size: 14px; max-width: 90ch; }
+.meta b { color: var(--ink); font-weight: 600; }
+nav.tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+nav.tabs button { font-family: var(--display); font-weight: 600; font-size: 16px; letter-spacing: .05em; text-transform: uppercase;
+  background: transparent; color: var(--muted); border: 1px solid transparent; border-radius: 3px; padding: 5px 12px; cursor: pointer; }
+nav.tabs button:hover { color: var(--ink); border-color: var(--line); }
+nav.tabs button[aria-selected="true"] { background: var(--ink); color: var(--bg); }
+button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible, tr:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 16px 0 10px; }
+.controls input, .controls select { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: 6px 10px; }
+.controls input { min-width: 0; flex: 1 1 200px; max-width: 320px; }
+.hint { color: var(--muted); font-size: 13px; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.grid th, table.grid td { padding: 5px 9px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--line); }
+table.grid th { font-family: var(--display); font-weight: 600; font-size: 14px; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--muted); position: sticky; top: 0; background: var(--surface); cursor: pointer; user-select: none; }
+table.grid th[aria-sort] { color: var(--ink); }
+table.grid th[aria-sort="ascending"]::after { content: " ▲"; font-size: 10px; }
+table.grid th[aria-sort="descending"]::after { content: " ▼"; font-size: 10px; }
+table.grid td { font-family: var(--data); font-size: 13px; }
+table.grid td.t, table.grid th.t { text-align: left; font-family: var(--body); }
+table.grid td.t { font-weight: 600; font-size: 14px; }
+table.grid tbody tr { cursor: pointer; }
+table.grid tbody tr:hover { background: var(--accent-soft); }
+.rk { color: var(--muted); font-size: 11px; margin-left: 3px; }
+.pos { color: var(--pos); } .neg { color: var(--neg); }
+.em { font-weight: 500; }
+.unrated { margin-top: 18px; display: grid; gap: 8px; }
+.unrated h3 { font-family: var(--display); text-transform: uppercase; letter-spacing: .05em; font-size: 17px; margin: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: inherit; font-size: 13px; background: var(--surface); color: var(--ink); border: 1px dashed var(--line); border-radius: 3px; padding: 3px 8px; cursor: pointer; }
+.chip:hover { border-color: var(--accent); }
+/* drawer */
+#scrim { position: fixed; inset: 0; background: var(--scrim); z-index: 10; }
+#drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(780px, 100%); background: var(--bg); z-index: 11;
+  overflow-y: auto; border-left: 2px solid var(--ink); padding-inline: 18px; padding-block: calc(16px + env(safe-area-inset-top, 0px)) calc(40px + env(safe-area-inset-bottom, 0px)); }
+.dhead { display: flex; gap: 12px; align-items: flex-start; justify-content: space-between; border-bottom: 2px solid var(--ink); padding-bottom: 10px; }
+.dhead h2 { font-family: var(--display); font-weight: 700; font-size: 34px; text-transform: uppercase; margin: 0; line-height: 1; }
+.dhead .sub { color: var(--muted); margin-top: 4px; }
+.close { font: inherit; font-size: 14px; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 3px; padding: 4px 10px; cursor: pointer; flex: none; }
+.statrow { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 12px 0 4px; }
+.stat { display: grid; }
+.stat .k { font-family: var(--display); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.stat .v { font-family: var(--data); font-size: 18px; }
+#drawer h3 { font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; font-size: 20px; margin: 26px 0 6px; }
+#drawer h4 { font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; font-size: 16px; margin: 14px 0 4px; color: var(--muted); }
+.formula { font-family: var(--data); font-size: 12.5px; background: var(--surface); border: 1px solid var(--line); padding: 8px 10px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; }
+table.mini { font-size: 12.5px; }
+table.mini th, table.mini td { padding: 3px 7px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
+table.mini th { font-family: var(--display); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-size: 12.5px; }
+table.mini td { font-family: var(--data); }
+table.mini .t { text-align: left; font-family: var(--body); }
+table.mini tr.prior td { color: var(--muted); font-style: italic; }
+.win { border: 1px solid var(--line); background: var(--surface); padding: 10px 12px; margin: 8px 0; display: grid; gap: 6px; }
+.win .line1 { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; justify-content: space-between; }
+.win .opp { font-weight: 600; }
+.win .val { font-family: var(--data); font-size: 17px; }
+details > summary { cursor: pointer; color: var(--accent); font-size: 13.5px; }
+details[open] > summary { margin-bottom: 6px; }
+.tree { font-size: 13px; display: grid; gap: 4px; }
+.tree .node { font-family: var(--data); font-size: 12.5px; }
+.tree .leaves { color: var(--muted); font-size: 12.5px; padding-left: 14px; }
+.tag { font-family: var(--display); font-weight: 600; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; padding: 1px 6px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); }
+.tag.l { background: transparent; border: 1px solid var(--neg); color: var(--neg); }
+.gauge text { font-family: var(--data); font-size: 9px; fill: var(--muted); }
+.note { color: var(--muted); font-size: 13.5px; }
+/* docs */
+.doc { max-width: 920px; }
+.doc h2 { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 30px; margin: 26px 0 8px; text-wrap: balance; }
+.doc h3 { font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: .03em; font-size: 22px; margin: 24px 0 6px; text-wrap: balance; }
+.doc h4 { font-family: var(--display); font-weight: 600; font-size: 18px; margin: 18px 0 4px; }
+.doc p, .doc li { max-width: 72ch; }
+.doc code { font-family: var(--data); font-size: .88em; background: var(--accent-soft); padding: 0 3px; border-radius: 2px; }
+.doc pre { background: var(--surface); border: 1px solid var(--line); padding: 10px 12px; overflow-x: auto; }
+.doc pre code { background: none; padding: 0; font-size: 12.5px; }
+.doc table.doc th, .doc table.doc td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: top; font-size: 14px; }
+.doc table.doc th { font-family: var(--display); text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.doc hr { border: 0; border-top: 1px solid var(--line); margin: 24px 0; }
+.doc a { color: var(--accent); }
+@media (max-width: 560px) {
+  .dhead h2 { font-size: 26px; }
+  #drawer { padding-inline: 16px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  #drawer { animation: slide .18s ease-out; }
+  @keyframes slide { from { transform: translateX(24px); opacity: .6; } to { transform: none; opacity: 1; } }
+}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><h1>FBS Efficiency Ratings</h1><span class="season" id="season"></span></div>
+    <p class="meta" id="meta"></p>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button role="tab" data-tab="ratings" aria-selected="true">Ratings</button>
+      <button role="tab" data-tab="resume">Win values</button>
+      <button role="tab" data-tab="picks" id="picks-tab">Next week</button>
+      <button role="tab" data-tab="metrics">Metrics</button>
+      <button role="tab" data-tab="review">Adversarial review</button>
+      <button role="tab" data-tab="trace">How to trace</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="tab-ratings">
+      <div class="controls">
+        <input id="q" type="search" placeholder="Find a team" aria-label="Find a team">
+        <select id="conf" aria-label="Conference"><option value="">All conferences</option></select>
+        <span class="hint">Click any team for its full derivation. AdjEM is points per game better than an average FBS team on a neutral field.</span>
+      </div>
+      <div class="tablewrap"><table class="grid" id="tbl"></table></div>
+      <div class="unrated" id="unrated"></div>
+    </section>
+    <section id="tab-resume" hidden>
+      <div class="controls"><span class="hint">Every FBS win is valued by the beaten team's +2 network (primary, secondary, tertiary records). 1.00 is a perfectly expected win. Losses cost by the mirror image. Click a team to see each win's tree.</span></div>
+      <div class="tablewrap"><table class="grid" id="tbl-resume"></table></div>
+    </section>
+    <section id="tab-picks" hidden>
+      <div class="controls"><span class="hint" id="picks-hint"></span></div>
+      <div class="tablewrap"><table class="grid" id="tbl-picks"></table></div>
+    </section>
+    <section id="tab-metrics" class="doc" hidden><!--DOC:metrics--></section>
+    <section id="tab-review" class="doc" hidden><!--DOC:review--></section>
+    <section id="tab-trace" class="doc" hidden><!--DOC:trace--></section>
+  </main>
+</div>
+
+<div id="scrim" hidden></div>
+<aside id="drawer" hidden aria-label="Team derivation"></aside>
+
+<script type="application/json" id="data">__DATA__</script>
+<script>
+(function () {
+  const D = JSON.parse(document.getElementById("data").textContent);
+  const M = D.meta, N = D.names;
+  const byId = {}; D.teams.forEach(t => { byId[t.id] = t; });
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const fx = (x, d = 2, sign = false) => x == null || Number.isNaN(x) ? "—" : (sign && x > 0 ? "+" : "") + Number(x).toFixed(d);
+  const cls = x => x == null ? "" : x > 0 ? "pos" : x < 0 ? "neg" : "";
+  const nm = id => N[id] || id;
+
+  document.getElementById("season").textContent = M.season + " · through week " + M.through_week;
+  document.getElementById("meta").innerHTML =
+    `<b>${M.eligible}</b> of ${M.fbs_teams} FBS teams rated (rule: ${M.min_games}+ games played). ` +
+    `${M.games_used} D-I games, ${M.games_with_drives} with play-by-play. ` +
+    `Average FBS drive is worth <b>${fx(M.mu_ppd, 2)}</b> points; teams get <b>${fx(M.muT, 1)}</b> possessions a game; ` +
+    `home field is worth <b>${fx(M.hfa_points, 1)}</b> points. Win values use weights ` +
+    `${M.net_weights.primary} / ${M.net_weights.secondary} / ${M.net_weights.tertiary} (primary / secondary / tertiary).`;
+
+  /* ---------- tabs ---------- */
+  const tabs = [...document.querySelectorAll("nav.tabs button")];
+  function showTab(name) {
+    tabs.forEach(b => b.setAttribute("aria-selected", String(b.dataset.tab === name)));
+    document.querySelectorAll("main > section").forEach(s => { s.hidden = s.id !== "tab-" + name; });
+    try { localStorage.setItem("cfb-tab", name); } catch (e) {}
+  }
+  tabs.forEach(b => b.addEventListener("click", () => showTab(b.dataset.tab)));
+
+  /* ---------- sortable table builder ---------- */
+  function buildTable(el, rows, cols, sortKey, sortDir, onRow) {
+    let key = sortKey, dir = sortDir;
+    function render() {
+      const col = cols.find(c => c.k === key);
+      const val = r => (col && col.sortv) ? col.sortv(r) : r[key];
+      const sorted = rows.slice().sort((a, b) => {
+        const va = val(a), vb = val(b);
+        if (va == null && vb == null) return 0;
+        if (va == null) return 1;
+        if (vb == null) return -1;
+        return (typeof va === "string" ? va.localeCompare(vb) : va - vb) * dir;
+      });
+      el.innerHTML = "<thead><tr>" + cols.map(c =>
+        `<th class="${c.text ? "t" : ""}" data-k="${c.k}" title="${esc(c.title || "")}"` +
+        (c.k === key ? ` aria-sort="${dir > 0 ? "ascending" : "descending"}"` : "") + ">" + c.label + "</th>").join("") +
+        "</tr></thead><tbody>" + sorted.map(r =>
+          `<tr tabindex="0" data-id="${esc(r.id || "")}">` + cols.map(c => `<td class="${c.text ? "t" : ""}">${c.f ? c.f(r[c.k], r) : esc(r[c.k])}</td>`).join("") + "</tr>"
+        ).join("") + "</tbody>";
+      el.querySelectorAll("th").forEach(th => th.addEventListener("click", () => {
+        const c = cols.find(x => x.k === th.dataset.k);
+        if (key === c.k) dir = -dir; else { key = c.k; dir = c.desc ? -1 : 1; }
+        render();
+      }));
+      if (onRow) el.querySelectorAll("tbody tr").forEach(tr => {
+        tr.addEventListener("click", () => onRow(tr.dataset.id));
+        tr.addEventListener("keydown", e => { if (e.key === "Enter") onRow(tr.dataset.id); });
+      });
+    }
+    render();
+    return { setRows(r) { rows = r; render(); } };
+  }
+  const withRk = (v, r, rk, d, sign) => `<span class="${sign ? cls(v) : ""}">${fx(v, d, sign)}</span>` + (r[rk] ? `<span class="rk">${r[rk]}</span>` : "");
+
+  /* ---------- ratings ---------- */
+  const rated = D.teams.filter(t => t.eligible && t.AdjEM != null);
+  const ratingCols = [
+    { k: "rk_AdjEM", label: "Rk", title: "Rank by AdjEM" },
+    { k: "name", label: "Team", text: true, f: v => esc(v) },
+    { k: "conference", label: "Conf", text: true, f: v => esc(v) },
+    { k: "W", label: "W-L", f: (v, r) => `${r.W}-${r.L}`, sortv: r => r.W - r.L, desc: true },
+    { k: "AdjEM", label: "AdjEM", desc: true, title: "Points per game better than an average FBS team, neutral field", f: v => `<span class="em ${cls(v)}">${fx(v, 1, true)}</span>` },
+    { k: "AdjEM_se", label: "±SE", title: "Standard error from game-to-game spread", f: v => `<span class="rk">${fx(v, 1)}</span>` },
+    { k: "AdjO", label: "AdjO", desc: true, title: "Points per drive vs an average FBS defense", f: (v, r) => withRk(v, r, "rk_AdjO", 2) },
+    { k: "AdjD", label: "AdjD", title: "Points per drive allowed vs an average FBS offense (lower is better)", f: (v, r) => withRk(v, r, "rk_AdjD", 2) },
+    { k: "AdjT", label: "AdjT", desc: true, title: "Adjusted possessions per game", f: v => fx(v, 1) },
+    { k: "SOS", label: "SOS", desc: true, title: "Average opponent AdjEM", f: (v, r) => withRk(v, r, "rk_SOS", 1, true) },
+    { k: "NCSOS", label: "NCSOS", desc: true, title: "Non-conference SOS", f: v => `<span class="${cls(v)}">${fx(v, 1, true)}</span>` },
+    { k: "NetResume", label: "Net resume", desc: true, title: "Sum of win values minus loss costs", f: (v, r) => withRk(v, r, "rk_NetResume", 2, true) },
+    { k: "luck", label: "Luck", desc: true, title: "Actual W% minus Pythagorean W%", f: v => `<span class="${cls(v)}">${fx(v, 3, true)}</span>` },
+  ];
+  const confs = [...new Set(rated.map(t => t.conference))].sort();
+  const sel = document.getElementById("conf");
+  confs.forEach(c => { const o = document.createElement("option"); o.value = c; o.textContent = c; sel.appendChild(o); });
+  const ratingsTable = buildTable(document.getElementById("tbl"), rated, ratingCols, "rk_AdjEM", 1, openTeam);
+  const q = document.getElementById("q");
+  function filter() {
+    const s = q.value.trim().toLowerCase(), c = sel.value;
+    ratingsTable.setRows(rated.filter(t => (!s || t.name.toLowerCase().includes(s)) && (!c || t.conference === c)));
+  }
+  q.addEventListener("input", filter); sel.addEventListener("change", filter);
+  const unr = D.teams.filter(t => !t.eligible);
+  if (unr.length) {
+    document.getElementById("unrated").innerHTML =
+      `<h3>Not yet rated (${unr.length})</h3><p class="note">Fewer than ${M.min_games} games played. These teams still count as opponents for everyone else, so their games feed other teams' adjustments, but they get no published rating until game ${M.min_games}.</p>` +
+      `<div class="chips">` + unr.sort((a, b) => a.name.localeCompare(b.name)).map(t => `<button class="chip" data-id="${t.id}">${esc(t.name)} · ${t.games} G</button>`).join("") + "</div>";
+    document.querySelectorAll("#unrated .chip").forEach(b => b.addEventListener("click", () => openTeam(b.dataset.id)));
+  }
+
+  /* ---------- resume ---------- */
+  const resumeCols = [
+    { k: "rk_NetResume", label: "Rk" },
+    { k: "name", label: "Team", text: true, f: v => esc(v) },
+    { k: "W", label: "W-L", f: (v, r) => `${r.W}-${r.L}`, sortv: r => r.W - r.L, desc: true },
+    { k: "WVT", label: "Win value total", desc: true, f: v => fx(v, 2) },
+    { k: "AvgWV", label: "Avg win", desc: true, f: v => fx(v, 3) },
+    { k: "LCT", label: "Loss cost", f: v => fx(v, 2) },
+    { k: "NetResume", label: "Net", desc: true, f: v => `<span class="em ${cls(v)}">${fx(v, 2, true)}</span>` },
+    { k: "SchedNS", label: "Sched strength", desc: true, title: "Average opponent network strength / NS_ref (1.00 = average)", f: v => fx(v, 3) },
+    { k: "BestWin", label: "Best win", desc: true, f: (v, r) => v == null ? "—" : `${fx(v, 3)} <span class="rk">${esc(nm(r.BestWinOpp))}</span>` },
+    { k: "WorstLoss", label: "Worst loss", desc: true, f: (v, r) => v == null ? "—" : `${fx(v, 3)} <span class="rk">${esc(nm(r.WorstLossOpp))}</span>` },
+    { k: "rk_AdjEM", label: "AdjEM rk" },
+  ];
+  buildTable(document.getElementById("tbl-resume"), rated, resumeCols, "rk_NetResume", 1, openTeam);
+
+  /* ---------- picks ---------- */
+  const P = D.predictions || [];
+  document.getElementById("picks-hint").textContent = P.length
+    ? `Model margins for the next slate (${P.length} games with an FBS team). Win probability uses σ = ${fx(M.sigma_points, 1)} points, the out-of-sample error from this season's walk-forward test. These include teams not yet rated: predictions use every team's internal estimate.`
+    : "No upcoming games in the data.";
+  if (!P.length) document.getElementById("picks-tab").hidden = true;
+  const pickRows = P.map(p => {
+    const fav = p.home_margin >= 0 ? p.home : p.away;
+    return { ...p, matchup: `${p.away} ${p.neutral ? "vs" : "at"} ${p.home}`, fav, edge: Math.abs(p.home_margin), favp: Math.max(p.home_win_prob, 1 - p.home_win_prob) };
+  });
+  buildTable(document.getElementById("tbl-picks"), pickRows, [
+    { k: "date", label: "Date", text: true },
+    { k: "matchup", label: "Matchup", text: true, f: v => esc(v) },
+    { k: "fav", label: "Model favorite", text: true, f: v => esc(v) },
+    { k: "edge", label: "By", desc: true, f: v => fx(v, 1) },
+    { k: "favp", label: "Win prob", desc: true, f: v => (v * 100).toFixed(0) + "%" },
+    { k: "possessions", label: "Poss.", f: v => fx(v, 1) },
+  ], "date", 1, null);
+
+  /* ---------- drawer ---------- */
+  const drawer = document.getElementById("drawer"), scrim = document.getElementById("scrim");
+  let lastFocus = null;
+  function closeTeam() {
+    drawer.hidden = true; scrim.hidden = true;
+    if (location.hash.startsWith("#t")) history.replaceState(null, "", location.pathname + location.search);
+    if (lastFocus) lastFocus.focus();
+  }
+  scrim.addEventListener("click", closeTeam);
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !drawer.hidden) closeTeam(); });
+
+  function gauge(v) {
+    // A 1.00-centred scale drawn like a field: hash marks every 0.1, midfield = expected win.
+    const lo = 0.4, hi = 1.6, w = 170, x = t => 6 + (Math.min(Math.max(t, lo), hi) - lo) / (hi - lo) * (w - 12);
+    let s = `<svg class="gauge" width="${w}" height="26" viewBox="0 0 ${w} 26" role="img" aria-label="Win value ${fx(v, 3)} on a scale where 1.00 is expected">`;
+    s += `<rect x="6" y="4" width="${w - 12}" height="9" fill="var(--accent-soft)"/>`;
+    for (let t = 0.4; t <= 1.6001; t += 0.1) s += `<line x1="${x(t)}" x2="${x(t)}" y1="4" y2="13" stroke="var(--line)" stroke-width="${Math.abs(t - 1) < 1e-6 ? 2 : 1}"/>`;
+    s += `<line x1="${x(1)}" x2="${x(1)}" y1="2" y2="15" stroke="var(--muted)" stroke-width="1.5"/>`;
+    s += `<circle cx="${x(v)}" cy="8.5" r="4.5" fill="${v >= 1 ? "var(--pos)" : "var(--gold)"}"/>`;
+    [0.5, 1.0, 1.5].forEach(t => { s += `<text x="${x(t)}" y="24" text-anchor="middle">${t.toFixed(1)}</text>`; });
+    return s + "</svg>";
+  }
+
+  function effTable(side, label, oppKey) {
+    const L = side.lines;
+    const tw = L.reduce((a, b) => a + b.w, 0);
+    let h = `<div class="tablewrap"><table class="mini"><thead><tr><th class="t">Opponent</th><th>Drives</th><th>Raw PPD</th><th>${oppKey === "opp_AdjD" ? "Opp AdjD" : "Opp AdjO"}</th><th>Opp adj</th><th>Venue adj</th><th>Adjusted</th></tr></thead><tbody>`;
+    L.forEach(l => { h += `<tr><td class="t">${esc(l.opp_name)}</td><td>${l.w}</td><td>${fx(l.raw, 3)}</td><td>${fx(l[oppKey], 3)}</td><td>${fx(l.opp_adjustment, 3, true)}</td><td>${fx(l.hfa_adjustment, 3, true)}</td><td>${fx(l.adjusted, 3)}</td></tr>`; });
+    h += `<tr class="prior"><td class="t">Phantom game (${esc(side.prior.division)} average)</td><td>${side.prior.weight}</td><td></td><td></td><td></td><td></td><td>${fx(side.prior.value, 3)}</td></tr></tbody></table></div>`;
+    h += `<div class="formula">${label} = (Σ drives × adjusted + ${side.prior.weight} × ${fx(side.prior.value, 3)}) / (${tw} + ${side.prior.weight}) = ${fx(side.recomputed, 4)}   ${side.check_ok ? "✓ matches stored value" : "✗ MISMATCH"}</div>`;
+    return h;
+  }
+
+  function winCard(r, n, isWin) {
+    const w = n.weights;
+    if (r.fcs) {
+      return `<div class="win"><div class="line1"><span><span class="tag ${isWin ? "" : "l"}">${isWin ? "W" : "L"}</span> <span class="opp">${esc(r.opp_name)}</span> <span class="rk">FCS</span></span><span class="val">${isWin ? fx(r.value, 3) : "−" + fx(r.cost, 3)}</span></div><div class="note">${esc(r.note)}</div></div>`;
+    }
+    const t = r.tree, p = t.primary;
+    const counted = p.games.filter(g => g.counted).map(g => (g.won ? "W " : "L ") + esc(g.opp_name)).join(", ");
+    const excluded = p.games.filter(g => !g.counted).map(g => esc(g.opp_name) + (g.note ? ` (${esc(g.note)})` : "")).join(", ") || "none";
+    const head = isWin
+      ? `value = NS / NS_ref = ${fx(r.ns, 4)} / ${fx(n.ns_ref, 4)} = ${fx(r.value, 3)}`
+      : `cost = (1 − NS) / (1 − NS_ref) = ${fx(1 - r.ns, 4)} / ${fx(1 - n.ns_ref, 4)} = ${fx(r.cost, 3)}`;
+    let h = `<div class="win"><div class="line1"><span><span class="tag ${isWin ? "" : "l"}">${isWin ? "W" : "L"}</span> <span class="opp">${esc(r.opp_name)}</span></span>` +
+      (isWin ? gauge(r.value) : "") + `<span class="val">${isWin ? fx(r.value, 3) : "−" + fx(r.cost, 3)}</span></div>`;
+    h += `<div class="formula">NS = ${w.primary}×${fx(t.P, 4)} + ${w.secondary}×${fx(t.S, 4)} + ${w.tertiary}×${fx(t.T, 4)} = ${fx(t.ns, 4)}\n${head}</div>`;
+    h += `<details><summary>Show the +2 network tree</summary><div class="tree">`;
+    h += `<div><b>Primary</b>: ${esc(p.name)} ${p.W}-${p.L} → (${p.W}+1)/(${p.W + p.L}+2) = ${fx(p.wp, 4)}<div class="leaves">Counted: ${counted || "none"}. Excluded: ${excluded}.</div></div>`;
+    h += `<div><b>Secondary</b>: mean of ${t.secondary.length} opponent record${t.secondary.length === 1 ? "" : "s"} = ${fx(t.S, 4)}. <b>Tertiary</b>: mean of the branch means = ${fx(t.T, 4)}.</div>`;
+    t.secondary.forEach(c => {
+      h += `<div class="node">${esc(c.name)} ${c.W}-${c.L} → ${fx(c.wp, 4)} · branch mean ${c.tertiary_mean == null ? "—" : fx(c.tertiary_mean, 4)}</div>` +
+        `<div class="leaves">${c.tertiary.map(d => `${esc(d.name)} ${d.W}-${d.L} (${fx(d.wp, 3)})`).join(" · ") || "no further FBS opponents"}</div>`;
+    });
+    if (t.fallbacks && t.fallbacks.length) h += `<div class="note">Empty layer(s) ${t.fallbacks.join(", ")} set to .500.</div>`;
+    return h + "</div></details></div>";
+  }
+
+  function openTeam(id) {
+    const r = byId[id], tr = D.traces[id];
+    if (!r || !tr) return;
+    lastFocus = document.activeElement;
+    let h = `<div class="dhead"><div><h2>${esc(r.name)}</h2><div class="sub">${esc(r.conference)} · ${r.W}-${r.L} · ${r.games} games` +
+      (r.eligible ? ` · ranked <b>${r.rk_AdjEM}</b> of ${M.eligible}` : ` · <b>not yet rated</b>`) + `</div></div><button class="close" id="close">Close</button></div>`;
+    if (r.eligible && r.AdjEM != null) {
+      h += `<div class="statrow">` + [["AdjEM", fx(r.AdjEM, 1, true) + " ± " + fx(r.AdjEM_se, 1)], ["AdjO", fx(r.AdjO, 2)], ["AdjD", fx(r.AdjD, 2)], ["AdjT", fx(r.AdjT, 1)],
+        ["SOS", fx(r.SOS, 1, true)], ["Net resume", fx(r.NetResume, 2, true)], ["Luck", fx(r.luck, 3, true)]].map(([k, v]) => `<div class="stat"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("") + "</div>";
+    }
+    h += `<h3>Schedule</h3><div class="tablewrap"><table class="mini"><thead><tr><th>Wk</th><th class="t">Opponent</th><th>Site</th><th>Result</th><th class="t">Notes</th></tr></thead><tbody>` +
+      tr.schedule.map(g => `<tr><td>${g.week}</td><td class="t">${esc(g.opp_name)} <span class="rk">${esc(g.opp_division)}${g.conf_game ? " · conf" : ""}</span></td><td>${g.site}</td><td>${g.result} ${g.us}-${g.them}</td><td class="t note">${g.used_in_efficiency ? (g.note ? esc(g.note) : "") : "not in efficiency model: " + esc(g.note)}</td></tr>`).join("") + "</tbody></table></div>";
+    if (!r.eligible) {
+      h += `<p class="note">${esc(r.name)} has played ${r.games} game${r.games === 1 ? "" : "s"}. The rule is ${M.min_games}, so no rating is published. The model still holds an internal estimate, used only to adjust its opponents' numbers.</p>`;
+    } else {
+      const e = tr.efficiency;
+      if (e) {
+        h += `<h3>Efficiency</h3><p class="note">Each game is adjusted for the opponent and the venue: adjusted = raw − (opponent rating − ${fx(e.mu, 3)}) − ${fx(e.h, 4)} × venue (home +1, away −1, neutral 0). The rating is the drive-weighted average plus one phantom game at the division average.</p>`;
+        h += `<h4>Offense (AdjO)</h4>` + effTable(e.offense, "AdjO", "opp_AdjD");
+        h += `<h4>Defense (AdjD)</h4>` + effTable(e.defense, "AdjD", "opp_AdjO");
+        h += `<div class="formula">AdjEM = (AdjO − AdjD) × possessions per game = (${fx(e.AdjO, 4)} − ${fx(e.AdjD, 4)}) × ${fx(e.muT, 3)} = ${fx(e.AdjEM, 2, true)}\n±SE ${fx(e.AdjEM_se, 1)} from game margins: ${e.game_margins.map(g => esc(g.opp_name) + " " + fx(g.adj_margin_per_game, 1, true)).join(", ")}</div>`;
+      }
+      const n = tr.network;
+      h += `<h3>Win values</h3><p class="note">Primary is the beaten team's record. Secondary is its opponents' records. Tertiary is their opponents' records. Records are (W+1)/(G+2), and FCS wins are ignored. Each record leaves out games against teams higher in the tree, and ${esc(r.name)} is removed from the graph entirely. NS_ref ${fx(n.ns_ref, 4)} is the average opponent's network strength.</p>`;
+      n.wins.forEach(w => { h += winCard(w, n, true); });
+      n.losses.forEach(l => { h += winCard(l, n, false); });
+      h += `<div class="formula">Win value total ${fx(n.win_value_total, 3)} − loss cost total ${fx(n.loss_cost_total, 3)} = net resume ${fx(n.net_resume, 3, true)}</div>`;
+      const fac = tr.factors.games;
+      const tot = s => fac.reduce((a, g) => { Object.keys(g[s]).forEach(k => { a[k] = (a[k] || 0) + g[s][k]; }); return a; }, {});
+      const O = tot("O"), Dd = tot("D");
+      const fr = (a, b, d = 3) => b ? fx(a / b, d) : "—";
+      h += `<h3>Five factors</h3><div class="tablewrap"><table class="mini"><thead><tr><th class="t"></th><th>Success rate</th><th>Explosive</th><th>Yds/play</th><th>Field pos.</th><th>Pts/opp</th><th>PPD</th></tr></thead><tbody>` +
+        [["Offense", O], ["Defense", Dd]].map(([k, T]) => `<tr><td class="t">${k}</td><td>${fr(T.successes, T.plays)} <span class="rk">${T.successes}/${T.plays}</span></td><td>${fr(T.explosive, T.plays)}</td><td>${fr(T.yards, T.plays, 2)}</td><td>${fr(T.start_yardline_sum, T.drives, 1)}</td><td>${fr(T.opp_points, T.scoring_opps, 2)} <span class="rk">${T.opp_points}/${T.scoring_opps}</span></td><td>${fr(T.points, T.drives)} <span class="rk">${T.points}/${T.drives}</span></td></tr>`).join("") +
+        `</tbody></table></div><p class="note">Turnover margin ${fx(r.TO_margin, 2, true)} per game. Seconds per offensive play ${fx(r.sec_per_play, 1)}.</p>`;
+      if (tr.tempo) h += `<h4>Tempo</h4><div class="formula">AdjT = mean(possessions − (opp AdjT − ${fx(tr.tempo.muT, 2)})) with one phantom game at ${fx(tr.tempo.prior, 2)}\n${tr.tempo.lines.map(l => `${esc(l.opp_name)} ${fx(l.poss, 1)} → ${fx(l.adjusted, 2)}`).join(" · ")}\n= ${fx(tr.tempo.recomputed, 3)} ${tr.tempo.check_ok ? "✓" : "✗"}</div>`;
+      const lk = tr.luck;
+      h += `<h4>Luck</h4><div class="formula">Pythag = ${lk.PF}^${lk.exponent} / (${lk.PF}^${lk.exponent} + ${lk.PA}^${lk.exponent}) = ${fx(lk.pythag, 3)}; actual ${fx(lk.actual, 3)}; luck ${fx(lk.luck, 3, true)}</div>`;
+      const so = tr.sos_efficiency;
+      h += `<h4>Schedule (efficiency)</h4><div class="formula">SOS = mean opponent AdjEM = ${fx(so.SOS, 2, true)}; NCSOS ${fx(so.NCSOS, 2, true)}\n${so.opponents.map(o => `${esc(o.opp_name)} ${fx(o.opp_AdjEM, 1, true)}${o.conf_game ? " (conf)" : ""}`).join(" · ")}</div>`;
+      const dr = tr.drives;
+      h += `<h3>Every drive</h3><details><summary>Show ${dr.rows.length} drives with keep/exclude reasons</summary><div class="tablewrap"><table class="mini"><thead><tr><th class="t">Opponent</th><th>Side</th><th>Q</th><th>Clock</th><th>Start</th><th class="t">Result</th><th>Pts</th><th>Margin</th><th class="t">Used?</th></tr></thead><tbody>` +
+        dr.rows.map(x => { const sch = tr.schedule.find(g => g.game === x[0]); return `<tr><td class="t">${esc(sch ? sch.opp_name : x[0])}</td><td>${x[2]}</td><td>${x[3]}</td><td>${esc(x[4] || "")}</td><td>${x[5] == null ? "—" : x[5]}</td><td class="t">${esc(x[6] || "")}</td><td>${x[7]}</td><td>${fx(x[8], 0, true)}</td><td class="t ${x[9] ? "" : "note"}">${x[9] ? "kept" : esc(x[10])}</td></tr>`; }).join("") +
+        `</tbody></table></div></details>`;
+    }
+    drawer.innerHTML = h;
+    drawer.hidden = false; scrim.hidden = false;
+    drawer.scrollTop = 0;
+    document.getElementById("close").addEventListener("click", closeTeam);
+    document.getElementById("close").focus();
+    history.replaceState(null, "", "#t" + id);
+  }
+
+  let start = "ratings";
+  try { start = localStorage.getItem("cfb-tab") || "ratings"; } catch (e) {}
+  const hash = location.hash.slice(1);
+  if (["ratings", "resume", "picks", "metrics", "review", "trace"].includes(hash)) start = hash;
+  showTab(start);
+  if (/^t\d+$/.test(hash) && byId[hash.slice(1)]) openTeam(hash.slice(1));
+})();
+</script>
