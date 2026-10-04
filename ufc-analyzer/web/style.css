@@ -255,7 +255,11 @@ dialog::backdrop { background: rgba(0,0,0,.5); }
 .decision.watch { border-color: color-mix(in srgb, var(--warn) 60%, var(--line)); }
 .decision ul { margin: 6px 0 0 18px; padding: 0; color: var(--muted); font-size: 12px; }
 
-#ledger { max-width: 860px; }
+#ledger, #rankings { max-width: 860px; }
+#rankings .books-table td, #rankings .books-table th { white-space: nowrap; }
+.ratings-table td.best { color: var(--good); font-weight: 700; }
+.ratings-table thead + tbody + thead th { padding-top: 14px; }
+.faint-badge { background: var(--panel-2); color: var(--muted); border: 1px solid var(--line); }
 #ledger .books-table td, #ledger .books-table th { white-space: nowrap; }
 #ledger .books-table td[title], #ledger .books-table th:nth-child(2) { white-space: normal; min-width: 120px; text-align: left; }
 @media (max-width: 520px) { #ledger .books-table { font-size: 12px; } #ledger .books-table td, #ledger .books-table th { padding: 6px 5px; } }

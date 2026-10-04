@@ -9,6 +9,8 @@ fighter history), UFCStats (career stats) and BestFightOdds (Caesars and every o
     /api/fighter/<id>?before=<ts>  bio, career stats, record breakdown and last five fights before <ts>
     /api/predict/<id>              model win/method/round probabilities per fight, with model edge at Caesars
     /api/ledger[/add|/remove]      forward record of flagged and placed bets, settled with CLV and results
+    /api/ratings/<event id>        KenPom-style power ratings model: per-fight prediction and rating cards
+    /api/leaderboard?div=          ranked active fighters by division
 
     python serve.py            # http://localhost:8766  and  http://<this-pc-ip>:8766 from your phone
     python serve.py --open     # same, and open it in the browser
@@ -20,7 +22,7 @@ from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-import espn, fighters, ledger, market, modelapi  # noqa: E402
+import espn, fighters, ledger, market, modelapi, ratingsapi  # noqa: E402
 
 ARGS = [a for a in sys.argv[1:] if not a.startswith("--")]
 PORT = int(ARGS[0]) if ARGS else 8766
@@ -39,6 +41,8 @@ def warm(event_id, card):
     warm_pool.submit(_quiet, market.card_odds, event_id)
     if modelapi.available():
         warm_pool.submit(_quiet, predictions, event_id)
+    if ratingsapi.available():
+        warm_pool.submit(_quiet, ratingsapi.predictions, event_id)
     for f in card["fights"]:
         for x in f["fighters"]:
             warm_pool.submit(_quiet, fighters.build, x["id"], card["date"], x["name"])
@@ -67,6 +71,12 @@ def keep_model_current():
             added = model_scrape.update()
             if added and added[1]:
                 model_predict.reload()
+                try:
+                    from ratings import predict as ratings_predict, rounds as ratings_rounds
+                    ratings_rounds.update()
+                    ratings_predict.reload()
+                except Exception as e:
+                    print(time.strftime("%H:%M:%S"), f"ratings: round top-up failed ({e})", flush=True)
                 print(time.strftime("%H:%M:%S"), f"model: added {added[1]} fights from {added[0]} new events", flush=True)
         except Exception as e:
             print(time.strftime("%H:%M:%S"), f"model: history update failed ({e}); using what's on disk", flush=True)
@@ -114,6 +124,10 @@ def api(path, q):
         return fighters.build(parts[2], float(before) if before else None, q.get("name", [None])[0])
     if parts[:2] == ["api", "predict"] and len(parts) == 3:
         return predictions(parts[2])
+    if parts[:2] == ["api", "ratings"] and len(parts) == 3:
+        return ratingsapi.predictions(parts[2])
+    if parts[:2] == ["api", "leaderboard"]:
+        return ratingsapi.leaderboard(q.get("div", [None])[0], int(q.get("top", ["25"])[0]))
     if parts[:2] == ["api", "ledger"]:
         if len(parts) == 3 and parts[2] == "add":
             g = lambda k: q.get(k, [None])[0]

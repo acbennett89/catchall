@@ -14,6 +14,7 @@ const S = {
   season: null, events: [], eventId: null, card: null, odds: null, fightId: null,
   fighters: {}, cardAt: 0, oddsAt: 0, timers: {}, calc: {}, showAllProps: false, oddsErr: null,
   pred: null, predAt: 0, predErr: null,
+  ratings: null, ratingsErr: null,
 };
 
 /* ---------- odds math (mirrors value.py) ---------- */
@@ -103,7 +104,7 @@ function setupSeasons() {
 /* ---------- card + odds polling ---------- */
 function selectEvent(id, fightId) {
   if (S.eventId !== id) {
-    S.card = null; S.odds = null; S.fightId = fightId || null; S.oddsErr = null; S.pred = null; S.predErr = null;
+    S.card = null; S.odds = null; S.fightId = fightId || null; S.oddsErr = null; S.pred = null; S.predErr = null; S.ratings = null; S.ratingsErr = null;
     clearTimeout(S.timers.card); clearTimeout(S.timers.odds);
   }
   S.eventId = id;
@@ -155,6 +156,7 @@ async function loadOdds() {
     renderList();
     updateMatchup(true);
     loadPred();
+    loadRatings();
   } catch (e) {
     S.oddsErr = e.message;
   }
@@ -256,7 +258,7 @@ function renderList() {
     const evs = [0, 1].map(i => basisEv(f, fo, i));
     const isValue = actionable && evs.some(v => v !== null && v >= settings.threshold);
     html += `<button class="fight-row${f.id === S.fightId ? " selected" : ""}${isValue ? " value" : ""}" data-fid="${esc(f.id)}">
-      <div class="fr-head"><span>${esc(f.weightClass || "")}${f.title ? " · <b style='color:var(--warn)'>Title</b>" : ""} · ${f.rounds} rds${decisionChip(f)}</span><span>${statusLine(f)}</span></div>
+      <div class="fr-head"><span>${esc(f.weightClass || "")}${f.title ? " · <b style='color:var(--warn)'>Title</b>" : ""} · ${f.rounds} rds${decisionChip(f)}${ratingChip(f)}</span><span>${statusLine(f)}</span></div>
       ${f.fighters.map((x, i) => {
         const cls = f.status.state === "post" ? (x.winner ? "won" : (f.fighters.some(y => y.winner) ? "lost" : "")) : "";
         const ev = evs[i];
@@ -297,6 +299,7 @@ function renderMatchup() {
     <section class="panel" id="m-head"></section>
     <section class="panel"><h3><span>${TARGET} moneyline vs. market</span><span class="small" id="m-odds-meta"></span></h3><div class="panel-body" id="m-odds"></div></section>
     <section class="panel"><h3><span>Model prediction</span><span class="small" id="m-model-meta"></span></h3><div class="panel-body" id="m-model"></div></section>
+    <section class="panel"><h3><span>Power ratings</span><span class="small" id="m-ratings-meta"></span></h3><div class="panel-body" id="m-ratings"></div></section>
     <section class="panel"><h3><span>Your number</span><button class="link-btn" id="calc-reset">Reset</button></h3><div class="panel-body" id="m-calc"></div></section>
     <section class="panel"><h3>Matchup notes</h3><div class="panel-body" id="m-notes"></div></section>
     <section class="panel"><h3>Tale of the tape</h3><div class="panel-body" id="m-tape"></div></section>
@@ -316,6 +319,7 @@ function updateMatchup(oddsChanged, fightersChanged) {
   renderHead(f, A, B);
   renderOdds(f, A, B);
   if (oddsChanged || !$("#m-model").innerHTML) renderModel(f);
+  if (oddsChanged || !$("#m-ratings").innerHTML) renderRatings(f);
   const calcFocused = document.activeElement && $("#m-calc") && $("#m-calc").contains(document.activeElement);
   if (!calcFocused && (oddsChanged || !$("#m-calc").innerHTML)) renderCalc(f);
   if (fightersChanged || oddsChanged) {
@@ -715,6 +719,7 @@ async function boot() {
   setupSettings();
   $("#ledger-btn").onclick = openLedger;
   $("#ledger-close").onclick = () => $("#ledger").close();
+  $("#rankings-close").onclick = () => $("#rankings").close();
   setupSeasons();
   const h = readHash();
   if (h.fight && isMobile()) document.body.classList.add("show-matchup");
