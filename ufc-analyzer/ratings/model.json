@@ -1,0 +1,1090 @@
+{
+ "built": "2026-10-04",
+ "trained_through": "2026-10-03",
+ "fights": 7730,
+ "windows": {
+  "tune": [
+   2010,
+   2015
+  ],
+  "val": [
+   2016,
+   2020
+  ],
+  "test": [
+   2021,
+   2026
+  ]
+ },
+ "C": 0.003,
+ "ablation": {
+  "margins_add": {
+   "tune_with_minus_without": {
+    "est": -0.0003,
+    "ci": [
+     -0.0012,
+     0.0006
+    ],
+    "n": 2212
+   },
+   "val_with_minus_without": {
+    "est": -0.0005,
+    "ci": [
+     -0.0013,
+     0.0002
+    ],
+    "n": 2348
+   },
+   "kept": true,
+   "features": [
+    "add_sig",
+    "add_sig_a",
+    "add_tot",
+    "add_head",
+    "add_dist",
+    "add_clinch",
+    "add_ground",
+    "add_kd",
+    "add_td",
+    "add_td_a",
+    "add_ctrl",
+    "add_sub",
+    "add_fin",
+    "add_pow"
+   ]
+  },
+  "margins_mult": {
+   "tune_with_minus_without": {
+    "est": -0.0001,
+    "ci": [
+     -0.0013,
+     0.001
+    ],
+    "n": 2212
+   },
+   "val_with_minus_without": {
+    "est": -0.0012,
+    "ci": [
+     -0.0023,
+     0.0
+    ],
+    "n": 2348
+   },
+   "kept": true,
+   "features": [
+    "mult_sig",
+    "mult_sig_a",
+    "mult_tot",
+    "mult_head",
+    "mult_dist",
+    "mult_clinch",
+    "mult_ground",
+    "mult_kd",
+    "mult_td",
+    "mult_td_a",
+    "mult_ctrl",
+    "mult_sub",
+    "mult_fin",
+    "mult_pow"
+   ]
+  },
+  "results": {
+   "tune_with_minus_without": {
+    "est": -0.0,
+    "ci": [
+     -0.0002,
+     0.0002
+    ],
+    "n": 2212
+   },
+   "val_with_minus_without": {
+    "est": -0.0001,
+    "ci": [
+     -0.0003,
+     0.0001
+    ],
+    "n": 2348
+   },
+   "kept": false,
+   "features": [
+    "bt",
+    "pyth_share"
+   ]
+  },
+  "schedule": {
+   "tune_with_minus_without": {
+    "est": -0.0005,
+    "ci": [
+     -0.0015,
+     0.0003
+    ],
+    "n": 2212
+   },
+   "val_with_minus_without": {
+    "est": -0.0004,
+    "ci": [
+     -0.0011,
+     0.0003
+    ],
+    "n": 2348
+   },
+   "kept": true,
+   "features": [
+    "sos",
+    "luck",
+    "log_eff_min"
+   ]
+  },
+  "rust": {
+   "tune_with_minus_without": {
+    "est": -0.0017,
+    "ci": [
+     -0.0042,
+     0.0011
+    ],
+    "n": 2212
+   },
+   "val_with_minus_without": {
+    "est": -0.0017,
+    "ci": [
+     -0.0042,
+     0.001
+    ],
+    "n": 2348
+   },
+   "kept": true,
+   "features": [
+    "log_layoff",
+    "layoff_over_1y",
+    "layoff_over_2y",
+    "layoff_vs_usual",
+    "fights_24m",
+    "off_ko_loss",
+    "off_loss",
+    "age_x_layoff"
+   ]
+  },
+  "momentum": {
+   "tune_with_minus_without": {
+    "est": 0.0016,
+    "ci": [
+     0.0002,
+     0.0031
+    ],
+    "n": 2212
+   },
+   "val_with_minus_without": {
+    "est": -0.0002,
+    "ci": [
+     -0.0008,
+     0.0005
+    ],
+    "n": 2348
+   },
+   "kept": false,
+   "features": [
+    "last5_wins",
+    "streak",
+    "last3_finishes",
+    "str_diff_trend",
+    "sos_last3"
+   ]
+  },
+  "cardio": {
+   "tune_with_minus_without": {
+    "est": -0.0001,
+    "ci": [
+     -0.0018,
+     0.0016
+    ],
+    "n": 2212
+   },
+   "val_with_minus_without": {
+    "est": 0.0006,
+    "ci": [
+     -0.0006,
+     0.0018
+    ],
+    "n": 2348
+   },
+   "kept": false,
+   "features": [
+    "fade",
+    "opp_fade",
+    "late_diff",
+    "champ_round_min",
+    "five_x_cardio"
+   ]
+  },
+  "judging": {
+   "tune_with_minus_without": {
+    "est": 0.0001,
+    "ci": [
+     -0.0001,
+     0.0002
+    ],
+    "n": 2212
+   },
+   "val_with_minus_without": {
+    "est": 0.0,
+    "ci": [
+     -0.0,
+     0.0001
+    ],
+    "n": 2348
+   },
+   "kept": false,
+   "features": [
+    "dec_win_pct"
+   ]
+  },
+  "record": {
+   "tune_with_minus_without": {
+    "est": 0.0001,
+    "ci": [
+     -0.0001,
+     0.0004
+    ],
+    "n": 2212
+   },
+   "val_with_minus_without": {
+    "est": 0.0001,
+    "ci": [
+     -0.0,
+     0.0002
+    ],
+    "n": 2348
+   },
+   "kept": false,
+   "features": [
+    "win_pct"
+   ]
+  },
+  "pace": {
+   "tune_with_minus_without": {
+    "est": 0.0001,
+    "ci": [
+     -0.0002,
+     0.0005
+    ],
+    "n": 2212
+   },
+   "val_with_minus_without": {
+    "est": 0.0001,
+    "ci": [
+     -0.0001,
+     0.0002
+    ],
+    "n": 2348
+   },
+   "kept": false,
+   "features": [
+    "pace"
+   ]
+  }
+ },
+ "feats": [
+  "adjem",
+  "adjo",
+  "adjd",
+  "sos",
+  "luck",
+  "log_eff_min",
+  "str_diff",
+  "sig_acc",
+  "sig_def",
+  "kd_15",
+  "kd_abs_15",
+  "head_abs_15",
+  "dist_net",
+  "td_15",
+  "td_acc",
+  "td_def",
+  "ctrl_diff",
+  "sub_15",
+  "ground_15",
+  "ko_loss_share",
+  "finished_share",
+  "ko_losses_3y",
+  "finish_rate",
+  "ko_15",
+  "age",
+  "age_over_32",
+  "age_under_25",
+  "reach",
+  "height",
+  "ape",
+  "southpaw",
+  "switch",
+  "log_ufc_fights",
+  "log_pro_fights",
+  "outside_win_pct",
+  "outside_finish",
+  "title_fights",
+  "five_round_fights",
+  "debut",
+  "log_layoff",
+  "layoff_over_1y",
+  "layoff_over_2y",
+  "layoff_vs_usual",
+  "fights_24m",
+  "off_ko_loss",
+  "off_loss",
+  "age_x_layoff",
+  "mult_sig",
+  "mult_sig_a",
+  "mult_tot",
+  "mult_head",
+  "mult_dist",
+  "mult_clinch",
+  "mult_ground",
+  "mult_kd",
+  "mult_td",
+  "mult_td_a",
+  "mult_ctrl",
+  "mult_sub",
+  "mult_fin",
+  "mult_pow",
+  "add_sig",
+  "add_sig_a",
+  "add_tot",
+  "add_head",
+  "add_dist",
+  "add_clinch",
+  "add_ground",
+  "add_kd",
+  "add_td",
+  "add_td_a",
+  "add_ctrl",
+  "add_sub",
+  "add_fin",
+  "add_pow",
+  "five_x_adjem"
+ ],
+ "evaluation": {
+  "val": {
+   "years": "2016-2020",
+   "model": {
+    "n": 2348,
+    "log_loss": 0.6424,
+    "brier": 0.2255,
+    "accuracy": 0.6278
+   },
+   "rating_only": {
+    "n": 2348,
+    "log_loss": 0.6644,
+    "brier": 0.236,
+    "accuracy": 0.5877
+   },
+   "without_adjusted": {
+    "n": 2348,
+    "log_loss": 0.6553,
+    "brier": 0.2315,
+    "accuracy": 0.6222
+   },
+   "with_market": {
+    "model": {
+     "n": 2331,
+     "log_loss": 0.6417,
+     "brier": 0.2252,
+     "accuracy": 0.6289
+    },
+    "market_open": {
+     "n": 2331,
+     "log_loss": 0.6355,
+     "brier": 0.2226,
+     "accuracy": 0.6371
+    },
+    "market_close": {
+     "n": 2331,
+     "log_loss": 0.616,
+     "brier": 0.2139,
+     "accuracy": 0.6538
+    },
+    "model_minus_open": {
+     "est": 0.0061,
+     "ci": [
+      -0.0069,
+      0.0178
+     ],
+     "n": 2331
+    },
+    "model_minus_close": {
+     "est": 0.0257,
+     "ci": [
+      0.0138,
+      0.0365
+     ],
+     "n": 2331
+    }
+   }
+  },
+  "test": {
+   "years": "2021-2026",
+   "model": {
+    "n": 2957,
+    "log_loss": 0.6313,
+    "brier": 0.2205,
+    "accuracy": 0.6422
+   },
+   "rating_only": {
+    "n": 2957,
+    "log_loss": 0.6583,
+    "brier": 0.2331,
+    "accuracy": 0.6043
+   },
+   "without_adjusted": {
+    "n": 2957,
+    "log_loss": 0.6428,
+    "brier": 0.2258,
+    "accuracy": 0.6365
+   },
+   "with_market": {
+    "model": {
+     "n": 2872,
+     "log_loss": 0.6281,
+     "brier": 0.2191,
+     "accuracy": 0.6462
+    },
+    "market_open": {
+     "n": 2872,
+     "log_loss": 0.6182,
+     "brier": 0.2146,
+     "accuracy": 0.6595
+    },
+    "market_close": {
+     "n": 2872,
+     "log_loss": 0.5947,
+     "brier": 0.2043,
+     "accuracy": 0.6842
+    },
+    "model_minus_open": {
+     "est": 0.0099,
+     "ci": [
+      0.0007,
+      0.0193
+     ],
+     "n": 2872
+    },
+    "model_minus_close": {
+     "est": 0.0334,
+     "ci": [
+      0.0241,
+      0.0423
+     ],
+     "n": 2872
+    }
+   }
+  }
+ },
+ "blend_model_for_comparison": {
+  "val": {
+   "model": {
+    "n": 2348,
+    "log_loss": 0.6542,
+    "brier": 0.2312,
+    "accuracy": 0.6086,
+    "ece": 0.0117
+   },
+   "with_market": {
+    "model": {
+     "n": 2331,
+     "log_loss": 0.6535,
+     "brier": 0.2309,
+     "accuracy": 0.6092,
+     "ece": 0.0132
+    },
+    "market_open": {
+     "n": 2331,
+     "log_loss": 0.6355,
+     "brier": 0.2226,
+     "accuracy": 0.6332,
+     "ece": 0.0212
+    },
+    "market_close": {
+     "n": 2331,
+     "log_loss": 0.616,
+     "brier": 0.2139,
+     "accuracy": 0.6529,
+     "ece": 0.031
+    }
+   }
+  },
+  "test": {
+   "model": {
+    "n": 2957,
+    "log_loss": 0.6403,
+    "brier": 0.2249,
+    "accuracy": 0.6341,
+    "ece": 0.0124
+   },
+   "with_market": {
+    "model": {
+     "n": 2872,
+     "log_loss": 0.6383,
+     "brier": 0.2239,
+     "accuracy": 0.6375,
+     "ece": 0.0162
+    },
+    "market_open": {
+     "n": 2872,
+     "log_loss": 0.6182,
+     "brier": 0.2146,
+     "accuracy": 0.6588,
+     "ece": 0.0189
+    },
+    "market_close": {
+     "n": 2872,
+     "log_loss": 0.5947,
+     "brier": 0.2043,
+     "accuracy": 0.6845,
+     "ece": 0.0265
+    }
+   }
+  }
+ },
+ "win": {
+  "feats": [
+   "adjem",
+   "adjo",
+   "adjd",
+   "sos",
+   "luck",
+   "log_eff_min",
+   "str_diff",
+   "sig_acc",
+   "sig_def",
+   "kd_15",
+   "kd_abs_15",
+   "head_abs_15",
+   "dist_net",
+   "td_15",
+   "td_acc",
+   "td_def",
+   "ctrl_diff",
+   "sub_15",
+   "ground_15",
+   "ko_loss_share",
+   "finished_share",
+   "ko_losses_3y",
+   "finish_rate",
+   "ko_15",
+   "age",
+   "age_over_32",
+   "age_under_25",
+   "reach",
+   "height",
+   "ape",
+   "southpaw",
+   "switch",
+   "log_ufc_fights",
+   "log_pro_fights",
+   "outside_win_pct",
+   "outside_finish",
+   "title_fights",
+   "five_round_fights",
+   "debut",
+   "log_layoff",
+   "layoff_over_1y",
+   "layoff_over_2y",
+   "layoff_vs_usual",
+   "fights_24m",
+   "off_ko_loss",
+   "off_loss",
+   "age_x_layoff",
+   "mult_sig",
+   "mult_sig_a",
+   "mult_tot",
+   "mult_head",
+   "mult_dist",
+   "mult_clinch",
+   "mult_ground",
+   "mult_kd",
+   "mult_td",
+   "mult_td_a",
+   "mult_ctrl",
+   "mult_sub",
+   "mult_fin",
+   "mult_pow",
+   "add_sig",
+   "add_sig_a",
+   "add_tot",
+   "add_head",
+   "add_dist",
+   "add_clinch",
+   "add_ground",
+   "add_kd",
+   "add_td",
+   "add_td_a",
+   "add_ctrl",
+   "add_sub",
+   "add_fin",
+   "add_pow",
+   "five_x_adjem"
+  ],
+  "coef": [
+   0.06630005091366636,
+   0.016404155814515233,
+   0.12237713087865788,
+   0.1382614616746422,
+   0.35255975195395006,
+   0.08419980213936613,
+   -0.06314770329695586,
+   0.5595748990959952,
+   1.012016627315054,
+   -0.011758434029539135,
+   0.01294153356187202,
+   0.002305082617793096,
+   -0.03458335565191285,
+   0.09905017312763577,
+   -0.6588131890816352,
+   0.19826819476707946,
+   -0.007624495261483856,
+   -0.04560590890592244,
+   -0.0023966948633801373,
+   0.010866848259624617,
+   -0.2610264847353406,
+   -0.02667363675701028,
+   0.04996626419985074,
+   -0.050536332761540396,
+   -0.04207413209718852,
+   -0.03983136322824494,
+   0.0003477770039205141,
+   0.015421868202744443,
+   0.008695299989109074,
+   0.23002258281196633,
+   0.0709294484197844,
+   0.061028838213194714,
+   -0.0966571502756056,
+   0.1501293844654382,
+   2.5799893685316952,
+   0.4499414454292458,
+   0.049538358646948645,
+   0.07678002965063596,
+   -0.24441363020121468,
+   0.001606536330701365,
+   -0.209101245840296,
+   0.2791507370680561,
+   0.09794590684216406,
+   0.037030849644876046,
+   -0.053537510855736256,
+   -0.03127470407999795,
+   0.0016970594319525513,
+   0.0031657297588823735,
+   3.877283329090724e-05,
+   -0.0001132731490271734,
+   0.004314069388022437,
+   0.0063569188654379145,
+   0.017588104522114775,
+   0.0019499784725173193,
+   0.31544722153026655,
+   0.0018963584461548918,
+   -0.002869882741448115,
+   0.01777144616892093,
+   0.10095678292701352,
+   0.3895021854434041,
+   0.0026255743024156467,
+   0.002686902077866738,
+   -0.001570457963139419,
+   -0.0002563104513429559,
+   0.004864438886101907,
+   0.006327142390315824,
+   -0.003926718281202346,
+   0.004901476335473886,
+   0.2212241286908088,
+   0.042027209762523665,
+   -0.009888881739675979,
+   0.023139412821103354,
+   0.054407775545298784,
+   0.5164868303076232,
+   -0.1651374897759136,
+   -0.016874585579278095
+  ],
+  "scale": [
+   1.0138082743420713,
+   0.775738373241004,
+   0.6900496758408023,
+   0.7023998406167015,
+   0.11754142547496063,
+   1.6040634957180142,
+   1.147393722037458,
+   0.07917448713003684,
+   0.07632519302031456,
+   0.4322382455244205,
+   0.32457431358944006,
+   12.355502046355284,
+   0.8543541319015484,
+   1.2196910647187782,
+   0.10716493915584459,
+   0.12107899629219124,
+   2.8563583548917353,
+   0.6773492907386651,
+   6.479101358547165,
+   0.16674133443226596,
+   0.11655217941540749,
+   0.8680769366347696,
+   0.1935939721352988,
+   0.23605553667642853,
+   5.2390672197501225,
+   2.7099366054453626,
+   0.6916266629674589,
+   3.156811563853089,
+   2.4980975944112163,
+   0.03611890592821938,
+   0.5553456553311761,
+   0.3331608005405462,
+   0.989295519069703,
+   0.6040992702538116,
+   0.06327298005687781,
+   0.1378131782021631,
+   0.5415365566489528,
+   0.6212218132042299,
+   0.420681391456436,
+   0.7436794449635297,
+   0.4043745269986497,
+   0.1819827551075458,
+   0.8093809639656009,
+   1.9642997428977722,
+   0.44270718393935465,
+   0.5673295972603183,
+   1.328781415485857,
+   17.29303039985716,
+   32.691180622778404,
+   28.650583068039836,
+   13.935680614360862,
+   13.08134886097122,
+   3.3719989639735943,
+   4.619755006603654,
+   0.23846232701261955,
+   1.6298943800125287,
+   4.719313885851386,
+   2.9000343608926458,
+   0.5618261511748571,
+   0.19834786417593692,
+   0.37760538093342133,
+   16.642529653047774,
+   31.676298451632935,
+   28.814714588547265,
+   13.290932169086128,
+   12.232706903903187,
+   3.3432559345457293,
+   4.691668453191906,
+   0.2355071437366506,
+   1.6490653903946122,
+   4.629432196491186,
+   2.976156302390012,
+   0.5516579126395176,
+   0.20419201964504222,
+   0.37948148037957213,
+   0.40648512111170104
+  ],
+  "calibration_scale": 1.007510818856172,
+  "importance": [
+   [
+    "age",
+    0.2188
+   ],
+   [
+    "outside_win_pct",
+    0.162
+   ],
+   [
+    "log_eff_min",
+    0.1341
+   ],
+   [
+    "td_15",
+    0.1199
+   ],
+   [
+    "age_over_32",
+    0.1071
+   ],
+   [
+    "add_fin",
+    0.1047
+   ],
+   [
+    "debut",
+    0.1021
+   ],
+   [
+    "sos",
+    0.0964
+   ],
+   [
+    "log_ufc_fights",
+    0.0949
+   ],
+   [
+    "log_pro_fights",
+    0.09
+   ],
+   [
+    "layoff_over_1y",
+    0.0839
+   ],
+   [
+    "adjd",
+    0.0838
+   ],
+   [
+    "mult_dist",
+    0.0825
+   ],
+   [
+    "layoff_vs_usual",
+    0.0787
+   ],
+   [
+    "add_dist",
+    0.0768
+   ],
+   [
+    "sig_def",
+    0.0767
+   ],
+   [
+    "mult_fin",
+    0.0767
+   ],
+   [
+    "mult_kd",
+    0.0747
+   ],
+   [
+    "fights_24m",
+    0.0722
+   ],
+   [
+    "str_diff",
+    0.0719
+   ],
+   [
+    "td_acc",
+    0.0701
+   ],
+   [
+    "add_td",
+    0.0688
+   ],
+   [
+    "add_ctrl",
+    0.0684
+   ],
+   [
+    "adjem",
+    0.0667
+   ],
+   [
+    "add_head",
+    0.0642
+   ],
+   [
+    "add_pow",
+    0.0622
+   ],
+   [
+    "outside_finish",
+    0.0615
+   ],
+   [
+    "mult_head",
+    0.0597
+   ],
+   [
+    "mult_clinch",
+    0.0589
+   ],
+   [
+    "mult_sub",
+    0.0563
+   ],
+   [
+    "mult_sig",
+    0.0543
+   ],
+   [
+    "add_kd",
+    0.0517
+   ],
+   [
+    "mult_ctrl",
+    0.0512
+   ],
+   [
+    "layoff_over_2y",
+    0.0504
+   ],
+   [
+    "add_sig_a",
+    0.0494
+   ],
+   [
+    "reach",
+    0.0483
+   ],
+   [
+    "five_round_fights",
+    0.0473
+   ],
+   [
+    "add_td_a",
+    0.0454
+   ],
+   [
+    "add_sig",
+    0.0444
+   ],
+   [
+    "sig_acc",
+    0.044
+   ],
+   [
+    "luck",
+    0.0411
+   ],
+   [
+    "southpaw",
+    0.0391
+   ],
+   [
+    "sub_15",
+    0.0307
+   ],
+   [
+    "finished_share",
+    0.0302
+   ],
+   [
+    "add_sub",
+    0.0298
+   ],
+   [
+    "dist_net",
+    0.0293
+   ],
+   [
+    "head_abs_15",
+    0.0283
+   ],
+   [
+    "title_fights",
+    0.0266
+   ],
+   [
+    "td_def",
+    0.0238
+   ],
+   [
+    "off_ko_loss",
+    0.0235
+   ],
+   [
+    "ko_losses_3y",
+    0.023
+   ],
+   [
+    "add_ground",
+    0.0228
+   ],
+   [
+    "ctrl_diff",
+    0.0216
+   ],
+   [
+    "height",
+    0.0216
+   ],
+   [
+    "switch",
+    0.0202
+   ],
+   [
+    "off_loss",
+    0.0176
+   ],
+   [
+    "ground_15",
+    0.0154
+   ],
+   [
+    "mult_td_a",
+    0.0134
+   ],
+   [
+    "add_clinch",
+    0.013
+   ],
+   [
+    "adjo",
+    0.0126
+   ],
+   [
+    "ko_15",
+    0.0118
+   ],
+   [
+    "finish_rate",
+    0.0096
+   ],
+   [
+    "mult_ground",
+    0.0089
+   ],
+   [
+    "ape",
+    0.0082
+   ],
+   [
+    "add_tot",
+    0.0073
+   ],
+   [
+    "five_x_adjem",
+    0.0068
+   ],
+   [
+    "kd_15",
+    0.005
+   ],
+   [
+    "kd_abs_15",
+    0.0042
+   ],
+   [
+    "mult_tot",
+    0.0032
+   ],
+   [
+    "mult_td",
+    0.0031
+   ],
+   [
+    "age_x_layoff",
+    0.0022
+   ],
+   [
+    "ko_loss_share",
+    0.0018
+   ],
+   [
+    "mult_sig_a",
+    0.0013
+   ],
+   [
+    "log_layoff",
+    0.0012
+   ],
+   [
+    "mult_pow",
+    0.001
+   ],
+   [
+    "age_under_25",
+    0.0002
+   ]
+  ]
+ },
+ "description": "Opponent-adjusted (KenPom-style) fighter ratings: striking, grappling, damage, control and submission efficiencies adjusted for the quality of opposition, plus pace, cardio, durability, physical, experience, ring rust and momentum terms; logistic predictor on fighter differences."
+}
