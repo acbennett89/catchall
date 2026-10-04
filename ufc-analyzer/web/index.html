@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<title>Fight Analyzer</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23d4202c'/%3E%3Cpath d='M9 22V10h9v3h-5.5v2H17v3h-4.5v4z' fill='white'/%3E%3Cpath d='M19 22l2-12h3l-2 12z' fill='white' opacity='.8'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="logo">FA</span><span class="brand-name">Fight Analyzer</span></div>
+  <div class="event-pick">
+    <select id="event-select" aria-label="Event"></select>
+    <select id="season-select" aria-label="Season"></select>
+  </div>
+  <div class="status" id="status"></div>
+  <button class="icon-btn" id="settings-btn" aria-label="Settings" title="Settings">
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3.3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.5 7.5 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" transform="translate(-1 0)"/></svg>
+  </button>
+</header>
+
+<div class="layout">
+  <aside class="card-list" id="card-list" aria-label="Fight card"></aside>
+  <main class="matchup" id="matchup"></main>
+</div>
+
+<dialog id="settings">
+  <form method="dialog" class="settings-form">
+    <h2>Settings</h2>
+    <label>Bankroll ($)<input type="number" id="set-bankroll" min="0" step="10"></label>
+    <label>Kelly fraction
+      <select id="set-kelly">
+        <option value="0.1">10% Kelly</option>
+        <option value="0.25">25% Kelly (quarter)</option>
+        <option value="0.5">50% Kelly (half)</option>
+        <option value="1">Full Kelly</option>
+      </select>
+    </label>
+    <label>Flag value when Caesars EV is at least
+      <select id="set-threshold">
+        <option value="0">0% (any +EV)</option>
+        <option value="0.01">+1%</option>
+        <option value="0.02">+2%</option>
+        <option value="0.03">+3%</option>
+        <option value="0.05">+5%</option>
+      </select>
+    </label>
+    <label>Odds format
+      <select id="set-format">
+        <option value="american">American (-150 / +130)</option>
+        <option value="decimal">Decimal (1.67 / 2.30)</option>
+      </select>
+    </label>
+    <p class="fine">Fair price = median no-vig line across every other book on BestFightOdds (Caesars excluded, off-market books dropped). EV is your expected profit per $1 at Caesars' price if the fair price is right. Bet sizes are a suggestion, not advice; bet within your means.</p>
+    <div class="settings-actions"><button value="ok" class="btn">Done</button></div>
+  </form>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>
