@@ -20,6 +20,7 @@ from ufcstats import _text  # noqa: E402
 
 DATA = os.path.join(HERE, "data")
 CACHE = os.path.join(ROOT, "cache")
+RECHECK_DAYS = 3
 
 
 def _pairs(td):
@@ -83,6 +84,16 @@ def parse_event(body):
             "round": int((_pairs(tds[8]) or ["0"])[0] or 0), "time": (_pairs(tds[9]) or [""])[0],
         })
     return fights
+
+
+def pending_bouts(body):
+    """Bouts on an event page that have both fighters but no result yet (the event is still running)."""
+    n = 0
+    for _, row in re.findall(r'<tr class="b-fight-details__table-row[^"]*"[^>]*data-link="https?://(?:www\.)?ufcstats\.com/fight-details/([0-9a-f]+)"[^>]*>(.*?)</tr>', body, re.S):
+        tds = re.findall(r"<td[^>]*>(.*?)</td>", row, re.S)
+        if len(tds) >= 10 and len(re.findall(r"fighter-details/([0-9a-f]+)", tds[1])) >= 2 and not re.search(r'b-flag__text">[a-zA-Z]+', tds[0]):
+            n += 1
+    return n
 
 
 def _of(s):
@@ -196,8 +207,11 @@ def build(base=DATA, workers=4, log=print, max_new_events=None):
     known_events, _, known_fighters = load_dataset()
     events, fights, fighters = (_load_exact(base, "events"), _load_exact(base, "fights"), _load_exact(base, "fighters"))
     listing = parse_events(ufcstats.get("/statistics/events/completed?page=all"))
-    today = datetime.date.today().isoformat()
-    todo = [e for e in listing if e["date"] and e["date"] < today and e["id"] not in known_events]
+    today = datetime.date.today()
+    # events from the last few days are fetched again in case they were stored while still running
+    recent = (today - datetime.timedelta(days=RECHECK_DAYS)).isoformat()
+    todo = [e for e in listing if e["date"] and e["date"] < today.isoformat()
+            and (e["id"] not in known_events or e["date"] >= recent)]
     todo.sort(key=lambda e: e["date"])
     if max_new_events:
         todo = todo[-max_new_events:]
@@ -206,9 +220,15 @@ def build(base=DATA, workers=4, log=print, max_new_events=None):
     lock = threading.Lock()
 
     def do_event(e):
-        rows = parse_event(ufcstats.get(f"/event-details/{e['id']}"))
+        body = ufcstats.get(f"/event-details/{e['id']}")
+        rows = parse_event(body)
         if not rows:
             return  # results not posted yet; try again next time
+        if pending_bouts(body) and e["date"] >= recent:
+            log(f"  {e['name']} is still running; will fetch it again later")
+            return  # storing it now would lose the later bouts for good
+        if e["id"] in known_events and len(known_events[e["id"]].get("fights") or []) >= len(rows):
+            return  # already complete
         def do_fight(r):
             try:
                 d = parse_fight(ufcstats.get(f"/fight-details/{r['id']}"))

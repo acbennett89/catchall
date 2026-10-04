@@ -14,7 +14,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(HERE, "model.json")
 
 _lock = threading.Lock()
-_state = {"model": None, "engine": None, "fighters": None, "built": 0, "names": None}
+_state = {"model": None, "engine": None, "fighters": None, "built": 0, "names": None, "data": None, "past": {}}
 
 
 def _load():
@@ -26,12 +26,46 @@ def _load():
         events, fights, fighters = scrape.load_dataset()
         eng = engine.Engine(model.get("engine"))
         eng.replay(events, fights)
-        names = {}
+        names, pairs = {}, {}
         for r in fights.values():
             names[r["f1"]] = r["n1"]
             names[r["f2"]] = r["n2"]
-        _state.update(model=model, engine=eng, fighters=fighters, built=time.time(), names=names)
+            if r.get("rounds") and r.get("date"):
+                pairs.setdefault(frozenset((r["f1"], r["f2"])), []).append((r["date"], r["rounds"]))
+        _state.update(model=model, engine=eng, fighters=fighters, built=time.time(), names=names,
+                      data=(events, fights), past={}, pairs=pairs)
         return _state
+
+
+def _state_on(st, day):
+    """State as it was before `day`: the live engine for upcoming fights, or a replay that stops before
+    `day` for a fight whose card is already in the history (a finished fight, or a past event), so a
+    result never feeds its own prediction."""
+    if day.isoformat() > (st["engine"].as_of or ""):
+        return st
+    key = day.isoformat()
+    with _lock:
+        hit = st["past"].get(key)
+    if hit is None:
+        events, fights = st["data"]
+        eng = engine.Engine(st["model"].get("engine")).replay(events, fights, until=key)
+        hit = dict(st, engine=eng)
+        with _lock:
+            if len(st["past"]) >= 4:
+                st["past"].pop(next(iter(st["past"])))
+            st["past"][key] = hit
+    return hit
+
+
+def scheduled_rounds(a_id, b_id, day):
+    """Scheduled rounds for a bout already in the history (UFCStats), dated within a day of `day`."""
+    if not a_id or not b_id:
+        return None
+    st = _load()
+    for date, rounds in st.get("pairs", {}).get(frozenset((a_id, b_id)), []):
+        if abs((engine.parse_day(date) - day).days) <= 1:
+            return rounds
+    return None
 
 
 def reload():
@@ -55,14 +89,32 @@ def _attrs_from_espn(esp):
             return int(m.group(1)) * 12 + int(m.group(2))
         m = re.match(r"([\d.]+)", s)
         return float(m.group(1)) if m else None
-    dob = None
-    if esp.get("dob"):
-        try:
-            dob = datetime.datetime.strptime(esp["dob"], "%m/%d/%Y").date().isoformat()
-        except ValueError:
-            pass
     return {"height": inches(esp.get("height")), "reach": inches(esp.get("reach")), "stance": esp.get("stance"),
-            "dob": dob, "record": esp.get("record")}
+            "dob": parse_espn_dob(esp.get("dob"), esp.get("age")), "record": esp.get("record")}
+
+
+def parse_espn_dob(s, age=None, today=None):
+    """ESPN's displayDOB is day-first ("26/5/1992"); when both readings are valid dates, the one that
+    matches ESPN's age wins, and day-first otherwise."""
+    if not s:
+        return None
+    today = today or datetime.date.today()
+    cands = []
+    for fmt in ("%d/%m/%Y", "%m/%d/%Y", "%Y-%m-%d"):
+        try:
+            d = datetime.datetime.strptime(s.strip()[:10], fmt).date()
+        except ValueError:
+            continue
+        if d not in cands:
+            cands.append(d)
+    if not cands:
+        return None
+    if age is not None and len(cands) > 1:
+        years = lambda d: today.year - d.year - ((today.month, today.day) < (d.month, d.day))
+        fit = [d for d in cands if years(d) == age]
+        if fit:
+            return fit[0].isoformat()
+    return cands[0].isoformat()
 
 
 def side_profile(st, ufcs_id, esp, day, div):
@@ -87,9 +139,9 @@ def side_profile(st, ufcs_id, esp, day, div):
 
 def predict(a, b, day=None, wc=None, rounds=3, title=False):
     """a/b: {"ufcstats_id", "name", "dob", "height", "reach", "stance", "record"} (ESPN-style fields)."""
-    st = _load()
-    model = st["model"]
     day = day or datetime.date.today()
+    st = _state_on(_load(), day)
+    model = st["model"]
     div = engine.weight_class(wc or "")
     A, fa, _ = side_profile(st, a.get("ufcstats_id"), a, day, div)
     B, fb, _ = side_profile(st, b.get("ufcstats_id"), b, day, div)

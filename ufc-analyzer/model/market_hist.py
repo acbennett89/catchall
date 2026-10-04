@@ -5,11 +5,17 @@ For each matched fight (date within 3 days, both names matching) we get, from fi
   close_fair  no-vig probability from the midpoints of both closing ranges
   close_worst f1's least generous closing price across books (a conservative stand-in for a single
               book such as Caesars, whose own history isn't published), and the same for f2
+
+A closing range wider than CLOSE_MAX_WIDTH in implied probability usually means one book's "closing"
+price was taken during the fight (e.g. -3500 / +135 on the same side), which leaks the result; those
+fights get no closing data at all.
 """
 import datetime
 
 from names import pair_score
 from model.learn import dec_odds
+
+CLOSE_MAX_WIDTH = 0.12
 
 
 def _imp(o):
@@ -27,6 +33,15 @@ def _worst(lo, hi):
     if not vals:
         return None
     return min(vals, key=dec_odds)
+
+
+def close_width(lo1, hi1, lo2, hi2):
+    """Widest closing range of the two sides, in implied probability (0 when a range has one end)."""
+    w = 0.0
+    for lo, hi in ((lo1, hi1), (lo2, hi2)):
+        if lo is not None and hi is not None:
+            w = max(w, abs(_imp(lo) - _imp(hi)))
+    return w
 
 
 def join(fights, matchups):
@@ -64,6 +79,10 @@ def join(fights, matchups):
         if o1 is not None and o2 is not None:
             a, b = _imp(o1), _imp(o2)
             rec["open_fair"] = a / (a + b)
+        if close_width(lo1, hi1, lo2, hi2) > CLOSE_MAX_WIDTH:
+            rec.update(close1=[None, None], close2=[None, None], worst1=None, worst2=None, close_inplay=True)
+            out[fid] = rec
+            continue
         a, b = _mid_prob(lo1, hi1), _mid_prob(lo2, hi2)
         if a and b:
             fair = a / (a + b)

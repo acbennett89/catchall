@@ -124,19 +124,27 @@ class Engine:
         """Apply every event dated before `until` (ISO date) in order.
 
         on_event(event, bouts, day) is called before each event's results are applied, with bouts as
-        a list of fight records, so callers can read pre-fight state via self.get(...).
+        a list of fight records, so callers can read pre-fight state via self.get(...).  Events on the
+        same date all see the state from before that date (serving can't know a same-day card's results).
         """
         evs = sorted((e for e in events.values() if e.get("date")), key=lambda e: (e["date"], e["id"]))
-        for e in evs:
-            if until and e["date"] >= until:
+        i = 0
+        while i < len(evs):
+            date = evs[i]["date"]
+            if until and date >= until:
                 break
-            bouts = [fights[i] for i in e.get("fights", []) if i in fights]
-            day = parse_day(e["date"])
+            same = []
+            while i < len(evs) and evs[i]["date"] == date:
+                same.append((evs[i], [fights[k] for k in evs[i].get("fights", []) if k in fights]))
+                i += 1
+            day = parse_day(date)
             if on_event:
-                on_event(e, bouts, day)
-            for r in bouts:
-                self._apply(r, day)
-            self.as_of = e["date"]
+                for e, bouts in same:
+                    on_event(e, bouts, day)
+            for _, bouts in same:
+                for r in bouts:
+                    self._apply(r, day)
+            self.as_of = date
         return self
 
     def _apply(self, r, day):

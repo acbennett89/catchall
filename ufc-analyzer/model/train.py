@@ -30,12 +30,13 @@ OUT = os.path.join(HERE, "model.json")
 TRAIN_FROM = 2001
 TUNE_YEARS = list(range(2010, 2016))
 VAL_YEARS = list(range(2016, 2021))
-TEST_YEARS = list(range(2021, 2027))
+TEST_YEARS = list(range(2021, 2027))   # extended to the latest year in the data by main()
 OOS_YEARS = TUNE_YEARS + VAL_YEARS + TEST_YEARS
 METHODS = ["ko", "sub", "dec"]
 STACK_L2 = 40.0          # = penalty 20 * sum(theta^2): shrinks the blend toward "trust the market"
 SYNTH_HOLD = 0.044       # Caesars-like two-way margin for synthetic prices (power method)
 BET_EV, BET_MIN_P = 0.03, 0.20
+MIN_UFC_FIGHTS = 2       # the app's rule: a blend-made bet needs both fighters with 2+ UFC fights
 ANCHOR_KEY = {"open": "open_fair", "close": "close_fair"}
 
 
@@ -306,6 +307,39 @@ def outcome_params(rows, fights):
     return out
 
 
+def outcome_eval(rows, mm, preds, blend, years):
+    """Log loss of how the fight ends (finish in round 1..R, or goes the distance) and of goes-the-distance
+    alone, against base rates by format from the years before VAL."""
+    def end_class(r, R):
+        return int(r["round"]) - 1 if r["kind"] in ("ko", "sub") and r["round"] else R
+    base = {}
+    for R in (3, 5):
+        tr = [r for r in rows if TRAIN_FROM <= r["year"] < VAL_YEARS[0] and r["rounds"] == R and r["result"] in ("f1", "f2", "draw")]
+        cnt = [0.5] * (R + 1)
+        for r in tr:
+            cnt[min(R, end_class(r, R))] += 1
+        base[R] = [c / sum(cnt) for c in cnt]
+    te = [r for r in rows if r["year"] in years and r["rounds"] in (3, 5) and r["result"] in ("f1", "f2", "draw") and r["id"] in preds]
+    if not te:
+        return None
+    ll = llb = dl = dlb = 0.0
+    for r in te:
+        R = r["rounds"]
+        pa = blend.get(r["id"], preds[r["id"]])
+        t = predict.method_probs(mm, r["A"], r["B"], pa, R, r["div"])
+        probs = [x["a"] + x["b"] for x in t["rounds"]] + [t["distance"]]
+        k = min(R, end_class(r, R))
+        ll -= math.log(max(1e-9, probs[k]))
+        llb -= math.log(max(1e-9, base[R][k]))
+        went = 1 if k == R else 0
+        pd, pdb = min(max(t["distance"], 1e-6), 1 - 1e-6), base[R][R]
+        dl -= math.log(pd if went else 1 - pd)
+        dlb -= math.log(pdb if went else 1 - pdb)
+    n = len(te)
+    return {"fights": n, "end_log_loss": round(ll / n, 4), "end_base_log_loss": round(llb / n, 4),
+            "distance_log_loss": round(dl / n, 4), "distance_base_log_loss": round(dlb / n, 4)}
+
+
 # ------------------------------------------------------------------ betting backtest
 def bets_for(rows, prob_of, which, hold=SYNTH_HOLD):
     """One candidate per fight: the side with the higher EV at the given prices."""
@@ -330,6 +364,46 @@ def bets_for(rows, prob_of, which, hold=SYNTH_HOLD):
     return out
 
 
+def rule_bets(rows, bet_p, key, which, blend_bets, min_fights=MIN_UFC_FIGHTS, max_gap=None):
+    """The app's BET rule (modelapi.decide) on history, one side per fight: EV >= 3% at the bet
+    probability and a side >= 20%.  A bet the plain market price doesn't already make (EV < 3% at the
+    market fair price) is allowed only with blend_bets (early lines), and needs both fighters with
+    min_fights UFC fights (and, with max_gap, the model within max_gap of the market)."""
+    out = []
+    for r in rows:
+        pb, pm, pf = bet_p(r), market_p(r, key), None
+        if max_gap is not None:
+            pf = r.get("_pmodel")
+        if pb is None or pm is None:
+            continue
+        best = None
+        for side in (0, 1):
+            o = market_price(r, side, which)
+            if o is not None:
+                e = (pb if side == 0 else 1 - pb) * learn.dec_odds(o) - 1
+                if best is None or e > best[0]:
+                    best = (e, side, o)
+        if not best:
+            continue
+        e, side, o = best
+        ps, ms = (pb, pm) if side == 0 else (1 - pb, 1 - pm)
+        fs = None if pf is None else (pf if side == 0 else 1 - pf)
+        e_m = ms * learn.dec_odds(o) - 1
+        if e < BET_EV or ps < BET_MIN_P:
+            continue
+        if e_m < BET_EV:
+            if not blend_bets or min(r["A"]["fights"], r["B"]["fights"]) < min_fights:
+                continue
+            if max_gap is not None and fs is not None and abs(fs - ms) > max_gap:
+                continue
+        pc = market_p(r, "close_fair")
+        won = (r["y"] == 1) if side == 0 else (r["y"] == 0)
+        out.append({"p": ps, "odds": o, "won": 1 if won else 0, "cluster": r["date"], "year": r["year"],
+                    "pc": None if pc is None else (pc if side == 0 else 1 - pc),
+                    "kind": "market" if e_m >= BET_EV else "blend"})
+    return out
+
+
 def run_backtest(bets):
     """Pre-registered rule (EV >= 3%, side >= 20%), with per-year ROI, drawdown and closing-line value."""
     res = learn.backtest(bets, threshold=BET_EV, min_prob=BET_MIN_P)
@@ -347,6 +421,12 @@ def run_backtest(bets):
         peak = max(peak, bank)
         dd = max(dd, peak - bank)
     res["max_drawdown_units"] = round(dd, 1)
+    kinds = {}
+    for b in placed:
+        if b.get("kind"):
+            kinds[b["kind"]] = kinds.get(b["kind"], 0) + 1
+    if kinds:
+        res["by_kind"] = kinds
     clv = [b["pc"] * learn.dec_odds(b["odds"]) - 1 for b in placed if b.get("pc") is not None]
     if clv:
         lo, hi = learn.bootstrap(lambda idx: sum(clv[i] for i in idx) / len(idx), len(clv), reps=800)
@@ -416,6 +496,9 @@ def main():
     print("engine params:", params)
     rows, eng, _ = dataset.build_rows(ev, fi, fr, engine_params=params, espn_histories=hist)
     last_date = max(r["date"] for r in rows)
+    global TEST_YEARS, OOS_YEARS
+    TEST_YEARS = list(range(2021, int(last_date[:4]) + 1))
+    OOS_YEARS = TUNE_YEARS + VAL_YEARS + TEST_YEARS
     mk = market_hist.join(fi, odds_history.load())
     for r in rows:
         if r["id"] in mk:
@@ -543,6 +626,21 @@ def main():
             out[label] = {"gate_open": stack[anchor]["gate"], "blend": blend,
                           "raw_model": run_backtest(bets_for(rs_m, lambda r: preds.get(r["id"]), which))}
         out["sanity_market_at_worst_close"] = run_backtest(bets_for(rs_m, lambda r: market_p(r, "close_fair"), "worst"))
+        # the rule the app actually applies (modelapi.decide): 4+ days out, blend bets for fighters with 2+
+        # UFC fights, tested at opening prices; in fight week, market value only.  No Caesars history
+        # exists, so fight-week market value is tested at the best price across books (a ceiling).
+        # Variants show what the filters do; the rule was chosen on VAL.
+        sp_o, sp_c = stack_preds["open"][0], stack_preds["close"][0]
+        for r in rs_m:
+            r["_pmodel"] = preds.get(r["id"])
+        bo, bc = (lambda r: sp_o.get(r["id"])), (lambda r: sp_c.get(r["id"]))
+        out["served_rule"] = {
+            "early_open": run_backtest(rule_bets(rs_m, bo, "open_fair", "open", blend_bets=True)),
+            "early_open_any_experience": run_backtest(rule_bets(rs_m, bo, "open_fair", "open", blend_bets=True, min_fights=0)),
+            "early_open_gap15": run_backtest(rule_bets(rs_m, bo, "open_fair", "open", blend_bets=True, max_gap=0.15)),
+            "fight_week_best": run_backtest(rule_bets(rs_m, bc, "close_fair", "best", blend_bets=False)),
+            "fight_week_blend_synthetic": run_backtest(rule_bets(rs_m, bc, "close_fair", "synth", blend_bets=True)),
+        }
         sp = stack_preds["close"][0]
         for h in (0.03, 0.06):
             out[f"synthetic_caesars_hold_{h}"] = run_backtest(bets_for(rs_m, lambda r: sp.get(r["id"]), "synth", hold=h))
@@ -550,12 +648,21 @@ def main():
     report["backtest"] = bt
     for name in bt:
         for k, v in bt[name].items():
-            if "blend" in v:
+            if k == "served_rule":
+                for kk, b in v.items():
+                    print(f"  {name:4s} rule:{kk:16s} {b.get('bets')} bets ROI {b.get('roi')} {b.get('roi_ci')} "
+                          f"CLV {(b.get('clv') or {}).get('mean')} kinds {b.get('by_kind')}")
+            elif "blend" in v:
                 b, rm = v["blend"], v["raw_model"]
                 print(f"  {name:4s} {k:18s} blend {b.get('bets')} bets ROI {b.get('roi')} {b.get('roi_ci')} "
                       f"CLV {(b.get('clv') or {}).get('mean')} shuffle {b.get('placebo_shuffle_pct')} | raw {rm.get('bets')} ROI {rm.get('roi')}")
             else:
                 print(f"  {name:4s} {k:18s} {v.get('bets')} bets ROI {v.get('roi')} {v.get('roi_ci')}")
+
+    if os.environ.get("TRAIN_DUMP"):   # intermediate predictions for offline analysis
+        import pickle
+        with open(os.environ["TRAIN_DUMP"], "wb") as f:
+            pickle.dump({"rows": rows, "preds": preds, "stack_preds": {k: v[0] for k, v in stack_preds.items()}}, f)
 
     # 5. method model: checked on VAL/TEST, then fitted on everything
     mrows = method_rows(rows)
@@ -569,6 +676,11 @@ def main():
                       "log_loss": round(-sum(math.log(max(1e-9, method_predict(mm, x)[c])) for x, c, _ in te) / len(te), 4),
                       "base_rate_log_loss": round(-sum(math.log(max(1e-9, base[c])) for _, c, _ in te) / len(te), 4)}
     meth["base_rates"] = dict(zip(METHODS, [round(b, 3) for b in base]))
+    # the whole outcome table (finish round / distance), with round shapes fitted before VAL only and the
+    # win chance from the closing-line blend, as the props table uses it
+    oc_tr = outcome_params([r for r in rows if TRAIN_FROM <= r["year"] < VAL_YEARS[0]], fi)
+    meth["outcome_val"] = outcome_eval(rows, dict(mm, outcome=oc_tr), preds, stack_preds["close"][0], VAL_YEARS)
+    meth["outcome_test"] = outcome_eval(rows, dict(mm, outcome=oc_tr), preds, stack_preds["close"][0], TEST_YEARS)
     report["method_eval"] = meth
     print("method", meth)
 

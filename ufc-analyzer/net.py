@@ -48,6 +48,7 @@ class TTLCache:
         self._lock = threading.Lock()
         self._data = {}      # key -> (expires_at, value)
         self._inflight = {}  # key -> Event
+        self._puts = 0
 
     def get(self, key, loader, ttl, stale_ok=True):
         """Return a cached value or call loader().  If the loader fails and a stale value exists, return it."""
@@ -74,6 +75,10 @@ class TTLCache:
                 t = ttl(value) if callable(ttl) else ttl
                 with self._lock:
                     self._data[key] = (time.time() + t, value)
+                    self._puts += 1
+                    if self._puts % 200 == 0:   # forget entries a day past expiry (kept until then as fallbacks)
+                        cut = time.time() - 86400
+                        self._data = {k: v for k, v in self._data.items() if v[0] > cut}
                 return value
             except Exception:
                 if stale_ok and hit:
@@ -113,6 +118,12 @@ class DiskStore:
         if max_age is not None and time.time() - v.get("_at", 0) > max_age:
             return None
         return v.get("v")
+
+    def stamp(self, key):
+        """When `key` was last written (epoch seconds), or None."""
+        with self._lock:
+            v = self.data.get(key)
+        return v.get("_at") if v else None
 
     def put(self, key, value):
         with self._lock:

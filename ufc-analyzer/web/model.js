@@ -50,17 +50,18 @@ function renderModel(f) {
   if (pr.suppressed) { el.innerHTML = `<div class="muted">${esc(pr.suppressed)}</div>`; return; }
   const names = f.fighters.map(x => x.name);
   const ln = names.map(lastName);
-  const actionable = f.status.state !== "post";
+  const actionable = f.status.state === "pre";   // the moneylines are pre-fight prices
   const fo = fightOdds(f);
   const mkt = fo && fo.value && fo.value.fair;
+  const d = pr.decision || {};
   const sides = [0, 1].map(i => {
     const s = (pr.sides || [])[i] || {};
-    // highlight and size from the bet probability (market, nudged by the model only where that tested well);
-    // the raw model's EV is shown for reference but never drives a VALUE flag unless you chose the Model basis
-    const useModel = settings.basis === "model" || s.evBlend === undefined;
+    // VALUE and a stake only where the BET rule says BET; on the Model basis (your explicit choice) the raw
+    // model's EV drives them instead.  Both EVs are shown either way.
+    const useModel = settings.basis === "model";
     const ev = useModel ? s.evModel : s.evBlend;
-    const kel = useModel ? s.kellyModel : s.kellyBlend;
-    const isValue = actionable && ev !== undefined && ev >= settings.threshold;
+    const kel = useModel ? s.kellyModel : d.kelly;
+    const isValue = actionable && (useModel ? ev !== undefined && ev >= settings.threshold : d.action === "BET" && d.side === i);
     return `<div class="odds-side ${i ? "blue" : "red"}${isValue ? " value" : ""}">
       <div class="os-top"><span class="os-name">${esc(names[i])}</span><span class="os-book">Model</span></div>
       <div class="os-price">${pct(pr.p[i], 0)}${isValue ? ` <span class="badge good" style="vertical-align:middle">VALUE</span>` : ""}</div>
@@ -70,7 +71,7 @@ function renderModel(f) {
         ${pr.blend ? `<dt>Blend</dt><dd>${pct(pr.blend[i], 1)}</dd>` : ""}
         ${s.evModel !== undefined ? `<dt>EV at ${TARGET} (model)</dt><dd class="${s.evModel >= 0 ? "pos" : "neg"}">${signedPct(s.evModel)}</dd>` : ""}
         ${s.evBlend !== undefined ? `<dt>EV at ${TARGET} (blend)</dt><dd class="${s.evBlend >= 0 ? "pos" : "neg"}">${signedPct(s.evBlend)}</dd>` : ""}
-        ${ev !== undefined && ev > 0 ? `<dt>Stake (${Math.round(settings.kelly * 100)}% Kelly)</dt><dd>${money(stakeFor(kel))}</dd>` : ""}
+        ${isValue && kel > 0 ? `<dt>Stake (${Math.round(settings.kelly * 100)}% Kelly)</dt><dd>${money(stakeFor(kel))}</dd>` : ""}
         <dt>Elo rating</dt><dd>${esc(pr.elo ? pr.elo[i] : "—")}</dd>
       </dl></div>`;
   }).join("");
@@ -86,9 +87,10 @@ function renderModel(f) {
   const m = pr.method;
   if (m) {
     const row = (lab, k) => `<tr><td>${lab}</td><td>${pct(m.a[k], 0)}</td><td>${pct(m.b[k], 0)}</td></tr>`;
+    const wins = t => t.ko + t.sub + t.dec;   // the rows above, so the column adds up (a draw is the rest)
     method = `<table class="books-table"><thead><tr><th>Outcome</th><th>${esc(ln[0])}</th><th>${esc(ln[1])}</th></tr></thead><tbody>
       ${row("KO/TKO", "ko")}${row("Submission", "sub")}${m.a.dec_u !== undefined ? row("Unanimous decision", "dec_u") + row("Split/majority decision", "dec_s") : row("Decision", "dec")}
-      <tr class="target"><td>Wins</td><td>${pct(pr.p[0], 0)}</td><td>${pct(pr.p[1], 0)}</td></tr></tbody></table>
+      <tr class="target"><td>Wins</td><td>${pct(wins(m.a), 0)}</td><td>${pct(wins(m.b), 0)}</td></tr></tbody></table>
       <div class="note-line">Goes the distance: <b>${pct(m.distance, 0)}</b>${m.draw ? ` (draw ${pct(m.draw, 1)})` : ""}${m.over_under ? " · " + m.over_under.filter(o => o.line < f.rounds).map(o => `O/U ${o.line}: ${pct(o.over, 0)} / ${pct(o.under, 0)}`).join(" · ") : ""}</div>`;
     if (m.rounds) {
       method += `<details><summary>Finish by round</summary><table class="books-table"><thead><tr><th>Round</th><th>${esc(ln[0])}</th><th>${esc(ln[1])}</th></tr></thead><tbody>
@@ -111,11 +113,13 @@ function renderModel(f) {
   const g = pr.blendState || {};
   const away = g.hours >= 48 ? `${Math.round(g.hours / 24)} days` : `${Math.round(g.hours || 0)} hours`;
   // which blend applies: the early-line blend a week or more out, the closing-line blend inside 12 hours, a mix between
-  const which = g.wOpen >= 0.999 ? "on early lines the model beat the market in testing, so it nudges the price"
-    : g.wOpen <= 0.001 ? "on closing lines the blend still edged the market in testing, but by little (mostly by firming up the market's favorite), so the nudge is small"
-    : `mixing the early-line blend (${Math.round(g.wOpen * 100)}%) with the smaller closing-line blend as fight night nears`;
+  const moved = mkt && pr.blend ? ` Here it moves ${esc(ln[0])} ${(pr.blend[0] - mkt[0] >= 0 ? "+" : "−")}${Math.abs((pr.blend[0] - mkt[0]) * 100).toFixed(1)} points.` : "";
+  const early = (g.hours || 0) >= 96;
+  const which = g.wOpen >= 0.999 ? "on early lines the blend (market plus model) beat the market in testing, so a blend edge can be a BET"
+    : g.wOpen <= 0.001 ? "on closing lines the blend edged the market only slightly in testing, mostly by firming up favorites, so only market value is a BET now"
+    : `mixing the early-line blend (${Math.round(g.wOpen * 100)}%) with the weaker closing-line blend as fight night nears; ${early ? "a blend edge can still be a BET until 4 days out" : "inside 4 days only market value is a BET"}`;
   const gateNote = pr.blend ? `<div class="note-line">${g.active
-      ? `Blend is live (${away} out): ${which}${g.lowExperience ? ", and the model counts for less when a fighter has under 2 UFC fights" : ""}.`
+      ? `Blend is live (${away} out): ${which}${g.lowExperience ? ", and the model counts for less when a fighter has under 2 UFC fights" : ""}.${moved}`
       : `Blend = market (${away} out): the model hasn't beaten the market this close to the fight in testing, so it doesn't move the price.`}</div>` : "";
   el.innerHTML = `${decisionBox(pr, f)}<div class="odds-grid">${sides}</div>${gap}${gateNote}${flags}
     <div class="section-title" style="padding:12px 0 6px">How it ends${pr.methodAnchor && pr.methodAnchor !== "model" ? ` <span class="faint" style="text-transform:none;letter-spacing:0">(scaled to the ${pr.methodAnchor === "blend" ? "blended" : "market"} win chance)</span>` : ""}</div>${method}${drivers}
@@ -126,36 +130,36 @@ function renderModel(f) {
   if (meta) meta.textContent = S.pred.model && S.pred.model.trained_through ? `history through ${S.pred.model.trained_through}` : "";
 }
 
-/* How the model has done on fights it never saw, from model.json (test years, then validation). */
+/* How the model and the app's BET rule have done on fights they never saw, from model.json (test years;
+   the rule itself was chosen on the validation years). */
 function trackRecord() {
   const M = S.pred && S.pred.model;
   const T = M && M.evaluation && M.evaluation.test;
   if (!T || !T.with_market) return "";
-  const wm = T.with_market, st = M.stack || {}, bt = (M.backtest || {}).test || {};
+  const wm = T.with_market, st = M.stack || {}, bt = (M.backtest || {}).test || {}, bv = (M.backtest || {}).val || {};
+  const sr = bt.served_rule || {}, sv = bv.served_rule || {};
   const acc = x => x ? pct(x.accuracy, 1) : "—";
   const ll = x => x ? x.log_loss.toFixed(3) : "—";
   const ci = x => x && x.ci ? ` (95% range ${x.ci[0] >= 0 ? "+" : ""}${x.ci[0].toFixed(3)} to ${x.ci[1] >= 0 ? "+" : ""}${x.ci[1].toFixed(3)})` : "";
+  const roi = r => `${r.bets.toLocaleString()} bets, ROI ${signedPct(r.roi, 1)} (95% range ${signedPct(r.roi_ci[0], 0)} to ${signedPct(r.roi_ci[1], 0)})`;
   const gateLine = (anchor, label) => {
     const g = st[anchor];
     if (!g) return "";
-    return `<li>${label}: blend minus market log loss ${g.test_minus_market ? g.test_minus_market.est.toFixed(4) : "—"}${ci(g.test_minus_market)} on test; ${g.gate ? "<b>live</b> (it beat the market on 2016–20 and held up since)" : "not live (it didn't beat the market on 2016–20)"}.</li>`;
+    return `<li>${label}: blend minus market log loss ${g.test_minus_market ? g.test_minus_market.est.toFixed(4) : "—"}${ci(g.test_minus_market)}; ${g.gate ? "<b>live</b> (it beat the market on 2016–20 and held up since)" : "not live (it didn't beat the market on 2016–20)"}.</li>`;
   };
-  const btLine = (k, lab) => {
-    const r = bt[k] && bt[k].blend;
-    if (!r || !r.bets) return "";
-    const c = r.clv && k === "open" ? `; beat the closing line on ${pct(r.clv.beat_close, 0)} of bets (CLV ${signedPct(r.clv.mean, 1)})` : "";
-    return `<li>${lab}: ${r.bets.toLocaleString()} bets, ROI ${signedPct(r.roi, 1)} (95% range ${signedPct(r.roi_ci[0], 0)} to ${signedPct(r.roi_ci[1], 0)})${c}.</li>`;
-  };
+  const e = sr.early_open, ev = sv.early_open, fw = sr.fight_week_best, syn = sr.fight_week_blend_synthetic;
   const raw = bt.open && bt.open.raw_model;
   return `<details class="track"><summary>Track record: ${esc(T.years)}, ${T.model ? T.model.n.toLocaleString() : "?"} fights it never saw</summary>
     <div class="note-line">On ${wm.model ? wm.model.n.toLocaleString() : "?"} of them with betting history: model alone ${acc(wm.model)} right (log loss ${ll(wm.model)}),
-      opening line ${acc(wm.market_open)} (${ll(wm.market_open)}), closing line ${acc(wm.market_close)} (${ll(wm.market_close)}). Lower log loss is better.</div>
+      opening line ${acc(wm.market_open)} (${ll(wm.market_open)}), closing line ${acc(wm.market_close)} (${ll(wm.market_close)}). Lower log loss is better: the model alone loses to both, so it only ever moves the market price a little.</div>
     <ul class="small muted" style="margin:6px 0 0 18px;padding:0">
-      ${gateLine("open", "Early lines")}${gateLine("close", "Fight week")}
-      ${btLine("open", "Blend at opening prices, EV ≥ 3%")}${btLine("synthetic_caesars", "Blend at closing prices with a Caesars-like 4.4% margin")}
-      ${raw && raw.bets ? `<li>Model alone at opening prices: ${raw.bets.toLocaleString()} bets, ROI ${signedPct(raw.roi, 1)}. Don't bet the raw model.</li>` : ""}
+      ${gateLine("open", "Blend on early lines")}${gateLine("close", "Blend on closing lines")}
+      ${e && e.bets ? `<li><b>This app's BET rule 4+ days out</b> (blend edge, both fighters with 2+ UFC fights), at historical opening prices: ${roi(e)}${e.clv ? `; the closing line moved toward the pick on ${pct(e.clv.beat_close, 0)} of them (CLV ${signedPct(e.clv.mean, 1)})` : ""}.${ev && ev.bets ? ` The rule was picked on 2016–20 (${roi(ev)}).` : ""}</li>` : ""}
+      ${fw && fw.bets ? `<li>In fight week only market value is a BET. There's no ${TARGET} price history, so the best price across books stands in (a ceiling): ${roi(fw)}.</li>` : ""}
+      ${syn && syn.bets ? `<li>Blend bets at closing prices with a ${TARGET}-like 4.4% margin: ${roi(syn)}. Not a reliable edge, which is why fight-week blend edges stay WATCH.</li>` : ""}
+      ${raw && raw.bets ? `<li>Model alone at opening prices: ${roi(raw)}. Don't bet the raw model.</li>` : ""}
     </ul>
-    <div class="note-line">Opening prices are an upper bound: they're often from one small book days before ${TARGET} posts. The market is hard to beat; treat a model edge as a second opinion.</div></details>`;
+    <div class="note-line">Opening prices are an upper bound: they're often one small book's first number, and ${TARGET}'s early lines may already have moved. The forward ledger (top right) is the real test.</div></details>`;
 }
 
 /* Model probability for a Caesars prop label ("Silva wins by TKO/KO", "Over 2½ rounds", ...),
@@ -163,6 +167,7 @@ function trackRecord() {
 function propModelProb(p, f) {
   const pr = modelFor(f);
   if (!pr || !pr.method || !pr.method.a) return null;
+  if (f.status && f.status.state === "in") return null;   // a pre-fight table says nothing once rounds have gone by
   const m = pr.method;
   const R = m.rounds_scheduled || (m.rounds ? m.rounds.length : f.rounds);
   const norm = n => (n || "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
@@ -223,7 +228,7 @@ function stakeFor(kelly) {
 
 function decisionBox(pr, f) {
   const d = pr.decision;
-  if (!d || f.status.state === "post") return "";
+  if (!d || f.status.state !== "pre") return "";
   const cls = d.action === "BET" ? "good" : d.action === "WATCH" ? "title" : "";
   const who = d.side !== undefined ? esc(f.fighters[d.side].name) : "";
   const stake = d.action === "BET" && d.kelly ? ` · stake ${money(stakeFor(d.kelly))}` : "";
@@ -240,7 +245,7 @@ async function logBet(f, pr) {
   const cz = pr.sides && pr.sides[side] && pr.sides[side].caesars;
   const price = window.prompt(`Price you got on ${f.fighters[side].name} at ${TARGET} (American odds):`, cz !== undefined ? String(cz) : "");
   if (price === null || isNaN(parseFloat(price)) || Math.abs(parseFloat(price)) < 100) return;
-  const suggested = d.kelly ? stakeFor(d.kelly).toFixed(2) : "";
+  const suggested = d.action === "BET" && d.kelly ? stakeFor(d.kelly).toFixed(2) : "";
   const stake = window.prompt("Stake ($, optional):", suggested);
   if (stake === null) return;
   const q = new URLSearchParams({ event: S.eventId, fight: f.id, side, price: parseFloat(price) });
@@ -270,13 +275,15 @@ function renderLedger(d) {
   const s = d.summary || {};
   const line = (lab, x) => x && x.entries ? `<tr><td>${lab}</td><td>${x.entries}</td><td>${x.clv !== null ? signedPct(x.clv, 1) : "—"}</td><td>${x.beatClose !== null ? pct(x.beatClose, 0) : "—"}</td><td>${x.settled}</td><td>${x.roi !== null ? signedPct(x.roi, 1) : "—"}</td></tr>` : "";
   const rows = (d.entries || []).map(e => `<tr>
-      <td>${esc(fmtDate(e.ts))}</td><td>${esc(e.fighters[e.side])} <span class="faint">vs ${esc(lastName(e.fighters[1 - e.side]))}</span></td>
+      <td class="nowrap">${esc(new Date(e.ts * 1000).toLocaleDateString(undefined, { month: "short", day: "numeric" }))}</td><td title="${esc(e.eventName || "")}">${esc(e.fighters[e.side])} <span class="faint">vs ${esc(lastName(e.fighters[1 - e.side]))}</span></td>
       <td>${esc(fmtOdds(e.price))}</td><td>${esc(e.source === "user" ? "your bet" : e.action)}${e.tier ? `<br><span class="faint">${esc(e.tier)}</span>` : ""}</td>
-      <td>${e.closeFair !== null ? esc(fmtOdds(probToAm(e.closeFair))) : "—"}</td>
+      <td>${e.closeFair !== null ? esc(fmtOdds(probToAm(e.closeFair)))
+        : !e.started && e.fairNow != null ? `<span class="faint" title="Market now; the close is taken when the fight starts">${esc(fmtOdds(probToAm(e.fairNow)))} now</span>`
+        : e.started ? `<span class="faint" title="No price seen within an hour of the start">missed</span>` : "—"}</td>
       <td class="${e.clv > 0 ? "pos" : e.clv < 0 ? "neg" : ""}">${e.clv !== null ? signedPct(e.clv, 1) : "—"}</td>
       <td>${esc(e.result || "open")}${e.profit !== null && e.profit !== undefined ? ` <span class="${e.profit >= 0 ? "pos" : "neg"}">${e.profit >= 0 ? "+" : ""}${e.profit}</span>` : ""}</td>
       <td>${e.source === "user" ? `<button class="link-btn" data-remove="${esc(e.id)}">✕</button>` : ""}</td></tr>`).join("");
-  return `<p class="fine">Every ${TARGET} price the app flags is logged the first time it's flagged, plus the bets you log. Each is checked against the last consensus price the app saw before the fight (closing-line value) and the result. Positive CLV over a few hundred bets is the clearest sign of a real edge; ROI takes thousands.</p>
+  return `<p class="fine">Every ${TARGET} price the app flags is logged the first time it's flagged as WATCH and again if it becomes a BET, plus the bets you log. Once the fight starts, each is checked against the last consensus price the app saw (closing-line value), then the result. Positive CLV over a few hundred bets is the clearest sign of a real edge; ROI takes thousands. Keep the server running into fight night so it sees the close.</p>
     <div style="overflow-x:auto"><table class="books-table"><thead><tr><th></th><th>Entries</th><th>Avg CLV</th><th>Beat close</th><th>Settled</th><th>ROI</th></tr></thead><tbody>
       ${line("Flagged BET", s.flagged_bets)}${line("Flagged WATCH", s.flagged_watch)}${line("Your bets", s.your_bets)}</tbody></table></div>
     ${rows ? `<div style="overflow-x:auto;margin-top:10px"><table class="books-table"><thead><tr><th>Logged</th><th>Pick</th><th>Price</th><th>Type</th><th>Close</th><th>CLV</th><th>Result</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`
@@ -286,6 +293,6 @@ function renderLedger(d) {
 function decisionChip(f) {
   const pr = modelFor(f);
   const d = pr && pr.decision;
-  if (!d || f.status.state === "post" || d.action === "PASS") return "";
+  if (!d || f.status.state !== "pre" || d.action === "PASS") return "";
   return ` <span class="badge ${d.action === "BET" ? "good" : "title"}" title="${esc((d.reasons || []).join(" "))}">${d.action}</span>`;
 }

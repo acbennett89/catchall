@@ -21,7 +21,9 @@ def main():
     with open(MODEL_PATH, encoding="utf-8") as f:
         model = json.load(f)
     feats = model["win"]["feats"]
-    C = (model.get("evaluation") or {}).get("C") or 0.1
+    C = model.get("C") or (model.get("evaluation") or {}).get("C")
+    if not C:
+        raise SystemExit("model.json has no regularization strength (C); run python -m model.train instead")
     ev, fi, fr = scrape.load_dataset()
     rows, eng, _ = dataset.build_rows(ev, fi, fr, engine_params=model.get("engine"))
     rows = [r for r in rows if r["year"] >= 2001 and r["y"] is not None]

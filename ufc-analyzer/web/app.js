@@ -251,7 +251,8 @@ function renderList() {
     const fo = fightOdds(f);
     const cz = fo && fo.lines[TARGET];
     const fair = fo && fo.value && fo.value.fair;
-    const actionable = f.status.state !== "post";
+    // market EV keeps showing while a fight is live (the last pre-fight lines); model-based EV only before it starts
+    const actionable = settings.basis === "market" ? f.status.state !== "post" : f.status.state === "pre";
     const evs = [0, 1].map(i => basisEv(f, fo, i));
     const isValue = actionable && evs.some(v => v !== null && v >= settings.threshold);
     html += `<button class="fight-row${f.id === S.fightId ? " selected" : ""}${isValue ? " value" : ""}" data-fid="${esc(f.id)}">
@@ -665,7 +666,7 @@ function renderProps(f) {
       const mp = hasModel ? propModelProb(p, f) : null;
       const mev = mp !== null ? evAt(mp, p.odds) : null;
       const useEv = settings.basis === "market" ? p.ev : (mev !== null ? mev : p.ev);
-      const val = actionable && useEv !== null && useEv >= settings.threshold;
+      const val = (settings.basis === "market" ? actionable : f.status.state === "pre") && useEv !== null && useEv >= settings.threshold;
       const modelCells = hasModel ? `<td>${mp !== null ? esc(fmtOdds(probToAm(mp))) : "—"}</td><td>${mev !== null ? `<span class="${mev >= 0 ? "pos" : "neg"}">${signedPct(mev)}</span>` : "—"}</td>` : "";
       const evCell = p.ev !== null ? `<span class="${p.ev >= 0 ? "pos" : "neg"}">${signedPct(p.ev)}</span>` :
         (p.vsMarket !== null ? `<span class="muted" title="No two-way market to strip the vig from; this compares ${TARGET}'s payout with the median of other books.">${p.vsMarket >= 0 ? "pays +" : "pays "}${(p.vsMarket * 100).toFixed(0)}%</span>` : "—");

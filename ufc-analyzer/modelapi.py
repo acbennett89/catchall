@@ -7,7 +7,7 @@ Three probabilities per fight:
   market  the no-vig consensus of the other books
   bet     the market, nudged by the model only where that blend beat the market in testing
 """
-import datetime, math, time
+import datetime, math, threading, time
 
 import espn, ledger, ufcstats, value
 from net import cache
@@ -19,6 +19,8 @@ except Exception:  # model package missing or broken: the rest of the app still 
     _predict = None
 
 OPEN_HOURS, CLOSE_HOURS = 168.0, 12.0   # a week or more out = early lines; inside 12 h = the close
+EARLY_HOURS = 96.0   # 4+ days out counts as early lines, where the blend has beaten the market at its own prices
+BET_EV, MIN_P, NEWS_GAP, MAX_CZ_OFF = 0.03, 0.20, 0.15, 0.08
 
 
 def available():
@@ -42,10 +44,12 @@ def _espn_side(fighter):
         uid = ufcstats.find_id(name, first, last.split(" ")[-1] if last else None, fighter["id"], a.get("record") or fighter.get("record"))
     except Exception:
         uid = None
-    ufc_dates = [h["date"] for h in a.get("history", []) if h.get("ufc") and h.get("result")] if a else []
+    # ESPN files Dana White's Contender Series under its UFC league; those fights aren't UFC fights here
+    ufc_dates = [h["date"] for h in a.get("history", []) if h.get("ufc") and h.get("result")
+                 and "contender series" not in (h.get("event") or "").lower()] if a else []
     uid = _resolve_with_history(uid, name, len(ufc_dates))
     return {"ufcstats_id": uid, "name": name, "espn_hist": espn_hist.compact_history(a) if a else None,
-            "espn_ufc_dates": ufc_dates,
+            "espn_ufc_dates": ufc_dates, "age": a.get("age"),
             "dob": a.get("dob"), "height": a.get("height") or fighter.get("height"),
             "reach": a.get("reach") or fighter.get("reach"), "stance": a.get("stance") or fighter.get("stance"),
             "record": a.get("record") or fighter.get("record")}
@@ -103,12 +107,16 @@ def apply_stacker(stk, p_model, p_market, low_experience):
 
 
 def decide(p_bet, p_mkt, p_model, odds_view, stk, low_experience, stale):
-    """BET / WATCH / PASS for the better Caesars side, with plain reasons (the pre-registered rule).
+    """BET / WATCH / PASS for the better Caesars side, with plain reasons.
 
-    BET needs EV >= 3% at the bet probability AND a non-negative EV at the plain market price (the model
-    can never create a bet the market prices as negative), a side above 20%, a fair price from 3+ books
-    and Caesars within 8 points of it.  A bet that exists only because of the model also needs the blend
-    to be live, both fighters to have 2+ UFC fights and model and market within 15 points.
+    Every BET needs EV >= 3% at the bet probability, the side above 20%, a fair price from 3+ books and
+    Caesars within 8 points of it.  If the plain market price alone gives EV >= 3%, that's market value,
+    a BET at any time.  Otherwise the edge comes from the blend, which is a BET only 4+ days out, with
+    the opening-line blend live, both fighters with 2+ UFC fights and both fighters' latest fights in the
+    history.  That is the rule backtested in model.json (backtest.*.served_rule): on 2016-2020 the blend
+    beat opening lines at their own prices with this filter, while no fight-week version beat zero.  A
+    model-market gap over 15 points gets a check-the-news note rather than a block: in testing those
+    were the early bets that paid.
     """
     lines = {bk: tuple(v) for bk, v in (odds_view.get("lines") or {}).items()}
     v = odds_view.get("value") or {}
@@ -127,32 +135,41 @@ def decide(p_bet, p_mkt, p_model, odds_view, stk, low_experience, stale):
     if v.get("books", 0) < 3:
         blocks.append(f"Fair price comes from only {v.get('books', 0)} book(s).")
     gap = abs(value.no_vig(cz[0], cz[1])[0] - p_mkt)
-    if gap > 0.08:
+    if gap > MAX_CZ_OFF:
         blocks.append(f"{value.TARGET_BOOK} is {gap * 100:.0f} points off the market; check for news or a stale line first.")
-    if p_side < 0.20:
+    if p_side < MIN_P:
         blocks.append("Longshot under a 20% chance: historically the worst-priced bets.")
-    if ev_mkt < 0:
-        blocks.append(f"At the plain market price this is {ev_mkt * 100:+.1f}%: the model alone can't make it a bet.")
-    model_made = ev_mkt < 0.03 <= ev
-    if model_made:
-        if not stk.get("active"):
-            blocks.append("The blend isn't live at this point before the fight.")
+    early = stk.get("hours", 0) >= EARLY_HOURS
+    blend_made = ev_mkt < BET_EV <= ev
+    notes = []
+    if blend_made:
+        if not early:
+            blocks.append(f"At the plain market price this is {ev_mkt * 100:+.1f}%. Inside 4 days of the fight only market "
+                          f"value counts: the blend hasn't beaten fight-week prices in testing.")
+        elif not stk.get("open_gate"):
+            blocks.append("The early-line blend isn't live.")
         if low_experience:
-            blocks.append("A fighter has fewer than 2 UFC fights, where the model adds little.")
-        if f_side is not None and abs(f_side - m_side) > 0.15:
-            blocks.append(f"Model and market disagree by {abs(f_side - m_side) * 100:.0f} points; that's usually news the model can't see.")
+            blocks.append("A fighter has fewer than 2 UFC fights; blend bets on newcomers didn't hold up in testing.")
         if stale:
             blocks.append("A fighter's latest fight isn't in the model's history yet.")
-    if ev_mkt >= 0.03:
+        if f_side is not None and abs(f_side - m_side) > NEWS_GAP:
+            notes.append(f"Model and market are {abs(f_side - m_side) * 100:.0f} points apart: check for news the model can't "
+                         f"see (injury, weight cut, late replacement) before betting.")
+        if f_side is not None and f_side <= m_side:
+            notes.append("The model doesn't rate this side above the market; the edge comes from the blend firming up "
+                         "favorites, which past lines have underpriced.")
+    if ev_mkt >= BET_EV:
         tier = "Market value + model agrees" if f_side is not None and f_side >= m_side else "Market value"
-    elif model_made:
-        tier = "Model lean (unproven)"
+    elif blend_made:
+        tier = "Early-line blend" if early else "Blend (fight week)"
     else:
         tier = None
     price = ("+" if cz[side] > 0 else "") + str(cz[side])
     reasons = [f"{value.TARGET_BOOK} {price}: EV {ev * 100:+.1f}% at the bet probability "
-               f"({value.prob_to_american(p_side):+d}), {ev_mkt * 100:+.1f}% at the market price ({value.prob_to_american(m_side):+d})."]
-    action = "BET" if ev >= 0.03 and not blocks else "WATCH" if ev > 0 else "PASS"
+               f"({value.prob_to_american(p_side):+d}), {ev_mkt * 100:+.1f}% at the market price ({value.prob_to_american(m_side):+d})."] + notes
+    action = "BET" if ev >= BET_EV and not blocks else "WATCH" if ev > 0 else "PASS"
+    if action == "PASS":
+        tier = None
     return {"action": action, "tier": tier, "side": side, "ev": round(ev, 4), "evMarket": round(ev_mkt, 4),
             "p": round(p_side, 4), "kelly": round(value.kelly(p_side, cz[side]), 4), "reasons": reasons + blocks}
 
@@ -177,13 +194,16 @@ def _sides(pred, lines):
 def fight_prediction(card, f, odds_view=None):
     day = datetime.date.fromtimestamp(card["date"]) if card.get("date") else datetime.date.today()
     a, b = (_espn_side(x) for x in f["fighters"])
-    pred = _predict.predict(a, b, day=day, wc=f.get("weightClass"), rounds=f.get("rounds") or 3, title=f.get("title"))
+    # scheduled rounds: UFCStats' own record once the bout is in the history (ESPN only guesses 5 for
+    # title fights and main events, and misses five-round co-mains)
+    rounds = _predict.scheduled_rounds(a["ufcstats_id"], b["ufcstats_id"], day) or f.get("rounds") or 3
+    pred = _predict.predict(a, b, day=day, wc=f.get("weightClass"), rounds=rounds, title=f.get("title"))
     pred["ufcstatsIds"] = [a["ufcstats_id"], b["ufcstats_id"]]
     if pred.get("suppressed"):
         pred.pop("_ctx", None)
         return pred
     meta = _predict._state["model"] or {}
-    stk = stacker(meta, card)
+    stk = stacker(meta, {"date": f.get("date") or card.get("date")})   # hours to this fight's segment
     low = min(pred["profiles"][0]["fights"] or 0, pred["profiles"][1]["fights"] or 0) < 2
     stale = any("isn't in the model's history" in x["text"] for x in pred.get("flags", []))
     pred["blendState"] = {"hours": stk["hours"], "wOpen": stk["w_open"], "active": stk["active"],
@@ -232,5 +252,15 @@ def predictions(event_id, odds=None):
         summary["stack"] = {k: {kk: vv for kk, vv in v.items() if kk != "fits_by_year"}
                             for k, v in (summary.get("stack") or {}).items()}
         return {"available": True, "fights": out, "model": summary, "at": int(time.time() * 1000)}
-    key = ("predictions", event_id, (odds or {}).get("at"))
+    # one cached result per event: recomputed when the odds behind it change (or after 5 minutes)
+    at = (odds or {}).get("at")
+    with _keys_lock:
+        prev = _last_key.get(event_id)
+        key = ("predictions", event_id, at)
+        if prev and prev != key:
+            cache.drop(prev)
+        _last_key[event_id] = key
     return cache.get(key, load, ttl=300)
+
+
+_last_key, _keys_lock = {}, threading.Lock()

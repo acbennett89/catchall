@@ -73,6 +73,30 @@ def keep_model_current():
         time.sleep(6 * 3600)
 
 
+def watch_prices():
+    """Keep prices (and model flags) current for upcoming cards and cards with open ledger entries, even
+    with no page open, so the ledger sees closing prices: every 2 minutes within two days of a card,
+    every 15 minutes before that."""
+    last = {}
+    while True:
+        try:
+            now = time.time()
+            watch = {}
+            for e in espn.events():
+                if e.get("start") and now - 12 * 3600 < e["start"] < now + 8 * 86400 and "contender" not in (e.get("name") or "").lower():
+                    watch[str(e["id"])] = e["start"]
+            for e in ledger.open_events():
+                watch.setdefault(str(e["event"]), e.get("eventDate") or now)
+            for eid, date in watch.items():
+                gap = 120 if date - now < 2 * 86400 else 900
+                if now - last.get(eid, 0) >= gap:
+                    last[eid] = now
+                    _quiet(predictions if modelapi.available() else market.card_odds, eid)
+        except Exception as e:
+            print(time.strftime("%H:%M:%S"), f"price watch failed: {e}", flush=True)
+        time.sleep(60)
+
+
 def api(path, q):
     parts = path.strip("/").split("/")
     if parts[:2] == ["api", "events"]:
@@ -167,6 +191,8 @@ if __name__ == "__main__":
         print(f"On your phone (same Wi-Fi):  http://{ip}:{PORT}", flush=True)
     if modelapi.available() and "--no-update" not in sys.argv:
         threading.Thread(target=keep_model_current, daemon=True).start()
+    if "--no-watch" not in sys.argv:
+        threading.Thread(target=watch_prices, daemon=True).start()
     if "--open" in sys.argv:
         threading.Timer(0.8, webbrowser.open, [f"http://localhost:{PORT}"]).start()
     try:

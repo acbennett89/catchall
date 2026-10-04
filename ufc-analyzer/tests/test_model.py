@@ -81,6 +81,27 @@ class EngineTests(unittest.TestCase):
         eng = engine.Engine().replay(ev, fi, until="2020-06-01")
         self.assertEqual(eng.get("ann").fights, 1)                 # x3 on 2020-06-01 is not applied
 
+    def test_same_day_cards_see_state_from_before_that_day(self):
+        ev, fi, _ = history()
+        ev["e2b"] = {"id": "e2b", "date": "2020-06-01", "fights": ["x5"]}   # a second card on x3's date
+        fi["x5"] = dict(fight("x5", "bea", "dee"), date="2020-06-01")
+        eng = engine.Engine()
+        seen = {}
+
+        def on_event(e, bouts, day):
+            seen[e["id"]] = (eng.n_div.copy() if hasattr(eng, "n_div") else None, eng.get("ann").fights, eng.as_of)
+        eng.replay(ev, fi, on_event=on_event)
+        self.assertEqual(seen["e2"][2], seen["e2b"][2])            # neither card is applied before the other
+        self.assertEqual(seen["e2b"][1], 1)                         # ann's x3 (same day) isn't in e2b's state
+
+    def test_layoff_never_negative(self):
+        ev, fi, _ = history()
+        eng = engine.Engine().replay(ev, fi)
+        import datetime
+        p = features.fighter_profile(eng, eng.get("ann"), {}, datetime.date(2020, 3, 1), "lightweight", (0, 0))
+        self.assertEqual(p["layoff"], 0)                            # a date before her last fight can't crash log1p
+        features.win_features(p, p)
+
 
 class FeatureTests(unittest.TestCase):
     def test_antisymmetric(self):
@@ -154,7 +175,29 @@ class MarketJoinTests(unittest.TestCase):
         self.assertLess(j["close_fair"], 0.5)    # Bea is the underdog
         self.assertEqual(j["worst1"], 180)       # Bea's least generous closing price
 
+    def test_inplay_closing_range_is_dropped(self):
+        import calendar
+        ts = calendar.timegm((2021, 4, 10, 12, 0, 0))
+        fights = {"y1": dict(fight("y1", "al", "so"), date="2021-04-10", n1="Arnold Allen", n2="Sodiq Yusuff")}
+        matchups = {"7": {"matchup": 7, "date": ts, "a": "Arnold Allen", "b": "Sodiq Yusuff",
+                          "aOpen": 100, "aLo": -3500, "aHi": 135, "bOpen": -120, "bLo": -161, "bHi": 1480}}
+        j = market_hist.join(fights, matchups)["y1"]
+        self.assertTrue(j.get("close_inplay"))
+        self.assertNotIn("close_fair", j)        # a price taken mid-fight would leak the result
+        self.assertIsNone(j["worst1"])
+        self.assertIn("open_fair", j)            # the opening line is still fine
 
+
+
+
+class FakeStore(dict):
+    """market.history stand-in: get(key) and stamp(key) (when the key was last written)."""
+    def __init__(self, data, stamps=None):
+        super().__init__(data)
+        self.stamps = stamps or {}
+
+    def stamp(self, key):
+        return self.stamps.get(key, 1e10 if key in self else None)
 
 
 class LedgerTests(unittest.TestCase):
@@ -170,22 +213,76 @@ class LedgerTests(unittest.TestCase):
         pred = {"market": 0.6, "p": [0.55, 0.45], "blend": [0.58, 0.42], "sides": [{"caesars": -130}, {"caesars": 110}]}
         dec = {"action": "BET", "side": 1, "ev": 0.04, "evMarket": 0.01, "tier": "Market value"}
         try:
-            self.assertIsNotNone(ledger.record("e1", card, fight, dec, pred))
-            self.assertIsNone(ledger.record("e1", card, fight, dec, pred))           # flagged once per fight/side
+            watch = dict(dec, action="WATCH")
+            self.assertIsNotNone(ledger.record("e1", card, fight, watch, pred))
+            self.assertIsNone(ledger.record("e1", card, fight, watch, pred))         # WATCH logged once per fight/side
+            self.assertIsNotNone(ledger.record("e1", card, fight, dec, pred))        # turning into a BET is logged too
+            self.assertIsNone(ledger.record("e1", card, fight, dec, pred))
+            pre = ledger.report(FakeStore({"e1:f1": [[1, -130, 110, 0.62]]}))
+            self.assertTrue(all(e["clv"] is None for e in pre["entries"]))          # no CLV before the fight starts
+            self.assertIsNone(pre["summary"]["all"]["clv"])
             self.assertIsNotNone(ledger.record("e1", card, fight, dec, pred, source="user", price=115, stake=10, side=1))
-            settled = {"id": "f1", "status": {"state": "post"},
+            settled = {"id": "f1", "status": {"state": "post"}, "date": 2e9,
                        "fighters": [{"name": "Ann A", "winner": False}, {"name": "Bea B", "winner": True}]}
             espn.card = lambda eid: dict(card, fights=[settled])
-            hist = {"e1:f1": [[1, -130, 110, 0.62], [2, -140, 120, 0.55]]}             # closing fair for A = 0.55
-            rep = ledger.report(hist)
+            hist = FakeStore({"e1:f1": [[1, -130, 110, 0.62], [2, -140, 120, 0.56]], "e1:f1:last": [3, -140, 120, 0.55]})
+            stale = ledger.report(FakeStore(dict(hist), {"e1:f1:last": 2e9 - 7200}))
+            self.assertTrue(all(e["clv"] is None for e in stale["entries"]))        # last price seen 2h before: no close
+            rep = ledger.report(hist)                                                 # closing fair for A = 0.55
             user = next(e for e in rep["entries"] if e["source"] == "user")
             self.assertAlmostEqual(user["closeFair"], 0.45)
             self.assertAlmostEqual(user["clv"], round(0.45 * 2.15 - 1, 4))
             self.assertEqual(user["result"], "won")
             self.assertAlmostEqual(user["profit"], 11.5)
             self.assertEqual(rep["summary"]["your_bets"]["settled"], 1)
+            self.assertEqual(rep["summary"]["flagged_bets"]["entries"], 1)
         finally:
             ledger.PATH, espn.card = old_path, old_card
+
+
+class ServingTests(unittest.TestCase):
+    def test_espn_dob_is_day_first(self):
+        import datetime
+        from model.predict import parse_espn_dob
+        today = datetime.date(2026, 10, 4)
+        self.assertEqual(parse_espn_dob("26/5/1992", today=today), "1992-05-26")
+        self.assertEqual(parse_espn_dob("5/8/2004", today=today), "2004-08-05")           # day-first by default
+        self.assertEqual(parse_espn_dob("5/8/2004", age=22, today=today), "2004-08-05")
+        self.assertEqual(parse_espn_dob("9/12/1990", age=36, today=today), "1990-09-12")  # ESPN's age breaks the tie
+        self.assertIsNone(parse_espn_dob("", today=today))
+
+    def test_decide_regimes(self):
+        import modelapi, value
+        lines = {value.TARGET_BOOK: [-165, 140], "A": [-160, 135], "B": [-155, 130], "C": [-150, 128]}
+        view = {"lines": lines, "value": {"books": 3, "fair": [0.60, 0.40]}}
+        early = {"active": True, "open_gate": True, "hours": 200.0}
+        late = {"active": True, "open_gate": True, "hours": 30.0}
+        d = modelapi.decide(0.66, 0.60, 0.66, view, early, False, False)
+        self.assertEqual((d["action"], d["side"], d["tier"]), ("BET", 0, "Early-line blend"))   # tested at opening prices
+        d = modelapi.decide(0.66, 0.60, 0.66, view, late, False, False)
+        self.assertEqual(d["action"], "WATCH")      # inside 4 days only market value is a BET
+        d = modelapi.decide(0.66, 0.60, 0.66, view, early, True, False)
+        self.assertEqual(d["action"], "WATCH")      # a fighter with under 2 UFC fights
+        d = modelapi.decide(0.66, 0.60, 0.85, view, early, False, False)
+        self.assertEqual(d["action"], "BET")        # a big model-market gap is a check-the-news note, not a block
+        self.assertTrue(any("check for news" in r for r in d["reasons"]))
+        d = modelapi.decide(0.66, 0.60, 0.66, view, early, False, True)
+        self.assertEqual(d["action"], "WATCH")      # a fighter's latest fight is missing from the history
+        good = dict(view, lines=dict(lines, **{value.TARGET_BOOK: [-130, 110]}))
+        d = modelapi.decide(0.60, 0.60, 0.62, good, late, False, False)
+        self.assertEqual((d["action"], d["tier"]), ("BET", "Market value + model agrees"))
+        d = modelapi.decide(0.66, 0.60, 0.58, view, early, False, False)
+        self.assertTrue(any("firming up favorites" in r for r in d["reasons"]))   # model below market: say so
+
+    def test_pending_bouts(self):
+        from model import scrape
+        row = ('<tr class="b-fight-details__table-row" data-link="http://ufcstats.com/fight-details/{fid}">'
+               '<td>{flag}</td><td><a href="http://ufcstats.com/fighter-details/aaa">A</a>'
+               '<a href="http://ufcstats.com/fighter-details/bbb">B</a></td>' + "<td></td>" * 8 + "</tr>")
+        done = row.format(fid="f1", flag='<i class="b-flag__text">win</i>')
+        live = row.format(fid="f2", flag="")
+        self.assertEqual(scrape.pending_bouts(done + live), 1)
+        self.assertEqual(scrape.pending_bouts(done), 0)
 
 
 class PropMappingJS(unittest.TestCase):

@@ -76,7 +76,7 @@ def fighter_profile(eng, f, attrs, day, div, outside):
     ow, ol = outside[0], outside[1]
     known = outside[2] if len(outside) > 2 else True
     age = _age(attrs.get("dob"), day)
-    layoff = (day - f.last).days if f.last else None
+    layoff = max(0, (day - f.last).days) if f.last else None
     hist = f.history
     form = 0.0
     wsum = 0.0

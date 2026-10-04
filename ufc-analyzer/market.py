@@ -10,13 +10,17 @@ history = DiskStore("odds_history")
 
 
 def _track(event_id, fight_id, cz, fair):
-    """Append a Caesars/fair snapshot when it changes; return the series [[ts, czA, czB, fairA], ...]."""
+    """Append a Caesars/fair snapshot when it changes; return the series [[ts, czA, czB, fairA], ...].
+    Every look is also kept as "<key>:last" (exact latest prices, stamped with when they were seen), which
+    the ledger uses as the closing price."""
     key = f"{event_id}:{fight_id}"
     series = list(history.get(key) or [])
     snap = [int(time.time()), cz[0] if cz else None, cz[1] if cz else None, round(fair, 4) if fair else None]
     if not series or series[-1][1:3] != snap[1:3] or (snap[3] and series[-1][3] and abs(series[-1][3] - snap[3]) >= 0.01):
         series.append(snap)
         history.put(key, series[-200:])
+    if snap[3] is not None:
+        history.put(key + ":last", snap)
     return series
 
 

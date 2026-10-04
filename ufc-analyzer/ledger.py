@@ -3,7 +3,8 @@ consensus and the result, so the app's real edge is measured going forward.
 
 Closing-line value (CLV) = closing fair probability x the decimal price you got - 1.  It shows skill in
 a few hundred bets, where ROI needs thousands.  The "close" is the last consensus the app saw before
-the fight started, so leave the server running into fight night for the best numbers.
+the fight started; the server keeps checking prices for cards with open entries, so leave it running
+into fight night.  An entry gets no CLV if the app saw no price within an hour of the fight's start.
 
     cache/ledger.json   {"entries": [...]}
 """
@@ -33,7 +34,8 @@ def _save(doc):
 
 
 def record(event_id, card, fight, decision, pred, source="auto", price=None, stake=None, side=None):
-    """Add an entry.  Automatic entries are logged once per fight and side (the first time it's flagged)."""
+    """Add an entry.  Automatic entries are logged once per fight, side and action (the first WATCH and
+    the first BET each get one, at the price when it was flagged)."""
     if fight["status"]["state"] != "pre":
         return None
     side = decision.get("side") if side is None else side
@@ -41,7 +43,8 @@ def record(event_id, card, fight, decision, pred, source="auto", price=None, sta
         return None
     with _lock:
         doc = _load()
-        if source == "auto" and any(e["fight"] == fight["id"] and e["side"] == side and e["source"] == "auto" for e in doc["entries"]):
+        if source == "auto" and any(e["fight"] == fight["id"] and e["side"] == side and e["source"] == "auto"
+                                    and e.get("action") == decision.get("action") for e in doc["entries"]):
             return None
         e = {"id": uuid.uuid4().hex[:10], "ts": int(time.time()), "source": source, "event": event_id,
              "eventName": card.get("name"), "eventDate": card.get("date"), "fight": fight["id"],
@@ -59,15 +62,23 @@ def record(event_id, card, fight, decision, pred, source="auto", price=None, sta
         return e
 
 
-def _closing(history_store, e):
-    """Last consensus snapshot before the fight (market.history: [ts, czA, czB, fairA])."""
-    series = history_store.get(f"{e['event']}:{e['fight']}") or []
-    if not series:
-        return None
-    fair_a = next((s[3] for s in reversed(series) if s[3] is not None), None)
+CLOSE_WITHIN = 3600   # the last price seen must be from within an hour of the fight's scheduled start
+
+
+def _closing(history_store, e, start):
+    """(closing fair probability for the entry's side, when it was seen) from the last consensus the app
+    saw before the fight (market.history "<key>:last", else the change series [ts, czA, czB, fairA])."""
+    key = f"{e['event']}:{e['fight']}"
+    last = history_store.get(key + ":last")
+    seen = history_store.stamp(key + ":last") if last else None
+    fair_a = last[3] if last else None
     if fair_a is None:
-        return None
-    return fair_a if e["side"] == 0 else 1 - fair_a
+        series = history_store.get(key) or []
+        fair_a = next((s[3] for s in reversed(series) if s[3] is not None), None)
+        seen = history_store.stamp(key)
+    if fair_a is None or not seen or (start and seen < start - CLOSE_WITHIN):
+        return None, seen
+    return (fair_a if e["side"] == 0 else 1 - fair_a), seen
 
 
 def report(history_store):
@@ -78,16 +89,23 @@ def report(history_store):
     out = []
     for e in doc["entries"]:
         e = dict(e)
-        pc = _closing(history_store, e)
         d = value.to_decimal(e["price"])
-        e["closeFair"] = round(pc, 4) if pc is not None else None
-        e["clv"] = round(pc * d - 1, 4) if pc is not None else None
         try:
             card = cards.get(e["event"]) or espn.card(e["event"])
             cards[e["event"]] = card
             f = next((x for x in card["fights"] if x["id"] == e["fight"]), None)
         except Exception:
             f = None
+        # CLV only once the fight has started: before that the "close" would just be today's price
+        started = bool(f and f["status"]["state"] != "pre")
+        pc, seen = _closing(history_store, e, (f or {}).get("date")) if started else (None, None)
+        e["closeFair"] = round(pc, 4) if pc is not None else None
+        e["clv"] = round(pc * d - 1, 4) if pc is not None else None
+        e["closeSeen"] = int(seen) if seen else None
+        e["started"] = started
+        if not started:
+            now_fair, _ = _closing(history_store, e, None)
+            e["fairNow"] = round(now_fair, 4) if now_fair is not None else None
         e["result"] = None
         if f and f["status"]["state"] == "post":
             winners = [i for i, x in enumerate(f["fighters"]) if x["winner"]]
@@ -109,6 +127,20 @@ def report(history_store):
                                         "flagged_bets": summary([r for r in out if r["source"] == "auto" and r["action"] == "BET"]),
                                         "flagged_watch": summary([r for r in out if r["source"] == "auto" and r["action"] == "WATCH"]),
                                         "your_bets": summary([r for r in out if r["source"] == "user"])}}
+
+
+def open_events(within=4 * 86400):
+    """Ledger events dated from 12 hours ago to `within` seconds ahead (cards whose closes are still to come)."""
+    now = time.time()
+    with _lock:
+        doc = _load()
+    seen, out = set(), []
+    for e in doc["entries"]:
+        d = e.get("eventDate") or 0
+        if e["event"] not in seen and now - 12 * 3600 < d < now + within:
+            seen.add(e["event"])
+            out.append(e)
+    return out
 
 
 def remove(entry_id):
