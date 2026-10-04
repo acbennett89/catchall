@@ -1,6 +1,6 @@
 """Flat-stake backtest of the power ratings' picks against the betting lines.
 
-    python3 -m ratings.flatbet [--since 2021-10-04] [--stake 10] [--max-fav -350] [--hold 0.044]
+    python3 -m ratings.flatbet [--since 2021-10-04] [--stake 10] [--max-fav -350] [--hold 0.044] [--by fav|dog|both]
 
 Every out-of-sample pick of the ratings predictor (ratings/data/oos_preds.pkl, written by
 `python3 -m ratings.train`) from --since on is a flat --stake bet on the side the ratings give more
@@ -13,9 +13,10 @@ favourite the ratings also like is not a bet).  Prices come from BestFightOdds:
   Caesars-like close the same from the closing no-vig price (what the line looked like in fight week)
 
 Caesars' own history is not published, so "Caesars-like" is the best stand-in.  Draws and no
-contests are not in the data (the rows carry a winner).  The bucket table groups every fight with an
-opening line by the opening favourite's price and shows how often the ratings, the opening line and
-the closing line named the winner.
+contests are not in the data (the rows carry a winner).  The bucket tables group every fight with an
+opening line by the opening favourite's price, then by the opening underdog's, and show how often the
+ratings, the opening line and the closing line named the winner; the underdog table adds the fights
+where the ratings took the dog and what those bets made.
 """
 import argparse, collections, datetime as dt, os, pickle, random, sys
 
@@ -120,7 +121,10 @@ def bootstrap_ci(bets, which, n=2000, seed=7):
     return tots[int(0.025 * n)], tots[int(0.975 * n) - 1]
 
 
-def bucket_of(fav_price, pickem, top=550):
+TOP = 550   # last bucket: this price and beyond
+
+
+def bucket_of(fav_price, pickem, top=TOP):
     """50-point buckets by the opening favourite's price; pick'em opens get their own row."""
     if pickem:
         return "pickem"
@@ -129,12 +133,38 @@ def bucket_of(fav_price, pickem, top=550):
     return (-fav_price - 100) // 50 * 50 + 100   # -100..-149 -> 100, -150..-199 -> 150, ...
 
 
-def bucket_label(key, top=550):
+def dog_bucket_of(dog_price, pickem, top=TOP):
+    """50-point buckets by the opening underdog's price.  A dog at minus money (-105 against a -115
+    favourite) gets a "short" row, pick'em opens their own."""
+    if pickem:
+        return "pickem"
+    if dog_price < 100:
+        return "short"
+    if dog_price >= top:
+        return top
+    return (dog_price - 100) // 50 * 50 + 100     # +100..+149 -> 100, +150..+199 -> 150, ...
+
+
+def bucket_label(key, by="fav", top=TOP):
     if key == "pickem":
         return "Pick'em open"
+    if key == "short":
+        return "Under +100"
+    sign = "-" if by == "fav" else "+"
     if key == top:
-        return f"-{top} and heavier"
-    return f"-{key} to -{key + 49}"
+        return f"{sign}{top} and {'heavier' if by == 'fav' else 'longer'}"
+    return f"{sign}{key} to {sign}{key + 49}"
+
+
+def bucket_key(r, by):
+    pickem = r["open_fav"] is None
+    if by == "fav":
+        return bucket_of(r["fav_price"], pickem)
+    return dog_bucket_of(max(r["open"]), pickem)
+
+
+def bucket_sort(key):
+    return (key in ("short", "pickem"), key == "pickem", key if isinstance(key, int) else 0)
 
 
 def pct(n, d):
@@ -145,7 +175,7 @@ def money(x):
     return f"{'-' if x < 0 else '+'}${abs(x):,.0f}"
 
 
-def report(recs, stake, max_fav, since, hold):
+def report(recs, stake, max_fav, since, hold, by="both"):
     bets = [r for r in recs if r["bet"]]
     skipped = [r for r in recs if not r["bet"]]
     print(f"Fights with an opening line since {since}: {len(recs)}")
@@ -176,24 +206,42 @@ def report(recs, stake, max_fav, since, hold):
         grp = [b for b in bets if b["year"] == y]
         print(f"  {y}  {len(grp):4d} bets  {sum(g['won'] for g in grp):4d} won ({pct(sum(g['won'] for g in grp), len(grp))})  {money(total(grp, 'open')):>8s}")
 
-    print("\nBy the opening favourite's price (all fights with a line; bets and P&L at the Caesars-like open):")
-    print(f"  {'Opening favourite':20s} {'Fights':>6s} {'Ratings right':>16s} {'Open right':>16s} {'Close right':>16s} {'Bets':>5s} {'P&L':>8s}")
+    if by in ("fav", "both"):
+        bucket_table(recs, "fav")
+    if by in ("dog", "both"):
+        bucket_table(recs, "dog")
+    return bets
+
+
+def bucket_table(recs, by):
+    """Accuracy of the ratings, the opening line and the closing line per 50-point bucket of the opening
+    favourite's (by="fav") or underdog's (by="dog") price, with the bets and P&L at the Caesars-like open.
+    The underdog table also shows the fights where the ratings took the dog and what those bets made."""
+    who = "favourite" if by == "fav" else "underdog"
+    print(f"\nBy the opening {who}'s price (all fights with a line; bets and P&L at the Caesars-like open):")
+    head = f"  {'Opening ' + who:20s} {'Fights':>6s} {'Ratings right':>16s} {'Open right':>16s} {'Close right':>16s} {'Bets':>5s} {'P&L':>8s}"
+    if by == "dog":
+        head += f" {'Dog picks':>9s} {'Dog won':>8s} {'Dog P&L':>8s}"
+    print(head)
     groups = collections.defaultdict(list)
     for r in recs:
-        groups[bucket_of(r["fav_price"], r["open_fav"] is None)].append(r)
-    order = sorted(groups, key=lambda k: (k == "pickem", k if k != "pickem" else 0))
-    for key in order:
+        groups[bucket_key(r, by)].append(r)
+    for key in sorted(groups, key=bucket_sort):
         grp = groups[key]
         n = len(grp)
         rr = sum(g["won"] for g in grp)
         op = [g["open_right"] for g in grp if g["open_right"] is not None]
         cl = [g["close_right"] for g in grp if g["close_right"] is not None]
         bs = [g for g in grp if g["bet"]]
-        print(f"  {bucket_label(key):20s} {n:6d} {rr:5d} ({pct(rr, n):>6s}) "
-              f"{(str(sum(op)) + ' (' + pct(sum(op), len(op)) + ')') if op else 'no pick':>16s} "
-              f"{(str(sum(cl)) + ' (' + pct(sum(cl), len(cl)) + ')') if cl else '-':>16s} "
-              f"{len(bs):5d} {money(total(bs, 'open')):>8s}")
-    return bets
+        line = (f"  {bucket_label(key, by):20s} {n:6d} {rr:5d} ({pct(rr, n):>6s}) "
+                f"{(str(sum(op)) + ' (' + pct(sum(op), len(op)) + ')') if op else 'no pick':>16s} "
+                f"{(str(sum(cl)) + ' (' + pct(sum(cl), len(cl)) + ')') if cl else '-':>16s} "
+                f"{len(bs):5d} {money(total(bs, 'open')):>8s}")
+        if by == "dog":
+            dogs = [g for g in grp if g["open_fav"] is not None and not g["pick_is_fav"]]
+            dw = sum(g["won"] for g in dogs)
+            line += f" {len(dogs):9d} {(str(dw) + ' (' + pct(dw, len(dogs)) + ')') if dogs else '-':>13s} {money(total(dogs, 'open')):>8s}"
+        print(line)
 
 
 def main(argv=None):
@@ -202,6 +250,7 @@ def main(argv=None):
     ap.add_argument("--stake", type=float, default=10.0)
     ap.add_argument("--max-fav", type=int, default=-350, help="skip picks that side with an opening favourite this heavy or heavier")
     ap.add_argument("--hold", type=float, default=SYNTH_HOLD, help="two-way hold for the Caesars-like prices")
+    ap.add_argument("--by", choices=("fav", "dog", "both"), default="both", help="bucket fights by the opening favourite's or underdog's price")
     a = ap.parse_args(argv)
     since = a.since
     if since is None:
@@ -209,7 +258,7 @@ def main(argv=None):
         y, mo, d = (int(x) for x in last.split("-"))
         since = (dt.date(y, mo, d) - dt.timedelta(days=365 * 5 + 1)).isoformat()
     recs = picks(load(since), a.stake, a.max_fav, a.hold)
-    report(recs, a.stake, a.max_fav, since, a.hold)
+    report(recs, a.stake, a.max_fav, since, a.hold, a.by)
 
 
 if __name__ == "__main__":

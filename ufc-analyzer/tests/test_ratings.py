@@ -248,6 +248,17 @@ class FlatBetTests(unittest.TestCase):
         self.assertEqual(flatbet.bucket_of(-150, False), 150)
         self.assertEqual(flatbet.bucket_of(-800, False), 550)
         self.assertEqual(flatbet.bucket_of(-110, True), "pickem")
+        self.assertEqual(flatbet.dog_bucket_of(100, False), 100)
+        self.assertEqual(flatbet.dog_bucket_of(149, False), 100)
+        self.assertEqual(flatbet.dog_bucket_of(150, False), 150)
+        self.assertEqual(flatbet.dog_bucket_of(-105, False), "short")       # -105 dog against a -115 favourite
+        self.assertEqual(flatbet.dog_bucket_of(900, False), flatbet.TOP)
+        self.assertEqual(flatbet.dog_bucket_of(-110, True), "pickem")
+        self.assertEqual(flatbet.bucket_label(150, "dog"), "+150 to +199")
+        self.assertEqual(flatbet.bucket_label(flatbet.TOP, "dog"), "+550 and longer")
+        self.assertEqual(flatbet.bucket_label(300, "fav"), "-300 to -349")
+        order = sorted(["pickem", 300, "short", 100], key=flatbet.bucket_sort)
+        self.assertEqual(order, [100, 300, "short", "pickem"])
 
     def test_picks_settle_and_skip(self):
         recs = flatbet.picks([
