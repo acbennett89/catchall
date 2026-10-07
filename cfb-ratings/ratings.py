@@ -25,7 +25,7 @@ def load(season, regular_season_only=True):
     aside: the ratings cover the regular season, conference championship games included. They
     are listed in data["excluded_postseason"] so the page can say what was left out.
     """
-    with gzip.open(os.path.join(HERE, "data", str(season), "games.json.gz"), "rt") as f:
+    with gzip.open(os.path.join(HERE, "data", str(season), "games.json.gz"), "rt", encoding="utf-8") as f:
         data = json.load(f)
     if regular_season_only:
         post = [g for g in data["games"] if g.get("postseason")]
@@ -37,7 +37,7 @@ def load(season, regular_season_only=True):
 
 
 def load_config():
-    with open(os.path.join(HERE, "config.json")) as f:
+    with open(os.path.join(HERE, "config.json"), encoding="utf-8") as f:
         return json.load(f)
 
 

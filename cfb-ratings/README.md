@@ -18,6 +18,25 @@ Game results are cleaned before they are rated:
 | [ADVERSARIAL_REVIEW.md](ADVERSARIAL_REVIEW.md) | Every design choice attacked, with backtests and evidence |
 | [TRACE.md](TRACE.md) | How to trace any number, with worked examples |
 
+## Open it
+
+**Windows, one-time setup.** From PowerShell in any copy of this repository (needs git and Python 3.10+):
+
+```
+powershell -ExecutionPolicy Bypass -File .\cfb-ratings\windows\install.ps1
+```
+
+It puts the project in `Documents\Github - Personal Projects\CFB Rankings` (pass `-Dest "<folder>"` for
+another place), checking out only this folder, adds two launchers at the top of that folder and opens
+the site. Run it again any time to pull the latest version. Then double-click:
+
+| Launcher | What it does |
+|---|---|
+| **Launch CFB Rankings.bat** | Builds the page if it is out of date, serves it on this computer only and opens your browser. Close the window to stop. |
+| **Update CFB Rankings.bat** | First downloads the current season's new games and AP/CFP polls from ESPN and rebuilds that season (the first run on a computer fetches every game so far and takes several minutes), then opens the site. |
+
+**Any system:** `python launch.py` (or `python launch.py --update`) does the same from this folder.
+
 ## Run it
 
 Python 3.10+ and the standard library. `requests` is needed only by the downloaders, `fetch.py` and `polls.py`.
@@ -29,7 +48,7 @@ python polls.py                               # AP and CFP rankings by week -> d
 python build.py                               # -> out/2026/ (ratings.csv, ratings.json, traces/, anchors.json, weekly.json)
 python build.py --season 2025                 # any other parsed season -> out/2025/
 python report.py                              # -> out/site/ (one page, season and week pickers, data files per season)
-python -m http.server -d out/site             # view it at http://localhost:8000
+python -m http.server -d out/site             # view it at http://localhost:8000 (python launch.py does both)
 python trace.py "Notre Dame"                  # print any team's full derivation
 python trace.py Indiana --season 2025         # ...for another season
 python trace.py Indiana --season 2025 --week 8   # ...as it stood after week 8 (recomputed)
@@ -73,5 +92,6 @@ All parameters live in `config.json`.
 | `efficiency.py` | Additive opponent-adjustment solver (AdjO, AdjD, home field, tempo) with traces |
 | `network.py` | +2 network: primary/secondary/tertiary records, win values, loss costs, trees |
 | `ratings.py` | Assembles every metric in METRICS.md |
+| `launch.py`, `*.bat`, `windows/install.ps1` | One-step open (and update) of the site; Windows launchers and setup |
 | `build.py` / `report.py` / `trace.py` | Per-season outputs in `out/<season>/` (including internal-input derivations, `anchors.json` and the weekly views in `weekly.json`), the multi-season page in `out/site/`, command-line trace (any week with `--week`) |
 | `backtest.py` / `validate.py` / `audit_penalties.py` | Evidence for the adversarial review |

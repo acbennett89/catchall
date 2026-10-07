@@ -140,7 +140,7 @@ def write(season, refresh=False):
                    "after the middle kickoff of that week and before the middle kickoff of the next",
            "polls": polls}
     ap_, cfp = check(season, polls)
-    with open(os.path.join(HERE, "data", str(season), "polls.json"), "w") as f:
+    with open(os.path.join(HERE, "data", str(season), "polls.json"), "w", encoding="utf-8") as f:
         json.dump(out, f, indent=1)
     span = lambda w: f" (after weeks {w[0]}-{w[-1]})" if w else ""
     print(f"{season}: {len(ap_)} AP polls{span(ap_)}, {len(cfp)} CFP rankings{span(cfp)}" +
@@ -150,7 +150,7 @@ def write(season, refresh=False):
 def load_polls(season):
     """Parsed polls for a season, or None if polls.py has not been run for it."""
     p = os.path.join(HERE, "data", str(season), "polls.json")
-    return json.load(open(p)) if os.path.exists(p) else None
+    return json.load(open(p, encoding="utf-8")) if os.path.exists(p) else None
 
 
 def latest(polls, kind, week):

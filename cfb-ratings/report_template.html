@@ -217,7 +217,7 @@ details[open] > summary { margin-bottom: 6px; }
   const fx = (x, d = 2, sign = false) => x == null || Number.isNaN(x) ? "—" : (sign && x > 0 ? "+" : "") + Number(x).toFixed(d);
   const cls = x => x == null ? "" : x > 0 ? "pos" : x < 0 ? "neg" : "";
   const nm = id => N[id] || id;
-  const seasonStatus = m => m.regular_season_complete ? "regular season final" : "through week " + m.through_week;
+  const seasonStatus = m => m.regular_season_complete ? "regular season final" : "through week " + m.through_week + (m.week_in_progress ? " (in progress)" : "");
   const shortDate = iso => new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/New_York" });
 
   /* ---------- files beside the page (season tables, team traces) ---------- */
@@ -450,7 +450,7 @@ details[open] > summary { margin-bottom: 6px; }
     // them then, with how each came out.
     const Pk = latest ? (D.predictions || []) : (V.picks || []);
     const tabBtn = document.getElementById("picks-tab");
-    tabBtn.textContent = latest ? "Next week" : `Week ${V.week + 1} picks`;
+    tabBtn.textContent = latest ? (M.week_in_progress ? "Rest of week " + V.week : "Next week") : `Week ${V.week + 1} picks`;
     tabBtn.hidden = !Pk.length;
     const pickRows = Pk.map(p => {
       const homeFav = p.home_margin >= 0, fav = homeFav ? p.home : p.away;
@@ -494,7 +494,7 @@ details[open] > summary { margin-bottom: 6px; }
     (D.weeks || []).forEach(x => {
       const o = document.createElement("option");
       o.value = x.week;
-      o.textContent = `Week ${x.week}` + (x.week === M.through_week ? (M.regular_season_complete ? " · final" : " · latest") : "");
+      o.textContent = `Week ${x.week}` + (x.week === M.through_week ? (M.regular_season_complete ? " · final" : M.week_in_progress ? " · in progress" : " · latest") : "");
       wk.appendChild(o);
     });
     wk.hidden = !(D.weeks || []).length;

@@ -148,7 +148,7 @@ def main():
           f"raw {sg['raw_ppd_MAE']:.2f} avg margin {sg['avg_margin_MAE']:.2f} | vs market "
           f"{json.dumps(h.get('same_games_vs_market'))}")
     os.makedirs(os.path.join(HERE, "out"), exist_ok=True)
-    with open(os.path.join(HERE, "out", "validation.json"), "w") as f:
+    with open(os.path.join(HERE, "out", "validation.json"), "w", encoding="utf-8") as f:
         json.dump(report, f, indent=1)
 
 

@@ -24,7 +24,7 @@ class TentativeRatings(unittest.TestCase):
         for season in seasons:
             with self.subTest(season=season):
                 out = os.path.join(HERE, "out", str(season))
-                r = json.load(open(os.path.join(out, "ratings.json")))
+                r = json.load(open(os.path.join(out, "ratings.json"), encoding="utf-8"))
                 teams, meta = r["teams"], r["meta"]
                 ranked = [t for t in teams if t["eligible"]]
                 tentative = [t for t in teams if not t["eligible"]]
@@ -37,15 +37,15 @@ class TentativeRatings(unittest.TestCase):
                     self.assertEqual(t["status"], "tentative")
                     self.assertIsNotNone(t["AdjEM"])
                     self.assertFalse([k for k, v in t.items() if k.startswith("rk_") and v is not None], t["name"])
-                    tr = json.load(open(os.path.join(out, "traces", f"{t['id']}.json")))
+                    tr = json.load(open(os.path.join(out, "traces", f"{t['id']}.json"), encoding="utf-8"))
                     self.assertTrue(tr.get("tentative"))
                     self.assertIn("efficiency", tr)
                 ids = {t["id"] for t in teams}
-                internal = json.load(open(os.path.join(out, "traces", "internal", "index.json")))
+                internal = json.load(open(os.path.join(out, "traces", "internal", "index.json"), encoding="utf-8"))
                 self.assertFalse(ids & set(internal), "internal derivations must be FCS-only")
                 # Opponent labels: tentative FBS opponents vs FCS internal inputs.
                 status_of = {t["id"]: "published" if t["eligible"] else "tentative" for t in teams}
-                tr = json.load(open(os.path.join(out, "traces", f"{ranked[0]['id']}.json")))
+                tr = json.load(open(os.path.join(out, "traces", f"{ranked[0]['id']}.json"), encoding="utf-8"))
                 for ln in tr["efficiency"]["offense"]["lines"]:
                     want = status_of.get(ln["opp"], "internal")
                     self.assertTrue(ln["opp_status"].startswith(want), (ln["opp"], ln["opp_status"]))
@@ -67,8 +67,8 @@ class WeeklyViews(unittest.TestCase):
         for season in built_seasons():
             with self.subTest(season=season):
                 out = os.path.join(HERE, "out", str(season))
-                r = json.load(open(os.path.join(out, "ratings.json")))
-                wk = json.load(open(os.path.join(out, "weekly.json")))
+                r = json.load(open(os.path.join(out, "ratings.json"), encoding="utf-8"))
+                wk = json.load(open(os.path.join(out, "weekly.json"), encoding="utf-8"))
                 meta, polls = r["meta"], load_polls(season)
                 data = load(season)
                 week_of = {g["id"]: g["week"] for g in data["games"]}
@@ -98,7 +98,7 @@ class WeeklyViews(unittest.TestCase):
                         self.assertEqual(s["meta"]["slot_base"][metric], "ranked" if pool is elig else "all")
                         for t in rows:
                             want = None if t["eligible"] or t[metric] is None else \
-                                1 + sum(1 for x in pool if x is not t and x[metric] > t[metric])
+                                1 + sum(1 for x in pool if x is not t and x[metric] > t[metric] + 1e-9)
                             self.assertEqual(t.get("slot_" + metric), want, (w, t["name"], metric))
                     for t in rows:
                         self.assertEqual(t["eligible"], t["games"] >= meta["min_games"], (w, t["name"]))
@@ -143,7 +143,7 @@ class WeeklyViews(unittest.TestCase):
         picks = [(seasons[-1], 3)] + ([(2025, 8)] if 2025 in seasons else [])
         for season, week in picks:
             with self.subTest(season=season, week=week):
-                wk = json.load(open(os.path.join(HERE, "out", str(season), "weekly.json")))
+                wk = json.load(open(os.path.join(HERE, "out", str(season), "weekly.json"), encoding="utf-8"))
                 snap = next(s for s in wk["weeks"] if s["week"] == week)
                 res = rate(copy.deepcopy(load(season)), load_config(), through_week=week)
                 rows, info = finish_rows(res, load_polls(season), week)
@@ -165,8 +165,8 @@ class Polls(unittest.TestCase):
             with self.subTest(season=season):
                 p = os.path.join(HERE, "data", str(season), "polls.json")
                 self.assertTrue(os.path.exists(p), "run python polls.py --season %d" % season)
-                polls = json.load(open(p))["polls"]
-                last = json.load(open(os.path.join(HERE, "out", str(season), "ratings.json")))["meta"]["through_week"]
+                polls = json.load(open(p, encoding="utf-8"))["polls"]
+                last = json.load(open(os.path.join(HERE, "out", str(season), "ratings.json"), encoding="utf-8"))["meta"]["through_week"]
                 keys = [(x["poll"], x["after_week"]) for x in polls]
                 self.assertEqual(len(keys), len(set(keys)))
                 for kind in ("AP", "CFP"):

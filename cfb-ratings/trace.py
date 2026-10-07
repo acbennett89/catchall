@@ -34,21 +34,21 @@ def _match(query, items):
 
 def find_team(query, internal=False):
     if internal:
-        rated = json.load(open(os.path.join(OUT, "ratings.json")))["teams"]
+        rated = json.load(open(os.path.join(OUT, "ratings.json"), encoding="utf-8"))["teams"]
         hit = next((t for t in rated if t["name"].lower() == query.lower()), None)
         if hit:
             kind = "rated" if hit.get("eligible") else "tentatively rated"
             sys.exit(f"{hit['name']} is {kind} in {os.path.basename(OUT)}; run without --internal")
-        index = json.load(open(os.path.join(OUT, "traces", "internal", "index.json")))
+        index = json.load(open(os.path.join(OUT, "traces", "internal", "index.json"), encoding="utf-8"))
         tid = _match(query, list(index.items()))
         if tid is None:
             sys.exit(f"no internal derivation for {query!r} (FBS teams have full traces; run without --internal)")
-        return json.load(open(os.path.join(OUT, "traces", "internal", f"{tid}.json")))
-    data = json.load(open(os.path.join(OUT, "ratings.json")))
+        return json.load(open(os.path.join(OUT, "traces", "internal", f"{tid}.json"), encoding="utf-8"))
+    data = json.load(open(os.path.join(OUT, "ratings.json"), encoding="utf-8"))
     tid = _match(query, [(t["id"], t["name"]) for t in data["teams"]])
     if tid is None:
         sys.exit(f"no FBS team matches {query!r}; for an FCS opponent use --internal")
-    return json.load(open(os.path.join(OUT, "traces", f"{tid}.json")))
+    return json.load(open(os.path.join(OUT, "traces", f"{tid}.json"), encoding="utf-8"))
 
 
 def recompute(season, week, query, internal):
@@ -344,13 +344,13 @@ def main():
     ap.add_argument("--week", type=int, help="the derivation as it stood after this week (recomputed)")
     a = ap.parse_args()
     global OUT
-    season = a.season or json.load(open(os.path.join(HERE, "config.json")))["season"]
+    season = a.season or json.load(open(os.path.join(HERE, "config.json"), encoding="utf-8"))["season"]
     OUT = os.path.join(HERE, "out", str(season))
     if not os.path.exists(os.path.join(OUT, "ratings.json")):
         sys.exit(f"no ratings for {season}: run python build.py --season {season}")
     if a.week is not None:
         tr = recompute(season, a.week, a.team, a.internal)
-        latest = json.load(open(os.path.join(OUT, "ratings.json")))["meta"]["through_week"]
+        latest = json.load(open(os.path.join(OUT, "ratings.json"), encoding="utf-8"))["meta"]["through_week"]
         print(f"AFTER WEEK {a.week} of {season}: recomputed from the games of weeks 1-{a.week} only "
               "(the page's weekly view). " + (f"This is the latest week: the same as {os.path.relpath(OUT, HERE)}/."
                                               if a.week == latest else
@@ -392,7 +392,8 @@ if __name__ == "__main__":
     # Python salts string hashes per run, which reorders set iteration and moves float sums in the
     # last bits (about 1e-14). A fixed seed makes every rebuild byte-identical, so the files (and
     # the page's content-hashed data files) change only when a number really does.
+    # (A child process rather than os.execv: on Windows execv returns to the caller at once.)
     if os.environ.get("PYTHONHASHSEED") != "0":
-        os.environ["PYTHONHASHSEED"] = "0"
-        os.execv(sys.executable, [sys.executable] + sys.argv)
+        import subprocess
+        sys.exit(subprocess.call([sys.executable] + sys.argv, env={**os.environ, "PYTHONHASHSEED": "0"}))
     main()

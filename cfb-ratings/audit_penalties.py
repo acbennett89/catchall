@@ -47,7 +47,7 @@ def main():
         summary, rows = audit(season)
         out[season] = {"summary": summary, "team_games": rows}
         print(season, {k: (round(v, 4) if isinstance(v, float) else v) for k, v in summary.items()})
-    with open(os.path.join(HERE, "out", "penalty_audit.json"), "w") as f:
+    with open(os.path.join(HERE, "out", "penalty_audit.json"), "w", encoding="utf-8") as f:
         json.dump(out, f, separators=(",", ":"))
 
 

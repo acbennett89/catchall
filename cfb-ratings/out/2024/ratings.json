@@ -26,6 +26,7 @@
    "regular_season_end": "2024-12-14T07:59Z"
   },
   "last_game_date": "2024-12-14",
+  "week_in_progress": false,
   "penalty_audit": {
    "team_games": 3070,
    "count_exact": 0.5381107491856677,

@@ -95,7 +95,8 @@ def finish_rows(res, polls, week):
             if r["eligible"] or r.get(metric) is None:
                 r.pop(f"slot_{metric}", None)
                 continue
-            r[f"slot_{metric}"] = 1 + sum(1 for x in pool if x is not r and x[metric] > r[metric])
+            # Equal values (to 1e-9, beyond float noise) share a slot.
+            r[f"slot_{metric}"] = 1 + sum(1 for x in pool if x is not r and x[metric] > r[metric] + 1e-9)
     used = {}
     for kind in ("AP", "CFP"):
         p = latest_poll(polls, kind, week)
@@ -436,7 +437,7 @@ def main():
     os.makedirs(os.path.join(out_dir, "traces"), exist_ok=True)
     polls = load_polls(cfg["season"])
     rows, table_info = finish_rows(res, polls, last_week)
-    with open(os.path.join(out_dir, "ratings.csv"), "w", newline="") as f:
+    with open(os.path.join(out_dir, "ratings.csv"), "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow([c for _, c in COLUMNS])
         for r in rows:
@@ -460,7 +461,7 @@ def main():
             bad.append(r["name"])
         if not r["eligible"]:
             tr["tentative"], tr["note"] = True, tentative_note(r, cfg)
-        with open(os.path.join(out_dir, "traces", f"{r['id']}.json"), "w") as f:
+        with open(os.path.join(out_dir, "traces", f"{r['id']}.json"), "w", encoding="utf-8") as f:
             json.dump(tr, f, separators=(",", ":"), default=float)
 
     # Internal-input derivations. Every FCS team appears as an opponent in some FBS team's
@@ -476,9 +477,9 @@ def main():
         if teams.get(t, {}).get("division") == "FBS":
             continue
         index[t] = name_of(teams, t)
-        with open(os.path.join(idir, f"{t}.json"), "w") as f:
+        with open(os.path.join(idir, f"{t}.json"), "w", encoding="utf-8") as f:
             json.dump(tr, f, separators=(",", ":"), default=float)
-    with open(os.path.join(idir, "index.json"), "w") as f:
+    with open(os.path.join(idir, "index.json"), "w", encoding="utf-8") as f:
         json.dump(index, f)
 
     # Anchors: every input to the global constants, so they can be recomputed.
@@ -487,7 +488,7 @@ def main():
     for a in res["net"].fbs:
         for b, won, gid in res["net"].fbs_games[a]:
             net_rows.append([gid, a, b, int(won), res["net"].strength(b, a)["ns"]])
-    with open(os.path.join(out_dir, "anchors.json"), "w") as f:
+    with open(os.path.join(out_dir, "anchors.json"), "w", encoding="utf-8") as f:
         json.dump({
             "mu": {"value": ppd_["mu"], "rule": "mean AdjO over all FBS teams (= mean FBS AdjD); "
                                                "includes tentative teams below the game minimum"},
@@ -518,9 +519,13 @@ def main():
     conferences = sorted(({"conference": c, "teams": len(v), "avg_AdjEM": sum(v) / len(v)}
                           for c, v in conf.items()), key=lambda x: -x["avg_AdjEM"])
 
-    # next week's predictions
-    upcoming = [u for u in data.get("upcoming", []) if u["week"] > last_week]
-    nxt = min((u["week"] for u in upcoming), default=None)
+    # The next games to predict. Unplayed games from weeks before the latest are postponed or
+    # cancelled ones and are ignored. Unplayed FBS games in the latest week mean that week is still
+    # in progress (data fetched midweek): its remaining games are the next ones.
+    upcoming = [u for u in data.get("upcoming", []) if u["week"] >= last_week]
+    has_fbs = lambda u: "FBS" in (teams[u["home"]]["division"], teams[u["away"]]["division"])
+    week_in_progress = any(u["week"] == last_week and has_fbs(u) for u in upcoming)
+    nxt = min((u["week"] for u in upcoming if has_fbs(u)), default=None)
     preds = []
     for u in upcoming:
         if u["week"] != nxt:
@@ -545,7 +550,7 @@ def main():
     for w in range(1, last_week + 1):
         rw = res if w == last_week else rate(copy.deepcopy(data), cfg, through_week=w)
         snaps.append(snapshot(rw, w, data, cfg, sigma, polls))
-    with open(os.path.join(out_dir, "weekly.json"), "w") as f:
+    with open(os.path.join(out_dir, "weekly.json"), "w", encoding="utf-8") as f:
         json.dump({"season": cfg["season"],
                    "rule": "week w = ratings.rate(data, cfg, through_week=w): every number from the games of "
                            "weeks 1..w only. AP/CFP = the newest poll reflecting games through week w "
@@ -562,6 +567,7 @@ def main():
                                         and max(cal.get("weeks_fetched") or [0]) >= cal["regular_season_weeks"]),
         "calendar": cal,
         "last_game_date": eastern_date(max(g["date"] for g in res["games"])),
+        "week_in_progress": week_in_progress,
         # Parsed play-by-play fouls vs ESPN box scores, this season (python audit_penalties.py).
         "penalty_audit": audit(cfg["season"])[0],
         "data_coverage": data_coverage(res["games"], teams),
@@ -589,12 +595,13 @@ def main():
                           for g in res["games"] if g["pbp_note"] and g["drives"]],
     }
     newest_ap = latest_poll(polls, "AP", last_week)
-    if polls and not meta["regular_season_complete"] and (not newest_ap or newest_ap["after_week"] < last_week):
+    if polls and not meta["regular_season_complete"] and not week_in_progress and \
+            (not newest_ap or newest_ap["after_week"] < last_week):
         print(f"note: the newest AP poll in data/{cfg['season']}/polls.json follows week "
               f"{newest_ap and newest_ap['after_week']}; once ESPN releases the poll that follows week "
               f"{last_week}, run python polls.py --season {cfg['season']} and rebuild")
     published = rows
-    with open(os.path.join(out_dir, "ratings.json"), "w") as f:
+    with open(os.path.join(out_dir, "ratings.json"), "w", encoding="utf-8") as f:
         json.dump({"meta": meta, "teams": published, "conferences": conferences,
                    "predictions": preds, "names": {k: v.get("name", k) for k, v in teams.items()}},
                   f, indent=1, default=float)
@@ -613,7 +620,8 @@ if __name__ == "__main__":
     # Python salts string hashes per run, which reorders set iteration and moves float sums in the
     # last bits (about 1e-14). A fixed seed makes every rebuild byte-identical, so the files (and
     # the page's content-hashed data files) change only when a number really does.
+    # (A child process rather than os.execv: on Windows execv returns to the caller at once.)
     if os.environ.get("PYTHONHASHSEED") != "0":
-        os.environ["PYTHONHASHSEED"] = "0"
-        os.execv(sys.executable, [sys.executable] + sys.argv)
+        import subprocess
+        sys.exit(subprocess.call([sys.executable] + sys.argv, env={**os.environ, "PYTHONHASHSEED": "0"}))
     main()

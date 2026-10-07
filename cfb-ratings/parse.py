@@ -16,7 +16,7 @@ import re
 from fetch import HERE, read_gz
 from penalties import TABLE_FIELDS, parse_game_penalties, penalty_table
 
-CONFIG = json.load(open(os.path.join(HERE, "config.json")))
+CONFIG = json.load(open(os.path.join(HERE, "config.json"), encoding="utf-8"))
 
 RUSH = {"Rush", "Rushing Touchdown"}
 PASS = {"Pass Reception", "Pass Incompletion", "Passing Touchdown", "Pass Completion", "Sack",

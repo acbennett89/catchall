@@ -97,7 +97,7 @@ def dump_named(obj, folder, stem):
     new name, so a browser can never pair a new page with a cached old data file."""
     text = json.dumps(obj, separators=(",", ":"), default=float)
     name = f"{stem}_{hashlib.sha1(text.encode()).hexdigest()[:10]}.json"
-    with open(os.path.join(folder, name), "w") as f:
+    with open(os.path.join(folder, name), "w", encoding="utf-8") as f:
         f.write(text)
     return name
 
@@ -109,10 +109,10 @@ def write_season(season, site):
     are large, so they go in chunks of about 1.5 MB that the page fetches when a team opens.
     Returns the table and its file name."""
     src = os.path.join(OUT, str(season))
-    table = json.load(open(os.path.join(src, "ratings.json")))
+    table = json.load(open(os.path.join(src, "ratings.json"), encoding="utf-8"))
     traces = {}
     for f in sorted(glob.glob(os.path.join(src, "traces", "*.json"))):
-        tr = json.load(open(f))
+        tr = json.load(open(f, encoding="utf-8"))
         tr.pop("summary", None)  # duplicated in the table
         traces[tr["team"]["id"]] = tr
     size = sum(len(json.dumps(t, separators=(",", ":"), default=float)) for t in traces.values())
@@ -125,7 +125,7 @@ def write_season(season, site):
     internal = {}
     for f in glob.glob(os.path.join(src, "traces", "internal", "*.json")):
         if not f.endswith("index.json"):
-            tr = json.load(open(f))
+            tr = json.load(open(f, encoding="utf-8"))
             internal[tr["team"]["id"]] = tr
     dst = os.path.join(site, str(season))
     shutil.rmtree(dst, ignore_errors=True)
@@ -138,7 +138,7 @@ def write_season(season, site):
     table["weeks"], table["history"] = [], None
     wpath = os.path.join(src, "weekly.json")
     if os.path.exists(wpath):
-        weekly = json.load(open(wpath))
+        weekly = json.load(open(wpath, encoding="utf-8"))
         last = table["meta"]["through_week"]
         for s in weekly["weeks"]:
             entry = {"week": s["week"], "polls": s["meta"]["polls"]}
@@ -155,7 +155,7 @@ def main():
         raise SystemExit("no built seasons: run python build.py [--season YYYY] first")
     site = os.path.join(OUT, "site")
     os.makedirs(site, exist_ok=True)
-    default = json.load(open(os.path.join(HERE, "config.json")))["season"]
+    default = json.load(open(os.path.join(HERE, "config.json"), encoding="utf-8"))["season"]
     if default not in seasons:
         default = seasons[0]
     tables, index = {}, []
@@ -170,14 +170,14 @@ def main():
     for key, fn in (("metrics", "METRICS.md"), ("review", "ADVERSARIAL_REVIEW.md"),
                     ("trace", "TRACE.md")):
         p = os.path.join(HERE, fn)
-        docs[key] = markdown(open(p).read()) if os.path.exists(p) else "<p>Not written yet.</p>"
+        docs[key] = markdown(open(p, encoding="utf-8").read()) if os.path.exists(p) else "<p>Not written yet.</p>"
     boot = {"default": default, "seasons": index, "tables": tables}
     blob = json.dumps(boot, separators=(",", ":"), default=float).replace("</", "<\\/")
-    page = open(os.path.join(HERE, "report_template.html")).read()
+    page = open(os.path.join(HERE, "report_template.html"), encoding="utf-8").read()
     page = page.replace("__DATA__", blob)
     for k, v in docs.items():
         page = page.replace(f"<!--DOC:{k}-->", v)
-    with open(os.path.join(site, "index.html"), "w") as f:
+    with open(os.path.join(site, "index.html"), "w", encoding="utf-8") as f:
         f.write(page)
     total = sum(os.path.getsize(os.path.join(dp, fn)) for dp, _, fns in os.walk(site) for fn in fns)
     print(f"out/site/: page {len(page) / 1e6:.2f} MB, seasons {', '.join(map(str, seasons))} "

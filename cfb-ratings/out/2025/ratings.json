@@ -26,6 +26,7 @@
    "regular_season_end": "2025-12-13T07:59Z"
   },
   "last_game_date": "2025-12-13",
+  "week_in_progress": false,
   "penalty_audit": {
    "team_games": 3107,
    "count_exact": 0.7470228516253621,

@@ -20,7 +20,7 @@ from network import Network
 from ratings import load
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-BASE = json.load(open(os.path.join(HERE, "config.json")))
+BASE = json.load(open(os.path.join(HERE, "config.json"), encoding="utf-8"))
 
 
 def logistic_fit(X, y, iters=50, ridge=1e-6):
@@ -195,7 +195,7 @@ def main():
             print(f"    {k}: {v['diff']:+.4f} (se {v['se']:.4f}, z {v['z']:+.2f})")
         report["thresholds"][f"both teams >= {min_prior} prior D-I games"] = block
     os.makedirs(os.path.join(HERE, "out"), exist_ok=True)
-    with open(os.path.join(HERE, "out", "backtest_network.json"), "w") as f:
+    with open(os.path.join(HERE, "out", "backtest_network.json"), "w", encoding="utf-8") as f:
         json.dump(report, f, indent=1)
 
 
@@ -256,7 +256,7 @@ def run_resume_backtest():
     out = resume_backtest(d["games"], d["teams"], BASE)
     for k, v in out.items():
         print(k, v)
-    with open(os.path.join(HERE, "out", "backtest_resume.json"), "w") as f:
+    with open(os.path.join(HERE, "out", "backtest_resume.json"), "w", encoding="utf-8") as f:
         json.dump(out, f, indent=1)
 
 
