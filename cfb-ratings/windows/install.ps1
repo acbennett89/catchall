@@ -17,8 +17,11 @@ $ErrorActionPreference = "Stop"
 function Invoke-Git { & git.exe @args; if ($LASTEXITCODE) { throw "git $args failed" } }
 
 if (Test-Path (Join-Path $Dest ".git")) {
-    Write-Host "Updating the copy in $Dest"
-    Invoke-Git -C $Dest pull --ff-only
+    # The published ratings replace any built locally ("Update CFB Rankings" rebuilds them, and
+    # its download cache in cfb-ratings\cache is kept, so the next update is quick).
+    Write-Host "Updating the copy in $Dest to the latest published version"
+    Invoke-Git -C $Dest fetch origin $Branch
+    Invoke-Git -C $Dest reset --hard FETCH_HEAD
 } else {
     if ((Test-Path $Dest) -and (Get-ChildItem -Force $Dest | Select-Object -First 1)) {
         throw "$Dest already exists and is not empty. Empty it, or pass -Dest with another folder."
@@ -26,12 +29,19 @@ if (Test-Path (Join-Path $Dest ".git")) {
     New-Item -ItemType Directory -Force -Path $Dest | Out-Null
     Write-Host "Downloading into $Dest (only the cfb-ratings folder)"
     Invoke-Git clone --branch $Branch --filter=blob:none --sparse $Repo $Dest
-    Invoke-Git -C $Dest sparse-checkout set cfb-ratings
+}
+# Both paths: this is the step that actually downloads cfb-ratings, so an interrupted first run
+# is completed by running the script again.
+Invoke-Git -C $Dest sparse-checkout set cfb-ratings
+if (-not (Test-Path (Join-Path $Dest "cfb-ratings\launch.py"))) {
+    throw "cfb-ratings did not download completely. Run this script again."
 }
 
 # Launchers at the top of the folder; they call the ones inside cfb-ratings.
 foreach ($name in "Launch CFB Rankings.bat", "Update CFB Rankings.bat") {
-    $body = "@echo off`r`ncall `"%~dp0cfb-ratings\$name`" %*`r`n"
+    $body = "@echo off`r`n" +
+        "if not exist `"%~dp0cfb-ratings\$name`" (echo cfb-ratings is missing next to this file: run cfb-ratings\windows\install.ps1 again. & pause & exit /b 1)`r`n" +
+        "call `"%~dp0cfb-ratings\$name`" %*`r`n"
     [IO.File]::WriteAllText((Join-Path $Dest $name), $body, [Text.Encoding]::ASCII)
 }
 $exclude = Join-Path $Dest ".git\info\exclude"

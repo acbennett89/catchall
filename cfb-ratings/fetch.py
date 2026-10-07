@@ -33,6 +33,7 @@ def session():
 
 
 def get_json(url, tries=4):
+    last = None
     for i in range(tries):
         try:
             r = session().get(url, timeout=60)
@@ -40,16 +41,22 @@ def get_json(url, tries=4):
                 return r.json()
             if r.status_code == 404:
                 return None
-        except Exception:  # network errors: retry with backoff
-            pass
+            last = f"HTTP {r.status_code}"
+        except Exception as e:  # network errors: retry with backoff
+            last = f"{type(e).__name__}: {e}"
         time.sleep(2 ** (i + 1))
-    raise RuntimeError(f"failed: {url}")
+    raise RuntimeError(f"could not download {url} ({last}). Check the internet connection; a proxy "
+                       "or antivirus that inspects HTTPS traffic can also block it.")
 
 
 def write_gz(path, obj):
+    """Write to a temporary name and rename into place, so an interrupted download never
+    leaves a truncated file that later runs would trust."""
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    with gzip.open(path, "wt", encoding="utf-8") as f:
+    tmp = path + ".part"
+    with gzip.open(tmp, "wt", encoding="utf-8") as f:
         json.dump(obj, f)
+    os.replace(tmp, path)
 
 
 def read_gz(path):
@@ -122,12 +129,17 @@ def fetch_summaries(event_ids, cache, workers=8):
         return eid, True
 
     done = 0
-    with ThreadPoolExecutor(workers) as ex:
+    ex = ThreadPoolExecutor(workers)
+    try:
         for fut in as_completed([ex.submit(one, e) for e in todo]):
             fut.result()
             done += 1
             if done % 50 == 0:
                 print(f"  {done}/{len(todo)}", file=sys.stderr)
+    except KeyboardInterrupt:  # stop now: drop the queued downloads (finished ones are kept)
+        ex.shutdown(wait=False, cancel_futures=True)
+        raise
+    ex.shutdown()
 
 
 def parse_weeks(s):

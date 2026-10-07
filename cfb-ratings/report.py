@@ -129,7 +129,7 @@ def write_season(season, site):
             internal[tr["team"]["id"]] = tr
     dst = os.path.join(site, str(season))
     shutil.rmtree(dst, ignore_errors=True)
-    os.makedirs(dst)
+    os.makedirs(dst, exist_ok=True)  # on Windows a file the server is sending can't be deleted; names are content-hashed, so a leftover is harmless
     table["trace_files"] = [dump_named(c, dst, f"traces_{k}") for k, c in enumerate(chunks)]
     table["trace_chunk"] = where
     table["internal_file"] = dump_named(internal, dst, "internal")

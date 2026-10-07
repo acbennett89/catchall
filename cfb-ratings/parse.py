@@ -9,6 +9,7 @@ flag and reason, and the scrimmage plays used for the five factors.
 import argparse
 import glob
 import gzip
+import io
 import json
 import os
 import re
@@ -505,11 +506,16 @@ def build(season):
         games.append(g)
     out = os.path.join(HERE, "data", str(season))
     os.makedirs(out, exist_ok=True)
-    with gzip.open(os.path.join(out, "games.json.gz"), "wt", encoding="utf-8") as f:
+    # Written under a temporary name and renamed into place (an interrupted run never leaves a
+    # truncated file), with a zero gzip timestamp so an unchanged season gives identical bytes.
+    path = os.path.join(out, "games.json.gz")
+    with open(path + ".part", "wb") as raw, gzip.GzipFile(fileobj=raw, mode="wb", mtime=0) as gz, \
+            io.TextIOWrapper(gz, encoding="utf-8") as f:
         json.dump({"season": season, "teams": members, "games": games, "upcoming": upcoming,
                    "calendar": season_calendar(season),
                    "penalty_fields": list(TABLE_FIELDS) + ["drive_why"]},
                   f, separators=(",", ":"))
+    os.replace(path + ".part", path)
     return games
 
 

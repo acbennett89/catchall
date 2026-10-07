@@ -1,6 +1,6 @@
 @echo off
 rem Double-click: opens the FBS Efficiency Ratings in your browser.
-rem Close this window (or press Ctrl+C) to stop the local server.
+rem Leave the window open while you use the site; close it to stop the local server.
 setlocal
 rem Runs from this folder whatever the current directory is.
 cd /d "%~dp0"

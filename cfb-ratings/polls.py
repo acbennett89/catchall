@@ -140,8 +140,10 @@ def write(season, refresh=False):
                    "after the middle kickoff of that week and before the middle kickoff of the next",
            "polls": polls}
     ap_, cfp = check(season, polls)
-    with open(os.path.join(HERE, "data", str(season), "polls.json"), "w", encoding="utf-8") as f:
+    path = os.path.join(HERE, "data", str(season), "polls.json")
+    with open(path + ".part", "w", encoding="utf-8") as f:
         json.dump(out, f, indent=1)
+    os.replace(path + ".part", path)
     span = lambda w: f" (after weeks {w[0]}-{w[-1]})" if w else ""
     print(f"{season}: {len(ap_)} AP polls{span(ap_)}, {len(cfp)} CFP rankings{span(cfp)}" +
           (f"; not yet in the game data: {', '.join(waiting)}" if waiting else ""))

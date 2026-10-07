@@ -21,7 +21,9 @@ import os
 import sys
 from collections import defaultdict
 
-from datetime import datetime
+import shutil
+import time
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
 from audit_penalties import audit
@@ -414,7 +416,38 @@ def data_coverage(games, teams):
 
 def eastern_date(iso):
     """ESPN stamps kickoffs in UTC; a late kickoff is the previous day on the US calendar."""
-    return datetime.fromisoformat(iso.replace("Z", "+00:00")).astimezone(ZoneInfo("America/New_York")).date().isoformat()
+    t = datetime.fromisoformat(iso.replace("Z", "+00:00"))
+    try:
+        return t.astimezone(ZoneInfo("America/New_York")).date().isoformat()
+    except Exception:  # Windows has no time-zone database unless the tzdata package is installed
+        return (t + timedelta(hours=us_eastern_offset(t))).date().isoformat()
+
+
+def us_eastern_offset(t):
+    """UTC offset of US Eastern time at UTC instant t: -4 from 2:00 local on the second Sunday of
+    March to 2:00 local on the first Sunday of November (the rule since 2007), -5 otherwise."""
+    def sunday(month, n):
+        first = datetime(t.year, month, 1, tzinfo=timezone.utc)
+        return first + timedelta(days=(6 - first.weekday()) % 7 + 7 * (n - 1))
+    return -4 if sunday(3, 2) + timedelta(hours=7) <= t < sunday(11, 1) + timedelta(hours=6) else -5
+
+
+def swap_in(new, final):
+    """Replace `final` with the finished `new` folder. Retries briefly: on Windows a virus scanner
+    or the search indexer can hold a just-written file open for a moment."""
+    old = final + ".old"
+    for attempt in range(20):
+        try:
+            shutil.rmtree(old, ignore_errors=True)
+            if os.path.exists(final):
+                os.rename(final, old)
+            os.rename(new, final)
+            break
+        except OSError:
+            if attempt == 19:
+                raise
+            time.sleep(0.5)
+    shutil.rmtree(old, ignore_errors=True)
 
 
 def main():
@@ -424,7 +457,11 @@ def main():
     cfg = load_config()
     if args.season:
         cfg["season"] = args.season
-    out_dir = os.path.join(HERE, "out", str(cfg["season"]))
+    # Everything is written to out/<season>.building and swapped in at the end, so a build that
+    # fails (or is stopped) leaves the previous outputs untouched.
+    final_dir = os.path.join(HERE, "out", str(cfg["season"]))
+    out_dir = final_dir + ".building"
+    shutil.rmtree(out_dir, ignore_errors=True)
     data = load(cfg["season"])
     res = rate(copy.deepcopy(data), cfg)
     teams = data["teams"]
@@ -437,7 +474,8 @@ def main():
     os.makedirs(os.path.join(out_dir, "traces"), exist_ok=True)
     polls = load_polls(cfg["season"])
     rows, table_info = finish_rows(res, polls, last_week)
-    with open(os.path.join(out_dir, "ratings.csv"), "w", newline="", encoding="utf-8") as f:
+    # utf-8-sig: the byte-order mark lets Excel on Windows read "San José State" correctly.
+    with open(os.path.join(out_dir, "ratings.csv"), "w", newline="", encoding="utf-8-sig") as f:
         w = csv.writer(f)
         w.writerow([c for _, c in COLUMNS])
         for r in rows:
@@ -611,7 +649,9 @@ def main():
           f"{len(preds)} predictions for week {nxt}; weekly views for weeks 1-{last_week}"
           + ("" if polls else "; no polls (run python polls.py)"))
     if bad:
-        raise SystemExit(f"trace self-check FAILED for: {', '.join(bad)}")
+        raise SystemExit(f"trace self-check FAILED for: {', '.join(bad)} (new files left in {out_dir}; "
+                         f"{final_dir} unchanged)")
+    swap_in(out_dir, final_dir)
     print(f"trace self-check: every AdjO, AdjD, AdjSR and AdjT reconstructs its stored value "
           f"({len(res['ppd']['O'])} D-I teams); internal derivations: {len(index)}")
 
