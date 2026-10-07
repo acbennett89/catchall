@@ -559,3 +559,21 @@ behaviour, and code and docs. They raised 29 findings: 24 confirmed, 5 partly. A
 | Tests | The recompute test picked a week where nobody is ranked; the poll test allowed a missing week or file. | Reruns 2026 week 3 and 2025 week 8 and compares every field the page shows; checks slots, counts, that every pickable game is listed, and that polls have no holes. |
 | Docs | README said only `fetch.py` needs `requests` and left `polls.py` out of adding a year. | Fixed. |
 
+
+## M. Opponent ranks in the efficiency tables (round 8)
+
+Four reviewers, each finding checked by a skeptic. One reviewer recomputed every rank from the weekly
+tables with its own script, one drove the page in Chromium, one read the code, and one ran everything on
+Python 3.8 with Windows output encodings. The recomputation covered all 24,040 efficiency lines in five
+seasons, team and FCS traces: 0 mismatches. It also checked bye weeks, the in-progress week (simulated)
+and week-0 games, and confirmed every other output was unchanged.
+
+| Area | Finding | Fix |
+|---|---|---|
+| Data | **Major.** In a season's first weeks, a ranked opponent showed its official rank among only the few 5-game teams, beside ≈ places counted among all teams. Eastern Michigan read "3" when it was 113th of 138; there were 94 such cells across the seasons. | While fewer than half the rated teams are ranked, every opponent shows ≈ its place among all rated teams (the ≈n rule), so a column is on one scale. The tooltip says which: official rank among N, tentative slot among N ranked, or place among all N. |
+| Page | The two columns pushed 26 of 276 Offense/Defense tables past the desktop drawer with Windows scrollbars, hiding "Adjusted". | Two-line headers: 0 of 548 tables overflow. |
+| Page | The note told phone users to hover for the week. | The note states the rule (after the week before the game; now = after week N). |
+| CLI | The new "no rank" dash could not be printed by some Windows code pages; `trace.py --week` crashed on an older `weekly.json` and called every opponent "FCS team" without one. | Prints "-"; ranks need only fields every `weekly.json` has; a missing file is reported. |
+| Tests | Expected slots used the code's own direction table, so a reversed AdjD passed. | Directions are written out in the test, which also checks that the official ranks run the right way. |
+| Docs | TRACE.md said every early rank is a tentative slot. | Reworded. |
+| Page | Before this change: the FCS drawer labelled its success-rate column "Opp AdjD" and showed "—" for μT in its tempo formula. | Named as in team traces; μT stored. |

@@ -65,9 +65,7 @@
   },
   "slot_base": {
    "AdjEM": "ranked",
-   "NetPerGame": "ranked",
-   "AdjO": "ranked",
-   "AdjD": "ranked"
+   "NetPerGame": "ranked"
   },
   "weeks": [
    1,
@@ -13187,8 +13185,6 @@
    "status": "tentative",
    "slot_AdjEM": 6,
    "slot_NetPerGame": 1,
-   "slot_AdjO": 27,
-   "slot_AdjD": 1,
    "AP": 1,
    "CFP": null
   },
@@ -13294,8 +13290,6 @@
    "status": "tentative",
    "slot_AdjEM": 8,
    "slot_NetPerGame": 7,
-   "slot_AdjO": 14,
-   "slot_AdjD": 10,
    "AP": 12,
    "CFP": null
   },
@@ -13401,8 +13395,6 @@
    "status": "tentative",
    "slot_AdjEM": 10,
    "slot_NetPerGame": 31,
-   "slot_AdjO": 12,
-   "slot_AdjD": 26,
    "AP": null,
    "CFP": null
   },
@@ -13508,8 +13500,6 @@
    "status": "tentative",
    "slot_AdjEM": 14,
    "slot_NetPerGame": 5,
-   "slot_AdjO": 23,
-   "slot_AdjD": 10,
    "AP": 8,
    "CFP": null
   },
@@ -13615,8 +13605,6 @@
    "status": "tentative",
    "slot_AdjEM": 17,
    "slot_NetPerGame": 9,
-   "slot_AdjO": 15,
-   "slot_AdjD": 26,
    "AP": 21,
    "CFP": null
   },
@@ -13722,8 +13710,6 @@
    "status": "tentative",
    "slot_AdjEM": 18,
    "slot_NetPerGame": 19,
-   "slot_AdjO": 14,
-   "slot_AdjD": 36,
    "AP": 13,
    "CFP": null
   },
@@ -13829,8 +13815,6 @@
    "status": "tentative",
    "slot_AdjEM": 29,
    "slot_NetPerGame": 39,
-   "slot_AdjO": 15,
-   "slot_AdjD": 52,
    "AP": null,
    "CFP": null
   },
@@ -13936,8 +13920,6 @@
    "status": "tentative",
    "slot_AdjEM": 29,
    "slot_NetPerGame": 21,
-   "slot_AdjO": 14,
-   "slot_AdjD": 56,
    "AP": 9,
    "CFP": null
   },
@@ -14043,8 +14025,6 @@
    "status": "tentative",
    "slot_AdjEM": 29,
    "slot_NetPerGame": 31,
-   "slot_AdjO": 38,
-   "slot_AdjD": 27,
    "AP": 18,
    "CFP": null
   },
@@ -14150,8 +14130,6 @@
    "status": "tentative",
    "slot_AdjEM": 30,
    "slot_NetPerGame": 49,
-   "slot_AdjO": 75,
-   "slot_AdjD": 2,
    "AP": null,
    "CFP": null
   },
@@ -14257,8 +14235,6 @@
    "status": "tentative",
    "slot_AdjEM": 35,
    "slot_NetPerGame": 68,
-   "slot_AdjO": 35,
-   "slot_AdjD": 50,
    "AP": null,
    "CFP": null
   },
@@ -14364,8 +14340,6 @@
    "status": "tentative",
    "slot_AdjEM": 47,
    "slot_NetPerGame": 78,
-   "slot_AdjO": 71,
-   "slot_AdjD": 26,
    "AP": null,
    "CFP": null
   },
@@ -14471,8 +14445,6 @@
    "status": "tentative",
    "slot_AdjEM": 49,
    "slot_NetPerGame": 5,
-   "slot_AdjO": 58,
-   "slot_AdjD": 36,
    "AP": null,
    "CFP": null
   },
@@ -14578,8 +14550,6 @@
    "status": "tentative",
    "slot_AdjEM": 51,
    "slot_NetPerGame": 79,
-   "slot_AdjO": 18,
-   "slot_AdjD": 79,
    "AP": null,
    "CFP": null
   },
@@ -14685,8 +14655,6 @@
    "status": "tentative",
    "slot_AdjEM": 51,
    "slot_NetPerGame": 76,
-   "slot_AdjO": 56,
-   "slot_AdjD": 42,
    "AP": null,
    "CFP": null
   },
@@ -14792,8 +14760,6 @@
    "status": "tentative",
    "slot_AdjEM": 62,
    "slot_NetPerGame": 69,
-   "slot_AdjO": 55,
-   "slot_AdjD": 62,
    "AP": null,
    "CFP": null
   },
@@ -14899,8 +14865,6 @@
    "status": "tentative",
    "slot_AdjEM": 66,
    "slot_NetPerGame": 71,
-   "slot_AdjO": 61,
-   "slot_AdjD": 59,
    "AP": null,
    "CFP": null
   },
@@ -15006,8 +14970,6 @@
    "status": "tentative",
    "slot_AdjEM": 69,
    "slot_NetPerGame": 44,
-   "slot_AdjO": 56,
-   "slot_AdjD": 70,
    "AP": null,
    "CFP": null
   },
@@ -15113,8 +15075,6 @@
    "status": "tentative",
    "slot_AdjEM": 70,
    "slot_NetPerGame": 103,
-   "slot_AdjO": 73,
-   "slot_AdjD": 56,
    "AP": null,
    "CFP": null
   },
@@ -15220,8 +15180,6 @@
    "status": "tentative",
    "slot_AdjEM": 71,
    "slot_NetPerGame": 58,
-   "slot_AdjO": 88,
-   "slot_AdjD": 36,
    "AP": null,
    "CFP": null
   },
@@ -15327,8 +15285,6 @@
    "status": "tentative",
    "slot_AdjEM": 73,
    "slot_NetPerGame": 80,
-   "slot_AdjO": 80,
-   "slot_AdjD": 53,
    "AP": null,
    "CFP": null
   },
@@ -15434,8 +15390,6 @@
    "status": "tentative",
    "slot_AdjEM": 73,
    "slot_NetPerGame": 44,
-   "slot_AdjO": 71,
-   "slot_AdjD": 72,
    "AP": null,
    "CFP": null
   },
@@ -15541,8 +15495,6 @@
    "status": "tentative",
    "slot_AdjEM": 75,
    "slot_NetPerGame": 104,
-   "slot_AdjO": 74,
-   "slot_AdjD": 68,
    "AP": null,
    "CFP": null
   },
@@ -15648,8 +15600,6 @@
    "status": "tentative",
    "slot_AdjEM": 77,
    "slot_NetPerGame": 71,
-   "slot_AdjO": 87,
-   "slot_AdjD": 59,
    "AP": null,
    "CFP": null
   },
@@ -15755,8 +15705,6 @@
    "status": "tentative",
    "slot_AdjEM": 77,
    "slot_NetPerGame": 104,
-   "slot_AdjO": 80,
-   "slot_AdjD": 70,
    "AP": null,
    "CFP": null
   },
@@ -15862,8 +15810,6 @@
    "status": "tentative",
    "slot_AdjEM": 81,
    "slot_NetPerGame": 79,
-   "slot_AdjO": 96,
-   "slot_AdjD": 50,
    "AP": null,
    "CFP": null
   },
@@ -15969,8 +15915,6 @@
    "status": "tentative",
    "slot_AdjEM": 81,
    "slot_NetPerGame": 100,
-   "slot_AdjO": 81,
-   "slot_AdjD": 75,
    "AP": null,
    "CFP": null
   },
@@ -16076,8 +16020,6 @@
    "status": "tentative",
    "slot_AdjEM": 81,
    "slot_NetPerGame": 106,
-   "slot_AdjO": 79,
-   "slot_AdjD": 76,
    "AP": null,
    "CFP": null
   },
@@ -16183,8 +16125,6 @@
    "status": "tentative",
    "slot_AdjEM": 82,
    "slot_NetPerGame": 104,
-   "slot_AdjO": 72,
-   "slot_AdjD": 91,
    "AP": null,
    "CFP": null
   },
@@ -16290,8 +16230,6 @@
    "status": "tentative",
    "slot_AdjEM": 82,
    "slot_NetPerGame": 102,
-   "slot_AdjO": 79,
-   "slot_AdjD": 87,
    "AP": null,
    "CFP": null
   },
@@ -16397,8 +16335,6 @@
    "status": "tentative",
    "slot_AdjEM": 100,
    "slot_NetPerGame": 106,
-   "slot_AdjO": 96,
-   "slot_AdjD": 96,
    "AP": null,
    "CFP": null
   }

@@ -69,6 +69,8 @@ def recompute(season, week, query, internal):
     eligible = {r["id"] for r in rows if r["eligible"]}
     # Opponent ranks entering each game come from the published weekly tables (the same rate() runs).
     wk = os.path.join(OUT, "weekly.json")
+    if not os.path.exists(wk):
+        print(f"(no {os.path.relpath(wk, HERE)}: opponent ranks at game need it; run python build.py --season {season})")
     tables = {s["week"]: {r["id"]: r for r in s["teams"]}
               for s in (json.load(open(wk, encoding="utf-8"))["weeks"] if os.path.exists(wk) else [])
               if s["week"] < week}
@@ -131,9 +133,9 @@ def mark_of(status):
 
 
 def rank_txt(x):
-    """An opponent rank from the trace: 12, ~12 for a tentative team's slot, — for none."""
+    """An opponent rank from the trace: 12, ~12 when it is not an official rank, - for none."""
     if not x or x.get("rank") is None:
-        return "—"
+        return "-"
     return ("~" if x.get("approx") else "") + str(x["rank"])
 
 
@@ -148,7 +150,8 @@ def rank_cols(s):
 
 
 RANK_NOTE = ("  rk at game = the opponent's rank entering the game (the table after the week before); now = the "
-             "table this trace covers; ~n = a tentative team's slot (fewer than 5 games); 1 = best")
+             "table this trace covers; 1 = best.\n  ~n = not an official rank: where a team with fewer than 5 games "
+             "would slot among the ranked teams, or, in a season's first weeks, any team's place among all rated teams")
 
 
 def lines_table(s, label, opp_key, fmt=".3f"):
@@ -401,8 +404,9 @@ def main():
         print(f"{t['name']} ({t['division']}, {t['conference']})  INTERNAL INPUT\n{tr['note']}")
         efficiency(tr)
         print("\nADJUSTED SUCCESS RATE (internal input)")
-        lines_table(tr["success_rate_adjusted"]["offense"], "AdjSR_O", "opp_AdjD")
-        lines_table(tr["success_rate_adjusted"]["defense"], "AdjSR_D", "opp_AdjO")
+        sr = tr["success_rate_adjusted"]
+        lines_table(sr["offense"], "AdjSR_O", "opp_AdjSR_D" if "opp_AdjSR_D" in (sr["offense"]["lines"] or [{}])[0] else "opp_AdjD")
+        lines_table(sr["defense"], "AdjSR_D", "opp_AdjSR_O" if "opp_AdjSR_O" in (sr["defense"]["lines"] or [{}])[0] else "opp_AdjO")
         if tr.get("tempo"):
             tempo(tr)
         return

@@ -183,9 +183,7 @@
   },
   "slot_base": {
    "AdjEM": "ranked",
-   "NetPerGame": "ranked",
-   "AdjO": "ranked",
-   "AdjD": "ranked"
+   "NetPerGame": "ranked"
   },
   "weeks": [
    1,

@@ -47,7 +47,7 @@ From `python trace.py "Notre Dame" --section efficiency`:
 
 ```
 opponent               weight  raw PPD  opp_AdjD AdjD rk at game   now  opp adj  venue  adjusted
-Wisconsin                   9    3.778     1.691               —    15   +0.652 -0.000     4.430
+Wisconsin                   9    3.778     1.691               -    15   +0.652 -0.000     4.430
 Rice                        6    5.833     2.981             ~54    92   -0.637 -0.154     5.042
 Michigan State            8.5    3.176     2.064             ~56    35   +0.279 -0.154     3.301
 Purdue                      5    5.600     2.749            ~114    78   -0.406 +0.154     5.349
@@ -67,8 +67,10 @@ phantom game (FBS avg)     12                                                   
 - **Adjusted** is raw plus both adjustments.
 - **AdjD rk at game / now** is the opponent's defensive rank (1 = best) entering the game and now
   (METRICS 10.6). Display only; nothing in the sum uses it. Wisconsin was the week-1 opponent, so there
-  was no table before the game (—). Until enough teams have 5 games, a rank is a tentative slot, ~n
-  (≈n on the page): after week 1, Rice's defense sat about 54th of every rated team; it is 92nd now.
+  was no table before the game (-). ~n (≈n on the page) is not an official rank. In a season's first
+  weeks, while fewer than half the rated teams have 5 games, every opponent shows its place among all
+  rated teams: after week 1, Rice's defense sat about 54th; it is 92nd now. After that, ~n is where a
+  team with fewer than 5 games would slot among the ranked teams (North Carolina, ~50 now).
 - **The T:** North Carolina has played only 4 games, so its rating is tentative (no official
   rank). Its own trace (`python trace.py "North Carolina"`, or its row on the page, marked T) shows
   how its 2.238 was derived, so this line can still be checked to the end.

@@ -68,14 +68,12 @@ COLUMNS = [
 # What the page's tables need from each row of a weekly snapshot (the full row lives in ratings.json).
 WEEK_FIELDS = (
     "id", "name", "conference", "W", "L", "games", "eligible", "tentative", "status", "AP", "CFP",
-    "slot_AdjEM", "slot_NetPerGame", "slot_AdjO", "slot_AdjD", "AdjEM", "AdjEM_se", "rk_AdjEM", "AdjO", "rk_AdjO", "AdjD",
+    "slot_AdjEM", "slot_NetPerGame", "AdjEM", "AdjEM_se", "rk_AdjEM", "AdjO", "rk_AdjO", "AdjD",
     "rk_AdjD", "AdjT", "SOS", "rk_SOS", "NCSOS", "luck", "WVT", "AvgWV", "LCT", "NetResume",
     "NetPerGame", "rk_NetPerGame", "SchedNS", "BestWin", "BestWinOpp", "WorstLoss", "WorstLossOpp",
     "PenPG", "PenPG_conf", "PenYdsPG", "PenYdsPG_conf", "NetPenYdsPG", "OffPen100", "OffPen100_conf",
     "OffPreSnap100", "OffPreSnap100_conf", "DefPen100", "DefPen100_conf", "PenFDAllowedPG",
     "PenCoverage", "NeutralPace", "NeutralRunRate", "LP_drives", "Q4_lead_drives")
-# Tentative slots: (metric, +1 if higher is better, -1 if lower is better, as in the rk_ columns).
-SLOT_METRICS = (("AdjEM", 1), ("NetPerGame", 1), ("AdjO", 1), ("AdjD", -1))
 # One line per team per week in the history: these columns, in this order.
 HISTORY_COLUMNS = ["week", "W", "L", "AdjEM", "rk_AdjEM", "slot_AdjEM", "NetPerGame", "rk_NetPerGame",
                    "slot_NetPerGame", "AP", "CFP"]
@@ -89,14 +87,13 @@ def finish_rows(res, polls, week):
     same numbers, published and traced, but provisional and never ranked. slot_<metric> says where
     a tentative team would sit: among the ranked teams once they are at least half of the teams
     with a value ("ranked"), otherwise among every team with a value ("all"; the first weeks of a
-    season). See ratings.comparison_pool. A team with no value of the metric gets no slot.
-    AdjO and AdjD slots are what the drawer's opponent ranks show for a tentative opponent."""
+    season). See ratings.comparison_pool. A team with no value of the metric gets no slot."""
     rows = list(res["teams"].values())
     for r in rows:
         r["tentative"] = not r["eligible"]
         r["status"] = "rated" if r["eligible"] else "tentative"
     slot_base = {}
-    for metric, sign in SLOT_METRICS:
+    for metric in ("AdjEM", "NetPerGame"):
         pool = comparison_pool(rows, metric)
         slot_base[metric] = "ranked" if all(r["eligible"] for r in pool) else "all"
         for r in rows:
@@ -104,8 +101,7 @@ def finish_rows(res, polls, week):
                 r.pop(f"slot_{metric}", None)
                 continue
             # Equal values (to 1e-9, beyond float noise) share a slot.
-            r[f"slot_{metric}"] = 1 + sum(1 for x in pool if x is not r
-                                          and sign * (x[metric] - r[metric]) > 1e-9)
+            r[f"slot_{metric}"] = 1 + sum(1 for x in pool if x is not r and x[metric] > r[metric] + 1e-9)
     used = {}
     for kind in ("AP", "CFP"):
         p = latest_poll(polls, kind, week)
@@ -182,20 +178,36 @@ def opp_status(opp, teams, eligible):
 
 
 def rank_in(table, opp, metric, week):
-    """An opponent's rank in `metric` in the table after `week`: {"after_week", "rank", "approx"},
-    approx = a tentative team's slot (≈n). rank is None, with "why", when there is none."""
+    """An opponent's rank in `metric` (AdjO: highest is 1; AdjD: lowest is 1) in the table after
+    `week` (team id -> weekly table row): {"after_week", "rank", "approx", "base", "among"}.
+
+    Every rank in a column is on one scale, the same one the ≈n slots use (ratings.comparison_pool):
+    once the ranked (5+ game) teams are at least half of the teams with a value (base "ranked"), a
+    ranked team shows its official rank and a tentative one where it would slot among them (approx).
+    Before that (a season's first weeks, base "all") every team shows its place among all the teams
+    with a value, marked approx: an official rank among a handful of early 5-game teams would read
+    "3" for a team that was 113th. among = how many teams the place is counted against. rank is
+    None, with "why", when there is none."""
     out = {"after_week": week, "rank": None, "approx": False}
     r = (table or {}).get(opp)
     if week < 1:
         out["why"] = "before week 1: no ratings yet"
+    elif table is None:
+        out["why"] = f"no table for week {week}: rebuild the season (python build.py)"
     elif r is None:
         out["why"] = "FCS team: rated only to adjust FBS numbers, never ranked"
     elif r.get(metric) is None:
         out["why"] = f"no rating yet after week {week} (no game with usable play-by-play)"
-    elif r["eligible"]:
-        out["rank"] = r[f"rk_{metric}"]
     else:
-        out["rank"], out["approx"] = r[f"slot_{metric}"], True
+        pool = comparison_pool(list(table.values()), metric)
+        out["base"] = "ranked" if all(x["eligible"] for x in pool) else "all"
+        out["among"] = len(pool)
+        if r["eligible"] and out["base"] == "ranked":
+            out["rank"] = r[f"rk_{metric}"]
+        else:
+            sign = 1 if metric == "AdjO" else -1
+            out["rank"] = 1 + sum(1 for x in pool if x is not r and sign * (x[metric] - r[metric]) > 1e-9)
+            out["approx"] = True
     return out
 
 
@@ -404,6 +416,9 @@ def internal_trace(t, res, teams, cfg, eligible):
             s_["defense"]["lines"] + (tt["lines"] if tt else []):
         ln["opp_name"] = name_of(teams, ln["opp"])
         ln["opp_status"] = opp_status(ln["opp"], teams, eligible)
+    for side, k_old, k_new in (("offense", "opp_AdjD", "opp_AdjSR_D"), ("defense", "opp_AdjO", "opp_AdjSR_O")):
+        for ln in s_[side]["lines"]:  # success-rate ratings, named as in team traces
+            ln[k_new] = ln.pop(k_old)
     div = teams.get(t, {}).get("division")
     return {"team": {"id": t, "name": name_of(teams, t), "division": div,
                      "conference": teams.get(t, {}).get("conference")},
@@ -416,7 +431,7 @@ def internal_trace(t, res, teams, cfg, eligible):
             "efficiency": {"mu": res["ppd"]["mu"], "h": res["ppd"]["h"],
                            "offense": e["offense"], "defense": e["defense"]},
             "success_rate_adjusted": {"offense": s_["offense"], "defense": s_["defense"]},
-            "tempo": tt}
+            "tempo": tt and {"muT": res["muT"], **tt}}
 
 
 def tentative_note(r, cfg):
