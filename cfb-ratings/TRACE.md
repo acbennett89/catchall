@@ -46,13 +46,13 @@ ESPN rankings ─ polls.py ──> data/<season>/polls.json  (AP and CFP by week
 From `python trace.py "Notre Dame" --section efficiency`:
 
 ```
-opponent               weight  raw PPD  opp_AdjD  opp adj  venue  adjusted
-Wisconsin                   9    3.778     1.691   +0.652 -0.000     4.430
-Rice                        6    5.833     2.981   -0.637 -0.154     5.042
-Michigan State            8.5    3.176     2.064   +0.279 -0.154     3.301
-Purdue                      5    5.600     2.749   -0.406 +0.154     5.349
-North Carolina *            9    4.111     2.238   +0.106 +0.154     4.371
-phantom game (FBS avg)     12                                        2.344
+opponent               weight  raw PPD  opp_AdjD AdjD rk at game   now  opp adj  venue  adjusted
+Wisconsin                   9    3.778     1.691               —    15   +0.652 -0.000     4.430
+Rice                        6    5.833     2.981             ~54    92   -0.637 -0.154     5.042
+Michigan State            8.5    3.176     2.064             ~56    35   +0.279 -0.154     3.301
+Purdue                      5    5.600     2.749            ~114    78   -0.406 +0.154     5.349
+North Carolina T            9    4.111     2.238             ~43   ~50   +0.106 +0.154     4.371
+phantom game (FBS avg)     12                                                              2.344
 ```
 
 - **Weight** is kept drives, with lead-protection drives counted at the configured weight (0.5).
@@ -65,7 +65,11 @@ phantom game (FBS avg)     12                                        2.344
   Dame is credited +0.652.
 - **Venue** is −h × venue, with h = 0.1544: a home game gives it back, a road game adds it.
 - **Adjusted** is raw plus both adjustments.
-- **The asterisk:** North Carolina has played only 4 games, so its rating is tentative (no official
+- **AdjD rk at game / now** is the opponent's defensive rank (1 = best) entering the game and now
+  (METRICS 10.6). Display only; nothing in the sum uses it. Wisconsin was the week-1 opponent, so there
+  was no table before the game (—). Until enough teams have 5 games, a rank is a tentative slot, ~n
+  (≈n on the page): after week 1, Rice's defense sat about 54th of every rated team; it is 92nd now.
+- **The T:** North Carolina has played only 4 games, so its rating is tentative (no official
   rank). Its own trace (`python trace.py "North Carolina"`, or its row on the page, marked T) shows
   how its 2.238 was derived, so this line can still be checked to the end.
 - **AdjO** = (9×4.430 + 6×5.042 + 8.5×3.301 + 5×5.349 + 9×4.371 + 12×2.344) / (37.5 + 12) = **3.8867**. The trace
@@ -136,9 +140,10 @@ that weren't tagged.
   team in the season. In 2026 through week 5 that is 266 teams: the 107 ranked and 31 tentative FBS teams, plus
   the internal derivations of the 128 FCS teams (2025: 265, 2024: 263, 2023: 261, 2022: 261). `build.py` fails
   loudly if any differs by more than 1e-6.
-- **Unit tests** (`tests/`, 48 tests). Output checks cover every built season's tentative rules and every
+- **Unit tests** (`tests/`, 49 tests). Output checks cover every built season's tentative rules and every
   weekly view: ranks, eligibility, ≈n slots, games only ever growing week to week, poll ranks matching
-  `polls.json` (with no week missing), and next-week picks (every game picked or listed as unpickable). One
+  `polls.json` (with no week missing), and next-week picks (every game picked or listed as unpickable).
+  Every efficiency line's opponent rank, at game and now, is checked against the weekly tables. One
   test reruns two weeks from scratch (2026 week 3, 2025 week 8) and compares every field the page shows.
   The rest:
   - A hand-computed network on a toy graph covers FCS wins and losses, path exclusions, and the

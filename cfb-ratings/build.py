@@ -68,12 +68,14 @@ COLUMNS = [
 # What the page's tables need from each row of a weekly snapshot (the full row lives in ratings.json).
 WEEK_FIELDS = (
     "id", "name", "conference", "W", "L", "games", "eligible", "tentative", "status", "AP", "CFP",
-    "slot_AdjEM", "slot_NetPerGame", "AdjEM", "AdjEM_se", "rk_AdjEM", "AdjO", "rk_AdjO", "AdjD",
+    "slot_AdjEM", "slot_NetPerGame", "slot_AdjO", "slot_AdjD", "AdjEM", "AdjEM_se", "rk_AdjEM", "AdjO", "rk_AdjO", "AdjD",
     "rk_AdjD", "AdjT", "SOS", "rk_SOS", "NCSOS", "luck", "WVT", "AvgWV", "LCT", "NetResume",
     "NetPerGame", "rk_NetPerGame", "SchedNS", "BestWin", "BestWinOpp", "WorstLoss", "WorstLossOpp",
     "PenPG", "PenPG_conf", "PenYdsPG", "PenYdsPG_conf", "NetPenYdsPG", "OffPen100", "OffPen100_conf",
     "OffPreSnap100", "OffPreSnap100_conf", "DefPen100", "DefPen100_conf", "PenFDAllowedPG",
     "PenCoverage", "NeutralPace", "NeutralRunRate", "LP_drives", "Q4_lead_drives")
+# Tentative slots: (metric, +1 if higher is better, -1 if lower is better, as in the rk_ columns).
+SLOT_METRICS = (("AdjEM", 1), ("NetPerGame", 1), ("AdjO", 1), ("AdjD", -1))
 # One line per team per week in the history: these columns, in this order.
 HISTORY_COLUMNS = ["week", "W", "L", "AdjEM", "rk_AdjEM", "slot_AdjEM", "NetPerGame", "rk_NetPerGame",
                    "slot_NetPerGame", "AP", "CFP"]
@@ -87,13 +89,14 @@ def finish_rows(res, polls, week):
     same numbers, published and traced, but provisional and never ranked. slot_<metric> says where
     a tentative team would sit: among the ranked teams once they are at least half of the teams
     with a value ("ranked"), otherwise among every team with a value ("all"; the first weeks of a
-    season). See ratings.comparison_pool. A team with no value of the metric gets no slot."""
+    season). See ratings.comparison_pool. A team with no value of the metric gets no slot.
+    AdjO and AdjD slots are what the drawer's opponent ranks show for a tentative opponent."""
     rows = list(res["teams"].values())
     for r in rows:
         r["tentative"] = not r["eligible"]
         r["status"] = "rated" if r["eligible"] else "tentative"
     slot_base = {}
-    for metric in ("AdjEM", "NetPerGame"):
+    for metric, sign in SLOT_METRICS:
         pool = comparison_pool(rows, metric)
         slot_base[metric] = "ranked" if all(r["eligible"] for r in pool) else "all"
         for r in rows:
@@ -101,7 +104,8 @@ def finish_rows(res, polls, week):
                 r.pop(f"slot_{metric}", None)
                 continue
             # Equal values (to 1e-9, beyond float noise) share a slot.
-            r[f"slot_{metric}"] = 1 + sum(1 for x in pool if x is not r and x[metric] > r[metric] + 1e-9)
+            r[f"slot_{metric}"] = 1 + sum(1 for x in pool if x is not r
+                                          and sign * (x[metric] - r[metric]) > 1e-9)
     used = {}
     for kind in ("AP", "CFP"):
         p = latest_poll(polls, kind, week)
@@ -175,6 +179,35 @@ def opp_status(opp, teams, eligible):
     if opp not in eligible:
         return "tentative: FBS team below the game minimum (provisional rating, no official rank)"
     return "published"
+
+
+def rank_in(table, opp, metric, week):
+    """An opponent's rank in `metric` in the table after `week`: {"after_week", "rank", "approx"},
+    approx = a tentative team's slot (≈n). rank is None, with "why", when there is none."""
+    out = {"after_week": week, "rank": None, "approx": False}
+    r = (table or {}).get(opp)
+    if week < 1:
+        out["why"] = "before week 1: no ratings yet"
+    elif r is None:
+        out["why"] = "FCS team: rated only to adjust FBS numbers, never ranked"
+    elif r.get(metric) is None:
+        out["why"] = f"no rating yet after week {week} (no game with usable play-by-play)"
+    elif r["eligible"]:
+        out["rank"] = r[f"rk_{metric}"]
+    else:
+        out["rank"], out["approx"] = r[f"slot_{metric}"], True
+    return out
+
+
+def add_opp_ranks(eff, week_of, tables, now):
+    """Beside each efficiency line, the opponent's rank in the rating it is adjusted for (its AdjD
+    for an offense line, its AdjO for a defense line): entering the game (the table after the week
+    before) and now (the table after week `now`). tables: week -> {team id: weekly table row}."""
+    for side, metric in (("offense", "AdjD"), ("defense", "AdjO")):
+        for ln in eff[side]["lines"]:
+            w = week_of[ln["game"]] - 1
+            ln["opp_rank"] = {"metric": metric, "then": rank_in(tables.get(w), ln["opp"], metric, w),
+                              "now": rank_in(tables[now], ln["opp"], metric, now)}
 
 
 def team_trace(t, res, data, cfg, sigma, eligible):
@@ -490,10 +523,29 @@ def main():
                 out.append(round(v, 4) if isinstance(v, float) else v)
             w.writerow(out)
 
+    # Weekly views: the table as it stood after each week, each from its own rate() run over the
+    # games through that week only (the last week is the table above).
+    snaps = []
+    for w in range(1, last_week + 1):
+        rw = res if w == last_week else rate(copy.deepcopy(data), cfg, through_week=w)
+        snaps.append(snapshot(rw, w, data, cfg, sigma, polls))
+    with open(os.path.join(out_dir, "weekly.json"), "w", encoding="utf-8") as f:
+        json.dump({"season": cfg["season"],
+                   "rule": "week w = ratings.rate(data, cfg, through_week=w): every number from the games of "
+                           "weeks 1..w only. AP/CFP = the newest poll reflecting games through week w "
+                           "(data/<season>/polls.json); reference only. picks = week w+1 games predicted "
+                           "from week w's ratings, with the actual score.",
+                   "weeks": snaps, "history": history(snaps, polls)}, f, separators=(",", ":"), default=float)
+    # Opponent ranks beside each efficiency line, entering the game and now (from these tables).
+    tables = {s["week"]: {r["id"]: r for r in s["teams"]} for s in snaps}
+    week_of = {g["id"]: g["week"] for g in data["games"]}
+
     eligible = {t for t, r in res["teams"].items() if r["eligible"]}
     bad = []
     for r in rows:
         tr = team_trace(r["id"], res, data, cfg, sigma, eligible)
+        if "efficiency" in tr:
+            add_opp_ranks(tr["efficiency"], week_of, tables, last_week)
         checks = [tr["efficiency"][s]["check_ok"] for s in ("offense", "defense")] if "efficiency" in tr else []
         checks += [tr["success_rate_adjusted"][s]["check_ok"] for s in ("offense", "defense")] \
             if "success_rate_adjusted" in tr else []
@@ -513,6 +565,7 @@ def main():
     index = {}
     for t in res["ppd"]["O"]:
         tr = internal_trace(t, res, teams, cfg, eligible)
+        add_opp_ranks(tr["efficiency"], week_of, tables, last_week)
         if not tr["checks_ok"]:
             bad.append(name_of(teams, t))
         if teams.get(t, {}).get("division") == "FBS":
@@ -585,19 +638,6 @@ def main():
                       "hfa_per_drive": p["hfa_drive"]})
     preds.sort(key=lambda x: x["date"])
 
-    # Weekly views: the table as it stood after each week, each from its own rate() run over the
-    # games through that week only (the last week is the table above).
-    snaps = []
-    for w in range(1, last_week + 1):
-        rw = res if w == last_week else rate(copy.deepcopy(data), cfg, through_week=w)
-        snaps.append(snapshot(rw, w, data, cfg, sigma, polls))
-    with open(os.path.join(out_dir, "weekly.json"), "w", encoding="utf-8") as f:
-        json.dump({"season": cfg["season"],
-                   "rule": "week w = ratings.rate(data, cfg, through_week=w): every number from the games of "
-                           "weeks 1..w only. AP/CFP = the newest poll reflecting games through week w "
-                           "(data/<season>/polls.json); reference only. picks = week w+1 games predicted "
-                           "from week w's ratings, with the actual score.",
-                   "weeks": snaps, "history": history(snaps, polls)}, f, separators=(",", ":"), default=float)
 
     cal = data.get("calendar", {})
     meta = {

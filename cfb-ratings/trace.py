@@ -55,7 +55,7 @@ def recompute(season, week, query, internal):
     """A team's trace as it stood after `week`, rebuilt in memory the way build.py builds the
     weekly views: ratings.rate() over the games of weeks 1..week only."""
     import copy
-    from build import finish_rows, internal_trace, team_trace, tentative_note
+    from build import add_opp_ranks, finish_rows, internal_trace, team_trace, tentative_note
     from polls import load_polls
     from ratings import load, load_config, rate
     cfg = load_config()
@@ -67,6 +67,13 @@ def recompute(season, week, query, internal):
     res = rate(copy.deepcopy(data), cfg, through_week=week)
     rows, _ = finish_rows(res, load_polls(season), week)
     eligible = {r["id"] for r in rows if r["eligible"]}
+    # Opponent ranks entering each game come from the published weekly tables (the same rate() runs).
+    wk = os.path.join(OUT, "weekly.json")
+    tables = {s["week"]: {r["id"]: r for r in s["teams"]}
+              for s in (json.load(open(wk, encoding="utf-8"))["weeks"] if os.path.exists(wk) else [])
+              if s["week"] < week}
+    tables[week] = {r["id"]: r for r in rows}
+    week_of = {g["id"]: g["week"] for g in data["games"]}
     if internal:
         hit = next((r for r in rows if r["name"].lower() == query.lower()), None)
         if hit:
@@ -77,11 +84,15 @@ def recompute(season, week, query, internal):
         tid = _match(query, fcs)
         if tid is None:
             sys.exit(f"no internal derivation for {query!r} after week {week}")
-        return {**internal_trace(tid, res, data["teams"], cfg, eligible), "as_of_week": week, "as_of_last": week == last}
+        tr = internal_trace(tid, res, data["teams"], cfg, eligible)
+        add_opp_ranks(tr["efficiency"], week_of, tables, week)
+        return {**tr, "as_of_week": week, "as_of_last": week == last}
     tid = _match(query, [(r["id"], r["name"]) for r in rows])
     if tid is None:
         sys.exit(f"no FBS team matches {query!r}; for an FCS opponent use --internal")
     tr = team_trace(tid, res, data, cfg, None, eligible)
+    if "efficiency" in tr:
+        add_opp_ranks(tr["efficiency"], week_of, tables, week)
     if not res["teams"][tid]["eligible"]:
         tr["tentative"], tr["note"] = True, tentative_note(res["teams"][tid], cfg)
     tr["as_of_week"], tr["as_of_last"] = week, week == last
@@ -119,16 +130,38 @@ def mark_of(status):
     return " T" if status.startswith("tentative") else " *" if status.startswith("internal") else ""
 
 
+def rank_txt(x):
+    """An opponent rank from the trace: 12, ~12 for a tentative team's slot, — for none."""
+    if not x or x.get("rank") is None:
+        return "—"
+    return ("~" if x.get("approx") else "") + str(x["rank"])
+
+
+def rank_cols(s):
+    """Header and per-line text of the 'at game' / 'now' opponent-rank columns, if the lines have them."""
+    if not any("opp_rank" in ln for ln in s["lines"]):
+        return "", lambda ln: "", ""
+    m = s["lines"][0]["opp_rank"]["metric"]
+    return (f" {m + ' rk at game':>15} {'now':>5}",
+            lambda ln: f" {rank_txt(ln['opp_rank']['then']):>15} {rank_txt(ln['opp_rank']['now']):>5}",
+            f" {'':>15} {'':>5}")
+
+
+RANK_NOTE = ("  rk at game = the opponent's rank entering the game (the table after the week before); now = the "
+             "table this trace covers; ~n = a tentative team's slot (fewer than 5 games); 1 = best")
+
+
 def lines_table(s, label, opp_key, fmt=".3f"):
+    head, cols, blank = rank_cols(s)
     print(f"  {label}: adjusted = raw - (opp rating - mu) - h*venue")
-    print(f"    {'opponent':22s} {'weight':>6} {'raw':>8} {opp_key:>12} {'opp adj':>8} {'venue':>6} {'adjusted':>9}")
+    print(f"    {'opponent':22s} {'weight':>6} {'raw':>8} {opp_key:>12}{head} {'opp adj':>8} {'venue':>6} {'adjusted':>9}")
     for ln in s["lines"]:
         mark = mark_of(ln.get("opp_status"))
-        print(f"    {(ln['opp_name'][:20] + mark):22s} {ln['w']:>6g} {ln['raw']:>8{fmt}} {ln[opp_key]:>12{fmt}} "
+        print(f"    {(ln['opp_name'][:20] + mark):22s} {ln['w']:>6g} {ln['raw']:>8{fmt}} {ln[opp_key]:>12{fmt}}{cols(ln)} "
               f"{ln['opp_adjustment']:>+8{fmt}} {ln['hfa_adjustment']:>+6{fmt}} {ln['adjusted']:>9{fmt}}")
     p = s["prior"]
     tot_w = sum(ln["w"] for ln in s["lines"])
-    print(f"    {'phantom game (' + p['division'] + ' avg)':22s} {p['weight']:>6} {'':>8} {'':>12} {'':>8} {'':>6} "
+    print(f"    {'phantom game (' + p['division'] + ' avg)':22s} {p['weight']:>6} {'':>8} {'':>12}{blank} {'':>8} {'':>6} "
           f"{p['value']:>9{fmt}}")
     print(f"    {label} = (sum(weight*adjusted) + {p['weight']}*{p['value']:{fmt}}) / ({tot_w:g} + {p['weight']}) "
           f"= {s['recomputed']:.4f}   [stored {s['stored']:.4f}, check {'OK' if s['check_ok'] else 'FAIL'}]")
@@ -153,26 +186,31 @@ def efficiency(tr):
         lines_table(e["offense"], "AdjO", "opp_AdjD")
         lines_table(e["defense"], "AdjD", "opp_AdjO")
         print("  * opponent is itself an internal input (FCS); T = tentative FBS opponent")
+        if any("opp_rank" in ln for ln in e["offense"]["lines"] + e["defense"]["lines"]):
+            print(RANK_NOTE)
         return
     print(f"\nEFFICIENCY  mu (FBS avg PPD) = {f(e['mu'])}, home edge h = {f(e['h'], 4)} pts/drive, "
           f"muT = {f(e['muT'], 2)} drives/game")
     for side, opp_key, label in (("offense", "opp_AdjD", "AdjO"), ("defense", "opp_AdjO", "AdjD")):
         s = e[side]
+        head, cols, blank = rank_cols(s)
         print(f"  {label}: adjusted = raw - (opp rating - mu) - h*venue")
-        print(f"    {'opponent':22s} {'weight':>6} {'raw PPD':>8} {opp_key:>9} {'opp adj':>8} "
+        print(f"    {'opponent':22s} {'weight':>6} {'raw PPD':>8} {opp_key:>9}{head} {'opp adj':>8} "
               f"{'venue':>6} {'adjusted':>9}")
         for ln in s["lines"]:
             mark = mark_of(ln.get("opp_status"))
-            print(f"    {(ln['opp_name'][:20] + mark):22s} {ln['w']:>6g} {ln['raw']:>8.3f} {ln[opp_key]:>9.3f} "
+            print(f"    {(ln['opp_name'][:20] + mark):22s} {ln['w']:>6g} {ln['raw']:>8.3f} {ln[opp_key]:>9.3f}{cols(ln)} "
                   f"{ln['opp_adjustment']:>+8.3f} {ln['hfa_adjustment']:>+6.3f} {ln['adjusted']:>9.3f}")
         p = s["prior"]
         tot_w = sum(ln["w"] for ln in s["lines"])
         print(f"    {'phantom game (' + p['division'] + ' avg)':22s} {p['weight']:>6} "
-              f"{'':>8} {'':>9} {'':>8} {'':>6} {p['value']:>9.3f}")
+              f"{'':>8} {'':>9}{blank} {'':>8} {'':>6} {p['value']:>9.3f}")
         print(f"    {label} = (sum(weight*adjusted) + {p['weight']}*{p['value']:.3f}) / "
               f"({tot_w:g} + {p['weight']}) = {s['recomputed']:.4f}   [stored {s['stored']:.4f}, "
               f"check {'OK' if s['check_ok'] else 'FAIL'}]")
     print("  weight = kept drives, with lead-protection drives at the configured weight")
+    if any("opp_rank" in ln for ln in e["offense"]["lines"] + e["defense"]["lines"]):
+        print(RANK_NOTE)
     print(f"  AdjEM = ({f(e['AdjO'], 4)} - {f(e['AdjD'], 4)}) * {f(e['muT'], 3)} = {f(e['AdjEM'], 2)} "
           f"pts/game vs an average FBS team, neutral field  (+/- {f(e['AdjEM_se'], 1)} SE)")
     print('  T = tentative FBS opponent (fewer than 5 games): python trace.py "<opponent>"')

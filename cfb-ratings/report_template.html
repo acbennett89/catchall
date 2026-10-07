@@ -593,13 +593,24 @@ details[open] > summary { margin-bottom: 6px; }
     return s + "</svg>";
   }
 
+  // An opponent's rank from the trace (build.add_opp_ranks): n, ≈n for a tentative team's slot, — for none.
+  function oppRankCell(x) {
+    if (!x || x.rank == null) return `<td title="${esc(x ? x.why : "")}"><span class="rk">—</span></td>`;
+    const tip = `After week ${x.after_week}` + (x.approx ? `. ≈ = tentative (fewer than ${M.min_games} games): its approximate place, not an official rank` : "");
+    return `<td title="${esc(tip)}">${x.approx ? "≈" : ""}${x.rank}</td>`;
+  }
+
   function effTable(side, label, oppKey) {
     const L = side.lines;
     const tw = L.reduce((a, b) => a + b.w, 0);
     const oppLabel = { opp_AdjD: "Opp AdjD", opp_AdjO: "Opp AdjO", opp_AdjSR_D: "Opp AdjSR D", opp_AdjSR_O: "Opp AdjSR O" }[oppKey] || oppKey;
-    let h = `<div class="tablewrap"><table class="mini"><thead><tr><th class="t">Opponent</th><th>Weight</th><th>Raw</th><th>${oppLabel}</th><th>Opp adj</th><th>Venue adj</th><th>Adjusted</th></tr></thead><tbody>`;
-    L.forEach(l => { h += `<tr><td class="t">${esc(l.opp_name)}${internalTag(l)}</td><td>${fx(l.w, Number.isInteger(l.w) ? 0 : 1)}</td><td>${fx(l.raw, 3)}</td><td>${fx(l[oppKey], 3)}</td><td>${fx(l.opp_adjustment, 3, true)}</td><td>${fx(l.hfa_adjustment, 3, true)}</td><td>${fx(l.adjusted, 3)}</td></tr>`; });
-    h += `<tr class="prior"><td class="t">Phantom game (${esc(side.prior.division)} average)</td><td>${side.prior.weight}</td><td></td><td></td><td></td><td></td><td>${fx(side.prior.value, 3)}</td></tr></tbody></table></div>`;
+    // Opponent ranks in the rating the line is adjusted for: entering the game, and now.
+    const R = L.length && L[0].opp_rank, m = R && R.metric, nowWk = R && R.now.after_week;
+    const rkHead = R ? `<th title="The opponent's ${m} rank entering this game: the table after the week before">${m} rk at game</th><th title="The opponent's ${m} rank after week ${nowWk}">${m} rk now</th>` : "";
+    let h = `<div class="tablewrap"><table class="mini"><thead><tr><th class="t">Opponent</th><th>Weight</th><th>Raw</th><th>${oppLabel}</th>${rkHead}<th>Opp adj</th><th>Venue adj</th><th>Adjusted</th></tr></thead><tbody>`;
+    L.forEach(l => { h += `<tr><td class="t">${esc(l.opp_name)}${internalTag(l)}</td><td>${fx(l.w, Number.isInteger(l.w) ? 0 : 1)}</td><td>${fx(l.raw, 3)}</td><td>${fx(l[oppKey], 3)}</td>${R ? oppRankCell(l.opp_rank.then) + oppRankCell(l.opp_rank.now) : ""}<td>${fx(l.opp_adjustment, 3, true)}</td><td>${fx(l.hfa_adjustment, 3, true)}</td><td>${fx(l.adjusted, 3)}</td></tr>`; });
+    h += `<tr class="prior"><td class="t">Phantom game (${esc(side.prior.division)} average)</td><td>${side.prior.weight}</td><td></td><td></td>${R ? "<td></td><td></td>" : ""}<td></td><td></td><td>${fx(side.prior.value, 3)}</td></tr></tbody></table></div>`;
+    if (R) h += `<p class="note">${m} rk: the opponent's ${m === "AdjD" ? "defense" : "offense"} rank (1 = best) entering the game, from the table after the week before, and now, after week ${nowWk}. ≈ marks a tentative team's approximate place. — means no rank (an FCS team, a week-1 game, or no rating yet); hover a cell for the week it comes from.</p>`;
     if (L.some(l => (l.opp_status || "").startsWith("tentative"))) h += `<p class="note">Tentative: an FBS opponent with fewer than ${M.min_games} games. Its rating is published but provisional and unranked; click "tentative" to open its trace.</p>`;
     if (L.some(l => (l.opp_status || "").startsWith("internal"))) h += `<p class="note">* Internal input: the opponent is an FCS team, rated only to adjust FBS numbers. Click "internal*" to see how its rating was derived.</p>`;
     h += `<div class="formula">${label} = (Σ weight × adjusted + ${side.prior.weight} × ${fx(side.prior.value, 3)}) / (${tw} + ${side.prior.weight}) = ${fx(side.recomputed, 4)}   ${side.check_ok ? "✓ matches stored value" : "✗ MISMATCH"}</div>`;
