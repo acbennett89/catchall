@@ -20,7 +20,7 @@ Game results are cleaned before they are rated:
 
 ## Run it
 
-Python 3.10+ and the standard library. `requests` is needed only by `fetch.py`, to download.
+Python 3.10+ and the standard library. `requests` is needed only by the downloaders, `fetch.py` and `polls.py`.
 
 ```
 python fetch.py --season 2026 --weeks 1-6     # ESPN scoreboards + play-by-play -> cache/
@@ -39,8 +39,8 @@ python -m unittest discover -s tests          # network, solver, parser and pena
 ```
 
 **Seasons.** Parsed data is committed for 2022 through 2026, and `config.json` `"season"` picks the
-default season. To add a year, run `fetch.py --season YYYY --weeks 1-16`, `parse.py --season YYYY`
-and `build.py --season YYYY`, then `report.py`; the page's season picker lists every season in `out/`.
+default season. To add a year, run `fetch.py --season YYYY --weeks 1-16`, `parse.py --season YYYY`,
+`polls.py --season YYYY` and `build.py --season YYYY`, then `report.py`; the page's season picker lists every season in `out/`.
 **Weeks.** Every season has a week picker: week N shows the ratings as they stood after week N, each
 computed from the games of weeks 1 to N only, with the next week's games as the model predicted them
 and how they came out. The AP Top 25 and the CFP committee rankings sit beside the ratings, each week

@@ -77,14 +77,14 @@ def recompute(season, week, query, internal):
         tid = _match(query, fcs)
         if tid is None:
             sys.exit(f"no internal derivation for {query!r} after week {week}")
-        return {**internal_trace(tid, res, data["teams"], cfg, eligible), "as_of_week": week}
+        return {**internal_trace(tid, res, data["teams"], cfg, eligible), "as_of_week": week, "as_of_last": week == last}
     tid = _match(query, [(r["id"], r["name"]) for r in rows])
     if tid is None:
         sys.exit(f"no FBS team matches {query!r}; for an FCS opponent use --internal")
     tr = team_trace(tid, res, data, cfg, None, eligible)
     if not res["teams"][tid]["eligible"]:
         tr["tentative"], tr["note"] = True, tentative_note(res["teams"][tid], cfg)
-    tr["as_of_week"] = week
+    tr["as_of_week"], tr["as_of_last"] = week, week == last
     return tr
 
 
@@ -291,8 +291,8 @@ def network(tr):
     print(f"  anchors: NS_win {rf['win']:.4f} (mean NS of the beaten team over all {rf['n_wins']} FBS wins -> "
           f"average win = 1.00); NS_loss {rf['loss']:.4f} (mean NS of the winner over all {rf['n_losses']} FBS "
           f"losses -> average loss costs 1.00); NS_all {rf['all']:.4f} (schedule). Inputs: " +
-          (f"recomputed for week {tr['as_of_week']} (anchors.json covers the latest week)" if tr.get("as_of_week")
-           else f"{os.path.relpath(OUT, HERE)}/anchors.json"))
+          (f"recomputed for week {tr['as_of_week']} (anchors.json covers the latest week)"
+           if tr.get("as_of_week") and not tr.get("as_of_last") else f"{os.path.relpath(OUT, HERE)}/anchors.json"))
     print(f"  record rate = (W + {n['record_prior']['wins']}) / (W + L + "
           f"{n['record_prior']['wins'] + n['record_prior']['losses']}); exclusion rule: {n['exclusion']}")
     for kind, rows in (("WIN", n["wins"]), ("LOSS", n["losses"])):
@@ -348,11 +348,14 @@ def main():
     OUT = os.path.join(HERE, "out", str(season))
     if not os.path.exists(os.path.join(OUT, "ratings.json")):
         sys.exit(f"no ratings for {season}: run python build.py --season {season}")
-    if a.week:
+    if a.week is not None:
         tr = recompute(season, a.week, a.team, a.internal)
+        latest = json.load(open(os.path.join(OUT, "ratings.json")))["meta"]["through_week"]
         print(f"AFTER WEEK {a.week} of {season}: recomputed from the games of weeks 1-{a.week} only "
-              f"(the page's weekly view). Global constants differ from {os.path.relpath(OUT, HERE)}/anchors.json, "
-              "which covers the latest week.")
+              "(the page's weekly view). " + (f"This is the latest week: the same as {os.path.relpath(OUT, HERE)}/."
+                                              if a.week == latest else
+                                              f"Global constants differ from {os.path.relpath(OUT, HERE)}/anchors.json, "
+                                              "which covers the latest week."))
     else:
         tr = find_team(a.team, a.internal)
     if tr.get("internal"):

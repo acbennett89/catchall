@@ -198,6 +198,10 @@
     "headline": "2024 NCAA Football Rankings - CFP Rankings Week 16"
    }
   },
+  "slot_base": {
+   "AdjEM": "ranked",
+   "NetPerGame": "ranked"
+  },
   "weeks": [
    1,
    2,
@@ -218,6 +222,7 @@
   ],
   "eligible": 134,
   "tentative": 0,
+  "unrated": 0,
   "fbs_teams": 134,
   "solver": {
    "ppd_iterations": 95,

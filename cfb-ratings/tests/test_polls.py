@@ -4,7 +4,7 @@ import sys
 import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from polls import latest, middle_kickoffs, pin, when  # noqa: E402
+from polls import check, latest, middle_kickoffs, pin, when  # noqa: E402
 
 
 def games(spec):
@@ -38,6 +38,16 @@ class Pin(unittest.TestCase):
 
     def test_middle_not_last_kickoff(self):
         self.assertEqual(SEASON[3], when("2022-09-17T19:00Z"))
+
+
+class Check(unittest.TestCase):
+    def test_holes_stop_the_run(self):
+        ok = [{"poll": "AP", "after_week": w} for w in range(4)] + [{"poll": "CFP", "after_week": w} for w in (2, 3)]
+        self.assertEqual(check(2025, ok), ([0, 1, 2, 3], [2, 3]))
+        with self.assertRaises(SystemExit):
+            check(2025, [p for p in ok if p != {"poll": "AP", "after_week": 2}])
+        with self.assertRaises(SystemExit):
+            check(2025, [p for p in ok if p != {"poll": "AP", "after_week": 0}])
 
 
 class Latest(unittest.TestCase):

@@ -196,6 +196,17 @@ def discipline(t, mine, fields, cfg):
                            "box_fouls_same_games": cov_box}}
 
 
+def comparison_pool(rows, metric):
+    """The teams a tentative team is placed against (its "≈n" slot), and that conference averages
+    are taken over: the ranked (5+ game) teams with a value of `metric`, once they are at least
+    half of all teams with a value. Before that (the first weeks of a season, when only a handful
+    of teams have played 5 games) it is every team with a value, so a slot is a position among
+    all of them rather than among two or three early starters."""
+    have = [r for r in rows if r.get(metric) is not None]
+    ranked = [r for r in have if r["eligible"]]
+    return ranked if 2 * len(ranked) >= len(have) else have
+
+
 def drive_weight(d, cfg):
     return cfg["situational"]["lead_protection"]["weight"] if d.get("lp") else 1.0
 
@@ -389,9 +400,10 @@ def rate(data, cfg, through_week=None):
             r[f"rk_{key}"] = i
 
     # conference averages beside each discipline value (officiating differs by conference)
+    pool = comparison_pool(out.values(), "AdjEM")
     for key in DISCIPLINE_KEYS:
         by_conf = {}
-        for r in elig:
+        for r in pool:
             if r.get(key) is not None:
                 by_conf.setdefault(r["conference"], []).append(r[key])
         allv = [x for v in by_conf.values() for x in v]

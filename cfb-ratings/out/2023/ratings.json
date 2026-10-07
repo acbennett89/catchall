@@ -198,6 +198,10 @@
     "headline": "2023 NCAA Football Rankings - CFP Rankings Week 15"
    }
   },
+  "slot_base": {
+   "AdjEM": "ranked",
+   "NetPerGame": "ranked"
+  },
   "weeks": [
    1,
    2,
@@ -217,6 +221,7 @@
   ],
   "eligible": 133,
   "tentative": 0,
+  "unrated": 0,
   "fbs_teams": 133,
   "solver": {
    "ppd_iterations": 96,

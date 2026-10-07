@@ -52,13 +52,16 @@ def download(season, refresh=False):
                 if rid not in POLLS:
                     continue
                 p = os.path.join(cache, f"t{stype}_w{w:02d}_r{rid}.json.gz")
-                if os.path.exists(p) and not refresh:
-                    d = read_gz(p)
-                else:
+                d = None
+                if not (os.path.exists(p) and not refresh):
                     d = get_json(it["$ref"].replace("http://", "https://"))
-                    if not d or not d.get("ranks"):
-                        continue
-                    write_gz(p, d)
+                    if d and d.get("ranks"):
+                        write_gz(p, d)
+                if not (d and d.get("ranks")) and os.path.exists(p):
+                    d = read_gz(p)  # ESPN listed it but did not return it this time: use the saved copy
+                if not (d and d.get("ranks")):
+                    raise SystemExit(f"{season}: ESPN lists the {POLLS[rid]} ranking for season type {stype} "
+                                     f"week {w} but did not return it; run again later")
                 out.append((stype, w, rid, d))
     return out
 
@@ -112,6 +115,19 @@ def parse(season, raw, middle, teams):
     return sorted(keep.values(), key=lambda p: (p["after_week"], p["poll"])), waiting
 
 
+def check(season, polls):
+    """The AP poll comes out every week from the preseason on, and the committee every week once
+    it starts; a hole means ESPN skipped one, so stop rather than show an older poll for that week."""
+    ap_ = [p["after_week"] for p in polls if p["poll"] == "AP"]
+    cfp = [p["after_week"] for p in polls if p["poll"] == "CFP"]
+    for kind, weeks in (("AP", ap_), ("CFP", cfp)):
+        if weeks and weeks != list(range(weeks[0], weeks[-1] + 1)):
+            raise SystemExit(f"{season}: {kind} polls follow weeks {weeks}: one is missing; run again later")
+    if ap_ and ap_[0] != 0:
+        raise SystemExit(f"{season}: no preseason AP poll")
+    return ap_, cfp
+
+
 def write(season, refresh=False):
     from ratings import load
     data = load(season)
@@ -123,12 +139,11 @@ def write(season, refresh=False):
                    "N-1 and the preseason poll is 0; checked against the release date, which must fall "
                    "after the middle kickoff of that week and before the middle kickoff of the next",
            "polls": polls}
+    ap_, cfp = check(season, polls)
     with open(os.path.join(HERE, "data", str(season), "polls.json"), "w") as f:
         json.dump(out, f, indent=1)
-    ap_ = [p["after_week"] for p in polls if p["poll"] == "AP"]
-    cfp = [p["after_week"] for p in polls if p["poll"] == "CFP"]
-    print(f"{season}: {len(ap_)} AP polls (after weeks {min(ap_)}-{max(ap_)}), "
-          f"{len(cfp)} CFP rankings" + (f" (after weeks {min(cfp)}-{max(cfp)})" if cfp else "") +
+    span = lambda w: f" (after weeks {w[0]}-{w[-1]})" if w else ""
+    print(f"{season}: {len(ap_)} AP polls{span(ap_)}, {len(cfp)} CFP rankings{span(cfp)}" +
           (f"; not yet in the game data: {', '.join(waiting)}" if waiting else ""))
 
 

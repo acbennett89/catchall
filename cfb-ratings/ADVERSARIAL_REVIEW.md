@@ -42,6 +42,7 @@ where many variants were tried, the bar is higher (§G).
 | I | Final review: 40 findings | 14 major findings upheld (12 at reduced severity) | All fixed: snap-time clocks, parser fixes, per-counted-game resume, full traceability of internal inputs and constants |
 | J | Season picker and 2024 (round 5): 25 findings | 22 confirmed, 2 partly, 1 refuted | All fixed; 2024 published with a data note (7% of FBS games lack drives, no snap stamps, penalties 54% exact) |
 | K | Power column, tentative ratings, 2022–2023 (round 6): 30 findings | 23 confirmed, 4 partly, 3 duplicates | All fixed (§K). 2022 is the one season where average margin out-predicts the model |
+| L | Weekly views, AP and CFP polls (round 7): 29 findings | 24 confirmed, 5 partly; poll data exact against Wikipedia | All fixed (§L). The weekly numbers recompute exactly; the main fix was where tentative teams are placed in a season's first weeks |
 
 ---
 
@@ -519,4 +520,42 @@ and 2023 seasons. Three reviewers (page, data and labels, docs) and three verifi
 | Docs | 2022/2023 missing from the penalty audit, coverage table, validation prose; 2022 market comparison missing. | Added; the market's edge in 2022 lasts all season (§C2). |
 | Data | 2022 home field of 1.5 points. | Explained as a coverage artifact (§J). |
 | Tests | Nothing guarded the tentative rules. | `tests/test_outputs.py` checks every built season: ranks 1..N for ranked teams only, tentative teams unranked with full traces, FCS-only internal derivations, opponent labels and prediction flags. |
+
+---
+
+## L. Weekly views, AP and CFP polls (round 7)
+
+You asked for weekly views of every season with the AP and CFP committee rankings by week. Each week's
+table is `rate()` rerun on the games of weeks 1..*w* (METRICS 10.4); the polls are reference only (10.5).
+Four reviewers checked the result, each followed by a verifier: poll accuracy, the weekly numbers, page
+behaviour, and code and docs. They raised 29 findings: 24 confirmed, 5 partly. All are fixed.
+
+**What held up without change.**
+- **Polls.** All 92 polls (68 AP, 24 CFP; 2,301 team-ranks) match Wikipedia's week-by-week tables
+  (sports-reference refused automated access). That covers ranks, ties, records, first-place votes,
+  release dates and the week each poll follows. The two differences are Wikipedia's tie formatting, where
+  ESPN's data is right. No bowl-season poll leaked in.
+- **Weekly numbers.** Every week of every season (67 tables) was rerun independently, field by field
+  (about 6,300 values a week), with 0 mismatches. W-L, games and eligibility were recounted from the raw
+  games, and a separate implementation of the +2 network reproduced the resume for sampled weeks. Nothing
+  inside a week's ratings uses a later week's games.
+
+| Area | Finding | Fix |
+|---|---|---|
+| Data | **Major.** In week 4 only 2–11 teams have played 5 games, so tentative teams were placed against that handful. 72 teams read "≈1" in 2025 week 4, and a team's week-by-week line jumped (Notre Dame 2025: ≈38, ≈1, ≈3). | While fewer than half the rated teams are ranked, ≈n is a place among all rated teams (`ratings.comparison_pool`). Conference averages use the same pool. The latest tables are unchanged. |
+| Data | Teams with no resume value yet (their only game an FCS win) were slotted last on the resume. | No slot ("—"). |
+| Data | Early weeks called teams with no rating at all "tentative". | Counted apart: "131 have a tentative rating; 5 have no rating yet". |
+| Data | The win probabilities on an earlier week's picks use the season's walk-forward σ, which includes later weeks. | Disclosed on the page and in METRICS 10.4; margins and hit/miss don't depend on it. |
+| Data | Picks quietly left out next-week games with a team that had no rating yet (19 of 82 in 2022 week 1). | Listed as `picks_skipped`; the page counts them. |
+| Page | AP-ranked teams with no rating yet (e.g. SMU, Utah in 2025 week 1) were missing from the AP column; a team with a resume value but no Power was missing from Win values. | Their "no rating yet" chips show the AP/CFP rank; Win values lists every team with a resume value. |
+| Page | Navigation races: Back during a week load, a slow season load overriding a later choice, a drawer closed when a week arrived, a deep link briefly rewritten to the latest week, keypresses lost while loading. | Last-request tokens for week and season; the open drawer is reopened; deep links go straight to the requested view; the picker stays live. |
+| Page | Changing week reset search, conference filter and sorting. | They carry over within a season. |
+| Page | Unknown or future weeks fell back silently; a failed week file left the address pointing elsewhere. | "No week 9; showing week 5"; on failure the address keeps the request so a reload retries it. |
+| Page | Army–Navy week's poll line said no poll came out after it (the post-bowl poll did). | "The last regular-season poll". |
+| Page | Drawer CFP column only for teams ever ranked; "would rank about undefined" header in one path; "1 games"; "rated from that week's games only". | Fixed wording and logic. |
+| Polls | A ranking ESPN listed but did not return was skipped silently; a cached week list could miss a CFP ranking released two days after the AP poll. | Falls back to the saved copy or stops; week lists are always re-read; a missing week stops the run. |
+| Polls | An out-of-date `polls.json` was not noticed. | `build.py` notes it during a season. |
+| CLI | `trace.py --week 0` printed the latest week; `--week <latest>` said its constants differed. | Rejected; the latest week says it matches `out/<season>/`. |
+| Tests | The recompute test picked a week where nobody is ranked; the poll test allowed a missing week or file. | Reruns 2026 week 3 and 2025 week 8 and compares every field the page shows; checks slots, counts, that every pickable game is listed, and that polls have no holes. |
+| Docs | README said only `fetch.py` needs `requests` and left `polls.py` out of adding a year. | Fixed. |
 

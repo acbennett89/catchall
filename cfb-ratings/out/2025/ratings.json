@@ -180,6 +180,10 @@
     "headline": "2025 NCAA Football Rankings - CFP Rankings Week 16"
    }
   },
+  "slot_base": {
+   "AdjEM": "ranked",
+   "NetPerGame": "ranked"
+  },
   "weeks": [
    1,
    2,
@@ -200,6 +204,7 @@
   ],
   "eligible": 136,
   "tentative": 0,
+  "unrated": 0,
   "fbs_teams": 136,
   "solver": {
    "ppd_iterations": 97,

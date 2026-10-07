@@ -27,8 +27,8 @@ from zoneinfo import ZoneInfo
 from audit_penalties import audit
 from efficiency import trace, trace_tempo
 from polls import latest as latest_poll, load_polls
-from ratings import (DISCIPLINE_KEYS, HERE, drive_weight, good_clock, is_situational_foul, load,
-                     load_config, phi, predict, rate, venue)
+from ratings import (DISCIPLINE_KEYS, HERE, comparison_pool, drive_weight, good_clock,
+                     is_situational_foul, load, load_config, phi, predict, rate, venue)
 from validate import evaluate
 
 
@@ -75,26 +75,27 @@ HISTORY_COLUMNS = ["week", "W", "L", "AdjEM", "rk_AdjEM", "slot_AdjEM", "NetPerG
 
 
 def finish_rows(res, polls, week):
-    """Status, tentative slots and poll ranks for one table; returns the rows sorted for display
-    and the polls used.
+    """Status, tentative slots and poll ranks for one table. Returns the rows sorted for display
+    and {"polls": the polls used, "slot_base": what each slot is counted against}.
 
     Teams with 5+ games are rated and ranked. Teams below the minimum get a TENTATIVE rating: the
-    same numbers, published and traced, but provisional and never ranked. slot_* says where a
-    tentative team would sit among the ranked teams (among the tentative teams themselves before
-    anyone has reached the minimum)."""
+    same numbers, published and traced, but provisional and never ranked. slot_<metric> says where
+    a tentative team would sit: among the ranked teams once they are at least half of the teams
+    with a value ("ranked"), otherwise among every team with a value ("all"; the first weeks of a
+    season). See ratings.comparison_pool. A team with no value of the metric gets no slot."""
     rows = list(res["teams"].values())
     for r in rows:
         r["tentative"] = not r["eligible"]
         r["status"] = "rated" if r["eligible"] else "tentative"
-    rated = [r for r in rows if r.get("AdjEM") is not None]
-    base = [r for r in rated if r["eligible"]] or rated
-    for r in rated:
-        if r["eligible"]:
-            continue
-        r["slot_AdjEM"] = 1 + sum(1 for x in base if x is not r and x["AdjEM"] > r["AdjEM"])
-        mine = r["NetPerGame"] if r.get("NetPerGame") is not None else -1e9
-        r["slot_NetPerGame"] = 1 + sum(1 for x in base if x is not r and x.get("NetPerGame") is not None
-                                       and x["NetPerGame"] > mine)
+    slot_base = {}
+    for metric in ("AdjEM", "NetPerGame"):
+        pool = comparison_pool(rows, metric)
+        slot_base[metric] = "ranked" if all(r["eligible"] for r in pool) else "all"
+        for r in rows:
+            if r["eligible"] or r.get(metric) is None:
+                r.pop(f"slot_{metric}", None)
+                continue
+            r[f"slot_{metric}"] = 1 + sum(1 for x in pool if x is not r and x[metric] > r[metric])
     used = {}
     for kind in ("AP", "CFP"):
         p = latest_poll(polls, kind, week)
@@ -105,20 +106,23 @@ def finish_rows(res, polls, week):
                             "espn_week": p["espn"]["week"], "headline": p["espn"]["headline"]}
     rows.sort(key=lambda r: (not r["eligible"], r.get("rk_AdjEM") or 999,
                              -(r.get("AdjEM") if r.get("AdjEM") is not None else -999), r["name"]))
-    return rows, used
+    return rows, {"polls": used, "slot_base": slot_base}
 
 
 def snapshot(res, week, data, cfg, sigma, polls):
     """The table as it stood after `week`, plus the next week's games as the model saw them then
     (prediction from these ratings, and the actual score)."""
     teams = data["teams"]
-    rows, used = finish_rows(res, polls, week)
+    rows, info = finish_rows(res, polls, week)
     eligible = {r["id"] for r in rows if r["eligible"]}
-    picks = []
+    picks, skipped = [], []
     for g in sorted((g for g in data["games"] if g["week"] == week + 1 and g["d1"]), key=lambda g: g["date"]):
         fbs_sides = [x for x in (g["home"], g["away"]) if teams[x]["division"] == "FBS"]
-        p = predict(res, g["home"], g["away"], g["neutral"]) if fbs_sides else None
-        if p is None:
+        if not fbs_sides:
+            continue
+        p = predict(res, g["home"], g["away"], g["neutral"])
+        if p is None:  # a team with no rating yet (no game with usable play-by-play)
+            skipped.append({"game": g["id"], "home": name_of(teams, g["home"]), "away": name_of(teams, g["away"])})
             continue
         picks.append({"game": g["id"], "date": eastern_date(g["date"]), "home": name_of(teams, g["home"]),
                       "away": name_of(teams, g["away"]), "neutral": bool(g["neutral"]),
@@ -127,12 +131,19 @@ def snapshot(res, week, data, cfg, sigma, polls):
                       "possessions": p["poss"], "home_pts": g["home_pts"], "away_pts": g["away_pts"]})
     meta = {"week": week, "last_game_date": eastern_date(max(g["date"] for g in res["games"])),
             "games_used": len(res["games"]), "games_with_drives": sum(1 for g in res["games"] if g["drives"]),
-            "eligible": len(eligible), "tentative": sum(1 for r in rows if not r["eligible"]),
+            "eligible": len(eligible), **rating_counts(rows),
             "fbs_teams": len(rows), "min_games": cfg["min_games"], "mu_ppd": res["ppd"]["mu"],
             "muT": res["muT"], "hfa_points": res["hfa_points"], "net_refs": res["net"].references(),
-            "net_weights": cfg["net_weights"], "polls": used}
+            "net_weights": cfg["net_weights"], **info}
     return {"week": week, "meta": meta, "teams": [{k: r.get(k) for k in WEEK_FIELDS} for r in rows],
-            "picks": picks}
+            "picks": picks, "picks_skipped": skipped}
+
+
+def rating_counts(rows):
+    """Tentative = rated but under the game minimum; unrated = no rating at all yet (no game with
+    usable play-by-play), which happens only in a season's first weeks."""
+    return {"tentative": sum(1 for r in rows if not r["eligible"] and r.get("AdjEM") is not None),
+            "unrated": sum(1 for r in rows if r.get("AdjEM") is None)}
 
 
 def history(snaps, polls):
@@ -424,7 +435,7 @@ def main():
 
     os.makedirs(os.path.join(out_dir, "traces"), exist_ok=True)
     polls = load_polls(cfg["season"])
-    rows, polls_used = finish_rows(res, polls, last_week)
+    rows, table_info = finish_rows(res, polls, last_week)
     with open(os.path.join(out_dir, "ratings.csv"), "w", newline="") as f:
         w = csv.writer(f)
         w.writerow([c for _, c in COLUMNS])
@@ -562,9 +573,9 @@ def main():
         "prior_drives": cfg["prior_drives"], "sigma_points": sigma,
         "net_refs": res["net"].references(), "net_weights": cfg["net_weights"],
         "min_games": cfg["min_games"],
-        "polls": polls_used, "weeks": [s["week"] for s in snaps],
+        **table_info, "weeks": [s["week"] for s in snaps],
         "eligible": sum(r["eligible"] for r in res["teams"].values()),
-        "tentative": sum(not r["eligible"] for r in res["teams"].values()),
+        **rating_counts(rows),
         "fbs_teams": len(res["teams"]),
         "solver": {"ppd_iterations": res["ppd"]["iterations"], "ppd_converged": res["ppd"]["converged"],
                    "sr_iterations": res["sr"]["iterations"], "tempo_iterations": res["tempo"]["iterations"]},
@@ -577,6 +588,11 @@ def main():
                            "warning": g["pbp_note"]}
                           for g in res["games"] if g["pbp_note"] and g["drives"]],
     }
+    newest_ap = latest_poll(polls, "AP", last_week)
+    if polls and not meta["regular_season_complete"] and (not newest_ap or newest_ap["after_week"] < last_week):
+        print(f"note: the newest AP poll in data/{cfg['season']}/polls.json follows week "
+              f"{newest_ap and newest_ap['after_week']}; once ESPN releases the poll that follows week "
+              f"{last_week}, run python polls.py --season {cfg['season']} and rebuild")
     published = rows
     with open(os.path.join(out_dir, "ratings.json"), "w") as f:
         json.dump({"meta": meta, "teams": published, "conferences": conferences,

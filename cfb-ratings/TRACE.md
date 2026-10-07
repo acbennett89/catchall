@@ -136,9 +136,10 @@ that weren't tagged.
   team in the season. In 2026 through week 5 that is 266 teams: the 107 ranked and 31 tentative FBS teams, plus
   the internal derivations of the 128 FCS teams (2025: 265, 2024: 263, 2023: 261, 2022: 261). `build.py` fails
   loudly if any differs by more than 1e-6.
-- **Unit tests** (`tests/`, 47 tests). Output checks cover every built season's tentative rules and every
-  weekly view: ranks, eligibility, games only ever growing week to week, poll ranks matching `polls.json`, and
-  next-week picks. One test reruns a week's ratings from scratch and compares them with `weekly.json`.
+- **Unit tests** (`tests/`, 48 tests). Output checks cover every built season's tentative rules and every
+  weekly view: ranks, eligibility, ≈n slots, games only ever growing week to week, poll ranks matching
+  `polls.json` (with no week missing), and next-week picks (every game picked or listed as unpickable). One
+  test reruns two weeks from scratch (2026 week 3, 2025 week 8) and compares every field the page shows.
   The rest:
   - A hand-computed network on a toy graph covers FCS wins and losses, path exclusions, and the
     average FBS win and loss being exactly 1.00.

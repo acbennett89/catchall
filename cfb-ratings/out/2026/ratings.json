@@ -62,6 +62,10 @@
    },
    "CFP": null
   },
+  "slot_base": {
+   "AdjEM": "ranked",
+   "NetPerGame": "ranked"
+  },
   "weeks": [
    1,
    2,
@@ -71,6 +75,7 @@
   ],
   "eligible": 107,
   "tentative": 31,
+  "unrated": 0,
   "fbs_teams": 138,
   "solver": {
    "ppd_iterations": 59,
