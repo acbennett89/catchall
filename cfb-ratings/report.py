@@ -110,8 +110,11 @@ def write_season(season, site):
     Returns the table and its file name."""
     src = os.path.join(OUT, str(season))
     table = json.load(open(os.path.join(src, "ratings.json"), encoding="utf-8"))
+    ids = {t["id"] for t in table["teams"]}
     traces = {}
     for f in sorted(glob.glob(os.path.join(src, "traces", "*.json"))):
+        if os.path.basename(f)[:-5] not in ids:
+            continue  # a stray file, not a team in this table
         tr = json.load(open(f, encoding="utf-8"))
         tr.pop("summary", None)  # duplicated in the table
         traces[tr["team"]["id"]] = tr
@@ -123,10 +126,10 @@ def write_season(season, site):
         chunks[k % n_chunks][tid] = traces[tid]
         where[tid] = k % n_chunks
     internal = {}
-    for f in glob.glob(os.path.join(src, "traces", "internal", "*.json")):
-        if not f.endswith("index.json"):
-            tr = json.load(open(f, encoding="utf-8"))
-            internal[tr["team"]["id"]] = tr
+    idir = os.path.join(src, "traces", "internal")
+    for tid in json.load(open(os.path.join(idir, "index.json"), encoding="utf-8")):  # the ones build wrote
+        tr = json.load(open(os.path.join(idir, f"{tid}.json"), encoding="utf-8"))
+        internal[tr["team"]["id"]] = tr
     dst = os.path.join(site, str(season))
     shutil.rmtree(dst, ignore_errors=True)
     os.makedirs(dst, exist_ok=True)  # on Windows a file the server is sending can't be deleted; names are content-hashed, so a leftover is harmless

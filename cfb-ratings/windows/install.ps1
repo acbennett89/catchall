@@ -22,6 +22,9 @@ if (Test-Path (Join-Path $Dest ".git")) {
     Write-Host "Updating the copy in $Dest to the latest published version"
     Invoke-Git -C $Dest fetch origin $Branch
     Invoke-Git -C $Dest reset --hard FETCH_HEAD
+    # Files a local build added that the published version doesn't have (cache\ and out\site\
+    # are ignored by git, so they stay).
+    Invoke-Git -C $Dest clean -fdq -- cfb-ratings/data cfb-ratings/out
 } else {
     if ((Test-Path $Dest) -and (Get-ChildItem -Force $Dest | Select-Object -First 1)) {
         throw "$Dest already exists and is not empty. Empty it, or pass -Dest with another folder."
