@@ -140,8 +140,8 @@ def main():
     ap.add_argument("--no-browser", action="store_true")
     ap.add_argument("--no-serve", action="store_true")
     a = ap.parse_args()
-    if sys.version_info < (3, 10):
-        sys.exit(f"Python 3.10 or newer is needed (this is {sys.version.split()[0]}).")
+    if sys.version_info < (3, 8):
+        sys.exit(f"Python 3.8 or newer is needed (this is {sys.version.split()[0]}).")
     no_quick_edit()
     try:
         if a.update:

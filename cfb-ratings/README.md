@@ -20,7 +20,7 @@ Game results are cleaned before they are rated:
 
 ## Open it
 
-**Windows, one-time setup.** From PowerShell in any copy of this repository (needs git and Python 3.10+):
+**Windows, one-time setup.** From PowerShell in any copy of this repository (needs git and Python 3.8+):
 
 ```
 powershell -ExecutionPolicy Bypass -File .\cfb-ratings\windows\install.ps1
@@ -39,7 +39,7 @@ the site. Run it again any time to pull the latest version. Then double-click:
 
 ## Run it
 
-Python 3.10+ and the standard library. `requests` is needed only by the downloaders, `fetch.py` and `polls.py`.
+Python 3.8+ (tests and a full update checked on 3.8 and 3.11) and the standard library. `requests` is needed only by the downloaders, `fetch.py` and `polls.py`.
 
 ```
 python fetch.py --season 2026 --weeks 1-6     # ESPN scoreboards + play-by-play -> cache/

@@ -130,14 +130,17 @@ def fetch_summaries(event_ids, cache, workers=8):
 
     done = 0
     ex = ThreadPoolExecutor(workers)
+    futs = [ex.submit(one, e) for e in todo]
     try:
-        for fut in as_completed([ex.submit(one, e) for e in todo]):
+        for fut in as_completed(futs):
             fut.result()
             done += 1
             if done % 50 == 0:
                 print(f"  {done}/{len(todo)}", file=sys.stderr)
     except KeyboardInterrupt:  # stop now: drop the queued downloads (finished ones are kept)
-        ex.shutdown(wait=False, cancel_futures=True)
+        for f in futs:
+            f.cancel()
+        ex.shutdown(wait=False)
         raise
     ex.shutdown()
 

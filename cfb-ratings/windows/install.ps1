@@ -5,7 +5,7 @@
 #   powershell -ExecutionPolicy Bypass -File .\cfb-ratings\windows\install.ps1
 #   powershell -ExecutionPolicy Bypass -File .\cfb-ratings\windows\install.ps1 -Dest "D:\Somewhere else"
 #
-# Needs git and Python 3.10+. Only the cfb-ratings folder of the repository is checked out.
+# Needs git and Python 3.8+. Only the cfb-ratings folder of the repository is checked out.
 param(
     [string]$Dest = (Join-Path $env:USERPROFILE "Documents\Github - Personal Projects\CFB Rankings"),
     [string]$Repo = "https://github.com/acbennett89/catchall.git",

@@ -24,7 +24,10 @@ from collections import defaultdict
 import shutil
 import time
 from datetime import datetime, timedelta, timezone
-from zoneinfo import ZoneInfo
+try:
+    from zoneinfo import ZoneInfo
+except ImportError:  # Python 3.8
+    ZoneInfo = None
 
 from audit_penalties import audit
 from efficiency import trace, trace_tempo
@@ -419,7 +422,7 @@ def eastern_date(iso):
     t = datetime.fromisoformat(iso.replace("Z", "+00:00"))
     try:
         return t.astimezone(ZoneInfo("America/New_York")).date().isoformat()
-    except Exception:  # Windows has no time-zone database unless the tzdata package is installed
+    except Exception:  # Python 3.8, or Windows without the tzdata package: no time-zone database
         return (t + timedelta(hours=us_eastern_offset(t))).date().isoformat()
 
 
