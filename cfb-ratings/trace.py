@@ -5,11 +5,15 @@
     python trace.py Alabama --section efficiency
     python trace.py Alabama --drives                # every drive and why it was kept/excluded
     python trace.py Indiana --season 2025           # another season (default: config.json)
+    python trace.py Indiana --season 2025 --week 8  # as it stood after week 8 (recomputed)
 
 Sections: schedule, efficiency, success_rate, tempo, factors, luck, situational, discipline, sos,
 network. Opponents marked T have a tentative rating (fewer than 5 games; run trace.py on them
 normally). Opponents marked * are FCS internal inputs; show one with:
     python trace.py "Idaho State" --internal
+
+--week N reruns the ratings on the games of weeks 1..N only, exactly as build.py does for the
+page's weekly views, and prints that week's derivation (a few seconds; nothing is written).
 """
 import argparse
 import json
@@ -45,6 +49,43 @@ def find_team(query, internal=False):
     if tid is None:
         sys.exit(f"no FBS team matches {query!r}; for an FCS opponent use --internal")
     return json.load(open(os.path.join(OUT, "traces", f"{tid}.json")))
+
+
+def recompute(season, week, query, internal):
+    """A team's trace as it stood after `week`, rebuilt in memory the way build.py builds the
+    weekly views: ratings.rate() over the games of weeks 1..week only."""
+    import copy
+    from build import finish_rows, internal_trace, team_trace, tentative_note
+    from polls import load_polls
+    from ratings import load, load_config, rate
+    cfg = load_config()
+    cfg["season"] = season
+    data = load(season)
+    last = max(g["week"] for g in data["games"] if g["d1"])
+    if not 1 <= week <= last:
+        sys.exit(f"{season} has weeks 1-{last}")
+    res = rate(copy.deepcopy(data), cfg, through_week=week)
+    rows, _ = finish_rows(res, load_polls(season), week)
+    eligible = {r["id"] for r in rows if r["eligible"]}
+    if internal:
+        hit = next((r for r in rows if r["name"].lower() == query.lower()), None)
+        if hit:
+            kind = "rated" if hit["eligible"] else "tentatively rated"
+            sys.exit(f"{hit['name']} is {kind} after week {week}; run without --internal")
+        fcs = [(t, data["teams"][t].get("name", t)) for t in res["ppd"]["O"]
+               if data["teams"].get(t, {}).get("division") != "FBS"]
+        tid = _match(query, fcs)
+        if tid is None:
+            sys.exit(f"no internal derivation for {query!r} after week {week}")
+        return {**internal_trace(tid, res, data["teams"], cfg, eligible), "as_of_week": week}
+    tid = _match(query, [(r["id"], r["name"]) for r in rows])
+    if tid is None:
+        sys.exit(f"no FBS team matches {query!r}; for an FCS opponent use --internal")
+    tr = team_trace(tid, res, data, cfg, None, eligible)
+    if not res["teams"][tid]["eligible"]:
+        tr["tentative"], tr["note"] = True, tentative_note(res["teams"][tid], cfg)
+    tr["as_of_week"] = week
+    return tr
 
 
 def f(x, nd=3):
@@ -249,7 +290,9 @@ def network(tr):
     print(f"\nNETWORK WIN VALUES  NS = {w['primary']}*P + {w['secondary']}*S + {w['tertiary']}*T")
     print(f"  anchors: NS_win {rf['win']:.4f} (mean NS of the beaten team over all {rf['n_wins']} FBS wins -> "
           f"average win = 1.00); NS_loss {rf['loss']:.4f} (mean NS of the winner over all {rf['n_losses']} FBS "
-          f"losses -> average loss costs 1.00); NS_all {rf['all']:.4f} (schedule). Inputs: {os.path.relpath(OUT, HERE)}/anchors.json")
+          f"losses -> average loss costs 1.00); NS_all {rf['all']:.4f} (schedule). Inputs: " +
+          (f"recomputed for week {tr['as_of_week']} (anchors.json covers the latest week)" if tr.get("as_of_week")
+           else f"{os.path.relpath(OUT, HERE)}/anchors.json"))
     print(f"  record rate = (W + {n['record_prior']['wins']}) / (W + L + "
           f"{n['record_prior']['wins'] + n['record_prior']['losses']}); exclusion rule: {n['exclusion']}")
     for kind, rows in (("WIN", n["wins"]), ("LOSS", n["losses"])):
@@ -298,13 +341,20 @@ def main():
                                           "situational", "discipline", "sos", "network"])
     ap.add_argument("--drives", action="store_true")
     ap.add_argument("--season", type=int, help="season (default: config.json); build it first")
+    ap.add_argument("--week", type=int, help="the derivation as it stood after this week (recomputed)")
     a = ap.parse_args()
     global OUT
     season = a.season or json.load(open(os.path.join(HERE, "config.json")))["season"]
     OUT = os.path.join(HERE, "out", str(season))
     if not os.path.exists(os.path.join(OUT, "ratings.json")):
         sys.exit(f"no ratings for {season}: run python build.py --season {season}")
-    tr = find_team(a.team, a.internal)
+    if a.week:
+        tr = recompute(season, a.week, a.team, a.internal)
+        print(f"AFTER WEEK {a.week} of {season}: recomputed from the games of weeks 1-{a.week} only "
+              f"(the page's weekly view). Global constants differ from {os.path.relpath(OUT, HERE)}/anchors.json, "
+              "which covers the latest week.")
+    else:
+        tr = find_team(a.team, a.internal)
     if tr.get("internal"):
         t = tr["team"]
         print(f"{t['name']} ({t['division']}, {t['conference']})  INTERNAL INPUT\n{tr['note']}")
@@ -336,4 +386,10 @@ def main():
 
 
 if __name__ == "__main__":
+    # Python salts string hashes per run, which reorders set iteration and moves float sums in the
+    # last bits (about 1e-14). A fixed seed makes every rebuild byte-identical, so the files (and
+    # the page's content-hashed data files) change only when a number really does.
+    if os.environ.get("PYTHONHASHSEED") != "0":
+        os.environ["PYTHONHASHSEED"] = "0"
+        os.execv(sys.executable, [sys.executable] + sys.argv)
     main()

@@ -215,6 +215,8 @@ penalty yards and first downs already show up in points per drive.
 | 10.1 | **Next-week predictions** | `Margin = (AdjEM_A − AdjEM_B)·Poss/μT + 2h·Poss·home`, with `P(win) = Φ(margin / σ)`. Every next-week game with an FBS team. Games involving a team with a tentative rating (under 5 games) are included and marked T. |
 | 10.3 | **Anchors** | `out/<season>/anchors.json` lists every input to μ, the phantom-game values, μT and NS_win/NS_loss/NS_all, so the global constants can be recomputed. |
 | 10.2 | **Conference ratings** | Average AdjEM of ranked members; tentative teams are left out. |
+| 10.4 | **Weekly views** | Week *w* = the whole table rerun on the games of weeks 1..*w* only (`ratings.rate(…, through_week=w)`): every metric, rank, eligibility and tentative status as it stood then. Nothing is carried over from later weeks. The latest week is the published table. `out/<season>/weekly.json` holds every week, each team's week-by-week line, and the week *w*+1 games predicted from week *w*'s ratings (10.1) with the actual scores. σ is the season's walk-forward value. |
+| 10.5 | **AP and CFP ranks** | Reference only; never an input. Each week shows the newest AP Top 25 and CFP committee ranking that reflects games through that week. ESPN's "Week N" poll follows week N−1, and the preseason poll is week 0. `polls.py` checks each label against the release date: it must fall after the middle kickoff of its week and before the middle kickoff of the next. If no poll came out after a week (Army–Navy week), the newest earlier one is shown and labelled. |
 
 ---
 

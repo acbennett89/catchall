@@ -3,7 +3,7 @@
 Every published number is a short, explicit computation over listed inputs. There
 are three ways to follow one:
 
-1. **The web page** (`out/site/index.html`; pick the season at the top). Click a team to see each game's adjustment, every
+1. **The web page** (`out/site/index.html`; pick the season and week at the top). Click a team to see each game's adjustment, every
    win's +2 network tree, the five-factor counts, and every drive with its keep or exclude reason. The page loads each
    season's data files from beside it, so serve the folder rather than opening the file:
    `python -m http.server -d out/site`, then http://localhost:8000. The published page needs nothing.
@@ -12,7 +12,9 @@ are three ways to follow one:
    `situational`, `discipline`) for one part, or `--drives` for every drive.
    `python trace.py "Team" --internal` prints the derivation of an FCS opponent's internal rating
    wherever it feeds an FBS team's numbers. A tentative FBS team (under 5 games) has a full trace:
-   run it without --internal.
+   run it without --internal. Add `--week N` for the derivation as it stood after week N. That reruns
+   the ratings on the games of weeks 1..N only, as `build.py` does for the page's weekly views; the page's
+   drawer always shows the latest week, plus a week-by-week line.
 3. **The raw files.** `out/<season>/traces/<team_id>.json` holds every input and intermediate value.
    Game ids match ESPN event ids, so any drive can be checked against the original payload at
    `cache/<season>/summaries/<game_id>.json.gz` or on ESPN's site.
@@ -34,7 +36,9 @@ ESPN payload ── fetch.py ──> cache/2026/summaries/<game>.json.gz        
              ── ratings.py ─> every metric in METRICS.md
              ── build.py ──> out/<season>/ratings.csv, ratings.json, traces/<id>.json,
                              traces/internal/<id>.json, anchors.json
-             ── report.py ─> out/site/index.html + out/site/<season>/ (table, trace files)
+                             weekly.json (the table after each week: rate() over weeks 1..w only)
+ESPN rankings ─ polls.py ──> data/<season>/polls.json  (AP and CFP by week; reference only)
+             ── report.py ─> out/site/index.html + out/site/<season>/ (table, week files, trace files)
 ```
 
 ## Worked example 1: Notre Dame's AdjO
@@ -132,7 +136,10 @@ that weren't tagged.
   team in the season. In 2026 through week 5 that is 266 teams: the 107 ranked and 31 tentative FBS teams, plus
   the internal derivations of the 128 FCS teams (2025: 265, 2024: 263, 2023: 261, 2022: 261). `build.py` fails
   loudly if any differs by more than 1e-6.
-- **Unit tests** (`tests/`, 37 tests, one of which checks every built season's tentative rules):
+- **Unit tests** (`tests/`, 47 tests). Output checks cover every built season's tentative rules and every
+  weekly view: ranks, eligibility, games only ever growing week to week, poll ranks matching `polls.json`, and
+  next-week picks. One test reruns a week's ratings from scratch and compares them with `weekly.json`.
+  The rest:
   - A hand-computed network on a toy graph covers FCS wins and losses, path exclusions, and the
     average FBS win and loss being exactly 1.00.
   - Solver tests recover known ratings from synthetic games.

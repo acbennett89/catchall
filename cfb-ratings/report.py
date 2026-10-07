@@ -2,8 +2,9 @@
 
     python report.py        (after python build.py [--season YYYY] for each season)
 
-The page has a season picker. The default season (config.json) is embedded; other seasons'
-tables, and every team's full trace, load from out/site/<season>/ when needed. Serve the
+The page has a season picker and a week picker. The default season (config.json) is embedded;
+other seasons' tables, earlier weeks' tables, and every team's full trace load from
+out/site/<season>/ when needed. Serve the
 folder to view it locally: python -m http.server -d out/site
 """
 import glob
@@ -132,6 +133,19 @@ def write_season(season, site):
     table["trace_files"] = [dump_named(c, dst, f"traces_{k}") for k, c in enumerate(chunks)]
     table["trace_chunk"] = where
     table["internal_file"] = dump_named(internal, dst, "internal")
+    # Weekly views: one small file per earlier week (the latest week is this table itself), the
+    # polls each week used, and every team's week-by-week line for its drawer.
+    table["weeks"], table["history"] = [], None
+    wpath = os.path.join(src, "weekly.json")
+    if os.path.exists(wpath):
+        weekly = json.load(open(wpath))
+        last = table["meta"]["through_week"]
+        for s in weekly["weeks"]:
+            entry = {"week": s["week"], "polls": s["meta"]["polls"]}
+            if s["week"] != last:
+                entry["file"] = dump_named(s, dst, f"week_{s['week']:02d}")
+            table["weeks"].append(entry)
+        table["history"] = weekly["history"]
     return table, dump_named(table, dst, "table")
 
 

@@ -25,12 +25,14 @@ Python 3.10+ and the standard library. `requests` is needed only by `fetch.py`, 
 ```
 python fetch.py --season 2026 --weeks 1-6     # ESPN scoreboards + play-by-play -> cache/
 python parse.py --season 2026                 # -> data/2026/games.json.gz (drives, points, flags)
-python build.py                               # -> out/2026/ (ratings.csv, ratings.json, traces/, anchors.json)
+python polls.py                               # AP and CFP rankings by week -> data/<season>/polls.json
+python build.py                               # -> out/2026/ (ratings.csv, ratings.json, traces/, anchors.json, weekly.json)
 python build.py --season 2025                 # any other parsed season -> out/2025/
-python report.py                              # -> out/site/ (one page, a season picker, data files per season)
+python report.py                              # -> out/site/ (one page, season and week pickers, data files per season)
 python -m http.server -d out/site             # view it at http://localhost:8000
 python trace.py "Notre Dame"                  # print any team's full derivation
 python trace.py Indiana --season 2025         # ...for another season
+python trace.py Indiana --season 2025 --week 8   # ...as it stood after week 8 (recomputed)
 python trace.py "Idaho State" --internal      # derivation of an FCS opponent's internal input
 python audit_penalties.py                     # parsed penalties vs box scores -> out/penalty_audit.json
 python -m unittest discover -s tests          # network, solver, parser and penalty tests
@@ -39,6 +41,13 @@ python -m unittest discover -s tests          # network, solver, parser and pena
 **Seasons.** Parsed data is committed for 2022 through 2026, and `config.json` `"season"` picks the
 default season. To add a year, run `fetch.py --season YYYY --weeks 1-16`, `parse.py --season YYYY`
 and `build.py --season YYYY`, then `report.py`; the page's season picker lists every season in `out/`.
+**Weeks.** Every season has a week picker: week N shows the ratings as they stood after week N, each
+computed from the games of weeks 1 to N only, with the next week's games as the model predicted them
+and how they came out. The AP Top 25 and the CFP committee rankings sit beside the ratings, each week
+showing the newest poll that reflects games through that week. The polls are reference only and never
+enter a rating. `polls.py` pins each poll to the week of games it follows and checks ESPN's "Week N" label
+against the release date.
+
 The ratings cover the **regular season**, conference championship games and Army–Navy included.
 Postseason games are left out: bowls and the CFP are never downloaded, and the FCS playoff rounds that
 ESPN files among regular-season weeks are flagged by `parse.py` and set aside by `ratings.load()`.
@@ -58,10 +67,11 @@ All parameters live in `config.json`.
 | File | Role |
 |------|------|
 | `fetch.py` | Downloads ESPN payloads (cached, gzipped) |
+| `polls.py` | AP Top 25 and CFP committee rankings by week, each pinned to the games it follows |
 | `parse.py` | Drives, drive points from ESPN's scoring plays, garbage/OT/end-of-half flags, scrimmage plays, snap-to-snap clock intervals |
 | `penalties.py` | One row per foul from both ESPN text dialects, with how each value was read |
 | `efficiency.py` | Additive opponent-adjustment solver (AdjO, AdjD, home field, tempo) with traces |
 | `network.py` | +2 network: primary/secondary/tertiary records, win values, loss costs, trees |
 | `ratings.py` | Assembles every metric in METRICS.md |
-| `build.py` / `report.py` / `trace.py` | Per-season outputs in `out/<season>/` (including internal-input derivations and `anchors.json`), the multi-season page in `out/site/`, command-line trace |
+| `build.py` / `report.py` / `trace.py` | Per-season outputs in `out/<season>/` (including internal-input derivations, `anchors.json` and the weekly views in `weekly.json`), the multi-season page in `out/site/`, command-line trace (any week with `--week`) |
 | `backtest.py` / `validate.py` / `audit_penalties.py` | Evidence for the adversarial review |

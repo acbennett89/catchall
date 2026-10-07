@@ -44,6 +44,7 @@ h1 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 5vw, 
      text-transform: uppercase; margin: 0; line-height: 1; text-wrap: balance; }
 .season { font-family: var(--display); font-weight: 600; font-size: 20px; color: var(--accent); letter-spacing: .06em; background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: 1px 4px; cursor: pointer; }
 .season:disabled { opacity: .6; cursor: progress; }
+.season.wk { font-size: 17px; }
 .season-status { font-family: var(--display); font-weight: 600; font-size: 16px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
 .meta { margin: 0; color: var(--muted); font-size: 14px; max-width: 90ch; }
 .meta b { color: var(--ink); font-weight: 600; }
@@ -80,6 +81,9 @@ table.grid tbody tr:hover, table.grid tbody tr:hover td { background: var(--acce
 .tent { font-family: var(--display); font-weight: 600; font-size: 11px; letter-spacing: .04em; color: var(--gold); border: 1px solid var(--gold); border-radius: 2px; padding: 0 3px; margin-left: 4px; vertical-align: 1px; }
 .tentv { font-style: italic; opacity: .8; }
 .tentnote { border-left: 3px solid var(--gold); padding-left: 10px; color: var(--ink); }
+.weeknote { border-left: 3px solid var(--accent); padding-left: 10px; color: var(--ink); }
+table.mini tr.cur td { background: var(--accent-soft); font-weight: 600; }
+.hit { color: var(--pos); } .miss { color: var(--neg); }
 .tog { display: inline-flex; gap: 6px; align-items: center; font-size: 14px; color: var(--muted); cursor: pointer; white-space: nowrap; flex: none; }
 .tog[hidden] { display: none; }
 #tbl tbody tr:hover td, #tbl-resume tbody tr:hover td, #tbl-disc tbody tr:hover td,
@@ -154,8 +158,9 @@ details[open] > summary { margin-bottom: 6px; }
 
 <div class="wrap">
   <header class="top">
-    <div class="brand"><h1>FBS Efficiency Ratings</h1><select class="season" id="yr" aria-label="Season"></select><span class="season-status" id="season-status"></span></div>
+    <div class="brand"><h1>FBS Efficiency Ratings</h1><select class="season" id="yr" aria-label="Season"></select><select class="season wk" id="wk" aria-label="Week"></select><span class="season-status" id="season-status"></span></div>
     <p class="meta" id="meta"></p>
+    <p class="meta" id="polls-line"></p>
     <p class="meta dq" id="dq"></p>
     <nav class="tabs" role="tablist" aria-label="Sections">
       <button role="tab" data-tab="ratings" aria-selected="true">Ratings</button>
@@ -206,12 +211,14 @@ details[open] > summary { margin-bottom: 6px; }
   const BOOT = JSON.parse(document.getElementById("data").textContent);
   const SEASONS = BOOT.seasons;   // newest first: {season, complete, through_week, rated, fbs}
   const TABLES = BOOT.tables;     // season -> ratings table; other seasons load on demand
-  let D, M, N, byId = {}, current = null;
+  // D/M: the season's table and meta (latest week; every trace belongs to it). V: the week on show.
+  let D, M, N, V, byId = {}, current = null;
   const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const fx = (x, d = 2, sign = false) => x == null || Number.isNaN(x) ? "—" : (sign && x > 0 ? "+" : "") + Number(x).toFixed(d);
   const cls = x => x == null ? "" : x > 0 ? "pos" : x < 0 ? "neg" : "";
   const nm = id => N[id] || id;
   const seasonStatus = m => m.regular_season_complete ? "regular season final" : "through week " + m.through_week;
+  const shortDate = iso => new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/New_York" });
 
   /* ---------- files beside the page (season tables, team traces) ---------- */
   const pending = {};
@@ -279,12 +286,17 @@ details[open] > summary { margin-bottom: 6px; }
   const rankCell = (key, slotKey, metric) => ({ k: key, label: "Rk", title: "Official rank (5+ games). ≈n: where a tentative team would slot.",
     sortv: slotSort(slotKey, metric), f: (v, r) => r.tentative ? `<span class="rk" title="Tentative: would rank about here">≈${r[slotKey]}</span>` : (v == null ? "—" : v) });
   const teamCell = { k: "name", label: "Team", text: true, f: (v, r) => esc(v) + tag(r) };
-  const ratingCols = [
+  // AP and CFP: the newest poll reflecting games through the week on show. Reference only.
+  const pollCols = () => ["AP", "CFP"].filter(k => (V.meta.polls || {})[k]).map(k => ({ k, label: k,
+    title: `${k === "AP" ? "AP Top 25" : "College Football Playoff committee ranking"} released ${shortDate(V.meta.polls[k].released)}, after week ${V.meta.polls[k].after_week}. Reference only: polls never enter a rating.`,
+    f: v => v == null ? `<span class="rk">—</span>` : v }));
+  const ratingCols = () => [
     rankCell("rk_AdjEM", "_slot", "AdjEM"),
     teamCell,
     { k: "AdjEM", label: "Power", desc: true, title: "Power rating (AdjEM): points per game better than an average FBS team on a neutral field", f: (v, r) => `<span class="em ${cls(v)}${r.tentative ? " tentv" : ""}">${fx(v, 1, true)}</span>` },
     { k: "AdjEM_se", label: "±SE", title: "Standard error from game-to-game spread", f: v => `<span class="rk">${fx(v, 1)}</span>` },
     { k: "W", label: "W-L", f: (v, r) => `${r.W}-${r.L}`, sortv: r => r.W - r.L, desc: true },
+    ...pollCols(),
     { k: "conference", label: "Conf", text: true, f: v => esc(v) },
     { k: "AdjO", label: "AdjO", desc: true, title: "Points per drive vs an average FBS defense", f: (v, r) => withRk(v, r, "rk_AdjO", 2) },
     { k: "AdjD", label: "AdjD", title: "Points per drive allowed vs an average FBS offense (lower is better)", f: (v, r) => withRk(v, r, "rk_AdjD", 2) },
@@ -294,10 +306,11 @@ details[open] > summary { margin-bottom: 6px; }
     { k: "NetPerGame", label: "Resume / G", desc: true, title: "Net resume (win values minus loss costs) per counted game", f: (v, r) => withRk(v, r, "rk_NetPerGame", 3, true) },
     { k: "luck", label: "Luck", desc: true, title: "Actual W% minus Pythagorean W%", f: v => `<span class="${cls(v)}">${fx(v, 3, true)}</span>` },
   ];
-  const resumeCols = [
+  const resumeCols = () => [
     rankCell("rk_NetPerGame", "_rslot", "NetPerGame"),
     teamCell,
     { k: "W", label: "W-L", f: (v, r) => `${r.W}-${r.L}`, sortv: r => r.W - r.L, desc: true },
+    ...pollCols(),
     { k: "WVT", label: "Win value total", desc: true, f: v => fx(v, 2) },
     { k: "AvgWV", label: "Avg win", desc: true, f: v => fx(v, 3) },
     { k: "LCT", label: "Loss cost", f: v => fx(v, 2) },
@@ -332,6 +345,11 @@ details[open] > summary { margin-bottom: 6px; }
     { k: "favp", label: "Win prob", desc: true, f: v => (v * 100).toFixed(0) + "%" },
     { k: "possessions", label: "Poss.", f: v => fx(v, 1) },
   ];
+  // An earlier week's picks were played: show how each came out.
+  const resultCols = [
+    { k: "result", label: "Result", text: true, sortv: r => r.favActual, f: (v, r) => `<span class="${r.hit ? "hit" : "miss"}">${r.hit ? "✓" : "✗"}</span> ${esc(v)}` },
+    { k: "missBy", label: "Miss", title: "|predicted margin − actual margin|, points", f: v => fx(v, 1) },
+  ];
 
   /* ---------- one season's tables ---------- */
   const q = document.getElementById("q"), sel = document.getElementById("conf"), tent = document.getElementById("tent");
@@ -344,17 +362,34 @@ details[open] > summary { margin-bottom: 6px; }
   q.addEventListener("input", filter); sel.addEventListener("change", filter);
   tent.addEventListener("change", () => { filter(); resumeTable.setRows(shown()); discTable.setRows(shown()); });
 
-  function renderSeason() {
+  function renderView() {
+    const VM = V.meta, latest = V.latest;
     document.getElementById("season-status").textContent = seasonStatus(M);
-    const post = M.excluded_postseason || [];
+    const post = latest ? (M.excluded_postseason || []) : [];
     document.getElementById("meta").innerHTML =
-      `<b>${M.eligible}</b> of ${M.fbs_teams} FBS teams rated (rule: ${M.min_games}+ games played)` +
-      (M.tentative ? `; the other ${M.tentative} have a <b>tentative</b> rating, marked <span class="tent">T</span>, with no official rank` : "") + `. ` +
-      `${M.games_used} D-I games through ${esc(M.last_game_date || "week " + M.through_week)}, ${M.games_with_drives} with usable drive data` +
+      (latest ? "" : `<b>As of week ${V.week}:</b> `) +
+      `<b>${VM.eligible}</b> of ${VM.fbs_teams} FBS teams rated (rule: ${VM.min_games}+ games played)` +
+      (VM.tentative ? `; ${VM.eligible ? "the other" : "all"} ${VM.tentative} have a <b>tentative</b> rating, marked <span class="tent">T</span>, with no official rank` : "") + `. ` +
+      `${VM.games_used} D-I games through ${esc(VM.last_game_date || "week " + V.week)}, ${VM.games_with_drives} with usable drive data` +
       (post.length ? `; ${post.length} postseason game${post.length === 1 ? "" : "s"} left out (${esc([...new Set(post.map(p => /^FCS Championship/i.test(p.reason) ? "FCS playoffs" : p.reason))].join(", "))})` : "") + `. ` +
-      `Average FBS drive is worth <b>${fx(M.mu_ppd, 2)}</b> points; teams get <b>${fx(M.muT, 1)}</b> possessions a game; ` +
-      `home field is worth <b>${fx(M.hfa_points, 1)}</b> points. Win values use weights ` +
-      `${M.net_weights.primary} / ${M.net_weights.secondary} / ${M.net_weights.tertiary} (primary / secondary / tertiary).`;
+      `Average FBS drive is worth <b>${fx(VM.mu_ppd, 2)}</b> points; teams get <b>${fx(VM.muT, 1)}</b> possessions a game; ` +
+      `home field is worth <b>${fx(VM.hfa_points, 1)}</b> points. Win values use weights ` +
+      `${VM.net_weights.primary} / ${VM.net_weights.secondary} / ${VM.net_weights.tertiary} (primary / secondary / tertiary).`;
+
+    // Which polls the AP / CFP columns show. A poll is pinned to the last week of games it reflects.
+    const P = VM.polls || {}, pl = document.getElementById("polls-line");
+    const firstCFP = (D.weeks || []).find(x => x.polls && x.polls.CFP);
+    const pollText = (k, name) => {
+      const x = P[k];
+      return `${name}: released ${shortDate(x.released)}` + (x.after_week < V.week
+        ? `, after week ${x.after_week} (the newest; none came out after week ${V.week})` : `, after week ${x.after_week}'s games`);
+    };
+    const parts = P.AP ? [pollText("AP", "AP Top 25")] : [];
+    if (P.CFP) parts.push(pollText("CFP", "CFP committee"));
+    else if (firstCFP) parts.push(`CFP committee rankings start after week ${firstCFP.polls.CFP.after_week}`);
+    else if (P.AP) parts.push("no CFP committee rankings yet this season");
+    pl.innerHTML = parts.length ? `<b>Poll columns.</b> ${parts.join("; ")}. Reference only: polls never enter a rating.` : "";
+    pl.hidden = !parts.length;
 
     // Coverage of ESPN's play-by-play differs a lot by season; say so where it is weak.
     const dc = M.data_coverage, audit = M.penalty_audit, dq = document.getElementById("dq");
@@ -363,27 +398,26 @@ details[open] > summary { margin-bottom: 6px; }
       const weak = fbsMiss > 0.03 || stamp < 0.5 || (audit && audit.count_exact < 0.7);
       dq.className = "meta dq" + (weak ? " warn" : "");
       dq.innerHTML = (weak ? "<b>Data note.</b> " : "Data coverage: ") +
-        `ESPN's play-by-play gives usable drives for ${dc.fbs_with_drives} of ${dc.fbs_games} games involving an FBS team` +
+        `ESPN's play-by-play gives usable drives for ${dc.fbs_with_drives} of ${dc.fbs_games} games involving an FBS team` + (latest ? "" : " this season") +
         (fbsMiss > 0.03 ? `; the other ${dc.fbs_games - dc.fbs_with_drives} count in records, win values and the resume but not in AdjEM, so ratings are less precise this season` : "") + ". " +
         `Snap-time stamps on ${Math.round(stamp * 100)}% of drives` + (stamp < 0.5 ? " (the clock rules, neutral pace and lead-protection tags fall back to ESPN's end-of-play clock, so they are not comparable with seasons that have stamps)" : "") + ". " +
         (audit ? `Parsed penalties match the box score in ${Math.round(audit.count_exact * 100)}% of team-games.` : "");
     } else dq.textContent = "";
 
-    rated = D.teams.filter(t => t.AdjEM != null);
-    // ≈n = where a tentative team would slot among ranked teams. Before any team has reached the
-    // minimum there is nobody to slot against, so tentative teams are ordered among themselves.
-    const official = rated.filter(t => !t.tentative), tentativeOnly = !official.length;
-    const base = tentativeOnly ? rated : official;
+    rated = V.teams.filter(t => t.AdjEM != null);
+    // ≈n = where a tentative team would slot among ranked teams (build.py computes it; before any
+    // team has reached the minimum it is the order among the tentative teams themselves).
+    const official = rated.filter(t => !t.tentative), base = official.length ? official : rated;
     rated.filter(t => t.tentative).forEach(t => {
-      t._slot = 1 + base.filter(x => x !== t && x.AdjEM > t.AdjEM).length;
-      t._rslot = 1 + base.filter(x => x !== t && x.NetPerGame != null && x.NetPerGame > (t.NetPerGame ?? -1e9)).length;
+      t._slot = t.slot_AdjEM ?? 1 + base.filter(x => x !== t && x.AdjEM > t.AdjEM).length;
+      t._rslot = t.slot_NetPerGame ?? 1 + base.filter(x => x !== t && x.NetPerGame != null && x.NetPerGame > (t.NetPerGame ?? -1e9)).length;
     });
     document.getElementById("tent-tog").hidden = !rated.some(t => t.tentative);
     q.value = "";
     sel.innerHTML = `<option value="">All conferences</option>`;
     [...new Set(rated.map(t => t.conference))].sort().forEach(c => { const o = document.createElement("option"); o.value = c; o.textContent = c; sel.appendChild(o); });
-    ratingsTable = buildTable(document.getElementById("tbl"), shown(), ratingCols, "rk_AdjEM", 1, openTeam);
-    const unr = D.teams.filter(t => t.AdjEM == null);
+    ratingsTable = buildTable(document.getElementById("tbl"), shown(), ratingCols(), "rk_AdjEM", 1, openTeam);
+    const unr = V.teams.filter(t => t.AdjEM == null);
     const un = document.getElementById("unrated");
     un.innerHTML = unr.length
       ? `<h3>No rating yet (${unr.length})</h3><p class="note">No game with usable play-by-play yet. Their records still count for everyone else's resume.</p>` +
@@ -391,40 +425,100 @@ details[open] > summary { margin-bottom: 6px; }
       : "";
     un.querySelectorAll(".chip").forEach(b => b.addEventListener("click", () => openTeam(b.dataset.id)));
 
-    resumeTable = buildTable(document.getElementById("tbl-resume"), shown(), resumeCols, "rk_NetPerGame", 1, openTeam);
+    resumeTable = buildTable(document.getElementById("tbl-resume"), shown(), resumeCols(), "rk_NetPerGame", 1, openTeam);
     discTable = buildTable(document.getElementById("tbl-disc"), shown(), discCols, "PenPG", 1, openTeam);
     const pa = M.penalty_audit, dh = document.getElementById("disc-hint");
     dh.dataset.base = dh.dataset.base || dh.textContent;
     dh.textContent = dh.dataset.base + (pa ? ` This season, fouls parsed from the play-by-play match the box-score count exactly in ${Math.round(pa.count_exact * 100)}% of team-games (${Math.round(pa.count_within_1 * 100)}% within one); ${fx(-pa.total_count_vs_box * 100, 1)}% of all box-score fouls are missing from ESPN's play-by-play. The shortfall differs by team, so the Coverage column shows each team's share; per-snap rates under 90% coverage (red) read low. Games whose play-by-play lists no penalties at all are left out of the rates.` : "");
 
-    const P = D.predictions || [];
-    document.getElementById("picks-hint").textContent = P.length
-      ? `Model margins for the next slate (${P.length} games with an FBS team). Win probability uses σ = ${fx(M.sigma_points, 1)} points, the out-of-sample error from this season's walk-forward test. Games involving a team with a tentative rating (fewer than ${M.min_games} games) are marked T.`
-      : "No upcoming games in the data.";
-    document.getElementById("picks-tab").hidden = !P.length;
-    const pickRows = P.map(p => {
-      const fav = p.home_margin >= 0 ? p.home : p.away;
-      return { ...p, matchup: `${p.away} ${p.neutral ? "vs" : "at"} ${p.home}`, fav, edge: Math.abs(p.home_margin), favp: Math.max(p.home_win_prob, 1 - p.home_win_prob) };
+    // Latest week: the coming slate. An earlier week: the next week's games as the model saw
+    // them then, with how each came out.
+    const Pk = latest ? (D.predictions || []) : (V.picks || []);
+    const tabBtn = document.getElementById("picks-tab");
+    tabBtn.textContent = latest ? "Next week" : `Week ${V.week + 1} picks`;
+    tabBtn.hidden = !Pk.length;
+    const pickRows = Pk.map(p => {
+      const homeFav = p.home_margin >= 0, fav = homeFav ? p.home : p.away;
+      const row = { ...p, matchup: `${p.away} ${p.neutral ? "vs" : "at"} ${p.home}`, fav, edge: Math.abs(p.home_margin), favp: Math.max(p.home_win_prob, 1 - p.home_win_prob) };
+      if (p.home_pts != null) {
+        const actual = p.home_pts - p.away_pts, favActual = homeFav ? actual : -actual;
+        Object.assign(row, { favActual, hit: favActual > 0, missBy: Math.abs(p.home_margin - actual),
+          result: `${favActual > 0 ? "won" : "lost"} ${Math.max(p.home_pts, p.away_pts)}-${Math.min(p.home_pts, p.away_pts)}` });
+      }
+      return row;
     });
-    buildTable(document.getElementById("tbl-picks"), pickRows, pickCols, "date", 1, null);
-    if (activeTab === "picks" && !P.length) showTab("ratings");
+    const played = pickRows.filter(r => r.result);
+    document.getElementById("picks-hint").textContent = !Pk.length ? "No upcoming games in the data." : latest
+      ? `Model margins for the next slate (${Pk.length} games with an FBS team). Win probability uses σ = ${fx(M.sigma_points, 1)} points, the out-of-sample error from this season's walk-forward test. Games involving a team with a tentative rating (fewer than ${M.min_games} games) are marked T.`
+      : `Week ${V.week + 1} as the model saw it after week ${V.week}, from the ratings in this view: ${Pk.length} games with an FBS team. The model favorite won ${played.filter(r => r.hit).length} of ${played.length} (${Math.round(100 * played.filter(r => r.hit).length / (played.length || 1))}%), and the average miss was ${fx(played.reduce((a, r) => a + r.missBy, 0) / (played.length || 1), 1)} points. Win probability uses σ = ${fx(M.sigma_points, 1)} points. T = a team that was still tentative (fewer than ${M.min_games} games).`;
+    buildTable(document.getElementById("tbl-picks"), pickRows, latest ? pickCols : pickCols.concat(resultCols), "date", 1, null);
+    if (activeTab === "picks" && !Pk.length) showTab("ratings");
   }
 
-  /* ---------- season picker ---------- */
-  const yr = document.getElementById("yr");
+  /* ---------- season and week pickers ---------- */
+  const yr = document.getElementById("yr"), wk = document.getElementById("wk");
   SEASONS.forEach(s => { const o = document.createElement("option"); o.value = s.season; o.textContent = s.season; yr.appendChild(o); });
   // Links always name the season (#s2026-t87), so a shared link keeps meaning the same year
-  // after the default season moves on. A tab other than Ratings rides along (#s2025-resume).
+  // after the default season moves on. An earlier week rides along (#s2025-w8), and so does a
+  // tab other than Ratings (#s2025-resume). No week means the latest.
   function setHash(teamId) {
     const parts = ["s" + current];
+    if (V && !V.latest) parts.push("w" + V.week);
     if (teamId) parts.push("t" + teamId);
     else if (activeTab !== "ratings") parts.push(activeTab);
     history.replaceState(null, "", "#" + parts.join("-"));
   }
   const status = document.getElementById("season-status");
-  // Resolves true once `season` is showing, false if it could not be loaded.
-  function setSeason(season) {
-    if (season === current) return Promise.resolve(true);
+  const latestView = () => ({ season: current, week: M.through_week, latest: true, meta: M, teams: D.teams, picks: null });
+  function weekOptions() {
+    wk.innerHTML = "";
+    (D.weeks || []).forEach(x => {
+      const o = document.createElement("option");
+      o.value = x.week;
+      o.textContent = `Week ${x.week}` + (x.week === M.through_week ? (M.regular_season_complete ? " · final" : " · latest") : "");
+      wk.appendChild(o);
+    });
+    wk.hidden = !(D.weeks || []).length;
+  }
+  // Earlier weeks' tables are small files beside the page, fetched the first time they're picked.
+  function loadWeek(week) {
+    const entry = (D.weeks || []).find(x => x.week === week);
+    if (!entry || !entry.file) return Promise.resolve(latestView());
+    const season = current, T = TABLES[season];
+    T.weekViews = T.weekViews || {};
+    if (T.weekViews[week]) return Promise.resolve(T.weekViews[week]);
+    return loadFile(`${season}/${entry.file}`).then(s => (T.weekViews[week] = { season, week, latest: false, meta: s.meta, teams: s.teams, picks: s.picks }));
+  }
+  let wantWeek = null;  // the week asked for last; a slower load for any other week is dropped
+  // Resolves true once `week` of the current season is showing (null = the latest week).
+  function setWeek(week) {
+    if (week == null || !(D.weeks || []).some(x => x.week === week)) week = M.through_week;
+    if (V && V.season === current && V.week === week) return Promise.resolve(true);
+    const season = current, tok = wantWeek = `${season}:${week}`, hadFocus = document.activeElement === wk;
+    wk.disabled = true;
+    status.textContent = "loading…";
+    return loadWeek(week).then(v => {
+      if (wantWeek !== tok || current !== season) return false;
+      wk.disabled = false;
+      if (hadFocus) wk.focus();
+      closeTeam(true);
+      V = v; wk.value = String(V.week);
+      renderView();
+      setHash();
+      return true;
+    }).catch(() => {
+      if (wantWeek !== tok || current !== season) return false;
+      wk.disabled = false;
+      if (!V || V.season !== current) { V = latestView(); renderView(); }
+      wk.value = String(V.week);
+      status.textContent = seasonStatus(M) + ` · could not load week ${week}; ` + (location.protocol === "file:" ? "serve the folder (see How to trace)" : "reload and try again");
+      return false;
+    });
+  }
+  wk.addEventListener("change", () => setWeek(+wk.value));
+  // Resolves true once `season` (and `week`, null = latest) is showing, false if it could not be loaded.
+  function setSeason(season, week) {
+    if (season === current) return setWeek(week);
     const hadFocus = document.activeElement === yr;
     status.textContent = "loading…";
     yr.disabled = true;
@@ -436,9 +530,8 @@ details[open] > summary { margin-bottom: 6px; }
       closeTeam(true);
       D = t; M = D.meta; N = D.names; current = season; yr.value = String(season);
       byId = {}; D.teams.forEach(x => { byId[x.id] = x; });
-      renderSeason();
-      setHash();
-      return true;
+      weekOptions();
+      return setWeek(week);
     }).catch(() => {
       yr.disabled = false; yr.value = String(current);
       if (hadFocus) yr.focus();
@@ -573,6 +666,27 @@ details[open] > summary { margin-bottom: 6px; }
       `<div class="formula">AdjT = mean(possessions − (opp AdjT − ${fx(tt.muT, 2)})) incl. one phantom game = ${fx(tt.recomputed, 3)} ${tt.check_ok ? "✓" : "✗"}\nPossessions = (both teams' regulation drives with a real snap) / 2</div>`;
   }
 
+  // Where the team stood after each week, from that week's own snapshot (the drawer's derivation
+  // below always covers the latest week).
+  function weekByWeek(id, r) {
+    const H = D.history, lines = H && H.teams[id];
+    if (!lines) return "";
+    const c = Object.fromEntries(H.columns.map((k, i) => [k, i]));
+    const rank = (x, rkKey, slotKey) => x[c[rkKey]] != null ? x[c[rkKey]]
+      : x[c[slotKey]] != null ? `<span class="rk" title="Tentative (fewer than ${M.min_games} games): would rank about here">≈${x[c[slotKey]]}</span>` : "—";
+    const anyCFP = lines.some(x => x[c.CFP] != null), pre = H.preseason_AP || {};
+    let h = `<h3>Week by week</h3>`;
+    if (!V.latest) h += `<p class="note weeknote">The tables are showing week ${V.week} (highlighted). Everything else in this drawer covers the season through week ${M.through_week}. To trace the week ${V.week} numbers: <code>python trace.py "${esc(r.name)}" --season ${current} --week ${V.week}</code></p>`;
+    h += `<div class="tablewrap"><table class="mini"><thead><tr><th>Wk</th><th>W-L</th><th>Power</th><th>Rk</th><th>Resume / G</th><th>Rk</th><th>AP</th>${anyCFP ? "<th>CFP</th>" : ""}</tr></thead><tbody>`;
+    if (Object.keys(pre).length) h += `<tr><td>Pre</td><td>0-0</td><td>—</td><td>—</td><td>—</td><td>—</td><td>${pre[id] ?? "—"}</td>${anyCFP ? "<td>—</td>" : ""}</tr>`;
+    lines.forEach(x => {
+      h += `<tr class="${x[c.week] === V.week ? "cur" : ""}"><td>${x[c.week]}</td><td>${x[c.W]}-${x[c.L]}</td>` +
+        `<td>${x[c.AdjEM] == null ? "—" : `<span class="${cls(x[c.AdjEM])}">${fx(x[c.AdjEM], 1, true)}</span>`}</td><td>${rank(x, "rk_AdjEM", "slot_AdjEM")}</td>` +
+        `<td>${fx(x[c.NetPerGame], 3, true)}</td><td>${rank(x, "rk_NetPerGame", "slot_NetPerGame")}</td><td>${x[c.AP] ?? "—"}</td>${anyCFP ? `<td>${x[c.CFP] ?? "—"}</td>` : ""}</tr>`;
+    });
+    return h + `</tbody></table></div><p class="note">Each line is rated from that week's games only. AP${anyCFP ? " and CFP" : ""}: the newest poll reflecting games through that week (reference only)${Object.keys(pre).length ? "; Pre is the preseason AP poll" : ""}. ≈n: a tentative rating (fewer than ${M.min_games} games), shown where it would rank.</p>`;
+  }
+
   function openTeamNow(id) {
     const r = byId[id], tr = D.traces[id];
     if (!r || !tr) return;
@@ -584,6 +698,7 @@ details[open] > summary { margin-bottom: 6px; }
       h += `<div class="statrow">` + [["Power (AdjEM)", fx(r.AdjEM, 1, true) + " ± " + fx(r.AdjEM_se, 1)], ["AdjO", fx(r.AdjO, 2)], ["AdjD", fx(r.AdjD, 2)], ["AdjT", fx(r.AdjT, 1)],
         ["SOS", fx(r.SOS, 1, true)], ["Resume / game", fx(r.NetPerGame, 3, true)], ["Luck", fx(r.luck, 3, true)]].map(([k, v]) => `<div class="stat"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("") + "</div>";
     }
+    h += weekByWeek(id, r);
     h += `<h3>Schedule</h3><div class="tablewrap"><table class="mini"><thead><tr><th>Wk</th><th class="t">Opponent</th><th>Site</th><th>Result</th><th class="t">Notes</th></tr></thead><tbody>` +
       tr.schedule.map(g => `<tr><td>${g.week}</td><td class="t">${esc(g.opp_name)} <span class="rk">${esc(g.opp_division)}${g.conf_game ? " · conf" : ""}</span></td><td>${g.site}</td><td>${g.result} ${g.us}-${g.them}${(g.garbage_pts_us || g.garbage_pts_them) ? ` <span class="rk" title="Garbage-adjusted score (offensive points on garbage-time drives removed)">adj ${fx(g.adj_us, 0)}-${fx(g.adj_them, 0)}</span>` : ""}</td><td class="t note">${g.clock && g.clock.cand != null ? (g.clock.usable ? "clock usable" : `clock not usable (${g.clock.zero}/${g.clock.cand} zero)`) : ""}${g.box_penalties ? ` · pen ${g.box_penalties.us ? g.box_penalties.us.join("-") : "—"} vs ${g.box_penalties.them ? g.box_penalties.them.join("-") : "—"}` : ""}${g.used_in_efficiency ? (g.note ? " · " + esc(g.note).slice(0, 120) : "") : " · not in efficiency model: " + esc(g.note)}</td></tr>`).join("") + "</tbody></table></div>";
     if (tr.network) {
@@ -636,13 +751,15 @@ details[open] > summary { margin-bottom: 6px; }
     setHash(id);
   }
 
-  // Deep links, dash-joined in any order: s2025 (season), t333 (a team's derivation), a tab name.
+  // Deep links, dash-joined in any order: s2025 (season), w8 (a week; none = the latest), t333 (a
+  // team's derivation), a tab name.
   // A link without a season means the default season (links made before seasons existed).
   const TAB_NAMES = tabs.map(b => b.dataset.tab);
   function route(hash) {
     const want = {};
     hash.replace(/^#/, "").split("-").forEach(tok => {
       if (/^s\d{4}$/.test(tok)) want.season = +tok.slice(1);
+      else if (/^w\d{1,2}$/.test(tok)) want.week = +tok.slice(1);
       else if (/^t\d+$/.test(tok)) want.team = tok.slice(1);
       else if (TAB_NAMES.includes(tok)) want.tab = tok;
     });
@@ -653,7 +770,7 @@ details[open] > summary { margin-bottom: 6px; }
       want.team = null;
     }
     const first = current == null ? setSeason(BOOT.default) : Promise.resolve(true);
-    return first.then(() => setSeason(season)).then(ok => {
+    return first.then(() => setSeason(season, want.week)).then(ok => {
       if (want.tab) showTab(want.tab);
       if (note) status.textContent = seasonStatus(M) + " · " + note;
       if (ok && want.team && byId[want.team]) openTeam(want.team);

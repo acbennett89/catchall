@@ -6,6 +6,11 @@
       out/<season>/traces/<id>.json          every number for one team, back to drives and plays
       out/<season>/traces/internal/<id>.json derivations of internal inputs (FCS teams)
       out/<season>/anchors.json              every input to the global constants
+      out/<season>/weekly.json               the table as it stood after each week, the next week's
+                                             picks with results, and each team's week-by-week line
+
+AP and CFP ranks (data/<season>/polls.json, from python polls.py) ride along on every table for
+reference; they never enter a rating.
 """
 import argparse
 import copy
@@ -13,6 +18,7 @@ import csv
 import json
 import math
 import os
+import sys
 from collections import defaultdict
 
 from datetime import datetime
@@ -20,6 +26,7 @@ from zoneinfo import ZoneInfo
 
 from audit_penalties import audit
 from efficiency import trace, trace_tempo
+from polls import latest as latest_poll, load_polls
 from ratings import (DISCIPLINE_KEYS, HERE, drive_weight, good_clock, is_situational_foul, load,
                      load_config, phi, predict, rate, venue)
 from validate import evaluate
@@ -27,7 +34,7 @@ from validate import evaluate
 
 COLUMNS = [
     ("rk_AdjEM", "Rk"), ("name", "Team"), ("conference", "Conf"), ("W", "W"), ("L", "L"),
-    ("games", "G"), ("eligible", "Eligible"), ("status", "Status"),
+    ("games", "G"), ("eligible", "Eligible"), ("status", "Status"), ("AP", "AP_rank"), ("CFP", "CFP_rank"),
     ("AdjEM", "AdjEM"), ("AdjEM_se", "AdjEM_SE"), ("AdjO", "AdjO"), ("rk_AdjO", "AdjO_Rk"),
     ("AdjD", "AdjD"), ("rk_AdjD", "AdjD_Rk"), ("AdjT", "AdjT"), ("AdjSR_O", "AdjSR_O"),
     ("AdjSR_D", "AdjSR_D"), ("PPD_O", "PPD_O"), ("PPD_D", "PPD_D"),
@@ -51,6 +58,93 @@ COLUMNS = [
     ("BestWin", "BestWinValue"), ("BestWinOpp", "BestWinOpp"),
     ("WorstLoss", "WorstLossCost"), ("WorstLossOpp", "WorstLossOpp"),
 ]
+
+
+# What the page's tables need from each row of a weekly snapshot (the full row lives in ratings.json).
+WEEK_FIELDS = (
+    "id", "name", "conference", "W", "L", "games", "eligible", "tentative", "status", "AP", "CFP",
+    "slot_AdjEM", "slot_NetPerGame", "AdjEM", "AdjEM_se", "rk_AdjEM", "AdjO", "rk_AdjO", "AdjD",
+    "rk_AdjD", "AdjT", "SOS", "rk_SOS", "NCSOS", "luck", "WVT", "AvgWV", "LCT", "NetResume",
+    "NetPerGame", "rk_NetPerGame", "SchedNS", "BestWin", "BestWinOpp", "WorstLoss", "WorstLossOpp",
+    "PenPG", "PenPG_conf", "PenYdsPG", "PenYdsPG_conf", "NetPenYdsPG", "OffPen100", "OffPen100_conf",
+    "OffPreSnap100", "OffPreSnap100_conf", "DefPen100", "DefPen100_conf", "PenFDAllowedPG",
+    "PenCoverage", "NeutralPace", "NeutralRunRate", "LP_drives", "Q4_lead_drives")
+# One line per team per week in the history: these columns, in this order.
+HISTORY_COLUMNS = ["week", "W", "L", "AdjEM", "rk_AdjEM", "slot_AdjEM", "NetPerGame", "rk_NetPerGame",
+                   "slot_NetPerGame", "AP", "CFP"]
+
+
+def finish_rows(res, polls, week):
+    """Status, tentative slots and poll ranks for one table; returns the rows sorted for display
+    and the polls used.
+
+    Teams with 5+ games are rated and ranked. Teams below the minimum get a TENTATIVE rating: the
+    same numbers, published and traced, but provisional and never ranked. slot_* says where a
+    tentative team would sit among the ranked teams (among the tentative teams themselves before
+    anyone has reached the minimum)."""
+    rows = list(res["teams"].values())
+    for r in rows:
+        r["tentative"] = not r["eligible"]
+        r["status"] = "rated" if r["eligible"] else "tentative"
+    rated = [r for r in rows if r.get("AdjEM") is not None]
+    base = [r for r in rated if r["eligible"]] or rated
+    for r in rated:
+        if r["eligible"]:
+            continue
+        r["slot_AdjEM"] = 1 + sum(1 for x in base if x is not r and x["AdjEM"] > r["AdjEM"])
+        mine = r["NetPerGame"] if r.get("NetPerGame") is not None else -1e9
+        r["slot_NetPerGame"] = 1 + sum(1 for x in base if x is not r and x.get("NetPerGame") is not None
+                                       and x["NetPerGame"] > mine)
+    used = {}
+    for kind in ("AP", "CFP"):
+        p = latest_poll(polls, kind, week)
+        ranks = {x["team"]: x["rank"] for x in p["ranks"]} if p else {}
+        for r in rows:
+            r[kind] = ranks.get(r["id"])
+        used[kind] = p and {"after_week": p["after_week"], "released": p["released"],
+                            "espn_week": p["espn"]["week"], "headline": p["espn"]["headline"]}
+    rows.sort(key=lambda r: (not r["eligible"], r.get("rk_AdjEM") or 999,
+                             -(r.get("AdjEM") if r.get("AdjEM") is not None else -999), r["name"]))
+    return rows, used
+
+
+def snapshot(res, week, data, cfg, sigma, polls):
+    """The table as it stood after `week`, plus the next week's games as the model saw them then
+    (prediction from these ratings, and the actual score)."""
+    teams = data["teams"]
+    rows, used = finish_rows(res, polls, week)
+    eligible = {r["id"] for r in rows if r["eligible"]}
+    picks = []
+    for g in sorted((g for g in data["games"] if g["week"] == week + 1 and g["d1"]), key=lambda g: g["date"]):
+        fbs_sides = [x for x in (g["home"], g["away"]) if teams[x]["division"] == "FBS"]
+        p = predict(res, g["home"], g["away"], g["neutral"]) if fbs_sides else None
+        if p is None:
+            continue
+        picks.append({"game": g["id"], "date": eastern_date(g["date"]), "home": name_of(teams, g["home"]),
+                      "away": name_of(teams, g["away"]), "neutral": bool(g["neutral"]),
+                      "tentative": any(x not in eligible for x in fbs_sides),
+                      "home_margin": p["margin"], "home_win_prob": phi(p["margin"] / sigma),
+                      "possessions": p["poss"], "home_pts": g["home_pts"], "away_pts": g["away_pts"]})
+    meta = {"week": week, "last_game_date": eastern_date(max(g["date"] for g in res["games"])),
+            "games_used": len(res["games"]), "games_with_drives": sum(1 for g in res["games"] if g["drives"]),
+            "eligible": len(eligible), "tentative": sum(1 for r in rows if not r["eligible"]),
+            "fbs_teams": len(rows), "min_games": cfg["min_games"], "mu_ppd": res["ppd"]["mu"],
+            "muT": res["muT"], "hfa_points": res["hfa_points"], "net_refs": res["net"].references(),
+            "net_weights": cfg["net_weights"], "polls": used}
+    return {"week": week, "meta": meta, "teams": [{k: r.get(k) for k in WEEK_FIELDS} for r in rows],
+            "picks": picks}
+
+
+def history(snaps, polls):
+    """team id -> one line per week (HISTORY_COLUMNS), and the preseason AP poll."""
+    out = defaultdict(list)
+    for s in snaps:
+        for r in s["teams"]:
+            out[r["id"]].append([s["week"]] + [r.get(k) for k in HISTORY_COLUMNS[1:]])
+    pre = latest_poll(polls, "AP", 0)
+    return {"columns": HISTORY_COLUMNS, "teams": dict(out),
+            "preseason_AP": {x["team"]: x["rank"] for x in pre["ranks"]} if pre else {},
+            "preseason_AP_released": pre and pre["released"]}
 
 
 def name_of(teams, t):
@@ -250,6 +344,37 @@ def team_trace(t, res, data, cfg, sigma, eligible):
     return tr
 
 
+def internal_trace(t, res, teams, cfg, eligible):
+    """An internal input's own lines (an FCS team is rated only to adjust FBS numbers)."""
+    e, s_ = trace(res["ppd"], t), trace(res["sr"], t)
+    tt = trace_tempo(res["tempo"], t) if t in res["tempo"]["T"] else None
+    checks = [e["offense"]["check_ok"], e["defense"]["check_ok"], s_["offense"]["check_ok"],
+              s_["defense"]["check_ok"]] + ([tt["check_ok"]] if tt else [])
+    for ln in e["offense"]["lines"] + e["defense"]["lines"] + s_["offense"]["lines"] + \
+            s_["defense"]["lines"] + (tt["lines"] if tt else []):
+        ln["opp_name"] = name_of(teams, ln["opp"])
+        ln["opp_status"] = opp_status(ln["opp"], teams, eligible)
+    div = teams.get(t, {}).get("division")
+    return {"team": {"id": t, "name": name_of(teams, t), "division": div,
+                     "conference": teams.get(t, {}).get("conference")},
+            "internal": True,
+            "note": ("Internal input, not a published rating: " +
+                     ("FCS teams are rated only to adjust FBS numbers." if div == "FCS" else
+                      f"fewer than {cfg['min_games']} games played.") +
+                     " These lines exist so every rated team's numbers can be traced to the end."),
+            "checks_ok": all(checks),
+            "efficiency": {"mu": res["ppd"]["mu"], "h": res["ppd"]["h"],
+                           "offense": e["offense"], "defense": e["defense"]},
+            "success_rate_adjusted": {"offense": s_["offense"], "defense": s_["defense"]},
+            "tempo": tt}
+
+
+def tentative_note(r, cfg):
+    return (f"Tentative: {r['name']} has played {r['games']} of the {cfg['min_games']} games "
+            "a full rating needs. These numbers use the same model and are fully traced, "
+            "but rest on few games, so they are provisional and carry no official rank.")
+
+
 def label_tree(resume, teams):
     for r in resume["wins"] + resume["losses"]:
         r["opp_name"] = name_of(teams, r["opp"])
@@ -298,14 +423,8 @@ def main():
     sigma = holdout["sigma"]
 
     os.makedirs(os.path.join(out_dir, "traces"), exist_ok=True)
-    # Teams with 5+ games are rated and ranked. Teams below the minimum get a TENTATIVE rating:
-    # the same numbers, published and traced, but marked provisional and never ranked.
-    for r in res["teams"].values():
-        r["tentative"] = not r["eligible"]
-        r["status"] = "rated" if r["eligible"] else "tentative"
-    rows = sorted(res["teams"].values(),
-                  key=lambda r: (not r["eligible"], r.get("rk_AdjEM") or 999,
-                                 -(r.get("AdjEM") if r.get("AdjEM") is not None else -999), r["name"]))
+    polls = load_polls(cfg["season"])
+    rows, polls_used = finish_rows(res, polls, last_week)
     with open(os.path.join(out_dir, "ratings.csv"), "w", newline="") as f:
         w = csv.writer(f)
         w.writerow([c for _, c in COLUMNS])
@@ -329,10 +448,7 @@ def main():
         if not all(checks):
             bad.append(r["name"])
         if not r["eligible"]:
-            tr["tentative"] = True
-            tr["note"] = (f"Tentative: {r['name']} has played {r['games']} of the {cfg['min_games']} games "
-                          "a full rating needs. These numbers use the same model and are fully traced, "
-                          "but rest on few games, so they are provisional and carry no official rank.")
+            tr["tentative"], tr["note"] = True, tentative_note(r, cfg)
         with open(os.path.join(out_dir, "traces", f"{r['id']}.json"), "w") as f:
             json.dump(tr, f, separators=(",", ":"), default=float)
 
@@ -343,38 +459,14 @@ def main():
     os.makedirs(idir, exist_ok=True)
     index = {}
     for t in res["ppd"]["O"]:
-        e, s_, = trace(res["ppd"], t), trace(res["sr"], t)
-        checks = [e["offense"]["check_ok"], e["defense"]["check_ok"],
-                  s_["offense"]["check_ok"], s_["defense"]["check_ok"]]
-        tt = trace_tempo(res["tempo"], t) if t in res["tempo"]["T"] else None
-        if tt:
-            checks.append(tt["check_ok"])
-        if not all(checks):
+        tr = internal_trace(t, res, teams, cfg, eligible)
+        if not tr["checks_ok"]:
             bad.append(name_of(teams, t))
         if teams.get(t, {}).get("division") == "FBS":
             continue
-        for side in ("offense", "defense"):
-            for ln in e[side]["lines"] + s_[side]["lines"]:
-                ln["opp_name"] = name_of(teams, ln["opp"])
-                ln["opp_status"] = opp_status(ln["opp"], teams, eligible)
-        if tt:
-            for ln in tt["lines"]:
-                ln["opp_name"] = name_of(teams, ln["opp"])
-                ln["opp_status"] = opp_status(ln["opp"], teams, eligible)
-        div = teams.get(t, {}).get("division")
         index[t] = name_of(teams, t)
         with open(os.path.join(idir, f"{t}.json"), "w") as f:
-            json.dump({"team": {"id": t, "name": name_of(teams, t), "division": div,
-                                "conference": teams.get(t, {}).get("conference")},
-                       "internal": True,
-                       "note": ("Internal input, not a published rating: " +
-                                ("FCS teams are rated only to adjust FBS numbers." if div == "FCS" else
-                                 f"fewer than {cfg['min_games']} games played.") +
-                                " These lines exist so every rated team's numbers can be traced to the end."),
-                       "efficiency": {"mu": res["ppd"]["mu"], "h": res["ppd"]["h"],
-                                      "offense": e["offense"], "defense": e["defense"]},
-                       "success_rate_adjusted": {"offense": s_["offense"], "defense": s_["defense"]},
-                       "tempo": tt}, f, separators=(",", ":"), default=float)
+            json.dump(tr, f, separators=(",", ":"), default=float)
     with open(os.path.join(idir, "index.json"), "w") as f:
         json.dump(index, f)
 
@@ -436,6 +528,20 @@ def main():
                       "hfa_per_drive": p["hfa_drive"]})
     preds.sort(key=lambda x: x["date"])
 
+    # Weekly views: the table as it stood after each week, each from its own rate() run over the
+    # games through that week only (the last week is the table above).
+    snaps = []
+    for w in range(1, last_week + 1):
+        rw = res if w == last_week else rate(copy.deepcopy(data), cfg, through_week=w)
+        snaps.append(snapshot(rw, w, data, cfg, sigma, polls))
+    with open(os.path.join(out_dir, "weekly.json"), "w") as f:
+        json.dump({"season": cfg["season"],
+                   "rule": "week w = ratings.rate(data, cfg, through_week=w): every number from the games of "
+                           "weeks 1..w only. AP/CFP = the newest poll reflecting games through week w "
+                           "(data/<season>/polls.json); reference only. picks = week w+1 games predicted "
+                           "from week w's ratings, with the actual score.",
+                   "weeks": snaps, "history": history(snaps, polls)}, f, separators=(",", ":"), default=float)
+
     cal = data.get("calendar", {})
     meta = {
         "season": cfg["season"], "through_week": last_week,
@@ -456,6 +562,7 @@ def main():
         "prior_drives": cfg["prior_drives"], "sigma_points": sigma,
         "net_refs": res["net"].references(), "net_weights": cfg["net_weights"],
         "min_games": cfg["min_games"],
+        "polls": polls_used, "weeks": [s["week"] for s in snaps],
         "eligible": sum(r["eligible"] for r in res["teams"].values()),
         "tentative": sum(not r["eligible"] for r in res["teams"].values()),
         "fbs_teams": len(res["teams"]),
@@ -478,7 +585,8 @@ def main():
     print(f"{meta['fbs_teams']} FBS teams, {meta['eligible']} eligible, through week {last_week}; "
           f"HFA {meta['hfa_points']:.2f} pts; sigma {sigma:.1f}; NS refs win {meta['net_refs']['win']:.4f} "
           f"loss {meta['net_refs']['loss']:.4f} all {meta['net_refs']['all']:.4f}; "
-          f"{len(preds)} predictions for week {nxt}")
+          f"{len(preds)} predictions for week {nxt}; weekly views for weeks 1-{last_week}"
+          + ("" if polls else "; no polls (run python polls.py)"))
     if bad:
         raise SystemExit(f"trace self-check FAILED for: {', '.join(bad)}")
     print(f"trace self-check: every AdjO, AdjD, AdjSR and AdjT reconstructs its stored value "
@@ -486,4 +594,10 @@ def main():
 
 
 if __name__ == "__main__":
+    # Python salts string hashes per run, which reorders set iteration and moves float sums in the
+    # last bits (about 1e-14). A fixed seed makes every rebuild byte-identical, so the files (and
+    # the page's content-hashed data files) change only when a number really does.
+    if os.environ.get("PYTHONHASHSEED") != "0":
+        os.environ["PYTHONHASHSEED"] = "0"
+        os.execv(sys.executable, [sys.executable] + sys.argv)
     main()
