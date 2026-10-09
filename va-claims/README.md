@@ -16,6 +16,8 @@ WARMS (Web Automated Reference Material System, `benefits.va.gov/warms`) is reti
 | `38-usc/` | **38 U.S.C. (Veterans' Benefits)**, the statute itself, as HTML and PDF | govinfo.gov, U.S. Code 2023 edition | 2023 main edition |
 | [`va-gov/`](va-gov) | 40 VA.gov public guidance pages: eligibility, how to file, evidence, exams, effective dates, ratings, compensation and SMC rate tables, PACT Act, decision reviews (Supplemental, HLR, Board), legacy appeals, pension, DIC, and accredited representatives | va.gov | Retrieved 2026-10-09 |
 | [`forms/`](forms/README.md) | 26 core claim and review forms (526EZ, 0966, 0995, 0996, 10182, 8940, 0781, and others) and 71 public DBQs | vba.va.gov, va.gov, benefits.va.gov | Retrieved 2026-10-09 |
+| [`rulemaking/`](rulemaking/mental-health-rating-changes.md) | Federal Register documents on mental health ratings: the 2022 five-domain proposal (87 FR 8498, **not in effect**), the Feb 2026 medication interim final rule (91 FR 7118), and its rescission (91 FR 9712). Includes a current-vs-proposed comparison by area of life (self-care/hygiene, work, relationships, cognition, getting around). | govinfo.gov (official FR text), reginfo.gov | Checked 2026-10-09 |
+| `case-law/` | Full opinions: *Ingram v. Collins*, 38 Vet. App. 130 (2025), and *Jones v. Shinseki*, 26 Vet. App. 56 (2012), both on medication effects in ratings | uscourts.cavc.gov | Retrieved 2026-10-09 |
 
 ## Which source controls
 
