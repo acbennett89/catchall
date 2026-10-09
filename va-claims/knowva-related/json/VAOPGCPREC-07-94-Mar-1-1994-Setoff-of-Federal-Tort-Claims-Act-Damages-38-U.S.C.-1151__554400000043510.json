@@ -1,0 +1,109 @@
+{
+ "name": "VAOPGCPREC 07-94, Mar 1, 1994, Setoff of Federal Tort Claims Act Damages - 38 U.S.C. 1151",
+ "content": "<p style=\"text-align: center\">\tDecision Assessment Document<br />\tVAOPGCPREC 07-94, Mar 1, 1994, Setoff of Federal Tort Claims Act Damages - 38 U.S.C. 1151&nbsp;<br />\tOffice of General Counsel Precedent Opinion</p><p>\t<br />\t<strong>What the case is about</strong></p><p>\tDoes the amount of a Federal Tort Claims Act settlement to be set off against benefits payable under 38 U.S.C. \u00a7 1151 include the amount of attorney fees paid out of the settlement proceeds?</p><p>\t<strong>Impact on VBA</strong></p><p>\tWhen an individual is awarded a judgment or enters into a compromise on a Federal Tort Claims Act claim subject to 38 U.S.C. \u00a7 1151, that individual's future veterans' disability compensation benefits based on the same disability must be offset by the entire amount of the judgment or settlement proceeds, including the amount of any attorney fees paid out of such proceeds.</p><p>\t<strong>Summary on facts and findings</strong></p><p>\tSection 1151 provides that a veteran who has suffered a disability as the result of VA medical treatment is entitled to compensation as if the disability were service connected.&nbsp; That section further states that when an individual is awarded a judgment in a tort claim against the United States for that same disability, no compensation benefits shall be paid until the aggregate amount of benefits equals the total amount included in the tort settlement.&nbsp; This opinion looked at the issue of whether or not any fees paid to an attorney out of the tort settlement should be included in the amount to be offset by compensation benefits.&nbsp; A prevailing litigant in the United States ordinarily bears his or her own attorney fees and cannot look to the opposing party for reimbursement.&nbsp; Because the attorney has no statutory entitlement to the payment of attorney fees by the Government, the amount paid to the attorney must be considered a payment from the veteran out of the settlement funds.&nbsp; The plain meaning of section 1151 requires offset of the entire settlement amount, and VA has no discretion to exclude a portion of the settlement from offset based on the disposition of those funds by the veteran.</p><p>\tM21-1, Part IV, paragraph 20.42 discusses award actions for cases involving the granting of compensation for paired organs and extremities under the provisions of 38 U.S.C. \u00a7 1151.&nbsp; Paragraph 20.42b states that attorney's fees are not deductible from the gross amount of the tort settlement or judgment.&nbsp; No changes to this paragraph are required.&nbsp; M21-1, Part IV, Chapter 22 discusses actions to be taken when compensation is awarded under 38 U.S.C. \u00a7 1151.&nbsp; Paragraph 22.04c simply states that the total amount of the tort settlement is subject to offset until an amount equal to the judgment has been recouped from the veteran's compensation.&nbsp; The statement concerning attorney's fees found in paragraph 20.42b should also be included in Chapter 22 as it is the reference for most compensation cases awarded under section 1151.</p><p>\tAmend M21-1, Part IV, paragraph 22.04c to include the following statement:&nbsp; \"Attorney's fees, court costs and other expenses incident to the claim are NOT deductible from the total amount awarded.\"</p><p>\t<strong>References</strong></p><p>\t<a href=\"http://www.va.gov/ogc/docs/1994/Prc07-94.doc\" target=\"_blank\">http://www.va.gov/ogc/docs/1994/Prc07-94.doc</a><br />\t&nbsp;</p>",
+ "additionalInfo": "",
+ "articleType": 0,
+ "attachment": [],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 4175,
+ "createdByUserName": "OBPGMANC",
+ "createdDate": "21 Jun 2016 15:01:25.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": false,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "Federal Tort Claims Act,  38 U.S.C. 1151,  attorney fees,  settlement proceeds,",
+ "languageId": 1,
+ "lastModifiedBy": 4175,
+ "lastModifiedByUserName": "OBPGMANC",
+ "lastModifiedDate": "21 Jun 2016 15:07:23.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "21 Jun 2016 15:01:25.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000043318,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "summary": "When an individual is awarded a judgment or enters into a compromise on a Federal Tort Claims Act claim subject to 38 U.S.C. \u00a7 1151, that individual's future veterans' disability compensation benefits based on the same disability must be offset by the entire amount of the judgment or settlement proceeds, including the amount of any attorney fees paid out of such proceeds.",
+ "topicBreadcrumb": [],
+ "uuid": "45C11B7E-48AF-4962-B43D-4561E1E9C95F",
+ "version": 1,
+ "versionId": 554400000059733,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-43510",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000043510?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000043510
+}

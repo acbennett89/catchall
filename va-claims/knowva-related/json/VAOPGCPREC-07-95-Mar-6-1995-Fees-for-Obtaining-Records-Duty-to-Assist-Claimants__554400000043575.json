@@ -1,0 +1,108 @@
+{
+ "name": "VAOPGCPREC 07-95, Mar 6, 1995, Fees for Obtaining Records - Duty to Assist Claimants",
+ "content": "<p style=\"text-align: center\">\tDecision Assessment Document<br />\tVAOPGCPREC 07-95, Mar 6, 1995, Fees for Obtaining Records - Duty to Assist Claimants<br />\tOffice of General Counsel Precedent Opinion</p><p>\t<br />\t<strong>What the case is about</strong></p><p>\tIn light of 38 U.S.C. \u00a7 5106, may the National Archives and Records Administration (NARA) charge a fee for providing the Department of Veterans Affairs (VA) with copies of documents from its records?&nbsp; Does VA\u2019s statutory duty to assist claimants under 38 U.S.C. \u00a7 5107(a) require that VA pay fees charged by Federal, state, or local agencies or private sources to obtain copies of records maintained by those sources?</p><p>\t<strong>Impact on VBA</strong></p><p>\tThe National Archives and Records Administration (NARA) may charge a fee for providing the Department of Veterans Affairs with copies of records requested in connection with a benefit claim.&nbsp; Under 38 U.S.C. \u00a7 5107(a), the VA may require claimants to assume responsibility for payment of any fees associated with obtaining copies of records maintained by Federal, state, or local agencies or private sources.</p><p>\t<strong>Summary on facts and findings</strong></p><p>\tThe policy of NARA is to charge other Federal agencies for copies of documents from its records.&nbsp; NARA receives no appropriated funds for reproduction services.&nbsp; The plain language of 38 U.S.C. \u00a7 5106 contains no requirement that Federal agencies provide VA with information without charge.&nbsp; Therefore, NARA may charge VA for copies of records so long as NARA has no appropriation to cover reproduction costs.</p><p>\tSince NARA may charge for copies of records, the question is whether VA is obligated to obtain on behalf of a claimant records for which a fee is charged.&nbsp; 38 C.F.R. \u00a7 3.159(b) states that \"[t]he Department of Veterans Affairs shall not pay any fees charged by the custodian for providing such evidence.\"&nbsp; When 38 C.F.R. \u00a7 3.159, which implements the statutory requirements of section \u00a7 5107(a), was proposed, VA clarified its intention stating that \"[s]hould [VA] be unable to acquire necessary evidence for any reason which the claimant could rectify by paying a fee, . . . etc., VA will so notify the claimant and advise him or her that the ultimate responsibility for providing the requested evidence rests with him or her.\"&nbsp; Further, VA made clear its intention that the prohibition against paying fees for evidence would apply to evidence requested from both Federal and non-Federal sources.&nbsp; In this opinion, the General Counsel found that the regulation is consistent with the statute it implements, in light of the very general nature of the statutory provision establishing the duty to assist.</p><p>\tM21-1, Part III, paragraph 1.05c clearly indicates that VA is not authorized to pay a fee for copies of public documents or other evidence.&nbsp; This section of the manual should be revised to make clear that VA is not authorized to pay the fees for documents from NARA or other government or non-government agencies.&nbsp; Although other VBA services generally do not need to request documents from NARA, a copy of this assessment should be provided to all other VBA services and VHA for any appropriate action.</p><p>\tAmend M21-1, Part III, paragraph 1.05c, to state at the end of the first sentence \"from Federal, state, or local agencies or private sources\", and, provide a copy of this assessment to all other VBA elements and VHA.</p><p>\t<strong>References</strong></p><p>\t<a href=\"http://www.va.gov/ogc/docs/1995/Prc07-95.doc\" target=\"_blank\">http://www.va.gov/ogc/docs/1995/Prc07-95.doc</a><br />\t&nbsp;</p>",
+ "articleType": 0,
+ "attachment": [],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 4175,
+ "createdByUserName": "OBPGMANC",
+ "createdDate": "22 Jun 2016 14:31:12.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": false,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "",
+ "languageId": 1,
+ "lastModifiedBy": 4175,
+ "lastModifiedByUserName": "OBPGMANC",
+ "lastModifiedDate": "22 Jun 2016 14:40:08.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "22 Jun 2016 14:31:12.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000043319,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "summary": "The National Archives and Records Administration (NARA) may charge a fee for providing the Department of Veterans Affairs with copies of records requested in connection with a benefit claim.  Under 38 U.S.C. \u00a7 5107(a), the VA may require claimants to assume responsibility for payment of any fees associated with obtaining copies of records maintained by Federal, state, or local agencies or private sources.",
+ "topicBreadcrumb": [],
+ "uuid": "3AB87496-8E14-4439-A0D3-77D3C474B621",
+ "version": 1,
+ "versionId": 554400000059863,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-43575",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000043575?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000043575
+}

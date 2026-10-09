@@ -1,0 +1,109 @@
+{
+ "name": "VAOPGCPREC 23-97, Jul 1, 1997, Multiple Ratings for Knee Disability",
+ "content": "<p style=\"text-align: center\">\tDecision Assessment Document<br />\tVAOPGCPREC 23-97, Jul 1, 1997, Multiple Ratings for Knee Disability<br />\tOffice of General Counsel Precedent Opinion</p><p>\t<br />\t<strong>What the case is about</strong></p><p>\tWhere a claimant has arthritis and instability of the knee, does 38 C.F.R. \u00a7 4.71a authorize multiple ratings under diagnostic codes 5003 and 5257?</p><p>\t<strong>Impact on VBA</strong></p><p>\tA claimant who has arthritis and instability of the knee may be rated separately under diagnostic codes 5003 and 5257.</p><p>\t<strong>Summary on facts and findings</strong></p><p>\tSee OGC Precedent Opinion</p><p>\t<strong>References</strong></p><p>\t<a href=\"http://www.va.gov/ogc/docs/1997/Prc23-97.doc\" target=\"_blank\">http://www.va.gov/ogc/docs/1997/Prc23-97.doc</a><br />\t&nbsp;</p>",
+ "additionalInfo": "",
+ "articleType": 0,
+ "attachment": [],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 4175,
+ "createdByUserName": "OBPGMANC",
+ "createdDate": "24 Jun 2016 15:16:06.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": false,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "",
+ "languageId": 1,
+ "lastModifiedBy": 4175,
+ "lastModifiedByUserName": "OBPGMANC",
+ "lastModifiedDate": "24 Jun 2016 15:21:36.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "24 Jun 2016 15:16:06.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000043321,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "summary": "A claimant who has arthritis and instability of the knee may be rated separately under diagnostic codes 5003 and 5257.",
+ "topicBreadcrumb": [],
+ "uuid": "2666E373-629D-4702-81CB-A55838308FD9",
+ "version": 1,
+ "versionId": 554400000060006,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-43704",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000043704?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000043704
+}

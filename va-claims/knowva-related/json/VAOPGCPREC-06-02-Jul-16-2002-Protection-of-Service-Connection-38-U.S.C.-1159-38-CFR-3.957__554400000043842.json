@@ -1,0 +1,108 @@
+{
+ "name": "VAOPGCPREC 06-02, Jul 16, 2002, Protection of Service Connection - 38 U.S.C. 1159; 38 CFR 3.957",
+ "content": "<p style=\"text-align: center\">\tDecision Assessment Document<br />\tVAOPGCPREC 06-02, Jul 16, 2002, Protection of Service Connection - 38 U.S.C. 1159; 38 CFR 3.957<br />\tOffice of General Counsel Precedent Opinion</p><p>\t<br />\t<strong>What the case is about</strong></p><p>\tMay the&nbsp;VA sever service connection of a disability erroneously and recently granted but with an effective date more than ten years earlier than the date of the decision granting service connection?</p><p>\tIf such a grant of service connection is protected from severance, must VA retroactively award compensation for that disability, if otherwise in order?</p><p>\t<strong>Impact on VBA</strong></p><p>\tThe General Counsel held, in essence, that 38 USC \u00a7 1159 and 38 CFR \u00a7 3.957 (which protect an award of service connection that has been in effect for ten years or longer) protect an award of service connection, even if service connection is erroneously and recently granted but with an effective date more than ten years prior to the decision awarding service connection.&nbsp; The General Counsel also held that, in the absence of the veteran\u2019s own willful misconduct or abuse of alcohol or drugs, VA must pay compensation otherwise in order for a disability that was erroneously service connected, where service connection is protected from severance.&nbsp;&nbsp;</p><p>\t<strong>Summary on facts and findings</strong></p><p>\tThe veteran had active service from 1949 to 1953. In 1955, service connection for acute anterior poliomyelitis (polio) was denied because it developed at a date beyond the maximum incubation period shown in 38 CFR 3.379 (the provisions of which were in effect in 1955).&nbsp; In 2001, a VA regional office found the 1955 decision to be clearly and unmistakably erroneous and awarded service connection for polio.&nbsp; The Compensation and Pension (C&amp;P) Service asked the General Counsel for an opinion as to whether VA may sever an erroneous grant of service connection when the effective date is more than ten years earlier than the date of the decision awarding service connection.&nbsp; The C&amp;P Service also asked whether VA must retroactively award compensation for that disability, if protected from severance and otherwise in order.&nbsp;</p><p>\tThe General Counsel found that service connection may not be severed, absent fraud or lack of requisite service or character of discharge.&nbsp; In addition, there is no legal basis upon which VA may deny payment of compensation (provided payment is otherwise in order) for the service-connected disability.&nbsp;</p><p>\tM21-1, Part VI, Chapter 9, par. 9.05 should be amended to reflect the provisions of this opinion.&nbsp;</p><p>\t<strong>References</strong></p><p>\t<a href=\"http://www.va.gov/ogc/docs/2002/PREC_6-2002.doc\" target=\"_blank\">http://www.va.gov/ogc/docs/2002/PREC_6-2002.doc</a><br />\t&nbsp;</p>",
+ "articleType": 0,
+ "attachment": [],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 4175,
+ "createdByUserName": "OBPGMANC",
+ "createdDate": "28 Jun 2016 15:11:12.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": false,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "sever service connection,  erroneously granted, effective date more than ten years earlier, protected from severance, retroactively award compensation,",
+ "languageId": 1,
+ "lastModifiedBy": 4175,
+ "lastModifiedByUserName": "OBPGMANC",
+ "lastModifiedDate": "28 Jun 2016 15:11:27.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "28 Jun 2016 15:11:12.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000043326,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "summary": "The General Counsel held, in essence, that 38 USC \u00a7 1159 and 38 CFR \u00a7 3.957 (which protect an award of service connection that has been in effect for ten years or longer) protect an award of service connection, even if service connection is erroneously and recently granted but with an effective date more than ten years prior to the decision awarding service connection.  The General Counsel also held that, in the absence of the veteran\u2019s own willful misconduct or abuse of alcohol or drugs, VA must pay compensation otherwise in order for a disability that was erroneously service connected, where service connection is protected from severance.  ",
+ "topicBreadcrumb": [],
+ "uuid": "9F01B607-8F06-48F7-B742-80B6ECC913B8",
+ "version": 1,
+ "versionId": 554400000060261,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-43842",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000043842?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000043842
+}

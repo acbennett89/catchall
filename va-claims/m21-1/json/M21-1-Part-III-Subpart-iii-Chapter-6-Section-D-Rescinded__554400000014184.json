@@ -1,0 +1,157 @@
+{
+ "name": "M21-1, Part III, Subpart iii, Chapter 6, Section D - Rescinded",
+ "content": "<p style=\"text-align: right\"><span style=\"font-size: 11px\">&nbsp;<a class=\"eGainArticleLink\" articleid=\"554400000014182\" articlename=\"M21-1, Part III, Subpart iii, Chapter 6, Section C - Historical\" href=\"https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000014182?portalId=554400000001018&usertype=customer&\">&lt;-- Previous Section</a>&nbsp; <a class=\"eGainArticleLink\" articleid=\"554400000014185\" articlename=\"M21-1, Part III, Subpart iii, Chapter 7 - Historical\" href=\"https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000014185?portalId=554400000001018&usertype=customer&\">Next Section --&gt;</a></span></p><p></p><p><span style=\"font-size: 14px\"><span style=\"font-family: arial , helvetica , sans-serif\">&nbsp;</span></span></p>",
+ "additionalInfo": "508",
+ "articleType": 0,
+ "attachment": [
+  {
+   "name": "Historical_M21-1MRIII_iii_6_SecD_10-5-10.doc",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000011571?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000011571
+  },
+  {
+   "name": "Change - March 18, 2015 - Transmittal Sheet - M21-1MRIII_iii_6_D_TS.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000011572?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000011572
+  }
+ ],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 2255,
+ "createdByUserName": "OSPSWEAR",
+ "createdDate": "18 Oct 2014 19:16:49.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": true,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "",
+ "languageId": 1,
+ "lastModifiedBy": 4927,
+ "lastModifiedByUserName": "ACDDWILL",
+ "lastModifiedDate": "30 Sep 2021 13:05:16.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "30 Sep 2021 12:53:44.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000181176,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "summary": "",
+ "topicBreadcrumb": [
+  {
+   "topic": [
+    {
+     "id": 554400000001924,
+     "name": "Compensation and Pension"
+    },
+    {
+     "id": 554400000004049,
+     "name": "M21-1 Adjudication Procedures Manual"
+    },
+    {
+     "id": 554400000004051,
+     "name": "Part 03 (Part III). The Development Process"
+    },
+    {
+     "id": 554400000021236,
+     "name": "Historical"
+    },
+    {
+     "id": 554400000021246,
+     "name": "Subpart iii. Historical"
+    },
+    {
+     "id": 554400000021252,
+     "name": "Chapter 06. Historical"
+    }
+   ]
+  }
+ ],
+ "uuid": "E752BFD9-12C1-447D-8728-5AFCA5318E67",
+ "version": 13,
+ "versionId": 554400000234126,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "Policy or Procedure",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "Policy or Procedure",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "VA Staff",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "VA Staff",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-14184",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000014184?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000014184
+}

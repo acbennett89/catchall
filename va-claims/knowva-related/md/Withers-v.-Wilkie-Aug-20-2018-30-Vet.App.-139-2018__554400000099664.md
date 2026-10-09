@@ -1,0 +1,59 @@
+# Withers v. Wilkie, Aug 20, 2018, 30 Vet.App. 139 (2018)
+
+- Source: https://www.knowva.ebenefits.va.gov/system/templates/selfservice/va_ssnew/help/customer/locale/en-US/portal/554400000001018/content/554400000099664/
+- Article ID: 554400000099664 (KMPR-99664)
+- Last modified: 07 Dec 2018 19:54:09.000 +0000
+
+---
+
+Decision Assessment Document
+Withers v. Wilkie, Aug 20, 2018, 30 Vet.App. 139 (2018)
+U.S. Court of Appeals for Veterans Claims (Court)
+
+**What the case is about:**
+
+The Court held that where a veteran’s ability to perform sedentary work is the basis for a Board of Veterans’ Appeals (Board) decision concerning entitlement to a total disability evaluation due to individual unemployability (TDIU), the meaning of sedentary work must be determined from the particulars of the medical opinion that employs the term.  The Board must explain this meaning as well as how the concept of sedentary work factors into the veteran’s overall disability picture, vocational history, and ability to secure or follow substantially gainful occupation.
+
+The Court further held that before the Board can rely on an examiner’s finding that a veteran is capable of sedentary work to deny TDIU, it must also ensure that the finding is consistent with the entirety of the medical evidence.  The Court noted that although 38 C.F.R. 4.16 does not make the concept of sedentary work an explicit TDIU factor, if the Board bases it denial of TDIU in part on the conclusion that a veteran is capable of sedentary work, then it must explain how it interprets that concept in the context of that case.  This would include, when necessary, an explanation of how a finding that the veteran is capable of sedentary employment squares with the veteran’s education and occupational history, which allows for an individualized assessment as required by 4.16.
+
+The Court indicated that unless the concept of sedentary work is clarified through VA’s regulatory process, the meaning and relevance of the term will have to be discerned on a case-by-case basis from the medical and lay evidence presented in light of each veterans’ education, training and work history.
+
+**Impact on VBA:**
+
+The Manual will be revised at IV.ii.2.F in response to the Court's holding.
+
+**Summary of the facts and Court’s reasons:**
+
+The veteran, who served between 1968 and 1969, is service connected for several disabilities, to include gunshot wound (GSW) residuals of the right arm and leg, low back condition, and post-traumatic stress disorder (PTSD).  In 2005, he applied for TDIU benefits.  The veteran, for over two decades, had operated a financial services and investment firm, which involved managing an office of more than 30 people.  In 2004, he began missing work due to physical problems related to his service-connected disabilities and PTSD-related problems.  He stopped working in August 2004 and officially retired four months later.  The veteran underwent multiple VA examination in conjunction with his TDIU claim and the regional office (RO) denied the claim, which the veteran appealed.
+
+In 2008, the Social Security Administration (SSA) awarded the veteran disability benefits effective June 2004.  SSA found that the veteran suffered from severe physical and mental impairments as a result of his service-connected osteomyelitis and PTSD.  Although the agency determined that the veteran had the residual functional capacity to perform sedentary work as defined in SSA regulations, he was determined to be unable to perform competitive work on a full-time basis.
+
+The Board, in 2010, remanded the TDIU claim for an opinion as to whether the veteran’s service-connected disabilities precluded gainful employment.  In the first of a series of examinations, a VA examiner found that the veteran suffered decreased range of motion of his right ankle, right wrist and lumbosacral spine, and noted no psychiatric symptoms.  The examiner opined that the veteran was unable to do any kind of strenuous or sustained work but should be able to do light work or sedentary work.  A VA examination addressing his service-connected right leg disabilities evidenced significant occupational effects to include decreased mobility, problems lifting and carrying, and difficulty with prolonged standing or walking.  The examiner opined that the veteran’s right leg disabilities prevented strenuous work but permitted the him to perform sedentary work consistent with his job history of sales and management.  The examiner noted that the veteran spent several hours a day refinishing and building furniture.
+
+A VA examination addressing PTSD in 2012 found that the veteran’s PTSD could be associated with decreased work efficiency in an occupational setting, regardless of whether the work involved physical or sedentary tasks.  In a 2016 VA examination, the examiner opined that PTSD produced occasional decreases in work efficiency and intermittent periods of inability to perform occupational tasks.
+
+The Board, denying the veteran’s TDIU claim in March 2016, indicated that none of the VA examiners concluded that the veteran’s service-connected disabilities precluded him from limited or sedentary employment and that his college education and three-decade history as a sales manager “strongly suggest that he has the training to perform sedentary employment.”
+
+The veteran argued before the Court that the Board simply reiterated the examiners’ conclusions that he could do sedentary work without explaining the concept in light of his specific physical and psychological limitations.  He contended that the Board must use “objective measurements,” noting the detailed and technical definition of sedentary work adopted by SSA and argued that the Board should have explained why SSA’s criteria were not a persuasive reason for finding him incapable of sedentary work.  The Secretary maintained that since VA regulations do not define “sedentary employment,” the phrase should be given its ordinary meaning as found in dictionaries, namely, “employment marked by or requiring much sitting.”
+
+At the outset, the Court noted that the concept of sedentary work is not mentioned in any VA stature or regulation.  However, the use of the term in the TDIU context is pervasive in cases before the Court, as VA examiners commonly employ the term when opining on the extent of veterans’ physical and mental limitations, and those opinions become part of the evidence the Board considers and relies on when adjudicating entitlement to TDIU.
+
+The Court further indicated that VA has never forwarded, nor as the Court developed through precedential decisions, an interpretation of 4.16 that accords dispositive significance to a veteran’s ability to perform sedentary work.  Although the parties urged it to define sedentary employment; the Court determined that the term has no independent legal significance and to define the phrase would put the cart before the horse.  The Court resolved that the threshold question in this context is not what “sedentary employment” means, but what connection sedentary employment bears to the requirements of 4.16.  The Court also repeatedly indicated that the Secretary is may promulgate regulations in line with SSA’s definition of sedentary employment.
+
+The Court found that although the Board relied upon VA examinations that made the concept of sedentary work a central issue, it did not explain how it interpreted the examiners’ use of the term.  The Court rejected the Secretary’s argument that it should be presumed that the VA examiners use the word sedentary in accordance with its ordinary meaning; therefore, presuming the Board understood and used it in the same manner, which precluded any need for the Board to further explain the matter.
+
+The Court held that where a veteran’s ability to perform sedentary work is a basis for the Board’s decision, the meaning of sedentary work must be determined from the particulars of the medical opinion for which it is used.  The Board must explain this meaning – to the extent that it is not apparent from the Board’s overall discussion of the opinion – as well as how the concept of sedentary work factors into the veteran’s overall disability picture and vocational history, and the veteran’s ability to secure or follow substantially gainful occupation.
+
+The Court stated that when an examiner uses the term sedentary work, the surrounding medical opinion may give the term its content, based on the specific functional limitations, if any, found by the examiner.  However, when, as in the present case, the examiner describes certain types of functional limitations and still opines that the veteran is capable of sedentary work, the Board may need to determine whether a common-sense inference can be drawn that the concept of sedentary work, as understood by the examiner, does not encompass the physical or mental acts that the veteran is incapable of performing.  Before the Board can rely on an examiner’s finding that a veteran is capable of sedentary work to deny TDIU, it must also ensure that the findings are consistent with the totality of the medical evidence.
+
+The Court noted that although 4.16 does not make the concept of sedentary work an explicit TDIU factor, if the Board bases it denial of TDIU in part on the conclusion that a veteran is capable of sedentary work, then it must explain how it interprets this concept in the context of that case, which includes, if necessary, an explanation of how a finding that a veteran is capable of sedentary employment squares with the veteran’s educational and occupational history.  The meaning of “sedentary work” is arrived at inductively with the facts cited providing the context for understanding how the observation applies in a given situation.  This allows for an individualized assessment; however, absent such factual context, the phrase can be regarded conclusory and meaningless.
+
+The Court found that it was unclear whether the Board arrived at its own conclusion that the veteran could perform sedentary employment or simply adopted the examiners’ conclusions.  The Court stated that the Board must sufficiently explain how it interpreted the examiners’ use of the term and how the concept of sedentary work figures into a veteran’s overall disability picture and vocational history.  The Court also noted that the Board failed to mention whether the veteran’s PTSD symptoms, such as difficulty concentrating and interacting with people, could impact sedentary employment, as a VA examiner in 2012 opined that the PTSD could be associated with decreased work efficiency in an occupational setting, regardless of whether involves physical or sedentary tasks.
+
+The Court, finding that the Board focused exclusively on the veteran’s physical functional limitations in determining that he could perform sedentary work consistent with his vocational history, remanded the case with instructions that the Board clarify its assessment of the extent to which PTSD affects the veteran’s ability to do sedentary work.
+
+**References:**
+
+CAVC case number: No. 16-1543
+
+<http://www.uscourts.cavc.gov/documents/WithersBC_16-1543.pdf>

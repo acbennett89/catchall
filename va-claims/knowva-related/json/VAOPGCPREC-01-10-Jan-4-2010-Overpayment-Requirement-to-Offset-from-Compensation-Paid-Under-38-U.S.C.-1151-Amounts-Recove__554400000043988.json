@@ -1,0 +1,109 @@
+{
+ "name": "VAOPGCPREC 01-10, Jan 4, 2010, Overpayment & Requirement to Offset from Compensation Paid Under 38 U.S.C. 1151 Amounts Recovered Under the Federal Tort Claims Act",
+ "content": "<p style=\"text-align: center\">\tDecision Assessment Document<br />\tVAOPGCPREC 01-10, Jan 4, 2010, Overpayment &amp; Requirement to Offset from Compensation Paid Under 38 U.S.C. 1151 Amounts Recovered Under the Federal Tort Claims Act<br />\tOffice of General Counsel Precedent Opinion</p><p>\t<br />\t<strong>What the case is about</strong></p><p>\tVA may not apply the amount of overpayment of compensation, due to untimely discontinuance of compensation, that does not result in the creation of a debt or is waived, to the amount of a tort claim settlement that is required to be offset from disability compensation paid under 38 U.S.C. \u00a7 1151.&nbsp;&nbsp;</p><p>\t<strong>Impact on VBA</strong></p><p>\tNo impact requiring regulatory revision or Manual change.&nbsp;&nbsp;</p><p>\t<strong>Summary on facts and findings</strong></p><p>\tThe veteran, in March 1997, obtained a settlement under the Federal Tort Claims Act (FTCA) in the amount of $775,000 based on the same disability for which he was already in receipt of compensation under section 1151.&nbsp; The regional office (RO) was required by law to discontinue payments under section 1151 until the aggregate amount of compensation that would have otherwise have been paid equaled $775,000, the amount of the settlement.&nbsp;&nbsp; However, it failed to discontinue compensation payments beginning with the April 1997 payment and continued payments through December 2005.&nbsp;</p><p>\tThe RO, in July 2005, after it was instructed by Compensation and Pension Service to begin offset of section 1151 compensation, notified the veteran of its proposal to discontinue section 1151 compensation payments.&nbsp; The RO stopped paying compensation in January 2006, and made the discontinuation of compensation effective from April 1, 1997, resulting in an overpayment of $234,372.&nbsp; The veteran\u2019s challenge to the validity of the debt and request for waiver of overpayment was denied.&nbsp;</p><p>\tThe Board of Veterans\u2019 Appeals (Board), in July 2008, determined that the RO\u2019s payment of compensation from April 1997 through December 2005 resulted in an overpayment of $234,372; however, the Board also concluded that an overpayment in the amount $222,128 for the period from April 1997 through July 2005 was an invalid debt because it was solely the result of administrative error on the part of VA without the veteran knowing that it was erroneous.&nbsp; (The Board remanded the case to the RO to readjudicate the issue of waiver for the valid debt of $12,244, which constituted overpayment from August 2005 through December 2005 following VA\u2019s July 2005 notice to the veteran of the overpayment).&nbsp;</p><p>\tRegional Counsel presented the question as to whether the $222,128 amount may be applied toward the aggregate amount ($775,000) required to be offset from compensation payments.&nbsp;</p><p>\tGeneral Counsel held that VA may not apply the $222,128 overpayment to reduce the amount it is required to offset from section 1151 compensation payments.&nbsp; General Counsel stated that the Board\u2019s determination that the payments the veteran received from April 1997 through December 2005 to be an invalid debt does not obviate the statutory prohibition under section 1151(b)(1) against paying section 1151 compensation until the aggregate amount of compensation that would otherwise have been paid equals the total amount of the tort claim settlement.&nbsp; Section 1151(b)(1) unambiguously prohibits duplication of payments following a tort claim settlement and operates independently of the laws governing overpayment and debt collection.&nbsp; General Counsel also noted that there was no reason for distinguishing between an invalid debt and waived debt as, in either case, the veteran is permitted to keep compensation payments to which he was not rightfully entitled.&nbsp;</p><p>\tGeneral Counsel held that the law prohibits VA from paying compensation until the entire amount of the tort settlement, $775,000, is offset, and payments that the veteran is permitted to keep cannot be considered payments that were not made for purposes of the offset.&nbsp;</p><p>\t<strong>References</strong></p><p>\t<a href=\"http://www.va.gov/ogc/docs/2010/Prec1_2010.pdf\" target=\"_blank\">http://www.va.gov/ogc/docs/2010/Prec1_2010.pdf</a><br />\t&nbsp;</p>",
+ "additionalInfo": "",
+ "articleType": 0,
+ "attachment": [],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 4175,
+ "createdByUserName": "OBPGMANC",
+ "createdDate": "30 Jun 2016 17:51:36.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": false,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "",
+ "languageId": 1,
+ "lastModifiedBy": 4175,
+ "lastModifiedByUserName": "OBPGMANC",
+ "lastModifiedDate": "30 Jun 2016 17:58:27.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "30 Jun 2016 17:51:36.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000043334,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "summary": "VA may not apply the amount of overpayment of compensation, due to untimely discontinuance of compensation, that does not result in the creation of a debt or is waived, to the amount of a tort claim settlement that is required to be offset from disability compensation paid under 38 U.S.C. \u00a7 1151.  ",
+ "topicBreadcrumb": [],
+ "uuid": "6114B421-8AAD-49F0-8DB2-01FD65AFAF37",
+ "version": 1,
+ "versionId": 554400000060625,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-43988",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000043988?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000043988
+}

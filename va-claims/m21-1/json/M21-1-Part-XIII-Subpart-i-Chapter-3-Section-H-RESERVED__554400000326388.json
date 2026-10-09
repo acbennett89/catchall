@@ -1,0 +1,169 @@
+{
+ "name": "M21-1, Part XIII, Subpart i, Chapter 3, Section H - RESERVED",
+ "content": "<p style=\"text-align: right\"><span style=\"font-size:11px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><a class=\"eGainArticleLink\" articleid=\"554400000173843\" articlename=\"M21-1, Part XIII, Subpart i, Chapter 3, Section G - Eligibility for Medical Services for Polish and Czechoslovakian Armed Forces\" href=\"https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000173843?portalId=554400000001018&usertype=customer&\">&lt;-- Previous Section</a>&nbsp; <a class=\"eGainArticleLink\" articleid=\"554400000173844\" articlename=\"M21-1, Part XIII, Subpart i, Chapter 3, Section I - Civilian Health and Medical Program of the Department of Veterans Affairs (CHAMPVA) Eligibility Determinations\" href=\"https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000173844?portalId=554400000001018&usertype=customer&\">Next Section --&gt;</a>&nbsp;</span></span></p>\n",
+ "description": "",
+ "articleType": 0,
+ "attachment": [
+  {
+   "name": "Reorganization Guide.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000015769?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000015769
+  },
+  {
+   "name": "6-1-21_Key Changes_M21-1XIII_i_3_SecH.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000015854?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000015854
+  },
+  {
+   "name": "Historical_M21-1XIII_i_3_SecH_6-1-21.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000027824?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000027824
+  },
+  {
+   "name": "6-18-26_Key Changes_M21-1XIII_i_3_SecH.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000027825?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000027825
+  }
+ ],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 2265,
+ "createdByUserName": "CAPLMAZA",
+ "createdDate": "18 Jun 2026 17:11:52.873 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": true,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "languageId": 1,
+ "lastModifiedBy": 2265,
+ "lastModifiedByUserName": "CAPLMAZA",
+ "lastModifiedDate": "18 Jun 2026 17:32:55.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "18 Jun 2026 17:24:17.000 +0000",
+ "owner": 2265,
+ "parentFolderId": 554400000173622,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "topicBreadcrumb": [
+  {
+   "topic": [
+    {
+     "id": 554400000001924,
+     "name": "Compensation and Pension"
+    },
+    {
+     "id": 554400000004049,
+     "name": "M21-1 Adjudication Procedures Manual"
+    },
+    {
+     "id": 554400000019850,
+     "name": "Part 13 (Part XIII). Eligibility Determinations and Information Sharing for Other Benefits"
+    },
+    {
+     "id": 554400000019851,
+     "name": "Subpart i.  Eligibility Determinations  for Other Department of Veterans Affairs (VA) Benefits"
+    },
+    {
+     "id": 554400000019855,
+     "name": "Chapter 03.  Eligibility for Medical Care and Civilian Health and Medical Program of the Department of Veterans Affairs (CHAMPVA)"
+    }
+   ]
+  }
+ ],
+ "uuid": "0D0DA7F5-1975-4007-AE38-4E050729CBEF",
+ "version": 2,
+ "versionId": 554400000427770,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "KMPR-271598",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "Policy or Procedure",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "Policy or Procedure",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "VA Staff",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-326388",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000326388?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000326388
+}

@@ -1,0 +1,108 @@
+{
+ "name": "Andrews v. Nicholson, Aug 17, 2005, 421 F.3d 1278",
+ "content": "<p style=\"text-align: center\">\t<span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\">Decision Assessment Document<br />\tAndrews v. Nicholson, Aug 17, 2005, 421 F.3d 1278<br />\tU.S. Court of Appeals for the Federal Circuit</span></span><br />\t&nbsp;</p><p align=\"center\">\t<span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\">&nbsp;</span></span></p><p>\t<span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\"><strong>What the case is about:</strong></span></span></p><p>\t<span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\">In this case, the Federal Circuit explained its earlier precedent in <a href=\"https://law.resource.org/pub/us/case/reporter/F3/251/251.F3d.1378.00-7009.html\" target=\"_blank\"><em>Roberson v. Principi</em>, 251 F.3d 1378 (Fed. Cir. 2001)</a>, which held that VA must sympathetically read a veteran's filings to identify all claims that they raise.&nbsp;</span></span></p><p>\t<span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\"><strong>Impact on VBA:</strong></span></span></p><p>\t<span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\">No new impact warranting regulatory revision or Manual change. </span></span></p><p>\t<span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\"><strong>Summary of the facts and Court\u2019s reasons:</strong></span></span></p><p>\t<span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\">In <em>Andrews</em>, the court held that (1) <em>Roberson</em> requires VA to sympathetically read all pleadings filed pro se, including claims of clear and unmistakable error (CUE); (2) <em>Roberson</em> does not require sympathetic reading of pleadings filed by counsel; (3) VA\u2019s duty to sympathetically read a pro se claimant\u2019s CUE motion is antecedent to a determination as to whether CUE has been plead with specificity; (4) when VA violates <em>Roberson</em> by failing to adjudicate a raised claim, the claim is not considered unadjudicated, but the error is instead properly corrected through a CUE motion; and (5) the Court of Appeals for Veterans Claims (Veterans Court) lacks jurisdiction over a CUE issue not raised before VA by a represented claimant.&nbsp; Because the appellant in this case was represented, the Federal Circuit affirmed the Veteran\u2019s Court\u2019s decision declining to address a CUE challenge that had not been specifically raised to the Board.&nbsp;</span></span></p><p>\t<strong><span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\">References:</span></span></strong></p><p>\t<span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\">Federal Circuit case number: No. 04-7155</span></span></p><p>\t<a href=\"http://www.cafc.uscourts.gov/sites/default/files/opinions-orders/04-7155.pdf\" target=\"_blank\"><span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\">http://www.cafc.uscourts.gov/sites/default/files/opinions-orders/04-7155.pdf</span></span></a></p>",
+ "articleType": 0,
+ "attachment": [],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 2326,
+ "createdByUserName": "ADJTSLAU",
+ "createdDate": "31 Oct 2014 20:50:22.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": false,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "sympathetically read, raised claim, Andrews v. Nicholson, 421 F.3d 1278, No. 04-7155",
+ "languageId": 1,
+ "lastModifiedBy": 4175,
+ "lastModifiedByUserName": "OBPGMANC",
+ "lastModifiedDate": "05 Oct 2016 14:15:12.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "05 Oct 2016 14:04:33.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000014311,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "summary": "In this case, the Federal Circuit explained its earlier precedent in Roberson v. Principi, 251 F.3d 1378 (Fed. Cir. 2001), which held that VA must sympathetically read a veteran's filings to identify all claims that they raise. ",
+ "topicBreadcrumb": [],
+ "uuid": "CBC5268E-62F8-419D-BB57-554B8A522046",
+ "version": 5,
+ "versionId": 554400000065412,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "Law or Rule or Regulation",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "Law or Rule or Regulation",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "VA Staff",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "VA Staff",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-15186",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000015186?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000015186
+}

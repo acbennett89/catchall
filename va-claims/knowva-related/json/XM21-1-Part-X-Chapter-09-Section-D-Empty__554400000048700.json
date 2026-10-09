@@ -1,0 +1,109 @@
+{
+ "name": "XM21-1, Part X, Chapter 09, Section D - Empty",
+ "content": "",
+ "additionalInfo": "508",
+ "articleType": 0,
+ "attachment": [],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 4720,
+ "createdByUserName": "VBACOREASEJ",
+ "createdDate": "04 Nov 2016 19:49:00.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": false,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "",
+ "languageId": 1,
+ "lastModifiedBy": 2265,
+ "lastModifiedByUserName": "CAPLMAZA",
+ "lastModifiedDate": "02 Apr 2020 12:15:00.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "02 Apr 2020 12:14:00.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000011445,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "summary": "",
+ "topicBreadcrumb": [],
+ "uuid": "92C290C5-5444-44C6-B22F-EB09B3A12078",
+ "version": 6,
+ "versionId": 554400000176030,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "Policy or Procedure",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "Policy or Procedure",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "VA Staff",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "VA Staff",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-48700",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000048700?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000048700
+}

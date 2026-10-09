@@ -1,0 +1,144 @@
+{
+ "name": "M21-1, Part V, Subpart i, Chapter 3, Section E - Rescinded",
+ "content": "<p style=\"text-align: right\">\t&nbsp;<span style=\"font-size: 11px\"><span style=\"font-family: arial , helvetica , sans-serif\"><a class=\"eGainArticleLink\" articleid=\"554400000014370\" articlename=\"M21-1, Part V, Subpart i, Chapter 3, Section D - Historical\" href=\"https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000014370?portalId=554400000001018&usertype=customer&\">&lt;-- Previous Section</a>&nbsp; <a class=\"eGainArticleLink\" articleid=\"554400000014383\" articlename=\"M21-1, Part V, Subpart ii, Chapter 1, Section A - Principles of Reviewing and Weighing Evidence\" href=\"https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000014383?portalId=554400000001018&usertype=customer&\">Next Section --&gt;</a></span></span></p><div style=\"margin-left: 1.2in\">\t&nbsp;</div>",
+ "additionalInfo": "508",
+ "articleType": 0,
+ "attachment": [
+  {
+   "name": "Change - June 9, 2015 - Transmittal Sheet - M21-1MRV_i_3_SecE_TS.doc",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000002544?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000002544
+  }
+ ],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 2322,
+ "createdByUserName": "vscbgrah",
+ "createdDate": "29 Oct 2014 18:21:23.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": true,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "two-parent, parental line, beneficiary, Survivor\u2019s Pension, Dependency Indemnity Compensation (DIC), Dependents\u2019 Educational Assistance (DEA), election, surviving spouse, 38 CFR 3.703, 38 CFR 21.3023, 38 CFR 3.659, 38 CFR 3.700, 38 CFR 3.503, 38 CFR 3.704, 38 CFR 3.451, 38 U.S.C 5304, 38 U.S.C 3562, and 38 U.S.C 1311.",
+ "languageId": 1,
+ "lastModifiedBy": 2265,
+ "lastModifiedByUserName": "CAPLMAZA",
+ "lastModifiedDate": "01 Sep 2021 14:55:57.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "01 Sep 2021 14:54:56.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000180392,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "summary": "",
+ "topicBreadcrumb": [
+  {
+   "topic": [
+    {
+     "id": 554400000001924,
+     "name": "Compensation and Pension"
+    },
+    {
+     "id": 554400000004049,
+     "name": "M21-1 Adjudication Procedures Manual"
+    },
+    {
+     "id": 554400000004053,
+     "name": "Part 05 (Part V). The Rating Process"
+    },
+    {
+     "id": 554400000021025,
+     "name": "Historical"
+    },
+    {
+     "id": 554400000021026,
+     "name": "Subpart i. Historical"
+    }
+   ]
+  }
+ ],
+ "uuid": "3B74B978-6BF9-4209-AF20-FA53F39F1053",
+ "version": 11,
+ "versionId": 554400000231175,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "Policy or Procedure",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "Policy or Procedure",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "VA Staff",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "VA Staff",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-14378",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000014378?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000014378
+}

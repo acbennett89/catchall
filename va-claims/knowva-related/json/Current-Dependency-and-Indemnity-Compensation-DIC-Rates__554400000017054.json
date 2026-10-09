@@ -1,0 +1,147 @@
+{
+ "name": "Current Dependency and Indemnity Compensation (DIC) Rates",
+ "content": "<p>Click links&nbsp;for the&nbsp;DIC and Parents' DIC rate tables</p><p><a href=\"http://benefits.va.gov/Compensation/current_rates_dic.asp\" target=\"_blank\"><span style=\"font-size: 12px\"><span style=\"font-family: arial , helvetica , sans-serif\">Rates: Dependency and Indemnity Compensation</span></span></a></p><p><a href=\"http://benefits.va.gov/Pension/current_rates_Parents_DIC_pen.asp\" target=\"_blank\"><span style=\"font-size: 12px\"><span style=\"font-family: arial , helvetica , sans-serif\">Rates: Parents' Dependency and Indemnity Compensation</span></span></a></p><p></p><p><span style=\"font-size: 12px\"><span style=\"font-family: arial , helvetica , sans-serif\">&nbsp;</span></span></p><p><span style=\"font-size: 12px\"><span style=\"font-family: arial , helvetica , sans-serif\"><strong>&nbsp;</strong></span></span></p><p><span style=\"font-size: 12px\"><span style=\"font-family: arial , helvetica , sans-serif\">&nbsp;</span></span></p><div style=\"clear: both\"><span style=\"font-size: 12px\"><span style=\"font-family: arial , helvetica , sans-serif\">&nbsp;</span></span><p><span style=\"font-size: 12px\"><span style=\"font-family: arial , helvetica , sans-serif\">&nbsp;</span></span></p></div><p><span style=\"font-size: 12px\"><span style=\"font-family: arial , helvetica , sans-serif\">&nbsp;</span></span></p><p><span style=\"font-size: 12px\"><span style=\"font-family: arial , helvetica , sans-serif\">&nbsp;</span></span></p><h2></h2><p><span style=\"font-size: 12px\"><span style=\"font-family: arial , helvetica , sans-serif\">&nbsp;</span></span></p><p><span style=\"font-size: 12px\"><span style=\"font-family: arial , helvetica , sans-serif\">&nbsp;</span></span></p><h2><span style=\"font-size: 12px\"><span style=\"font-family: arial , helvetica , sans-serif\">&nbsp;</span></span></h2><p><span style=\"font-size: 12px\"><span style=\"font-family: arial , helvetica , sans-serif\">&nbsp;</span></span></p><p><span style=\"font-size: 12px\"><span style=\"font-family: arial , helvetica , sans-serif\">&nbsp;</span></span></p><h2><span style=\"font-size: 12px\"><span style=\"font-family: arial , helvetica , sans-serif\">&nbsp;</span></span></h2><p><span style=\"font-size: 12px\"><span style=\"font-family: arial , helvetica , sans-serif\">&nbsp;</span></span></p><p></p>",
+ "articleType": 0,
+ "attachment": [
+  {
+   "name": "2017-12-01 DIC Rate Tables 20P Approved.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000008378?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000008378
+  },
+  {
+   "name": "2017-12-01 Parents DIC Rate Tables 20P Approved.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000008379?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000008379
+  }
+ ],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 2289,
+ "createdByUserName": "VBACOMCCARD",
+ "createdDate": "15 Jan 2015 17:02:05.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": true,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "2017 COLA, 2017 Dependency and Indemnity Compensation (DIC) COLA, DIC COLA 2017, 2017 Parents DIC COLA, DIC Rates, 2017 DIC Rates, 2017, DIC Rate Tables, Dependency and Indemnity Compensation Rate Tables, 2017 DIC Tables, Cost of Living Adjustment (COLA), 2017 COLA, 2018, 2019",
+ "languageId": 1,
+ "lastModifiedBy": 2648,
+ "lastModifiedByUserName": "BASASMIT",
+ "lastModifiedDate": "29 Sep 2022 16:44:25.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "29 Sep 2022 16:43:23.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000015833,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "topicBreadcrumb": [
+  {
+   "topic": [
+    {
+     "id": 554400000001924,
+     "name": "Compensation and Pension"
+    },
+    {
+     "id": 554400000005316,
+     "name": "Rate Tables"
+    },
+    {
+     "id": 554400000005317,
+     "name": "Current"
+    },
+    {
+     "id": 554400000005320,
+     "name": "Pension"
+    }
+   ]
+  }
+ ],
+ "uuid": "4A1FD6AB-F328-48FE-A5BA-71E34B414D55",
+ "version": 16,
+ "versionId": 554400000271456,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "Record",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "Record",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "Pension",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "Pension",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-17054",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000017054?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000017054
+}

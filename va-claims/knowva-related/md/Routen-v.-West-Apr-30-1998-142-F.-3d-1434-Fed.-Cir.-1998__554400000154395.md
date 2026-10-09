@@ -1,0 +1,75 @@
+# Routen v. West, Apr 30, 1998, 142 F. 3d 1434 (Fed. Cir. 1998)
+
+- Source: https://www.knowva.ebenefits.va.gov/system/templates/selfservice/va_ssnew/help/customer/locale/en-US/portal/554400000001018/content/554400000154395/
+- Article ID: 554400000154395 (KMPR-154395)
+- Last modified: 07 Aug 2020 14:05:09.000 +0000
+
+---
+
+Decision Assessment Document
+Routen v. West, Apr 30, 1998, 142 F. 3d 1434 (Fed. Cir. 1998)
+U.S. Court of Appeals for the Federal Circuit
+
+**What the case is about:**
+
+The Federal Circuit held that a change in regulation addressing proof required to rebut the presumption that aggravation of a pre-service disability was service connected was not new and material evidence for purposes of reopening a veteran's previously denied claim.  The change in regulation was not an intervening, substantive change in law providing new cause of action to the veteran.
+
+**Impact on VBA:**
+
+The Federal Circuit's holding has been incorporated into guidance contained in the Manual M21-1 at III.iv.5.A.
+
+**Summary of the facts and Court’s reasons:**
+
+In April 1977, the veteran attempted to enlist in the U.S. Navy. As a result of his enlistment examination, he was deemed medically ineligible to enlist due to psoriasis on his legs, a disqualifying skin disease. Following the submission of a letter from his personal physician noting that the rash was successfully treated and was just an “eczematous patch ... with secondary infection,” The veteran’s entrance medical examination record was changed from psoriasis to episodic eczema, and he entered the naval service. He served on active duty less than a year, from December 1977 to October 1978.
+
+Not long after entering service, the veteran complained of itchy, scaling skin. His condition was diagnosed by Navy doctors as psoriasis; he was treated for scaling on the knees, elbows, and palms, a condition which continued. Then, in September 1978, a Medical Board reviewing the veteran’s medical fitness for continued military service found the veteran unfit for further Naval Service by reason of a physical disability which was neither incurred in, nor aggravated by, a period of active military service. Based upon a finding that the veteran had developed the disease two years before enlistment, the Board reported a final diagnosis of psoriasis vulgaris, concluding that the disease “[e]xisted prior to enlistment/Nonservice aggravated.” The veteran was given a medical discharge from the Navy.
+
+Not long thereafter, in January 1979, the veteran filed a claim with the Veterans Administration for disability benefits based on his psoriasis, alleging that the disease was service connected.  In the same month, the regional office (RO) denied the veteran’s claim with the notation that the psoriasis was “neither incurred in nor aggravated by his short period of active duty.” The veteran did not appeal from that determination; the decision became final.
+
+Later in 1979, the veteran again sought disability benefits for his skin condition. Treating his application as a request for reconsideration, the RO, on July 10, 1979, again denied his claim. Some nine years later, in May 1988, the veteran applied yet again for veterans benefits, and again the RO denied his claim. The record does not indicate that any of these later denial decisions by the RO were appealed.
+
+Then in September 1992, the veteran filed an application to reopen his claim. He presented medical treatment records documenting a long history of care for his psoriasis to establish service connection. The RO in December 1992 denied the veteran’s application on the basis that he had not submitted new and material evidence. The veteran appealed the determination of the VARO to the Board of Veterans Appeals (Board).
+
+The Board in April 1995 affirmed the decision of the RO without reaching the merits of the claim, determining that the new records were not new and material for the purpose of reopening the veteran's claim. The Board apparently did not consider the effect of a 1992 change in 38 C.F.R. 3.306(b), which had the effect of raising the evidentiary burden required of the Government when it seeks to overcome the presumption of service-caused aggravation available to peacetime service veterans who demonstrate an increase during service of a pre-service disability.
+
+On the veteran's subsequent appeal to the Court of Veterans Appeals (Veterans Court), which affirmed the Board's decision, finding that neither the newly submitted medical records, nor the change in the presumption of aggravation rule constituted “new and material” evidence sufficient to reopen the veteran's claim.
+
+The veteran argued before the Federal Circuit that the change in the evidentiary standard for rebutting the presumption is now applicable to his case, and that it constitutes “new and material evidence” on the basis of which his case should have been reopened. The Veterans Court determined that a change in a burden-shifting presumption such as this does not constitute “new and material evidence” as that term is understood under 38 U.S.C. § 5108.
+
+The Federal Circuit observed that decision by the Veterans Court in Akins v. Derwinski, 1 Vet.App. 228 (1991), is the primary authority for the proposition that failure to apply an evidentiary presumption may serve as “new and material evidence” to reopen a claim. In Akins, the RO failed to properly apply the presumptions of soundness upon enlistment and of service-connection for aggravated conditions when denying the veteran's claim for benefits. The Veterans Court held that those presumptions provided the evidentiary foundation upon which the veteran's claim stood, and, unless rebutted by the Government, entitled the veteran to a decision in his favor. Failure to have given the veteran the benefit of the presumptions was clear and unmistakable error; the initial decision denying benefits was reversed and remanded.
+
+In the course of its opinion, the Veterans Court noted that “the factual predicate demonstrated by the presumptions have an important evidentiary value and, to that extent, are the functional equivalent of evidence.”. Hence, the failure to apply the presumptions provided a basis for reopening the claim.
+
+However, the Akins decision did not involve the question of reopening a case based on new and material evidence. As the court stated, “[o]n appeal ... appellant contended that the denial of his original claim ... was clear and unmistakable error.” The Federal Circuit indicated that the Veteran Court's conclusion was that there was such error, an independent ground for correction unrelated to the “new and material evidence” rule. Thus, the Akins court specifically noted that the appellant chose to demonstrate clear and unmistakable error, presumably in order to gain entitlement to benefits dating back to his original claim.
+
+The Federal Circuit stated that it has never treated a presumption as any form of evidence, although in Jensen v. Brown, 19 F.3d 1413, 1415 (Fed.Cir.1994), in dealing with presumptions in VA law is cited for the contrary proposition, the Jensen court did not so decide. Jensen involved an appeal from the Veterans Court regarding the validity of a regulation creating a special presumption relating to aggravation of preexisting conditions during combat, and its application to the case of the appellant veteran. The question was whether the agency had misapplied the presumption. The Veterans Court had held that the regulation was invalid as conflicting with governing statutes, and thus the question of misapplication was moot.
+
+In the course of its review of the Veterans Court decision, the Jensen court noted that the Veterans Court had held that “the misapplication of, or in this case the alleged complete failure to apply, an evidentiary regulation may be a form of new and material evidence sufficient to reopen a claim.” Jensen, 19 F.3d at 1415. The Jensen court simply assumed that the case before it had been properly “reopened” in accordance with established VA procedures, and proceeded with its review regarding the validity of the regulation at issue. The Jensen court concluded that the regulation was valid, reversed the decision of the Veterans Court, and remanded the case. On remand, the Veterans Court stated that “it appears that the Federal Circuit in reversing this Court has determined, as a matter of law, that 38 C.F.R. 3.306(b)(2) constituted ‘new and material’ evidence, and that appellant's claim must be reopened.” 7 Vet.App. 27, 28 (1994). The Federal Circuit concluded that that the Veterans Court read more into the decision than was there.
+
+The Federal Circuit held that the misapplication of, or failure to apply, a statutory or regulatory burden-shifting presumption does not constitute “new and material evidence” for the purpose of reopening a claim under 38 U.S.C. 5108. As earlier noted, a change in the evidentiary standard required to rebut a presumption such as the one at issue here is not considered “evidence” by this court, because the presumption itself never was evidence.
+
+The Federal Circuit stated that the question is what evidence constitutes “new and material evidence” entitling a petitioner to reopen a previously decided and closed case. By its terms, section 5108 requires “evidence,” which the regulations describe as “evidence not previously submitted to agency decisionmakers which bears directly and substantially upon the specific matter under consideration, [and] which is neither cumulative nor redundant.” See 38 C.F.R. 3.156(a) (1997). Once new and material factual evidence is presented that warrants reopening of the case, the presumption may well result in a decision in favor of the veteran. But that is a matter that goes to the merits of the case, not one that goes to the question of whether the rules of finality are overcome.2
+
+The veteran also contended that the 1992 change extending the presumption of aggravation to peacetime service veterans was “liberalizing,” entitling him to reconsideration of his claim under Spencer v. Brown, 17 F.3d 368 (Fed.Cir.1994). In Spencer, the Federal Circuit held that, upon a showing of a new basis of entitlement to a claimed benefit as a result of an intervening change in law or regulation, 38 U.S.C. 7104(b) does not preclude consideration of the claim even though based on facts in a previously and finally denied claim.
+
+The Spencer court then analyzed whether or not the Veterans' Judicial Review Act of 1988 (“VJRA”) represented a “liberalizing law,” using the definition: “one which brought about a substantive change in the law creating a new and different entitlement to a benefit.” Id. The court concluded that the VJRA changes were “unmistakably procedural in nature ... directed to improving the adjudicative process and did not create new substantive rights to veterans' benefits.”
+
+The Federal Circuit concluded that there is no statutory basis for review of a previously adjudicated claim following an intervening change in the law under section 7104(b). The apparent basis for the assumption that a claim may be reconsidered under a “liberalizing” intervening law, even though grounded on the same factual basis, is 38 U.S.C. 5110(g) and its implementing regulations, including 38 C.F.R. 3.114(a). However, 3.114 addresses a different issue. It sets the effective date of awards made pursuant to a “liberalizing law, or a liberalizing VA issue approved by the Secretary”; the regulation does not define “liberalizing.” The statutory authority cited for 3.114, 38 U.S.C. 5110(g), is part of a statutory section that deals with the effective dates of awards, and, with regard to compensation and pension claims, sets the effective date for awards or increases made “pursuant to any Act or administrative issue.” The statute says nothing about “liberalizing” laws.
+
+In Spencer, this court accepted the Veterans Court view that the preclusive language of section 7104(b) does not prevent consideration of a new claim based on earlier adjudicated facts, “wh[en] an intervening and substantive change in law or regulation created a new basis for entitlement to a benefit.” There is a good argument that, if a new law provides for benefits not previously available, even though grounded on some but not all of the same facts adjudicated under an earlier law, a new cause of action is created along with a new entitlement to a remedy. Thus, if the old law required proof of facts A, B, and C, and the new law requires proof of facts A, B, and D, a veteran who lost the A, B, C case under the old law because he could not establish C would seem free to claim under the new law, assuming he can establish A, B, and D.
+
+In Spencer, the court went on to analyze whether the statute being pressed by the appellant was a law that created a new basis for entitlement, and concluded that it was not. In this case, the regulation at issue now provides that the presumption of aggravation is rebutted by “clear and unmistakable evidence ... where the preservice disability underwent an increase in severity during service.” 38 C.F.R. 3.306(b) (1997). This change in the evidentiary standard required to rebut the presumption is procedural in nature. Changing the Government's evidentiary standard for peacetime service veterans does not effect a substantive change in the law; that is, it does not create a new cause of action, since no new basis of entitlement is created. The peacetime service veterans simply benefit from a stronger presumption toward the same ultimate disability benefit entitlement, based on the same factual predicates.
+
+The Federal Circuit concluded that the Veterans Court correctly determined that there has been no substantive change in the law creating a new cause of action. A remand to that court is unnecessary and unwarranted since there is no legal ground on which that court could hold otherwise.
+
+Finally, to the extent that the veteran argued on appeal that, relying on the medical records, no specific factual finding  was made by the RO, the Board, or the Veterans Court regarding whether or not his condition was worsened by his service, this court lacks jurisdiction to review the issue. This argument presupposes fact finding and application of law to facts, and is another way of suggesting that the presumption of aggravation should have been applied in the veteran's case. However, the Federal Circuit determined that unless the veteran is able to reopen his claim by showing clear and unmistakable error, or by presenting new and material evidence, the issue of whether or not the presumption of aggravation applies cannot be addressed.
+
+The Federal Circuit affirmed the judgment of the Veterans Court.
+
+**References:**
+
+Federal Circuit number: No. 97-7064
+
+<https://casetext.com/case/routen-v-west>
+
+[M21-1, Part III, Subpart iv, Chapter 5, Section A - Principles of Reviewing Evidence and Decision Making](https://www.knowva.ebenefits.va.gov/system/templates/selfservice/va_ssnew/help/customer/locale/en-US/portal/554400000001018/content/554400000014203/)

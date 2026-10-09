@@ -1,0 +1,178 @@
+{
+ "name": "M21-1, Part IV, Subpart i, Chapter 1 - Historical",
+ "content": "<p style=\"text-align: right\"><span style=\"font-size: 14px\"><span style=\"font-family: arial , helvetica , sans-serif\">&nbsp;<span style=\"font-size: 11px\"><a class=\"eGainArticleLink\" articleid=\"554400000014302\" articlename=\"M21-1, Part III, Subpart vi, Chapter 8 - Historical\" href=\"https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000014302?portalId=554400000001018&usertype=customer&\">&lt;-- Previous Section</a>&nbsp; <a class=\"eGainArticleLink\" articleid=\"554400000014321\" articlename=\"M21-1, Part IV, Subpart ii, Chapter 1, Section A - Determining the Need for Review Examinations\" href=\"https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000014321?portalId=554400000001018&usertype=customer&\">Next Section --&gt;</a></span></span></span></p>",
+ "additionalInfo": "508",
+ "articleType": 0,
+ "attachment": [
+  {
+   "name": "Transmittal 12_13_05.doc",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000001828?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000001828
+  },
+  {
+   "name": "Change - April 20, 2015 - Transmittal Sheet - M21-1IV_i_1_TS.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000002357?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000002357
+  },
+  {
+   "name": "Reorganization Guide.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000017497?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000017497
+  },
+  {
+   "name": "Historical_M21-1IV_i_11_4-20-15.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000017498?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000017498
+  },
+  {
+   "name": "9-1-21_Key Changes_M21-1IV_i_1.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000017499?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000017499
+  }
+ ],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 2322,
+ "createdByUserName": "vscbgrah",
+ "createdDate": "31 Oct 2014 13:06:29.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": true,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "languageId": 1,
+ "lastModifiedBy": 2265,
+ "lastModifiedByUserName": "CAPLMAZA",
+ "lastModifiedDate": "02 Sep 2021 11:14:57.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "02 Sep 2021 11:13:46.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000180397,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "topicBreadcrumb": [
+  {
+   "topic": [
+    {
+     "id": 554400000001924,
+     "name": "Compensation and Pension"
+    },
+    {
+     "id": 554400000004049,
+     "name": "M21-1 Adjudication Procedures Manual"
+    },
+    {
+     "id": 554400000004052,
+     "name": "Part 04 (Part IV). Examinations"
+    },
+    {
+     "id": 554400000021035,
+     "name": "Historical"
+    },
+    {
+     "id": 554400000021038,
+     "name": "Subpart i. Historical"
+    }
+   ]
+  }
+ ],
+ "uuid": "65D70A68-F8CE-4B79-AFCF-6899D6F2201E",
+ "version": 18,
+ "versionId": 554400000231284,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "Policy or Procedure",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "Policy or Procedure",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "VA Staff",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "VA Staff",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-14903",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000014903?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000014903
+}

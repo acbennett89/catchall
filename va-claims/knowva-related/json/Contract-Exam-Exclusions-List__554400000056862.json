@@ -1,0 +1,107 @@
+{
+ "name": "Contract Exam Exclusions List",
+ "content": "<h1><span style=\"font-family: arial, helvetica, sans-serif\"><span style=\"font-size: 14px\">Contract Examination Exclusions</span></span></h1><div></div><div><span style=\"font-family: Arial, Helvetica, sans-serif\"><span style=\"font-size: 14px\">Circumstances under which contract examinations <em><strong>must not </strong></em>be requested include, but are not limited to, the following:</span></span></div><div><span style=\"font-family: Arial, Helvetica, sans-serif\">&nbsp;</span></div><ul>\t<li><span style=\"font-family: Arial, Helvetica, sans-serif\"><span style=\"font-size: 14px\">Former Prisoner of War (FPOW) Protocol Examination is required</span></span></li>\t<li><span style=\"font-family: Arial, Helvetica, sans-serif\"><span style=\"font-size: 14px\">examination requires hospitalization or surgical evaluation, such as colonoscopy or laparoscopy</span></span></li>\t<li><span style=\"font-family: Arial, Helvetica, sans-serif\"><span style=\"font-size: 14px\">Veteran is an inpatient at a Veterans Health Administration (VHA) facility, nursing home, extended care facility, or domiciliary, and</span></span></li>\t<li><span style=\"font-family: Arial, Helvetica, sans-serif\"><span style=\"font-size: 14px\">Veteran is an employee of the contract examination vendor scheduled to conduct the examination.</span></span></li></ul><div><span style=\"font-family: Arial, Helvetica, sans-serif\">&nbsp;</span></div><div><span style=\"font-family: Arial, Helvetica, sans-serif\"><span style=\"font-size: 14px\"><em><strong>Reference</strong></em>:&nbsp; For more information on examination requests, see <a class=\"eGainArticleLink\" articleid=\"554400000180498\" articlename=\"M21-1, Part IV, Subpart i, Chapter 2, Section A - Examination Requests Overview\" href=\"https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000180498?portalId=554400000001018&usertype=customer&\">M21-1, Part IV, Subpart i, 2.A</a>.</span></span></div>",
+ "description": "DO NOT ASSOCIATE THIS ARTICLE WITH ANY TOPICS!!!!!!!!!!!!!!!",
+ "articleType": 0,
+ "attachment": [],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 2265,
+ "createdByUserName": "CAPLMAZA",
+ "createdDate": "12 May 2017 15:51:52.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": false,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "languageId": 1,
+ "lastModifiedBy": 4927,
+ "lastModifiedByUserName": "ACDDWILL",
+ "lastModifiedDate": "02 Dec 2021 16:12:37.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "02 Dec 2021 16:10:15.000 +0000",
+ "owner": 2265,
+ "parentFolderId": 554400000180496,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "topicBreadcrumb": [],
+ "uuid": "79C364A5-7814-4FD3-9A1F-196F77C7F752",
+ "version": 20,
+ "versionId": 554400000242267,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "Policy or Procedure",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "Policy or Procedure",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "VA Staff",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "VA Staff",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-56862",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000056862?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000056862
+}

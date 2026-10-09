@@ -1,0 +1,108 @@
+{
+ "name": "VAOPGCPREC 07-93, Aug 12, 1993, Service in Vietnam Under 38 CFR 3.313",
+ "content": "<p style=\"text-align: center\">\tDecision Assessment Document<br />\tVAOPGCPREC 07-93, Aug 12, 1993, Service in Vietnam Under 38 CFR 3.313<br />\tOffice of General Counsel Precedent Opinion</p><p>\t<br />\t<strong>What the case is about</strong></p><p>\tService in Vietnam under 38 CFR 3.313</p><p>\t<strong>Impact on VBA</strong></p><p>\tFor purposes of 38 CFR 3.313, which authorizes service connection of non-Hodgkin's lymphoma developing after military service in a veteran with service in Vietnam during the Vietnam era, the term \"service in Vietnam\" does not include service of a Vietnam era veteran whose only contact with Vietnam was flying high-altitude missions in Vietnamese airspace.</p><p>\t<strong>Summary on facts and findings</strong></p><p>\tThe question arises in the cases of a Vietnam era veteran who flew military missions over Vietnam but never actually landed in that country.&nbsp; The veteran contended that he is entitled to the presumption of service connection under 38 CFR 3.313 for nodular lymphocytic lymphoma on the basis of \"service in Vietnam,\" as that term is used in 38 CFR 3.313.&nbsp; The cited regulation implemented the determination by the Secretary that there is a relationship between Vietnam service and non-Hodgkin's lymphoma&nbsp;&nbsp; This determination was based on the Selected Cancers Study which focused on veterans who were \"stationed in Vietnam or off the coast of Vietnam\".&nbsp; Veterans whose only service with respect to Vietnam was in aircraft which flew in Vietnamese airspace were not included.&nbsp; Those veterans whose only contact with Vietnam was through high-altitude flights through Vietnamese airspace did not share the same experiences as those shown to be at increased risk in the Selected Cancers Study.</p><p>\tM21-1, Part VI, para 7.32b defines \"service in Vietnam\" to include service in the waters offshore, or service in other locations if the conditions of service involved duty or visitation in Vietnam.</p><p>\tAmend 38 CFR 3.313 to indicate that a Vietnam era veteran who only flew high altitude flights through Vietnamese airspace is not subject to the provisions of the regulation.</p><p>\t<strong>References</strong><br />\t<a href=\"http://www.va.gov/ogc/docs/1993/PRC07-93.DOC\" target=\"_blank\">http://www.va.gov/ogc/docs/1993/PRC07-93.DOC</a></p>",
+ "articleType": 0,
+ "attachment": [],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 4175,
+ "createdByUserName": "OBPGMANC",
+ "createdDate": "20 Jun 2016 17:43:30.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": false,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "38 CFR 3.313, non-Hodgkin's lymphoma,  Vietnam,  service in Vietnam,  exposure.",
+ "languageId": 1,
+ "lastModifiedBy": 4175,
+ "lastModifiedByUserName": "OBPGMANC",
+ "lastModifiedDate": "20 Jun 2016 17:50:26.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "20 Jun 2016 17:43:30.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000043317,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "summary": "For purposes of 38 CFR 3.313, which authorizes service connection of non-Hodgkin's lymphoma developing after military service in a veteran with service in Vietnam during the Vietnam era, the term \"service in Vietnam\" does not include service of a Vietnam era veteran whose only contact with Vietnam was flying high-altitude missions in Vietnamese airspace.",
+ "topicBreadcrumb": [],
+ "uuid": "E38932BC-9930-4A95-8A97-81E5B900A9F7",
+ "version": 1,
+ "versionId": 554400000059699,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-43468",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000043468?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000043468
+}

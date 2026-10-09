@@ -1,0 +1,33 @@
+# VAOPGCPREC 11-95, Apr 27, 1995, Duty to Assist - Contemporaneous Examination Requirement
+
+- Source: https://www.knowva.ebenefits.va.gov/system/templates/selfservice/va_ssnew/help/customer/locale/en-US/portal/554400000001018/content/554400000043581/
+- Article ID: 554400000043581 (KMPR-43581)
+- Last modified: 22 Jun 2016 15:39:02.000 +0000
+
+---
+
+Decision Assessment Document
+ VAOPGCPREC 11-95, Apr 27, 1995, Duty to Assist - Contemporaneous Examination Requirement
+ Office of General Counsel Precedent Opinion
+
+**What the case is about**
+
+Is the Board of Veterans’ Appeals required, pursuant to the statutory duty to assist claimants in developing their disability-benefit claims, to remand a case solely because of the passage of time since an otherwise adequate examination report was prepared?
+
+**Impact on VBA**
+
+The Board of Veterans' Appeals (BVA) is not required to remand an appealed disability-benefit claim solely because of the passage of time since an otherwise adequate examination report was prepared.  An examination which was adequate for purposes of determination of the claim by the regional office will ordinarily be adequate for purposes of the Board's determination, except to the extent that the claimant asserts that the disability in question has undergone an increase in severity since the time of the examination.
+
+**Summary on facts and findings**
+
+The Court of Veterans Appeals concluded in Green v. Derwinski, 1 Vet. App. 121 (1991) that "fulfillment of the statutory duty to assist . . . includes the conduct of a through and contemporaneous examination, one which takes into account the records of prior medical treatment, so that the evaluation of the claimed disability will be a fully informed one."  The General Counsel concluded that review of both Green and decisions issued subsequent to Green support the conclusion that the Court has not remanded a case solely because an examination has aged prior to appellate review.  Rather, in each of these cases, the Court has found the VA examinaton inadequate for some reason other than being too old.  The CVA cases do establish that when a claimant submits a well-grounded claim that his or her disability has worsened since a prior rating and since the most recent examination of record, the duty to assist requires VA to conduct a new examination.  Where the most recent medical evidence of record substantially predates the date of a claim for an increased rating, the evidence is inadequate for purposes of determining the level of disability at the time of the claim.  In this case, VA would be unable to rule out the possibility that the claimed increase in disability occurred subsequent to the most recent examination but before the claim was filed.  However, nothing in CVA's caselaw indicates that an examination which is contemporaneous with the claim for an increase and is adequate for rating purposes would be rendered inadequate for purposes of the Board's review solely by reason of the passage of time between the examination and the Board's review.  An examination conducted proximate to the time the claim for increase was filed will generally be sufficiently "current" or "contemporaneous" for purposes of deciding that claim.
+
+Where a claimant affirmatively asserts to the Board that a further increase in disability has occurred subsequent to the prior examination and decision, the duty to assist may require that the Board remand the issue for additional evidentiary development, including a new examination, unless the claimant has submitted acceptable medical evidence of his or her current disability level proximate to the time of the appeal to the Board.
+
+It is important that rating specialists determine the adequacy of VA examinations and return them to the VAMC facility when found to be inadequate.  M21-1, Part VI, paragraphs 1.01b and 1.09 discuss the responsibility in determining the adequacy of the examination and some of the factors to be considered.  M21-1, Part VI, paragraph 2.12 states that when an examination is deemed inadequate, it will be returned for a corrected supplementary report or for reexamination.  All-station letter 4-73 dated July 20, 1994, included a copy of Chapter 1 of the Physician's Guide to Disability Evaluation Examinations.  All three references are in the Automated Reference Materials System (ARMS) easily accessible by regional office employees.
+
+Include information on the adequacy of examinations in rating board training classes and provide a reminder on the importance of identifying inadequate examinations in the next quarterly training letter and on the next Judicial Review Hotline.
+
+**References**
+
+<http://www.va.gov/ogc/docs/1995/Prc11-95.doc>

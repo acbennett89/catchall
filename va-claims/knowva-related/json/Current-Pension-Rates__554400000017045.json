@@ -1,0 +1,129 @@
+{
+ "name": "Current Pension Rates",
+ "content": "<p>Click&nbsp;links below for the Pension rate tables</p><p><a href=\"http://www.benefits.va.gov/PENSION/current_rates_veteran_pen.asp\" target=\"_blank\">Rates:&nbsp; Veterans Pension</a></p><p><a href=\"http://www.benefits.va.gov/PENSION/current_rates_survivor_pen.asp\" target=\"_blank\">Rates:&nbsp; Survivors Pension</a></p><p><a href=\"http://www.benefits.va.gov/PENSION/current_protected_pension_rate_tables.asp\" target=\"_blank\">Rates:&nbsp; Protected Pension</a></p>",
+ "additionalInfo": "",
+ "articleType": 0,
+ "attachment": [],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 2289,
+ "createdByUserName": "VBACOMCCARD",
+ "createdDate": "15 Jan 2015 15:34:36.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": false,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "2017 COLA, 2016 Pension COLA,  2017 Survivors COLA, Rate Tables, Veterans Pension Rate Tables, Survivors Pension Rate Tables, 2017, 2018, 2019",
+ "languageId": 1,
+ "lastModifiedBy": 2648,
+ "lastModifiedByUserName": "BASASMIT",
+ "lastModifiedDate": "29 Sep 2022 16:45:42.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "29 Sep 2022 16:44:41.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000015833,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "topicBreadcrumb": [
+  {
+   "topic": [
+    {
+     "id": 554400000001924,
+     "name": "Compensation and Pension"
+    },
+    {
+     "id": 554400000005316,
+     "name": "Rate Tables"
+    },
+    {
+     "id": 554400000005317,
+     "name": "Current"
+    },
+    {
+     "id": 554400000005320,
+     "name": "Pension"
+    }
+   ]
+  }
+ ],
+ "uuid": "B9AFEC96-304E-4A80-A08E-5762D7F8E788",
+ "version": 19,
+ "versionId": 554400000271459,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "Record",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "Record",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "Pension",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "Pension",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-17045",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000017045?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000017045
+}

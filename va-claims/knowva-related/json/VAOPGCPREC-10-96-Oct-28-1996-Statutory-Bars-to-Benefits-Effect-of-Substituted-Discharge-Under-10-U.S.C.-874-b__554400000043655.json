@@ -1,0 +1,109 @@
+{
+ "name": "VAOPGCPREC 10-96, Oct 28, 1996, Statutory Bars to Benefits: Effect of Substituted Discharge Under 10 U.S.C. 874(b)",
+ "content": "<p style=\"text-align: center\">\tDecision Assessment Document<br />\tVAOPGCPREC 10-96, Oct 28, 1996, Statutory Bars to Benefits: Effect of Substituted Discharge&nbsp;Under 10 U.S.C.&nbsp;874(b)<br />\tOffice of General Counsel Precedent Opinion</p><p>\t<br />\t<strong>What the case is about</strong></p><p>\tDoes the action of the Secretary of a Service Department under 10 U.S.C. \u00a7 874(b), substituting an administrative discharge for a discharge or dismissal executed in accordance with the sentence of a general court-martial, remove the statutory bar to benefits under 38 U.S.C. \u00a7 5303(a)?</p><p>\t<strong>Impact on VBA</strong></p><p>\tAn upgraded discharge issued pursuant to 10 U.S.C. \u00a7 874(b) does not remove the statutory bar to benefits under 38 U.S.C. \u00a7 5303(a) for individuals discharged or dismissed by reason of the sentence of a general court-martial.</p><p>\t<strong>Summary on facts and findings</strong></p><p>\tThe General Counsel noted that the legislative history of section 874 indicates that it was intended to give the secretaries of the service departments clemency and parole power for purposes of sentence uniformity.&nbsp; Therefore, an upgraded discharge issued pursuant to section 874(b) is generally in the nature of a grant of clemency and does not serve to invalidate or abate the general court-martial proceedings or the executed sentence of discharge or dismissal.&nbsp; The Dept. of the Navy has concluded that section 874(b) authorizes only grants of clemency, based primarily upon an applicant's record in the civilian community subsequent to discharge, and does not permit review of questions of guilt or innocence or other legal questions attendant to the court-martial which resulted in the punitive discharge or dismissal.&nbsp; Based on that determination, the General Counsel concluded that an upgraded discharge awarded pursuant to section 874(b) does not alter an individual's service records to change the fact that the individual was discharged or dismissed by reason of the sentence of a general court-martial.&nbsp; The revised DD 214, issued to the veteran in the instant case, while reflecting a discharge under honorable conditions, continues to identify the sentence of the court-martial as the reason for discharge.&nbsp; The statutory bar to benefits under 38 U.S.C. \u00a7 5303(a) can only be removed when the Board for Correction of Military Records changes the reason for discharge.&nbsp; Because an upgraded discharge issued under 10 U.S.C. \u00a7 874(b) changes the character of discharge, but not the reasons for discharge, an upgraded discharge issued pursuant to section 874(b) does not remove the statutory bar to benefits under section 5303(a) as to individuals discharged or dismissed by reason of the sentence of a general court-martial.</p><p>\tAmend 38 C.F.R. \u00a7 3.12 to incorporate the holding of this precedent opinion.</p><p>\t<strong>References</strong></p><p>\t<a href=\"http://www.va.gov/ogc/docs/1996/Prc10-96.doc\" target=\"_blank\">http://www.va.gov/ogc/docs/1996/Prc10-96.doc</a><br />\t&nbsp;</p>",
+ "additionalInfo": "",
+ "articleType": 0,
+ "attachment": [],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 4175,
+ "createdByUserName": "OBPGMANC",
+ "createdDate": "23 Jun 2016 15:19:13.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": false,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "",
+ "languageId": 1,
+ "lastModifiedBy": 4175,
+ "lastModifiedByUserName": "OBPGMANC",
+ "lastModifiedDate": "23 Jun 2016 15:22:41.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "23 Jun 2016 15:19:13.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000043320,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "summary": "An upgraded discharge issued pursuant to 10 U.S.C. \u00a7 874(b) does not remove the statutory bar to benefits under 38 U.S.C. \u00a7 5303(a) for individuals discharged or dismissed by reason of the sentence of a general court-martial.",
+ "topicBreadcrumb": [],
+ "uuid": "B768DC78-8191-4EFC-85D0-936B7BA298FA",
+ "version": 1,
+ "versionId": 554400000059942,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-43655",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000043655?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000043655
+}

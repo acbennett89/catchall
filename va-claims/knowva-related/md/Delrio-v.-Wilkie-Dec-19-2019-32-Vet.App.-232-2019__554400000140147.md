@@ -1,0 +1,65 @@
+# Delrio v. Wilkie, Dec 19, 2019, 32 Vet.App. 232 (2019)
+
+- Source: https://www.knowva.ebenefits.va.gov/system/templates/selfservice/va_ssnew/help/customer/locale/en-US/portal/554400000001018/content/554400000140147/
+- Article ID: 554400000140147 (KMPR-140147)
+- Last modified: 04 May 2020 17:17:29.000 +0000
+
+---
+
+Decision Assessment Document
+Delrio v. Wilkie, Dec 19, 2019, 32 Vet.App. 232 (2019)
+U.S. Court of Appeals for Veterans Claims (Court)
+
+**What the case is about:**
+
+The Court held that the effective date for a total evaluation due to individual unemployability (TDIU) cannot be earlier than the effective date of service connection for the underlying disability or disabilities.
+
+**Impact on VBA:**
+
+The Court’s holding will be incorporated into guidance contained in the Manual M21-1 at IV.ii.2.F.
+
+**Summary of the facts and Court’s reasons:**
+
+The veteran, in July 1996, filed for service connection for posttraumatic stress disorder (PTSD).  A June 2005 regional office (RO) decision awarded service connection for PTSD and assigned a 10 percent evaluation from July 1996.  The veteran timely appealed the evaluation.  Following VA examinations conducted in 2005, 2008, and 2015, higher evaluations of 30 percent for PTSD were awarded from September 1999 and 50 percent from July 2015, respectively.
+
+In October 2006, the veteran submitted a claim for service connection for Gulf War Illness with multiple joint pain and fibromyalgia.  The RO, in July 2007, awarded service connection for fibromyalgia with a 10 percent evaluation from October 11, 2006, which was later increased to 40 percent from October 2008.
+
+The Board of Veterans’ Appeals (Board), in June 2013, determined that the issue of TDIU was reasonably raised by the record and remanded the issue for initial development and adjudication.  The RO denied the issue; however, the Board, in December 2016, awarded TDIU from July 29, 2015, the date that the veteran’s combined disability evaluation met the schedular rating requirements of 38 C.F.R. 4.16(a).  The Board also remanded for referral for consideration of an extra-schedular TDIU evaluation prior to that date.  Compensation Service subsequently determined that an extra-schedular TDIU evaluation was not warranted prior to July 29, 2015.
+
+The Board, in its September 2017 decision, awarded an extra-schedular TDIU evaluation from October 11, 2006, the effective date of the veteran’s grant of service connection for fibromyalgia, because it found that the service-connected PTSD and fibromyalgia collectively rendered the veteran unemployable.  The Board denied an effective date for the extra-schedular TDIU evaluation prior to October 11, 2006, on the basis that PTSD was the only service-connected disability at that time and was not of such severity as to render the veteran unable to secure or maintain substantially gainful employment.  The Board supported the determination with finding that although the March 2003 and November 2005 VA examiners opined that PTSD interfered with employment, they did not state that PTSD symptoms actually rendered the veteran unable to obtain and maintain substantially gainful employment.  The Board also noted that an August 2008 VA examination found no work deficiencies or total social or occupational impairment.
+
+The veteran’s primary argument before the Court was that the Board erred in not considering the effects of his service-connected fibromyalgia when assessing entitlement to TDIU prior to October 11, 2006, because once VA determined that fibromyalgia was related to service, the effective date for the grant of service connection became irrelevant and the only issue left to resolve was whether the symptoms of the service-connected disability contributed to his inability to engage in substantially gainful employment.
+
+He also contended that the Board provided inadequate reasons or bases because it improperly characterized the March 2003 and November 2005 VA examiners’ silence as to whether the veteran was unemployable as evidence that he was employable; adopted the negative August 2008 VA medical opinion as its own without reconciling that opinion with the other evidence of record or otherwise conducting an independent analysis of whether PTSD precluded substantially gainful employment; and overlooked material evidence that was favorable to him.
+
+The Secretary conceded that remand was warranted due to the Board’s failure to provide adequate reasons or bases, as its TDIU analysis did not comply with Ray v. Wilkie, 31 Vet.App. 58 (2019).  In Ray, the Court held that the phrase “unable to secure and follow a substantially gainful occupation” in 4.16 has economic and noneconomic components, the latter of which focuses on the veteran’s ability to perform the physical and mental acts necessary for such an occupation.
+
+The Court agreed that the Board’s TDIU analysis did not comport with Ray and referenced ample evidence of record dated prior to October 2006 that suggested the veteran’s service-connected PTSD caused memory, concentration, and stress management issues that interfered with the veteran’s ability to work.  The Court concluded that because Ray mandates that the Board discuss each of those limitations, when raised, in order to adequately address the noneconomic component of TDIU, the Board’s failure to do so renders its reasons or bases inadequate for denying TDIU based on PTSD alone prior to October 2006.
+
+The Court found other reasons or bases errors in the Board’s decision to include the Board having incorrectly characterized the 2003 and 2005 VA examiners’ silence as to the veteran’s unemployability as evidence that PTSD did not render him unemployable.  The Court held in previous decisions that the absence of evidence on a particular question cannot be construed as negative evidence against a claimant unless there is a foundation in the record that demonstrates that such silence has a tendency to prove or disprove a relevant fact.  See Fountain v. McDonald, 27 Vet.App. 258 (2015); Horn v Shinseki, 25 Vet.App. 231 (2012); Buczynski v. Shinseki, 24 Vet.App. 221 (2011).  The Court observed the Board to not have identified a section in either examination report that specifically addressed the veteran’s unemployability nor otherwise explain why it would have been reasonable to expect that the examiners would comment on that issue in examinations that were not expressly provided for TDIU purposes.  The Court concluded that absent such an evidentiary foundation, the examiners’ silence would not have the tendency to provide whether PTSD rendered the veteran unemployable, which prohibited the Board from characterizing the examiners’ silence as substantive evidence against TDIU entitlement.
+
+The Court also found that the Board’s assessment of the 2003, 2005, and 2008 VA examinations appeared to be based, in part, on a misunderstanding of the distinct roles of medical examiners and adjudicators in the veterans benefits system.  The Court described the role of medical examiners as “expert witnesses” who provide opinions on medical matters to VA adjudicators, which generally lack the expertise and competence to opine of medical matters, with the medical information and analysis necessary to decide a claim.  While medical examiners may assist VA adjudicators in making determinations by providing detailed descriptions of a veteran’s disabilities and any functional limitations that they cause, the authority to make the ultimate determination of whether a veteran meets the 4.16 standards for TDIU belongs exclusively to the adjudicator and may not be delegated to a medical examiner.  The Court concluded that the Board also erred when it summarily concluded that the 2008 VA examination weighed against TDIU entitlement solely based on the examiner’s conclusion that the veteran’s PTSD did not warrant a 100 percent evaluation, as the Board cannot outsource to a medical examiner its independent responsibility to make an adjudicative determination as to entitlement to a claimed disability evaluation, to include TDIU.
+
+Lastly, in addressing reasons or bases errors, the Court found that the Board did not address material evidence that was potentially favorable to the veteran’s TDIU entitlement, which included an August 2003 report to a VA social worker that the veteran’s former employer “encouraged him to retire due to increased anger and irritability which affected his work.”  Accordingly, the Court held that remand was justified due to the multiple reasons or bases errors.
+
+In turning to the question of whether fibromyalgia was to be considered in deciding whether the veteran was entitled to a TDIU evaluation prior to October 11, 2006, the Court concluded that the Board was not required to consider fibromyalgia because service connection was not established for fibromyalgia prior to that date.
+
+The veteran’s argument was premised on Frost v. Shulkin, 29 Vet.App. 131 (2017), where the Court held that 38 C.F.R. 3.310 – a secondary service connection regulation with some language similar to 4.16 – did not contain an express temporal requirement and therefore did not preclude a grant of service connection for a disability based on a primary disability that was service connected at the time of the secondary service connection decision but not at the time of incurrence of the secondary disability.  The veteran argued that under Frost, since 4.16 lacked an express temporal requirement, it allows VA to consider the effects of that disability on unemployability throughout the TDIU period on appeal, regardless of the effective date of service connection for the disability.  He also maintained that since 4.16(a) refers to “ratable,” rather than “rated,” service-connected disabilities, a disability need only be service connectable, not service connected, to be considered in the TDIU effective date inquiry.
+
+The Court rejected the veteran’s argument, holding that the effective date for TDIU cannot be earlier than the effective date of service connection for the underlying disability or disabilities.  The Court observed that inherent in the evaluation regulations in part 4 of title 38, and the statutes that authorize payment of disability compensation, is the requirement that the disability being evaluated has been determined to be service connected.  The Court concluded that this base temporal requirement in part 4 means that compensation cannot be paid for disability, at any evaluation level, before the effective date of service connection for the disability.
+
+The Court noted that the plain language of 4.16 expressly directed that “the existence or degree of nonservice-connected disabilities … will be disregarded” when determining entitlement to TDIU.  Thus, prior to October 11, 2006, fibromyalgia was a non-service-connected disability, and the Board was required to disregard its effects when determining whether the veteran’s service-connected disability precluded gainful employment prior to that date.
+
+The Court also rejected the veteran’s “ratable” argument, observing that the veteran overlooked the Federal Circuit having previously qualified that definition by holding that disability or disabilities is only “ratable” at a given level if rated at or above that level individual or through application of the combined ratings table in 38 C.F.R. 4.25.  See Gazelle v. Shulkin, 868 F.3d 1006 (Fed. Cir. 2017).  The Court indicated that this definition of “ratable” also accord with part 4’s base temporal requirement and 4.16(a)’s prohibition against considering non-service-connected disabilities in the TDIU inquiry.
+
+The Court noted that the essential difference between Frost and this case is that Frost involved 3.310, a secondary service connection regulation, whereas this case involves 4.16, a disability evaluation regulation that prescribes a compensation payment rule and contains the additional base temporal requirement and limit on consideration of non-service-connected disabilities.  Thus, because 4.16 is subject to additional “temporal prerequisites,” it is fundamentally differently from 3.310, which was temporally limited only by the requirement that a veteran have a service-connected disability when entitlement to secondary service connection is decided.
+
+The Court concluded that to hold that the effective date of TDIU can be earlier than the effective date of the award of service connection for the disability or disabilities upon which the award of TDIU is based would create the absurd result that a veteran could be paid compensation at the total disability rate under 4.16 for a disability prior to the date that a service connection grant became effective.
+
+**References:**
+
+CAVC case number: No. 17-4220
+
+<http://www.uscourts.cavc.gov/documents/DelrioJ_17-4220.pdf>
+
+[M21-1, Part IV, Subpart ii, Chapter 2, Section F - Compensation Based on Individual Unemployability (IU)](https://www.knowva.ebenefits.va.gov/system/templates/selfservice/va_ssnew/help/customer/locale/en-US/portal/554400000001018/content/554400000014564/)

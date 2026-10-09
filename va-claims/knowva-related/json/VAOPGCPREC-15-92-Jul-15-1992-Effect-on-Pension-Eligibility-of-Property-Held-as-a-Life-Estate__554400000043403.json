@@ -1,0 +1,108 @@
+{
+ "name": "VAOPGCPREC 15-92, Jul 15, 1992, Effect on Pension Eligibility of Property Held as a Life Estate",
+ "content": "<p style=\"text-align: center\">\t<span style=\"font-size: 14px\"><span style=\"font-family: arial,helvetica,sans-serif\">Decision Assessment Document<br />\tVAOPGCPREC 15-92, Jul 15, 1992, Effect on Pension Eligibility of Property Held as a Life Estate<br />\tOffice of General Counsel Precedent Opinion</span></span></p><p>\t<br />\t<span style=\"font-size: 14px\"><span style=\"font-family: arial,helvetica,sans-serif\"><strong>What the opinion&nbsp;is about:</strong></span></span></p><p>\t<span style=\"font-size: 14px\"><span style=\"font-family: arial,helvetica,sans-serif\">The veteran and his spouse transferred three farm properties to their children for a nominal consideration, retaining a life estate interest.&nbsp; Following the veteran's death, his spouse derived some rental income based on a lease agreement with her son.&nbsp; General Counsel noted that she retained an ownership interest in the properties which included income rights, and that the transfer had been tantamount to a gift.&nbsp; Accordingly, it was concluded that the transfers should not be recognized as reducing the corpus of estate pursuant to 38 CFR&nbsp;3.276(b).&nbsp; General Counsel also noted that there is authority to amend this regulation so that only the value of the life interest would be considered.</span></span></p><p>\t<span style=\"font-size: 14px\"><span style=\"font-family: arial,helvetica,sans-serif\"><strong>Impact on VBA:</strong></span></span></p><p>\t<span style=\"font-size: 14px\"><span style=\"font-family: arial,helvetica,sans-serif\">Provisions of 38 CFR&nbsp;3.276(b) should be reviewed to determine whether or not a revision is warranted based on the General Counsel commentary.&nbsp; In addition, provisions of M21-1, Part IV,&nbsp;16.40d should be amended to address title transfers when a life-estate interest is retained.</span></span></p><p>\t<span style=\"font-size: 14px\"><span style=\"font-family: arial,helvetica,sans-serif\"><strong>Summary of the&nbsp;facts and findings:</strong></span></span></p><p>\t<span style=\"font-size: 14px\"><span style=\"font-family: arial,helvetica,sans-serif\">Transfer of a property interest, to someone other than a relative in the claimant's household, is to be disregarded under 38 CFR&nbsp;3.276(b) when a life estate interest is retained.</span></span></p><p>\t<span style=\"font-size: 14px\"><span style=\"font-family: arial,helvetica,sans-serif\"><strong>References:</strong></span></span></p><p>\t<span style=\"font-size: 14px\"><span style=\"font-family: arial,helvetica,sans-serif\"><a href=\"http://www.va.gov/ogc/docs/1992/PREC_15-92.doc\" target=\"_blank\">http://www.va.gov/ogc/docs/1992/PREC_15-92.doc</a></span></span></p><p>\t&nbsp;</p>",
+ "articleType": 0,
+ "attachment": [],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 4175,
+ "createdByUserName": "OBPGMANC",
+ "createdDate": "16 Jun 2016 20:28:11.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": false,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "",
+ "languageId": 1,
+ "lastModifiedBy": 4175,
+ "lastModifiedByUserName": "OBPGMANC",
+ "lastModifiedDate": "13 Sep 2017 13:12:05.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "13 Sep 2017 13:07:25.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000043316,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "summary": "",
+ "topicBreadcrumb": [],
+ "uuid": "7736DF7A-BE24-4299-8F7C-95A4DF7E1E09",
+ "version": 3,
+ "versionId": 554400000096153,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-43403",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000043403?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000043403
+}

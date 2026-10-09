@@ -1,0 +1,109 @@
+{
+ "name": "VAOPGCPREC 07-97, Jan 29, 1997, Benefits Under 38 U.S.C. 1151 for Disability Incurred as the \u201cResult Of Hospitalization\u201d",
+ "content": "<p style=\"text-align: center\">\tDecision Assessment Document<br />\tVAOPGCPREC 07-97, Jan 29, 1997, Benefits Under 38 U.S.C.&nbsp;1151 for Disability Incurred as the \u201cResult Of Hospitalization\u201d<br />\tOffice of General Counsel Precedent Opinion</p><p>\t<br />\t<strong>What the case is about</strong></p><p>\tDo the provisions of 38 U.S.C. \u00a7 1151 authorizing monetary benefits for disability incurred as the \u201cresult of hospitalization\u201d apply to disabilities incurred during hospitalization but which are unrelated to a program of medical treatment?</p><p>\t<strong>Impact on VBA</strong></p><p>\tCompensation under 38 U.S.C. \u00a7 1151 for injuries suffered \u201cas the result of . . . hospitalization\u201d is not limited to injuries resulting from the provision of hospital care and treatment, but may encompass injuries resulting from risks created by any circumstances or incidents of hospitalization.&nbsp; In determining whether a specific injury is a result of hospitalization, guidance may be drawn in appropriate cases from judicial decisions under workers\u2019 compensation laws and similar laws requiring a finding of causation without regard to fault.&nbsp; An injury caused by a fall may be considered a result of hospitalization where the conditions or incidents of hospitalization caused or contributed to the fall or the severity of the injury.&nbsp; A fall due solely to the patient\u2019s inadvertence, want of care, or preexisting disability generally does not result from hospitalization.&nbsp; An injury incurred due to recreational activity may be considered a result of hospitalization where VA requires or encourages participation in the activity, administers or controls the activity, or facilitates the activity in furtherance of treatment objectives.&nbsp; In individual cases, the question whether an injury resulted from hospitalization is essentially an issue of fact to be determined by the fact finder upon consideration of all pertinent circumstances.</p><p>\t<strong>Summary on facts and findings</strong></p><p>\tSee OGC Precedent Opinion</p><p>\t<strong>References</strong></p><p>\t<a href=\"http://www.va.gov/ogc/docs/1997/PRC07-97.DOC\" target=\"_blank\">http://www.va.gov/ogc/docs/1997/PRC07-97.DOC</a><br />\t&nbsp;</p>",
+ "additionalInfo": "",
+ "articleType": 0,
+ "attachment": [],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 4175,
+ "createdByUserName": "OBPGMANC",
+ "createdDate": "23 Jun 2016 18:02:11.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": false,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "38 U.S.C. \u00a7 1151,  result of hospitalization,  medical treatment,",
+ "languageId": 1,
+ "lastModifiedBy": 4175,
+ "lastModifiedByUserName": "OBPGMANC",
+ "lastModifiedDate": "23 Jun 2016 18:02:33.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "23 Jun 2016 18:02:11.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000043321,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "summary": "Compensation under 38 U.S.C. \u00a7 1151 for injuries suffered \u201cas the result of . . . hospitalization\u201d is not limited to injuries resulting from the provision of hospital care and treatment, but may encompass injuries resulting from risks created by any circumstances or incidents of hospitalization.  In determining whether a specific injury is a result of hospitalization, guidance may be drawn in appropriate cases from judicial decisions under workers\u2019 compensation laws and similar laws requiring a finding of causation without regard to fault.  An injury caused by a fall may be considered a result of hospitalization where the conditions or incidents of hospitalization caused or contributed to the fall or the severity of the injury.  A fall due solely to the patient\u2019s inadvertence, want of care, or preexisting disability generally does not result from hospitalization.  An injury incurred due to recreational activity may be considered a result of hospitalization where VA requires or encourages participation in the activity, administers or controls the activity, or facilitates the activity in furtherance of treatment objectives.  In individual cases, the question whether an injury resulted from hospitalization is essentially an issue of fact to be determined by the fact finder upon consideration of all pertinent circumstances.",
+ "topicBreadcrumb": [],
+ "uuid": "62DC7DDE-F1FC-4500-B986-419B5CDB259B",
+ "version": 1,
+ "versionId": 554400000059959,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-43672",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000043672?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000043672
+}

@@ -1,0 +1,109 @@
+{
+ "name": "VAOPGCPREC 21-94, Dec 13, 1994, Aid & Attendance Allowance for Improved Pension Purposes",
+ "content": "<p style=\"text-align: center\">\tDecision Assessment Document<br />\tVAOPGCPREC 21-94, Dec 13, 1994, Aid &amp; Attendance Allowance for Improved Pension Purposes&nbsp;<br />\tOffice of General Counsel Precedent Opinion</p><p>\t<br />\t<strong>What the case is about</strong></p><p>\tMust the need for aid and attendance be permanent in order to qualify for a higher rate of improved pension?</p><p>\t<strong>Impact on VBA</strong></p><p>\tThe statutory provisions in 38 U.S.C. \u00a7\u00a7 1502(b), 1521(d), and 1541(d), authorizing an increased improved-pension rate for persons in need of regular aid and attendance, do not require that the need be permanent as a predicate to an award of the increased rate.</p><p>\t<strong>Summary on facts and findings</strong></p><p>\tRead literally, sections 1502(b), 1521(d), and 1541(d) establish entitlement to increased improved pension for any veteran or surviving spouse who is otherwise entitled to pension and who is in need of \"regular aid and attendance.\"&nbsp; Nothing in those provisions requires that the need be permanent.&nbsp; Nothing has been found in the legislative history of the aid-and-attendance provisions which would contravene the plain meaning of the current statutory provisions.&nbsp; Although neither the statutes nor the regulations require that the need for regular aid and attendance be a permanent need, the title of 38 C.F.R. \u00a7 3.352 does refer to \"[c]riteria for permanent need for aid and attendance and 'permanently bedridden.'\"&nbsp; M21-1, Part IV, paragraph 8.01 covers aid and attendance benefits in pension cases.&nbsp; The manual provision does not require a finding that the need for aid and attendance must be permanent.&nbsp; Because of the usage of the words in the title of section 3.352, many rating specialists have denied aid and attendance benefits when a permanent need for assistance was not shown.&nbsp; It would be helpful if a specific statement concerning permanency was placed in the manual.</p><p>\tRecomend revising the title of 38 C.F.R. \u00a7 3.352 to remove the words \"permanent\" and \"permanently\" and expanding M21-1, Part VI, paragraph 8.01 to include a specific statement that there is no requirement for a finding of a \"permanent need for aid and attendance\" before the additional special monthly pension benefits can be awarded.</p><p>\t<strong>References</strong></p><p>\t<a href=\"http://www.va.gov/ogc/docs/1994/PRC21-94.DOC\" target=\"_blank\">http://www.va.gov/ogc/docs/1994/PRC21-94.DOC</a><br />\t&nbsp;</p>",
+ "additionalInfo": "",
+ "articleType": 0,
+ "attachment": [],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 4175,
+ "createdByUserName": "OBPGMANC",
+ "createdDate": "21 Jun 2016 19:31:34.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": false,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "",
+ "languageId": 1,
+ "lastModifiedBy": 4175,
+ "lastModifiedByUserName": "OBPGMANC",
+ "lastModifiedDate": "21 Jun 2016 19:33:16.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "21 Jun 2016 19:31:34.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000043318,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "summary": "",
+ "topicBreadcrumb": [],
+ "uuid": "CD415CFA-43D5-4ADB-92F7-202F67F6829E",
+ "version": 1,
+ "versionId": 554400000059783,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-43547",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000043547?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000043547
+}

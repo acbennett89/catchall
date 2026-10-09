@@ -1,0 +1,166 @@
+{
+ "name": "M21-1, Part XIV, Chapter 5 - Matching Programs That Identify Veterans That Returned to Active Duty",
+ "content": "<div style=\"text-align: right\"><span style=\"font-family: arial, helvetica, sans-serif\"><span style=\"font-size: 11px\"><a class=\"eGainArticleLink\" articleid=\"554400000173315\" articlename=\"M21-1, Part XIV, Chapter 4, Section D - Federal Tax Information (FTI): Income Verification Match (IVM)\" href=\"https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000173315?portalId=554400000001018&usertype=customer&\">&nbsp; &lt;-- Previous Section</a>&nbsp; <a class=\"eGainArticleLink\" articleid=\"554400000173308\" articlename=\"M21-1, Part XIV, Chapter 6 - Review of Potential Duplicate Payment Cases\" href=\"https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000173308?portalId=554400000001018&usertype=customer&\">&nbsp; Next Section --&gt;</a></span></span></div>\n\n<h2><span style=\"font-family: arial, helvetica, sans-serif\"><a id=\"top\" name=\"top\"><span style=\"font-size: 16px\">Overview</span></a></span></h2>\n\n<div style=\"margin-left: 85pt\">\n<hr /></div>\n\n<div style=\"width: 15px\"></div>\n\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"width: 115px; vertical-align: top\">\n\t\t\t<h3><span style=\"font-family: arial, helvetica, sans-serif\"><span style=\"font-size: 14px\">In This Chapter</span></span></h3>\n\t\t\t</td>\n\t\t\t<td style=\"height: 9px; width: 15px; vertical-align: top\"></td>\n\t\t\t<td style=\"width: 516px\">\n\t\t\t<div><span style=\"font-family: arial, helvetica, sans-serif\"><span style=\"font-size: 14px\">This&nbsp;chapter contains topic \u201c<a href=\"#1\">Matching Programs That Identify Veterans That Returned to Active Duty</a>.\u201d</span></span></div>\n\t\t\t</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<div style=\"margin-left: 85pt\">\n<hr />\n<div><br />\n<span style=\"font-family: arial, helvetica, sans-serif\">&nbsp;</span></div>\n</div>\n\n<h2><span style=\"font-family: arial, helvetica, sans-serif\"><span style=\"font-size: 16px\">1<a id=\"1\" name=\"1\">.</a>&nbsp; Matching Programs That Identify Veterans That Returned to Active Duty</span></span></h2>\n\n<div><br />\n<span style=\"font-family: arial, helvetica, sans-serif\">&nbsp;</span></div>\n\n<div style=\"margin-left: 85pt\">\n<hr /></div>\n\n<div style=\"height: 8px; width: 15px\"></div>\n\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"width: 115px; vertical-align: top\">\n\t\t\t<h3><span style=\"font-family: arial, helvetica, sans-serif\"><span style=\"font-size: 14px\">Introduction</span></span></h3>\n\t\t\t</td>\n\t\t\t<td style=\"width: 15px; vertical-align: top\"></td>\n\t\t\t<td style=\"width: 516px\">\n\t\t\t<div><span style=\"font-family: arial, helvetica, sans-serif\"><span style=\"font-size: 14px\">This topic contains information on matching programs that identify Veterans that returned to active duty, including</span></span></div>\n\n\t\t\t<ul>\n\t\t\t\t<li>\n\t\t\t\t<div><em><span style=\"font-family: arial, helvetica, sans-serif\"><a href=\"#1a\"><span style=\"font-size: 14px\">VA/DoD Identity Repository (VADIR) Activation Match</span></a></span></em></div>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<div><span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\"><a href=\"#1b\">automated processing of the activation match</a>, and</span></span></div>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t<div><span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\"><a href=\"#1c\"><span style=\"font-size: 14px\">required actions after initial automated processing</span></a><span style=\"font-size: 14px\">.</span></span></span></div>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<div style=\"margin-left: 85pt\">\n<hr /></div>\n\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"width: 115px; vertical-align: top\">\n\t\t\t<h3><span style=\"font-family: arial, helvetica, sans-serif\"><span style=\"font-size: 14px\">Change Date</span></span></h3>\n\t\t\t</td>\n\t\t\t<td style=\"width: 15px; vertical-align: top\"></td>\n\t\t\t<td style=\"width: 516px\">\n\t\t\t<div><span style=\"font-family: arial, helvetica, sans-serif\"><span style=\"font-size: 14px\">January 19, 2022</span></span></div>\n\t\t\t</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<div style=\"margin-left: 85pt\">\n<hr /></div>\n\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"width: 115px; vertical-align: top\">\n\t\t\t<h3><span style=\"font-family: arial, helvetica, sans-serif\"><span style=\"font-size: 14px\"><span style=\"font-size: 14px\">XIV.5.1.a<a id=\"1a\" name=\"1a\">.</a> VADIR Activation Match</span></span></span></h3>\n\t\t\t</td>\n\t\t\t<td style=\"width: 15px; vertical-align: top\"></td>\n\t\t\t<td style=\"width: 516px\">\n\t\t\t<div>\n\t\t\t<div><span style=\"font-family: Arial, Helvetica, sans-serif\"><span style=\"font-size: 14px\">Approximately two months after the end of a specific month, a <em>VA/DoD Identity Repository (VADIR) Activation Match</em> is released to the Department of Veterans Affairs.&nbsp;</span></span></div>\n\n\t\t\t<div><span style=\"font-family: Arial, Helvetica, sans-serif\"><span style=\"font-size: 14px\">&nbsp;</span></span></div>\n\n\t\t\t<div><span style=\"font-family: Arial, Helvetica, sans-serif\"><span style=\"font-size: 14px\">This match identifies reservists and members of the National Guard that were called to active duty. &nbsp;Effective October 1, 2020, the match includes non-training Guard/Reserve Active Service (GRAS) periods in the Veterans Information Solution (VIS).&nbsp; These service periods are identifiable in VIS by the presence of <em>No</em> in the TRAINING column on the MILITARY HISTORY page.&nbsp; The results of the match are sent to the Hines Information Technology Center (ITC) for screening and end product (EP) establishment.&nbsp; &nbsp;</span></span></div>\n\n\t\t\t<div></div>\n\n\t\t\t<div><span style=\"font-family: Arial, Helvetica, sans-serif\"><span style=\"font-size: 14px\"><strong><em>Reference</em></strong>:&nbsp; For more information on a waiver of disability benefits during National Guard/Reserve training duty, see <a class=\"eGainArticleLink\" articleid=\"554400000179479\" articlename=\"M21-1, Part VI, Subpart ii, Chapter 3, Section A - Adjusting Department of Veterans Affairs (VA) Benefits Based on a Veteran's Receipt of Drill Pay\" href=\"https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000179479?portalId=554400000001018&usertype=customer&\">M21-1, Part VI, Subpart ii, 3</a>.</span></span></div>\n\t\t\t</div>\n\t\t\t</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<div style=\"margin-left: 85pt\">\n<hr /></div>\n\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"width: 115px; vertical-align: top\">\n\t\t\t<h3><span style=\"font-family: arial, helvetica, sans-serif\"><span style=\"font-size: 14px\"><span style=\"font-size: 14px\">XIV.5.1.b<a id=\"1b\" name=\"1b\">.</a>&nbsp; Automated Processing of the Activation Match</span></span></span></h3>\n\t\t\t</td>\n\t\t\t<td style=\"width: 15px; vertical-align: top\"></td>\n\t\t\t<td style=\"width: 516px\">\n\t\t\t<div>\n\t\t\t<div><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">The Hines ITC establishes an EP 600 - <i>Return to Active Duty</i> on matched cases.&nbsp; Corresponding notices of proposed adverse action are issued on all EPs 600 established by the batch process.&nbsp; In these cases, the system will</span></span></div>\n\n\t\t\t<ul>\n\t\t\t\t<li><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">set the suspense date for 65 days</span></span></li>\n\t\t\t\t<li><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">create contentions titled</span></span>\n\t\t\t\t<ul>\n\t\t\t\t\t<li><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\"><i>Return to Active Duty</i> followed by the begin date and termination date (if known), and</span></span></li>\n\t\t\t\t\t<li><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\"><i>Return to Active Duty Proposal</i>, and</span></span></li>\n\t\t\t\t</ul>\n\t\t\t\t</li>\n\t\t\t\t<li><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">create a tracked item titled <i>Return to Active Duty Proposal.</i></span></span></li>\n\t\t\t</ul>\n\n\t\t\t<div><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\"><b><i>Exception</i></b>:&nbsp; For cases in which there was more than one non-sequential active duty/activation period, an EP 290 - <i>Return to Active Duty </i>is<i> </i>automatically established for all remaining active duty/activation periods.&nbsp; These cases are not eligible for automated processing.&nbsp; Claims processors must follow the steps outlined in&nbsp;<a class=\"eGainArticleLink\" articleid=\"554400000178003\" articlename=\"M21-1, Part X, Subpart v, Chapter 2, Section B  - Award Adjustments Necessitated by a Veteran's Return to and Discharge From Active Duty\" href=\"https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000178003?portalId=554400000001018&usertype=customer&\">M21-1, Part X, Subpart v, 2.B.1.b</a> to manually process the notice that the Veteran has returned to active duty.&nbsp; </span></span></div>\n\t\t\t</div>\n\t\t\t</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<div style=\"margin-left: 85pt\">\n<hr /></div>\n\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"width: 115px; vertical-align: top\">\n\t\t\t<h3><span style=\"font-family: arial, helvetica, sans-serif\"><span style=\"font-size: 14px\"><span style=\"font-size: 14px\">XIV.5.1.c<a id=\"1c\" name=\"1c\">.</a> Required Actions After Initial Automated Processing</span></span></span></h3>\n\t\t\t</td>\n\t\t\t<td style=\"width: 15px; vertical-align: top\"></td>\n\t\t\t<td style=\"width: 516px\">\n\t\t\t<div>\n\t\t\t<div><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\"><span style=\"display: none\">&nbsp;</span>After the initial automated processing described in <a href=\"#1b\">M21-1, Part XIV, 5.1.b</a>, use the table below to determine the next steps.</span></span></div>\n\n\t\t\t<div></div>\n\t\t\t</div>\n\n\t\t\t<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" summary=\"This is an If-Then table.  Column 1 contains the criteria and column 2 the actions to take after the initial automated processing described in M21-1, Part XIV, 5.1.b.\">\n\t\t\t\t<thead>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<th scope=\"col\" style=\"width: 155px\">\n\t\t\t\t\t\t<div align=\"left\"><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\"><strong>If the Veteran ...</strong></span></span></div>\n\t\t\t\t\t\t</th>\n\t\t\t\t\t\t<th scope=\"col\" style=\"width: 354px\">\n\t\t\t\t\t\t<div align=\"left\"><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\"><strong>Then \u2026</strong></span></span></div>\n\t\t\t\t\t\t</th>\n\t\t\t\t\t</tr>\n\t\t\t\t</thead>\n\t\t\t\t<tbody>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td style=\"width: 155px; vertical-align: top\">\n\t\t\t\t\t\t<div align=\"left\"><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">does not respond after 65 days&nbsp;</span></span></div>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td style=\"width: 354px\">\n\t\t\t\t\t\t<div><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">no regional office action is required.&nbsp; The adjustment will be made through automated processing.&nbsp;</span></span></div>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td style=\"width: 155px; vertical-align: top\">\n\t\t\t\t\t\t<div align=\"left\"><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">responds within 65 days and agrees with the proposed action&nbsp;</span></span></div>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td style=\"width: 354px\">\n\t\t\t\t\t\t<div>\n\t\t\t\t\t\t<ul>\n\t\t\t\t\t\t\t<li><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">close out the <i>Return to Active Duty Proposal</i> tracked item with the date the Veteran provided the response, and</span></span></li>\n\t\t\t\t\t\t\t<li><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">the adjustment will be made through automated processing.</span></span></li>\n\t\t\t\t\t\t</ul>\n\n\t\t\t\t\t\t<div><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\"><b><i>Note</i></b>:&nbsp; A manual adjustment may be made to reduce the amount of the overpayment.&nbsp; &nbsp;</span></span></div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td style=\"width: 155px; vertical-align: top\">\n\t\t\t\t\t\t<div><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">responds within 65 days and disagrees with the proposed action&nbsp;</span></span></div>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td style=\"width: 354px\">\n\t\t\t\t\t\t<div>\n\t\t\t\t\t\t<ul>\n\t\t\t\t\t\t\t<li><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">close out the <i>Return to Active Duty Proposal</i> tracked item with the date the Veteran\u2019s response was received</span></span></li>\n\t\t\t\t\t\t\t<li><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">create a new tracked item titled <i>Other Request</i> and enter <i>Return to Active Duty \u2013 Manual Process</i> as free text and enter a suspense date that is 30 days from the current date, and</span></span></li>\n\t\t\t\t\t\t\t<li><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">no automated action will be taken. &nbsp;Manually adjust the Veteran\u2019s benefits.&nbsp;</span></span></li>\n\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td style=\"width: 155px; vertical-align: top\">\n\t\t\t\t\t\t<div><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">responds within 65 days and requests or claims a waiver of military pay and allowances for a specific active duty/activation period(s)&nbsp;</span></span></div>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td style=\"width: 354px\">\n\t\t\t\t\t\t<div align=\"left\">\n\t\t\t\t\t\t<ul>\n\t\t\t\t\t\t\t<li><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">send an encrypted e-mail to <a href=\"mailto:milpay.vbaco@va.gov?subject=Waiver%2520of%2520military%2520pay%2520and%2520allowances\">VAVBAWAS/CO/MILPAY</a></span></span></li>\n\t\t\t\t\t\t\t<li><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">in the body of the e-mail message, include the</span></span>\n\t\t\t\t\t\t\t<ul>\n\t\t\t\t\t\t\t\t<li><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">Veteran\u2019s name</span></span></li>\n\t\t\t\t\t\t\t\t<li><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">file number</span></span></li>\n\t\t\t\t\t\t\t\t<li><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">date the waiver was received</span></span></li>\n\t\t\t\t\t\t\t\t<li><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">period(s) of the waiver, and</span></span></li>\n\t\t\t\t\t\t\t\t<li><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">document identification number assigned to the waiver</span></span></li>\n\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t<li style=\"margin-left: 7.9pt\">\n\t\t\t\t\t\t\t<div><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">save a copy of the e-mail in portable document format (PDF) and upload the PDF into the Veteran\u2019s electronic claims folder, and</span></span></div>\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t<li style=\"margin-left: 7.9pt\">\n\t\t\t\t\t\t\t<div><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">take no further action until the Military Pay Staff responds with further instructions.&nbsp; &nbsp;</span></span></div>\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td style=\"width: 155px; vertical-align: top\">\n\t\t\t\t\t\t<div><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">responds within 65 days and requests a hearing&nbsp;</span></span></div>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td style=\"width: 354px\">\n\t\t\t\t\t\t<div><span style=\"font-size: 14px\"><span style=\"font-family: Arial, Helvetica, sans-serif\">follow the instructions in <a class=\"eGainArticleLink\" articleid=\"554400000177966\" articlename=\"M21-1, Part X, Subpart ii, Chapter 3, Section B - Adverse Action Proposal Period\" href=\"https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000177966?portalId=554400000001018&usertype=customer&\">M21-1, Part X, Subpart ii, 3.B.3</a>.&nbsp;</span></span></div>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t</tr>\n\t\t\t\t</tbody>\n\t\t\t</table>\n\n\t\t\t<div></div>\n\t\t\t</td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<div style=\"margin-left: 85pt\">\n<hr /></div>\n\n<div style=\"margin-left: 85pt\"></div>\n\n<div style=\"text-align: right\"><span style=\"font-family: arial, helvetica, sans-serif\"><span style=\"font-size: 11px\"><a class=\"eGainArticleLink\" articleid=\"554400000173315\" articlename=\"M21-1, Part XIV, Chapter 4, Section D - Federal Tax Information (FTI): Income Verification Match (IVM)\" href=\"https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000173315?portalId=554400000001018&usertype=customer&\">&nbsp; &lt;-- Previous Section</a>&nbsp; <a class=\"eGainArticleLink\" articleid=\"554400000173308\" articlename=\"M21-1, Part XIV, Chapter 6 - Review of Potential Duplicate Payment Cases\" href=\"https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000173308?portalId=554400000001018&usertype=customer&\">&nbsp; Next Section --&gt;</a></span></span></div>\n\n<div><span style=\"font-family: arial, helvetica, sans-serif\">&nbsp;<a href=\"#top\"><span style=\"font-size: 11px\">To Top</span></a></span></div>\n",
+ "articleType": 0,
+ "attachment": [
+  {
+   "name": "Reorganization Guide.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000015659?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000015659
+  },
+  {
+   "name": "5-21-21_Key Changes_M21-1XIV_5.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000015683?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000015683
+  },
+  {
+   "name": "Historical_M21-1XIV_5_5-21-21.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000018508?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000018508
+  },
+  {
+   "name": "1-19-22_Key Changes_M21-1XIV_5.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000018509?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000018509
+  }
+ ],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 2265,
+ "createdByUserName": "CAPLMAZA",
+ "createdDate": "10 May 2021 19:20:05.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": true,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "DOD match, reentered service, Department of Defense matches, DOD matches, active duty, Disability Compensation Payees on Active Duty reports, quarterly match, PII, personally identifiable information, redact, redacting",
+ "languageId": 1,
+ "lastModifiedBy": 2265,
+ "lastModifiedByUserName": "CAPLMAZA",
+ "lastModifiedDate": "27 May 2025 12:09:25.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "27 May 2025 12:08:24.000 +0000",
+ "owner": 2265,
+ "parentFolderId": 554400000173289,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "summary": "This chapter contains information on Veterans on active duty in receipt of Department of Veterans (VA) benefits.",
+ "topicBreadcrumb": [
+  {
+   "topic": [
+    {
+     "id": 554400000001924,
+     "name": "Compensation and Pension"
+    },
+    {
+     "id": 554400000004049,
+     "name": "M21-1 Adjudication Procedures Manual"
+    },
+    {
+     "id": 554400000019758,
+     "name": "Part 14 (Part XIV). Matching Programs"
+    },
+    {
+     "id": 554400000019763,
+     "name": "Chapter 05. Matching Programs That Identify Veterans That Returned to Active Duty"
+    }
+   ]
+  }
+ ],
+ "uuid": "700F0791-3083-4F3B-A869-F14F5CC23D35",
+ "version": 9,
+ "versionId": 554400000375237,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "KMPR-271598",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "Policy or Procedure",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "Policy or Procedure",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "VA Staff",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "VA Staff",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-173309",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000173309?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000173309
+}

@@ -1,0 +1,148 @@
+{
+ "name": "M27-1, Part I, Chapter 04",
+ "content": "<style type=\"text/css\">body {\n\t\tfont-family: Arial, sans-serif;\n\t}\n\n\t#toc {\n\t\tborder: 1px solid #ccc;\n\t\tpadding: 10px;\n\t\tmargin-bottom: 20px;\n\t}\n\n\t#toc ul {\n\t\tlist-style-type: none;\n\t\tpadding: 0;\n\t}\n\n\t#toc ul li {\n\t\tmargin-bottom: 5px;\n\t}\n\n\t#toc ul li a {\n\t\ttext-decoration: none;\n\t\tcolor: #00f;\n\t}\n\n\t#toc ul li a:hover {\n\t\ttext-decoration: underline;\n\t}\n\n\tol.lower-alpha {\n\t\tlist-style-type: lower-alpha;\n\t}\n\n\tul.disc {\n\t\tlist-style-type: disc;\n\t}\n\n\tul.circle {\n\t\tlist-style-type: circle;\n\t}\n\n\tol li {\n\t\tmargin-bottom: 15px;\n\t}\n\n\tol li::marker {\n\t\tfont-weight: bold;\n\t}\n\n\ttable.manual-table {\n\t\tborder: 1px solid black;\n\t\tborder-collapse: collapse;\n\t\twidth: 80%;\n\t}\n\n\ttable.manual-table tr td {\n\t\tborder: 1px solid black;\n\t\tpadding: 5px;\n\t}\n\n\ttable.manual-table th {\n\t\ttext-align: center;\n\t\tborder: 1px solid black;\n\t}\n\n\t.bold-border-top {\n\t\tborder-top: 2px solid black;\n\t}\n\n\t#myContent h3 {\n\t\tfont-size: 16px\n\t}\n\n\t#myContent h2 {\n\t\tfont-size: 20px\n\t}\n\n\t#myContent hr {\n\t\tmargin-bottom: 7px;\n\t\tmargin-top: 7px;\n\t}\n\n\t#myContent subscript {\n\t\tfont-weight: normal;\n\t\tfont-size: small;\n\t}\n</style>\n<div id=\"myContent\">\n<div id=\"toc\">\n<h2>Chapter 04 Public Contact</h2>\n\n<ul>\n\t<li style=\"padding-bottom: 5px\"><a href=\"#section1GenInfo\">4.00 - Part I Chapter 4, Public Contact</a></li>\n\t<li style=\"padding-bottom: 5px\"><a href=\"#section1\">4.01 - Waiting and Personal Interview Area</a>\n\t<ol style=\"list-style-type: lower-alpha; text-decoration: none; margin-left: 2%\">\n\t\t<li><a href=\"#section1a\">Waiting and Interview Area Hours of Operation</a></li>\n\t\t<li><a href=\"#section1b\">Facility Closure</a></li>\n\t\t<li><a href=\"#section1c\">Waiting Area Requirements</a></li>\n\t\t<li><a href=\"#section1d\">Interview Area Requirements</a></li>\n\t\t<li><a href=\"#section1e\">Security Procedures</a></li>\n\t</ol>\n\t</li>\n\t<li style=\"padding-bottom: 5px\"><a href=\"#section2\">4.02 - Tracking and Timeliness of Personal Interview Activity</a>\n\t<ol style=\"list-style-type: lower-alpha; text-decoration: none; margin-left: 2%\">\n\t\t<li><a href=\"#section2a\">Customer Relationship Management Unified Desktop Optimized (CRM/UD-O)</a></li>\n\t\t<li><a href=\"#section2b\">Visitor Engagement and Reporting Application (VERA)</a></li>\n\t\t<li><a href=\"#section2c\">Personal Interview Timeliness</a></li>\n\t\t<li><a href=\"#section2d\">Tracking Interviews</a></li>\n\t</ol>\n\t</li>\n\t<li style=\"padding-bottom: 5px\"><a href=\"#section3\">4.03 - The Intake Process</a>\n\t<ol style=\"list-style-type: lower-alpha; text-decoration: none; margin-left: 2%\">\n\t\t<li><a href=\"#section3a\">Steps to Conduct Intake</a></li>\n\t\t<li><a href=\"#section3b\">Identification Protocol</a></li>\n\t\t<li><a href=\"#section3c\">Action Taken if Visitor Must Leave Before In-person Interview</a></li>\n\t\t<li><a href=\"#section3d\">Address Changes</a></li>\n\t</ol>\n\t</li>\n\t<li style=\"padding-bottom: 5px\"><a href=\"#section4\">4.04 - The Interview Process</a>\n\t<ol style=\"list-style-type: lower-alpha; text-decoration: none; margin-left: 2%\">\n\t\t<li><a href=\"#section4a\">Steps to Conduct a Personal Interview</a></li>\n\t</ol>\n\t</li>\n</ul>\n</div>\n\n<section>\n<h2 id=\"section1GenInfo\">Chapter: Part I, Chapter 4, Public Contact Introduction:<br />\n<subscript style=\"font-size: small; font-weight: normal\">Change Date:&nbsp;September 30, 2023&nbsp; </subscript></h2>\n\n<p>This chapter contains the following topics:</p>\n\n<ul style=\"list-style-type: disc\">\n\t<li>Waiting and Personal Interview Area</li>\n\t<li>Tracking Personal Interview Activity</li>\n\t<li>The Intake Process</li>\n\t<li>The Interview Process</li>\n</ul>\n</section>\n\n<hr />\n<section id=\"section1\">\n<h2>4.01 Waiting and Personal Interview Area <a href=\"#toc\" style=\"font-size: 16px; text-decoration: none; float: right\">Back to top</a><br />\n<subscript>Change Date: April 13, 2026</subscript></h2>\n\n<ol style=\"list-style-type: lower-alpha\">\n\t<li id=\"section1a\">\n\t<h3>Waiting and Interview Area Hours of Operation</h3>\n\n\t<p>Operational requirements for the Regional Office (RO) waiting and interview area include:</p>\n\n\t<ul style=\"list-style-type: disc\">\n\t\t<li>being open to the public for at least 7.5 hours, Monday through Friday, excluding federal holidays</li>\n\t\t<li>maintain consistent hours of operation\n\t\t<ul style=\"list-style-type: circle\">\n\t\t\t<li>opening no earlier than 6:30 AM, no later than 9:00 AM and closing no earlier than 3:00 PM local time</li>\n\t\t\t<li>outbased locations must ensure they are open and staffed according to published schedules</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>allocating adequate Public Contact Team (PCT) staff to ensure the area remains open during employee training, breaks, and lunch</li>\n\t</ul>\n\t</li>\n\t<li id=\"section1b\">\n\t<h3>Facility Closure</h3>\n\n\t<p>In the event a location is closed due to unforeseen circumstances, such as weather or facilities issues (water/power outage, no heat/air conditioning, etc.), the RO or outbased location must:</p>\n\n\t<ul style=\"list-style-type: disc\">\n\t\t<li>contact any in-person Visitor Engagement Reporting Application (VERA)-scheduled appointments and offer a virtual appointment instead</li>\n\t\t<li>block out in-person appointments in VERA for the expected duration of the closure (if known), and</li>\n\t\t<li>submit a Digital Media request, through the local TeamSite point of contact, to update the VA.gov locator data, RO website and VBA social media platform with closure information including\n\t\t<ul style=\"list-style-type: circle\">\n\t\t\t<li>reason for closure</li>\n\t\t\t<li>expected duration (if known)</li>\n\t\t\t<li>link to schedule virtual appointment in <a href=\"https://www.my.va.gov/VAVERA/s/\" target=\"_blank\">VERA</a>, and</li>\n\t\t\t<li>National Contact Center's phone number and hour of operations. \uf0a7 1-800-827-1000 (8:00 AM - 9:00 PM ET, Monday through Friday)</li>\n\t\t</ul>\n\t\t</li>\n\t</ul>\n\n\t<p></p>\n\n\t<p>Once the location is reopened, the RO or outbased location must:</p>\n\n\t<ul style=\"list-style-type: disc\">\n\t\t<li>unblock in-person VERA appointments, and</li>\n\t\t<li>submit a Digital Media request to remove closure notifications.</li>\n\t</ul>\n\t</li>\n\t<li id=\"section1c\">\n\t<h3>Waiting Area Requirements</h3>\n\n\t<p>The RO will post a directory or lobby sign to identify the location of the waiting area, if not visible from the building's entrance.</p>\n\n\t<p>A Public Contact employee must be available to greet visitors. The employee must have a workstation with access to the full range of VBA computer applications (e.g., standard VBA workstation with access to VERA, Customer Relationship Management/Unified Desktop - Optimized (CRM/UD-O), Veterans Benefits Management System (VBMS), Caseflow, etc.) in the reception area.</p>\n\n\t<p>The reception area must have an operational and accessible VERA kiosk with signage directing public use.</p>\n\n\t<p>The RO waiting area will</p>\n\n\t<ul style=\"list-style-type: disc\">\n\t\t<li>be compliant with the Americans with Disabilities Act (ADA) and accessible to the public</li>\n\t\t<li>have hours posted outside the entrance to the waiting area</li>\n\t\t<li>provide ample space to accommodate visitor traffic and be comfortably furnished</li>\n\t\t<li>include a display area stocked with current VBA publications when pamphlets are unavailable, and\n\t\t<ul style=\"list-style-type: circle\">\n\t\t\t<li><b>Note:</b> These materials must be replenished daily. A list of current publications (\"List of Approved Pamphlets\") is available at: <a href=\"https://vbaw.vba.va.gov/BAS/index.asp\" target=\"_blank\">https://vbaw.vba.va.gov/BAS/index.asp</a>.</li>\n\t\t</ul>\n\t\t</li>\n\t\t<li>display the Women Veterans Coordinator (WVC) poster. The poster includes the name and telephone number of the RO's WVC. Poster templates can be found at: <a href=\"https://vbaw.vba.va.gov/bas/outreach/veterans/women/index.asp\" target=\"_blank\">https://vbaw.vba.va.gov/bas/outreach/veterans/women/index.asp</a>.</li>\n\t\t<li>display the Military Sexual Trauma (MST) poster. The poster includes the names of both the female and male MST Outreach coordinators and telephone number of the RO's MSTs. Poster templates can be found at: <a href=\"https://vbaw.vba.va.gov/BAS/outreach/MST.asp\" target=\"_blank\">https://vbaw.vba.va.gov/BAS/outreach/MST.asp</a>.</li>\n\t</ul>\n\t</li>\n\t<li id=\"section1d\">\n\t<h3>Interview Area Requirements</h3>\n\n\t<p>The interview area</p>\n\n\t<ul style=\"list-style-type: disc\">\n\t\t<li>must be an ample distance away from both the waiting area and other work areas to minimize disruption of the interview process while maximizing privacy</li>\n\t\t<li>must have a computer with the full range of VBA computer applications (e.g., standard VBA workstation with access to VERA, CRM/UD-O, VBMS, Caseflow, etc.), and</li>\n\t\t<li>must include adequate access to information needed to conduct interviews at each interview station.</li>\n\t</ul>\n\t</li>\n\t<li id=\"section1e\">\n\t<h3>Security Procedures</h3>\n\n\t<p>The RO must establish security procedures to allow for expedient response by building security personnel in the event of an emergency.</p>\n\n\t<p>The RO must ensure employees are aware of the local procedures in place to appropriately respond to an emergency.</p>\n\t</li>\n</ol>\n</section>\n\n<hr />\n<section id=\"section2\">\n<h2>4.02 Tracking and Timeliness of Personal Interview Activity<a href=\"#toc\" style=\"font-size: 16px; text-decoration: none; float: right\">Back to top</a><br />\n<subscript>Change Date: April 13, 2026</subscript></h2>\n\n<ol style=\"list-style-type: lower-alpha\">\n\t<li id=\"section2a\">\n\t<h3>Customer Relationship Management Unified Desktop Optimized (CRM/UD-O)</h3>\n\n\t<p>Public Contact Team (PCT) employees are required to utilize CRM/UD-O when conducting all interviews.</p>\n\n\t<p>Note: See M27-1, I.4.02.b. for how to record No Show appointments. PCRs must not categorize an interaction in CRM/UD-O for No Show appointments.</p>\n\t</li>\n\t<li id=\"section2b\">\n\t<h3>Visitor Engagement and Reporting Application (VERA)</h3>\n\n\t<p>VERA is the only approved scheduling system for PCT interviews. Visitors can schedule virtual (telephone) and in-person appointments through VERA's online portal. Ros must ensure staffing levels are appropriate to handle all scheduled appointments, as well as any unscheduled walk-in traffic. At least one (1) virtual appointment must be available for every time slot within the normal operating hours of the local PCT. Employees must utilize the VERA system to log all walk-in interviews as well as the timely start/stop of any appointment interviews.</p>\n\n\t<p>PCT PCRs must attempt to contact individuals that have scheduled a virtual appointment at least two times (2) before it can be cancelled:</p>\n\n\t<ul style=\"list-style-type: disc\">\n\t\t<li>Document the attempts in System Notes.</li>\n\t\t<li>If there is no response after the second attempt, record that the individual was a \"No Show\" for the appointment in VERA.</li>\n\t</ul>\n\t</li>\n\t<li id=\"section2c\">\n\t<h3>Personal Interview Timeliness</h3>\n\n\t<p>Interviews must begin within twenty (20) minutes or less from the time the visitor signs in for an RO interview.</p>\n\t</li>\n\t<li id=\"section2d\">\n\t<h3>Tracking Interviews</h3>\n\n\t<p>All PCT interviews, including walk-ins, must be logged with CRM/UD-O and VERA</p>\n\n\t<p>PCT PCRs must arrange for laptops and system access at offsite events.<br />\n\t<br />\n\tNote: If an individual does not have a VA record (i.e. no CRM/UD-O or VBMS record), PCT PCRs must still create a VERA entry to record the visit.</p>\n\n\t<p>For interviews and interactions that cannot be logged through CRM/UD-O and VERA due to a technical issue (i.e. system outage, power outage) PCT PCRs must log the interview and actions completed with VA Form 27-7288c, Daily Record of Veterans Services Activities - Correspondence until systems become available. As soon as possible PCT PCRs must log the interviews and interactions from the VA Form 27-7288c into CRM/UD-O and VERA.</p>\n\t</li>\n</ol>\n</section>\n\n<hr />\n<section id=\"section3\">\n<h2>4.03 The Intake Process<a href=\"#toc\" style=\"font-size: 16px; text-decoration: none; float: right\">Back to top</a><br />\n<subscript>Change Date: April 13, 2026</subscript></h2>\n\n<ol style=\"list-style-type: lower-alpha\">\n\t<li id=\"section3a\">\n\t<h3>Steps to Conduct Intake</h3>\n\n\t<p>Follow the steps below for in-person intake:</p>\n\n\t<table class=\"manual-table\">\n\t\t<thead>\n\t\t\t<tr>\n\t\t\t\t<th class=\"cell-step\">Step</th>\n\t\t\t\t<th class=\"cell-action\">Action</th>\n\t\t\t</tr>\n\t\t</thead>\n\t\t<tbody>\n\t\t\t<tr>\n\t\t\t\t<td class=\"cell-step\">1</td>\n\t\t\t\t<td class=\"cell-action\">Greet the visitor.</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td class=\"cell-step\">2</td>\n\t\t\t\t<td class=\"cell-action\">\n\t\t\t\t<ul style=\"list-style-type: disc\">\n\t\t\t\t\t<li>Create a VERA Walk-In entry for unscheduled walk-ins not entered into the kiosk and correspondence requests.</li>\n\t\t\t\t\t<li>For scheduled VERA appointments (if not checked in through the kiosk): Confirm the appointment in VERA and notify the assigned employee of the scheduled visitor's arrival.</li>\n\t\t\t\t</ul>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td class=\"cell-step\">3</td>\n\t\t\t\t<td class=\"cell-action\">See \"Identification Protocol\" in M27-1 I.4.03.b, prior to allowing visitors requesting information or submitting information about benefits.</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td class=\"cell-step\">4</td>\n\t\t\t\t<td class=\"cell-action\">\n\t\t\t\t<p>Is the visitor a Veteran requesting their own information?</p>\n\n\t\t\t\t<ul style=\"list-style-type: disc\">\n\t\t\t\t\t<li>If yes, provide the information per identification protocol guidelines.</li>\n\t\t\t\t\t<li>If no, provide information as appropriate to a third-party request.</li>\n\t\t\t\t</ul>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td class=\"cell-step\">5</td>\n\t\t\t\t<td class=\"cell-action\">Record information/take actions for interviews utilizing CRM/UD-O.</td>\n\t\t\t</tr>\n\t\t\t<tr class=\"last-row\">\n\t\t\t\t<td class=\"cell-step\">6</td>\n\t\t\t\t<td class=\"cell-action\">\n\t\t\t\t<p>If a visitor's request cannot be handled by the intake employee, assign the interview based on local procedures.</p>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t</tbody>\n\t</table>\n\t</li>\n\t<li id=\"section3b\">\n\t<h3>Identification Protocol</h3>\n\n\t<p>Visitors are required to provide acceptable positive identification when requesting personally identifiable information. Prior to sharing information with anyone other than the Veteran or beneficiary, ensure appropriate release of information has been completed by the Veteran for the individual requesting access.</p>\n\n\t<p>Visitors can provide physical identification to verify his or her identity such as a driver's license or military ID card.</p>\n\n\t<p>If valid photo identification is not available, the Veteran or beneficiary must confirm:</p>\n\n\t<ul style=\"list-style-type: disc\">\n\t\t<li>Veteran's Social Security Number or Claim Number</li>\n\t\t<li>Veteran's Full Name</li>\n\t\t<li>Veteran's Date of Birth</li>\n\t\t<li>Veteran's Branch of Service</li>\n\t\t<li>Inquirer's Full Name (if someone other than the Veteran), and</li>\n\t\t<li>Security Question (if a VALID 21-0845 is of record).</li>\n\t</ul>\n\n\t<p>Further questions may be asked if the employee is not comfortable with the above responses. All responses must be verified in the system.</p>\n\n\t<p>When identity proofing is completed without the use of a photo ID, change of address, change in direct deposit, change in telephone number, or change in email address, <strong>PCT PCR</strong>s must utilize the enhanced ID protocols identified in M27-1 I.3.06.</p>\n\t</li>\n\t<li id=\"section3c\">\n\t<h3>Action Taken if Visitor Must Leave Before In-person Interview</h3>\n\n\t<table class=\"manual-table\">\n\t\t<thead>\n\t\t\t<tr>\n\t\t\t\t<th>If the visitor requests</th>\n\t\t\t\t<th>Then</th>\n\t\t\t</tr>\n\t\t</thead>\n\t\t<tbody>\n\t\t\t<tr>\n\t\t\t\t<td>A telephone call</td>\n\t\t\t\t<td>\n\t\t\t\t<ul style=\"list-style-type: disc\">\n\t\t\t\t\t<li>Close out the VERA entry to log visitor's exit</li>\n\t\t\t\t\t<li>Create a new Virtual appointment in VERA based on the desired callback time</li>\n\t\t\t\t\t<li>Assign based on local procedure</li>\n\t\t\t\t</ul>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td>To schedule an interview and/or return at a later time/date</td>\n\t\t\t\t<td>\n\t\t\t\t<ul style=\"list-style-type: disc\">\n\t\t\t\t\t<li>Close out the VERA entry to log visitor's exit</li>\n\t\t\t\t\t<li>Create a new In-Person appointment in VERA based on location's availability</li>\n\t\t\t\t\t<li>Inform the visitor of the time/day that wait times are usually shorter</li>\n\t\t\t\t</ul>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t</tbody>\n\t</table>\n\t</li>\n\t<li id=\"section3d\">\n\t<h3>Address Changes</h3>\n\n\t<p>The PCT is responsible for entering address changes into the Veteran or beneficiary's records except in the cases shown below:</p>\n\n\t<table class=\"manual-table\">\n\t\t<thead>\n\t\t\t<tr>\n\t\t\t\t<th>If the address change involves a\u2026</th>\n\t\t\t\t<th>Then refer the case to the...</th>\n\t\t\t</tr>\n\t\t</thead>\n\t\t<tbody>\n\t\t\t<tr>\n\t\t\t\t<td>\n\t\t\t\t<ul style=\"list-style-type: disc\">\n\t\t\t\t\t<li>Nursing home</li>\n\t\t\t\t\t<li>Hospital</li>\n\t\t\t\t\t<li>Penal institution</li>\n\t\t\t\t\t<li>Recipient of VR&amp;E funds under USC Chapter 31 Centralized Mail Portal Upload Tool via VA Form 27-0820, Report of General Information</li>\n\t\t\t\t</ul>\n\t\t\t\t</td>\n\t\t\t\t<td>\n\t\t\t\t<p><a href=\"https://emmsweb.domaonline.com/EMMSUpload\" target=\"_blank\">Centralized Mail Portal Upload Tool</a> via VA Form 27-0820, <i>Report of General Information</i></p>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td>Beneficiary with a VA fiduciary</td>\n\t\t\t\t<td>\n\t\t\t\t<p>Fiduciary Hub Call Center (1-888-407-0144, 8:00 AM - 6:00 PM ET time) by initiating the call in the PCT for the visitor</p>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t</tbody>\n\t</table>\n\t</li>\n</ol>\n</section>\n\n<hr />\n<section id=\"section4\">\n<h2>4.04 The Interview Process<a href=\"#toc\" style=\"font-size: 16px; text-decoration: none; float: right\">Back to top</a><br />\n<subscript>Change Date: April 13, 2026</subscript></h2>\n\n<ol style=\"list-style-type: lower-alpha\">\n\t<li id=\"section4a\">\n\t<h3>Steps to Conduct a Personal Interview</h3>\n\n\t<table class=\"manual-table\">\n\t\t<thead>\n\t\t\t<tr>\n\t\t\t\t<th>Step</th>\n\t\t\t\t<th>Action</th>\n\t\t\t</tr>\n\t\t</thead>\n\t\t<tbody>\n\t\t\t<tr>\n\t\t\t\t<td>\n\t\t\t\t<p>1</p>\n\t\t\t\t</td>\n\t\t\t\t<td>\n\t\t\t\t<p>Greet the visitor. Acknowledge the Veteran\u2019s service with a statement, such as \"Thank you for your service.\", or \"We(VA)/I appreciate the Veteran's service.\"</p>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td>\n\t\t\t\t<p>2</p>\n\t\t\t\t</td>\n\t\t\t\t<td>\n\t\t\t\t<p>Find the corresponding VERA appointment and click on the Appointment Number. Click \"Mark Status as Complete\" in VERA to move the status from \"Scheduled\" to \"Started\".</p>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td>\n\t\t\t\t<p>3</p>\n\t\t\t\t</td>\n\t\t\t\t<td>\n\t\t\t\t<p>Verify reason for the visit.</p>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td>\n\t\t\t\t<p>4</p>\n\t\t\t\t</td>\n\t\t\t\t<td>\n\t\t\t\t<p>Access the record in CRM/UD-O.</p>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td>\n\t\t\t\t<p>5</p>\n\t\t\t\t</td>\n\t\t\t\t<td>\n\t\t\t\t<p>Conduct the interview, reviewing any other electronic records necessary to take required actions and address issues/questions during the interview.</p>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td>\n\t\t\t\t<p>6</p>\n\t\t\t\t</td>\n\t\t\t\t<td>\n\t\t\t\t<p>Ensure that the interaction(s) are categorized in CRM/UD-O.</p>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td>\n\t\t\t\t<p>7</p>\n\t\t\t\t</td>\n\t\t\t\t<td>\n\t\t\t\t<p>Ask if there are additional questions and close the interview.</p>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td>\n\t\t\t\t<p>8</p>\n\t\t\t\t</td>\n\t\t\t\t<td>\n\t\t\t\t<p>Close the electronic record by clicking \"Close Session\" in CRM/UD-O, and \"Mark Status as Complete\" in VERA to move the status from \"Started\" to \"Complete\"</p>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t</tbody>\n\t</table>\n\t</li>\n</ol>\n</section>\n</div>\n",
+ "description": "Personal Interviews",
+ "articleType": 0,
+ "attachment": [
+  {
+   "name": "M27-1_part1_ch4_TransmittalSheet_12012023.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000021507?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000021507
+  },
+  {
+   "name": "M27-1_Part I_Ch 4_Transmittal Sheet_04132026.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000027375?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000027375
+  }
+ ],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 2351,
+ "createdByUserName": "VACOFurmaB",
+ "createdDate": "22 Sep 2015 12:52:32.110 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": true,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "Telephone Interviews, Inteviews, Public Contact Teams, PCT's, PCR, LAS, phone, interviews, phone development, VAI's, Homeless, Justice Involved, Congressional",
+ "languageId": 1,
+ "lastModifiedBy": 170437,
+ "lastModifiedByUserName": "VBACOFurmaB",
+ "lastModifiedDate": "13 Apr 2026 12:59:59.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "13 Apr 2026 11:36:38.000 +0000",
+ "owner": 2351,
+ "parentFolderId": 554400000029858,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "topicBreadcrumb": [
+  {
+   "topic": [
+    {
+     "id": 554400000023242,
+     "name": "National Contact Operations Procedures"
+    },
+    {
+     "id": 554400000023243,
+     "name": "M27-1 VBA National Contact Centers and Public Contact"
+    },
+    {
+     "id": 554400000023244,
+     "name": "Part I Direct Services"
+    },
+    {
+     "id": 554400000023250,
+     "name": "Chapter 04 Public Contact"
+    }
+   ]
+  }
+ ],
+ "uuid": "36A4EF1F-C647-46C1-99AC-AEA84F223E66",
+ "version": 16,
+ "versionId": 554400000417801,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "Law or Rule or Regulation",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "Law or Rule or Regulation",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "All",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "All",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-34806",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000034806?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000034806
+}

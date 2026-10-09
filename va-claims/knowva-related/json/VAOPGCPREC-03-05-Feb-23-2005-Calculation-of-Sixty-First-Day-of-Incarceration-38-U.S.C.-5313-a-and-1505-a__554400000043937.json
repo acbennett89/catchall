@@ -1,0 +1,108 @@
+{
+ "name": "VAOPGCPREC 03-05, Feb 23, 2005, Calculation of Sixty-First Day of Incarceration \u2013 38 U.S.C. \u00a7\u00a7 5313(a) and 1505(a)",
+ "content": "<p style=\"text-align: center\"><span style=\"font-size: 14px\"><span style=\"font-family: arial,helvetica,sans-serif\">Decision Assessment Document<br />VAOPGCPREC 03-05, Feb 23, 2005, Calculation of Sixty-First Day of Incarceration \u2013 38 U.S.C. \u00a7\u00a7 5313(a) and 1505(a)<br />Office of General Counsel Precedent Opinion</span></span></p><p><br /><span style=\"font-size: 14px\"><span style=\"font-family: arial,helvetica,sans-serif\"><strong>What the&nbsp;opinion is about:</strong></span></span></p><p><span style=\"font-size: 14px\"><span style=\"font-family: arial,helvetica,sans-serif\">This GC opinion explains how to compute the sixty-first day of incarceration for purposes of reduction of compensation pursuant to section 5313 of title 38 of the U.S. Code.&nbsp;&nbsp;</span></span></p><p><span style=\"font-size: 14px\"><span style=\"font-family: arial,helvetica,sans-serif\"><strong>Impact on VBA:</strong></span></span></p><p><span style=\"font-size: 14px\"><span style=\"font-family: arial,helvetica,sans-serif\">Section 5313(a) of title 38, United States Code, provides that compensation and dependency and indemnity compensation in excess of a specified amount shall not be paid to any person incarcerated in a Federal, state, or local penal institution for a period in excess of sixty days for conviction of a felony, for the period beginning on the sixty-first day of such incarceration and ending on the day such incarceration ends.&nbsp; See 38 C.F.R. \u00a7 3.665(a) (implementing regulation). Section 1505(a) of title 38, United States Code, prohibits the payment of pension under public or private laws administered by VA to any person imprisoned in a Federal, state, or local penal institution as a result of conviction of a felony or misdemeanor, for the period beginning on the sixty-first day of such imprisonment and ending on the day such imprisonment ends.&nbsp; See 38 C.F.R. \u00a7 3.666 (implementing regulation).&nbsp;</span></span></p><p><span style=\"font-size: 14px\"><span style=\"font-family: arial,helvetica,sans-serif\">Since persons convicted of crimes are often given credit against their sentences for time during which they were incarcerated prior to conviction of a crime or prior to imposition of the sentence for the crime, the question arises as to whether the period of incarceration for purposes of 38 U.S.C. \u00a7\u00a7 5313(a) and 1505(a) includes periods of incarceration prior to conviction or prior to sentencing.&nbsp; The General Counsel held that the sixty-first day of incarceration cannot occur until sixty-one days after guilt is pronounced by a judge or jury and the veteran is incarcerated in a penal institution because of the determination of guilt, even if the veteran is given credit for time served prior to those events.&nbsp; However, once a veteran is imprisoned or incarcerated in a penal institution because of pronouncement of guilt for a felony (or misdemeanor in the case of section 1505(a)), the period of incarceration for purposes of 38 U.S.C. \u00a7\u00a7 5313(a) and 1505(a) would include the period of incarceration between the date of conviction and the date of sentencing, i.e., reduction of benefits could occur as of the sixty-first day after conviction.</span></span></p><p><span style=\"font-size: 14px\"><span style=\"font-family: arial,helvetica,sans-serif\"><strong>Summary on facts and findings:</strong></span></span></p><p><span style=\"font-size: 14px\"><span style=\"font-family: arial,helvetica,sans-serif\">See OGC Precedent Opinion</span></span></p><p><span style=\"font-size: 14px\"><span style=\"font-family: arial,helvetica,sans-serif\"><strong>References:</strong></span></span></p><p><span style=\"font-size: 14px\"><span style=\"font-family: arial,helvetica,sans-serif\"><a href=\"http://www.va.gov/ogc/docs/2005/PREC32005.doc\" target=\"_blank\">http://www.va.gov/ogc/docs/2005/PREC32005.doc</a><br />&nbsp;</span></span></p>",
+ "articleType": 0,
+ "attachment": [],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 4175,
+ "createdByUserName": "OBPGMANC",
+ "createdDate": "29 Jun 2016 17:24:01.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": false,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "sixty-first day of incarceration,  38 U.S.C. 5313(a), 38 U.S.C. 1505(a),  credit time served prior to conviction, credit time served prior to sentencing for a felony,",
+ "languageId": 1,
+ "lastModifiedBy": 4175,
+ "lastModifiedByUserName": "OBPGMANC",
+ "lastModifiedDate": "07 Mar 2018 17:13:54.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "07 Mar 2018 17:12:47.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000043329,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "summary": "This GC opinion explains how to compute the sixty-first day of incarceration for purposes of reduction of compensation pursuant to section 5313 of title 38 of the U.S. Code.  ",
+ "topicBreadcrumb": [],
+ "uuid": "38E6230E-9EE1-4257-A070-98FDDC695FB7",
+ "version": 2,
+ "versionId": 554400000116674,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-43937",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000043937?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000043937
+}

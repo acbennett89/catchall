@@ -1,0 +1,108 @@
+{
+ "name": "VAOPGCPREC 05-99, May 3, 1999, Scope of the Term Spina Bifida for Purposes of Benefits Under Section 421 of Pub. L. No. 104-204",
+ "content": "<p style=\"text-align: center\">\tDecision Assessment Document<br />\tVAOPGCPREC 05-99, May 3, 1999, Scope of the Term Spina Bifida for Purposes of Benefits Under Section 421 of Pub. L. No. 104-204<br />\tOffice of General Counsel Precedent Opinion</p><p>\t<br />\t<strong>What the case is about</strong></p><p>\tFor purposes of benefits authorized by section 421 of Pub. L. No. 104-204, does the term \u201cspina bifida\u201d include neural tube defects, such as encephalocele and anencephaly, which do not involve the spinal column?</p><p>\t<strong>Impact on VBA</strong></p><p>\tPursuant to 38 U.S.C. \u00a7 1802, chapter 18 of title 38, United States Code, applies with respect to all forms of spina bifida other than spina bifida occulta.&nbsp; For purposes of that chapter, the term \u201cspina bifida\u201d refers to a defective closure of the bony encasement of the spinal cord, but does not include other neural tube defects such as encephalocele and anencephaly.</p><p>\t<strong>Summary on facts and findings</strong></p><p>\tThis opinion was requested because of claims filed on behalf of children of Vietnam veterans who were born with disabilities such an encephalocele and anencephaly.&nbsp; Although this opinion deals with the two cited disabilities, it also applies to children born with any other disability which does not involve the defective closure of the bony encasement of the spinal cord.</p><p>\tM21-1, Part III, par 5.10 provides information about spina bifida claims.&nbsp; That manual provision should be amended to provide that benefits are not payable for neural tube defects that do not involve the spinal cord.&nbsp; M21-1, Part VI, Chapter 4 is currently being revised to include information on rating spina bifida cases.&nbsp; That change should include this OGC opinion.&nbsp;</p><p>\tUpon receipt of a claim from the chiled of a Vietnam veteran where the medical evidence shows a diagnosis of a neural tube defect that does not involve a defective closure of the bony encasement of the spinal cord, that claim must be denied.</p><p>\tAmend M21-1, Part III, paragraph 5.10 to include information that spina bifida benefits are not payable when the diagnosis is either encephalocele or anencephaly, or any other neural tube defect which does not involve the defective closure of the bony encasement of the spinal cord.</p><p>\tInclude information in M21-1, Part VI, Chapter 4 concerning the nonentitlement to spina bifida benefits for encephalocele and/or anencephaly.</p><p>\t<strong>References</strong></p><p>\t<a href=\"http://www.va.gov/ogc/docs/1999/prc5-99.doc\" target=\"_blank\">http://www.va.gov/ogc/docs/1999/prc5-99.doc</a><br />\t&nbsp;</p>",
+ "articleType": 0,
+ "attachment": [],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 4175,
+ "createdByUserName": "OBPGMANC",
+ "createdDate": "26 Jun 2016 12:52:27.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": false,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "",
+ "languageId": 1,
+ "lastModifiedBy": 4175,
+ "lastModifiedByUserName": "OBPGMANC",
+ "lastModifiedDate": "26 Jun 2016 12:57:22.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "26 Jun 2016 12:52:27.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000043323,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "summary": "Pursuant to 38 U.S.C. \u00a7 1802, chapter 18 of title 38, United States Code, applies with respect to all forms of spina bifida other than spina bifida occulta.  For purposes of that chapter, the term \u201cspina bifida\u201d refers to a defective closure of the bony encasement of the spinal cord, but does not include other neural tube defects such as encephalocele and anencephaly.",
+ "topicBreadcrumb": [],
+ "uuid": "8764A64A-24E5-4949-A515-BD9ACCF50976",
+ "version": 1,
+ "versionId": 554400000060077,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-43755",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000043755?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000043755
+}

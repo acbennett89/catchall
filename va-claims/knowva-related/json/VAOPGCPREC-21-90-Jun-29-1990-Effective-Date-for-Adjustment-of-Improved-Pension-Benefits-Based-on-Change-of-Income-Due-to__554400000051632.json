@@ -1,0 +1,108 @@
+{
+ "name": "VAOPGCPREC 21-90, Jun 29, 1990, Effective Date for Adjustment of Improved Pension Benefits Based on Change of Income Due to Social Security COLA",
+ "content": "<p style=\"text-align: center\">\t<span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\">Decision Assessment Document<br />\tVAOPGCPREC 21-90, Jun 29, 1990, Effective Date for Adjustment of Improved Pension Benefits Based on Change of Income Due to Social Security COLA<br />\tOffice of General Counsel Precedent Opinion</span></span></p><p>\t&nbsp;</p><p>\t<strong><span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\">What the opinion is about:</span></span></strong></p><p>\t<span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\">Effective Date for Adjustment of Improved Pension Benefits Based on Change of Income Due to Social Security COLA.</span></span></p><p>\t<strong><span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\">Impact on VBA:</span></span></strong></p><p>\t<span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\">None.</span></span></p><p>\t<strong><span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\">Summary of the facts and findings:</span></span></strong></p><p>\t<span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\">See OGC opinion for facts.</span></span></p><p>\t<span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\">A Social Security COLA is distinguishable from other types of income changes for improved pension rate computation purposes&nbsp; under the provisions of 38 U.S.C. \u00a7 3012(b)(4) which expressly exclude such changes to income from the treatment mandated for all other types of income.&nbsp; Under 38 U.S.C. \u00a7 3112(a) and its implementing regulation, 38 C.F.R. \u00a7 3.273(b)(1), the effective date of a pension rate reduction occasioned by a Social Security COLA is not the date the increased Security benefits are actually&nbsp; received, but the date of the increase, i.e., the same date as pension rate increase mandated under section 3112.</span></span></p><p>\t<strong><span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\">References:</span></span></strong></p><p>\t<span style=\"font-size: 14px\"><span style=\"font-family: arial, helvetica, sans-serif\"><a href=\"http://www.va.gov/ogc/docs/1990/PREC_21-90.doc\" target=\"_blank\">http://www.va.gov/ogc/docs/1990/PREC_21-90.doc</a></span></span></p>",
+ "articleType": 0,
+ "attachment": [],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 4175,
+ "createdByUserName": "OBPGMANC",
+ "createdDate": "11 Jan 2017 15:55:04.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": false,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "keywords": "VAOPGCPREC 21-90, Improved Pension, Change of Income, Social Security COLA, cost of living adjustment",
+ "languageId": 1,
+ "lastModifiedBy": 4175,
+ "lastModifiedByUserName": "OBPGMANC",
+ "lastModifiedDate": "11 Jan 2017 15:55:04.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "11 Jan 2017 15:55:04.000 +0000",
+ "owner": 4175,
+ "parentFolderId": 554400000043314,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "summary": "Effective Date for Adjustment of Improved Pension Benefits Based on Change of Income Due to Social Security COLA",
+ "topicBreadcrumb": [],
+ "uuid": "B91E637A-E2AB-4246-ADFC-EB1C3F53BA9E",
+ "version": 1,
+ "versionId": 554400000076558,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-51632",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000051632?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000051632
+}

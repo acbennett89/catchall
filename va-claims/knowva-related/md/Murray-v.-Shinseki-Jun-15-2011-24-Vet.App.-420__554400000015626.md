@@ -1,0 +1,51 @@
+# Murray v. Shinseki, Jun 15, 2011, 24 Vet.App. 420
+
+- Source: https://www.knowva.ebenefits.va.gov/system/templates/selfservice/va_ssnew/help/customer/locale/en-US/portal/554400000001018/content/554400000015626/
+- Article ID: 554400000015626 (KMPR-15626)
+- Last modified: 18 Nov 2016 17:02:47.000 +0000
+
+---
+
+Decision Assessment Document
+ Murray v. Shinseki, Jun 15, 2011, 24 Vet.App. 420
+ U.S. Court of Appeals for Veterans Claims (Court)
+
+**What the case is about:**
+
+The Court held that if a veteran’s service-connected disability is rated under a specific diagnostic code for at least 20 years, which is protected under [38 C.F.R. § 3.951(b)](http://www.ecfr.gov/cgi-bin/text-idx?SID=4f131427b6b45a2b7e70b11d705a0099&node=se38.1.3_1951&rgn=div8), VA cannot reclassify the disability by assigning the same evaluation under a different diagnostic code if doing so would, in effect, reduce the protected rating while maintaining the same evaluation based on different manifestations of disability.  If the evidence warrants a separate evaluation for different manifestations of disability under a different diagnostic code, VA may assign such rating, but must also maintain the original evaluation under the diagnostic code protected under § 3.951(b).
+
+**Impact on VBA:**
+
+No new impact warranting regulatory revision or Manual change.  However, VA should follow the Court’s instruction that, in cases where a disability evaluation is protected under § 3.951(b), VA must discuss that protection in any subsequent adjudication addressing the disability.
+
+**Summary of the facts and Court’s reasons:**
+
+In December 1983, the VA regional office (RO) granted the veteran service connection for a left knee injury and assigned a 10 percent disability rating under [38 C.F.R. § 4.71a](http://www.ecfr.gov/cgi-bin/text-idx?SID=4f131427b6b45a2b7e70b11d705a0099&node=se38.1.4_171a&rgn=div8), Diagnostic Code (DC) 5257, for recurrent subluxation or lateral instability of the knee, effective October 31, 1983.
+
+The veteran filed for increased evaluation for the left knee disability in November 2001.  In a January 2003 decision, the RO continued the 10 percent evaluation for the left knee disability under DC 5257, even though no laxity of the knee was found.  The Board of Veterans’ Appeals (Board), in September 2005, remanded the claim for increased disability rating for a left knee disability because it found that it was inextricably intertwined with a claim for service connection for left knee arthritis that had been raised but not yet adjudicated by the RO.  A February 2008 VA examination found no instability, dislocation or subluxation of the veteran’s left knee, but pain and weakness was present in the joint, which the examiner causally related to the veteran’s service-connected left knee disability.
+
+In March 2008, the RO replaced the previously assigned DC 5257 and reclassified his left knee disability as residuals of a left knee injury with arthritis and assigned a 10 percent evaluation under Diagnostic Codes 5260 and 5261, effective March 1, 1993.
+
+The Board, in its September 2008 decision, acknowledged that separate disability ratings may be assigned for arthritis and instability of the knee under Diagnostic Codes 5003 and 5257, (see [VA. Gen. Coun. Prec. 23-97](http://www.va.gov/ogc/docs/1997/Prc23-97.doc) (July 1, 1997), but found that separate disability ratings for these conditions were not warranted in this case because the objective evidence – January 2003, December 2005, and February 2008 VA examinations – did not show instability or subluxation of the left knee.  The Board concluded that the veteran’s current 10 percent disability rating for residuals of the left knee injury with arthritis, evaluated under Diagnostic Codes 5260 and 5261, was “most appropriate” considering the rating criteria in relation to the relevant evidence of record.
+
+The veteran argued before the Court that the Board failed to properly apply [38 C.F.R. § 4.25(b)](http://www.ecfr.gov/cgi-bin/text-idx?SID=4f131427b6b45a2b7e70b11d705a0099&node=se38.1.4_125&rgn=div8) in determining that he was not entitled to separate disability ratings for his later diagnosed arthritis of the left knee and for his other service-connected residuals of a left knee injury.  He also contended that the 10 percent evaluation for the left knee disability, effective October 31, 1983, which did not include arthritis of his left knee, was protected from reduction under [§ 3.951(b](http://www.ecfr.gov/cgi-bin/text-idx?SID=4f131427b6b45a2b7e70b11d705a0099&node=se38.1.3_1951&rgn=div8)), and that VA impermissibly disturbed this protected disability rating when it began evaluating his left knee conditions cumulatively under Diagnostic Code 5260 and 5261.
+
+The Court found that the Board determined that the veteran was entitled to a 10 percent rating for residuals of a left knee injury with arthritis under Diagnostic Codes 5260 and 5261 without explaining how this rating related to the protected 10 percent rating for his previous evaluation under DC 5257, which did not include the effects of arthritis.  The Court found the Board’s reasons or bases inadequate as it failed to sufficiently discuss § 3.951(b) or explain how it impacted its analysis of the veteran’s claim.  The Court stated that, because the veteran’s rating had been in effect for 20 years, “VA was required to discuss § 3.951(b) in any subsequent adjudication involving his left knee disability.”
+
+Such deficiency often requires remand; however, the Court held, in this case, that reversal, not remand, was warranted because the Board effectively reduced the veteran’s protected disability rating under DC 5257 to zero percent and assigned a new, separate 10 percent disability rating and such reduction violated the provisions of § 3.951(b) that prohibit the reduction of a disability evaluation that has been continuous for 20 years or more.
+
+The Court, observing that the March 2002 and January 2003 VA examinations showed no left knee laxity, indicated that the RO, at this point, could have reduced the 10 percent evaluation under DC 5257 or maintained the 10 percent rating and switched to a diagnostic code that more accurately reflected his current symptoms.  Instead, the RO, in January 2003, continued the 10 percent evaluation under DC 5257, even though laxity was no longer demonstrated that initially entitled him to a compensable rating under DC 5257.  The Court indicated that after the 10 percent rating became protected under [§ 3.951(b)](http://www.ecfr.gov/cgi-bin/text-idx?SID=4f131427b6b45a2b7e70b11d705a0099&node=se38.1.3_1951&rgn=div8) on October 31, 2003, the Board could not, as did in this case, rely on the January 2003 examination and more recent examinations, which show no subluxation or instability of the left knee, to conclude that the veteran was no longer entitled to a 10 percent evaluation based on laxity or instability of the left knee.  The Court held that a current examination cannot act to reduce a protected disability rating where the symptoms upon which the disability rating was based is no longer present.
+
+The Court observed that the Board acknowledged the applicability of Diagnostic Codes 5003 and 5010, but it did not properly apply the diagnostic codes.  The Board, in utilizing Diagnostic Codes 5260 and 5261, found that the veteran had, “at most, slight limitation of flexion in his left knee, insufficient to warrant even the lowest possible compensable disability evaluation under Diagnostic Code 5260” and “full extension” such that “a separate compensable rating is not warranted under Diagnostic Code 5261.”  Although a compensable rating may not have been warranted under Diagnostic Codes 5260 and 5261, the Court concluded that the veteran was still entitled to a 10 percent evaluation for left knee arthritis because DC 5003 provides that:  “When .. the limitation of motion of the specific joint or joints involved is noncompensable under the appropriate diagnostic codes, a rating of 10 percent is for application for each major joint or group of minor joints affected by limitation of motion, to be combined, not added under Diagnostic Code 5003.”
+
+The Court noted that, after the veteran’s 10 percent rating under DC 5257 had become protected, VA changed the basis for his 10 percent rating.  Specifically, in 2008, VA found that his disability was no longer manifested by laxity or instability, which was the basis of his protected rating under DC 5257, but had since 1993 been manifested by limitation of motion warranting a 10 percent rating under DC 5260 and DC 5261.  At the same time, although VA acknowledged that the veteran had arthritis of the left knee including limitation of motion, it declined to assign a separate rating for arthritis because it concluded that such a rating would be duplicative of his “existing” rating based on limitation of motion.  The Court concluded that the only way VA could have reached that result was by reducing his protected rating based on laxity or instability and assigning a separate rating for arthritis with limitation of motion.
+
+The Court reversed the Board’s determination that the veteran was entitled to a 10 percent evaluation for residuals of a left knee injury with arthritis under Diagnostic Codes 5260 and 5261 and remanded the case with instructions to reinstate the 10 percent rating for residuals of a left knee injury that is protected under the appropriate diagnostic code and to assign a separate 10 percent evaluation for arthritis of the left knee under Diagnostic Codes 5003 and 5010.
+
+The Court did not expressly state that VA is prohibited from changing the diagnostic code under which a rating protected by [38 C.F.R. § 3.951(b)](http://www.ecfr.gov/cgi-bin/text-idx?SID=4f131427b6b45a2b7e70b11d705a0099&node=se38.1.3_1951&rgn=div8) is evaluated.  However, under the facts of this case, the Court found that VA did not merely apply a different diagnostic code, but, in effect, reduced a protected rating and assigned a different rating based on different manifestations of disability.
+
+**References:**
+
+CAVC case number: No. 09-0158
+
+<http://www.uscourts.cavc.gov/documents/Murray_09-0158_published_opinion_June_15_2011.pdf>

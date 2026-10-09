@@ -1,0 +1,188 @@
+{
+ "name": "M21-1, Part I, Chapter 1, Section A - Historical",
+ "content": "<p style=\"text-align: right\"><span style=\"font-size: 11px\"><span style=\"font-family: arial , helvetica , sans-serif\">&nbsp; </span></span><a class=\"eGainArticleLink\" articleid=\"554400000014065\" articlename=\"M21-1, Part I, Chapter 1, Section B - Historical\" href=\"https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000014065?portalId=554400000001018&usertype=customer&\"><span style=\"font-size: 11px\"><span style=\"font-family: arial , helvetica , sans-serif\">Next Section --&gt;</span></span></a></p>",
+ "additionalInfo": "508",
+ "articleType": 0,
+ "attachment": [
+  {
+   "name": "Change - June 29, 2015 - Transmittal Sheet - M21-1I_1_SecA_TS.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000002683?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000002683
+  },
+  {
+   "name": "Historical_M21-1I_1_SecA_6-29-15.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000010639?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000010639
+  },
+  {
+   "name": "2-19-19_Key Changes_M21-1I_1_SecA.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000010640?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000010640
+  },
+  {
+   "name": "Reorganization Guide.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000017920?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000017920
+  },
+  {
+   "name": "Historical_M21-1I_1_SecA_2-19-19.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000017921?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000017921
+  },
+  {
+   "name": "9-30-21_Key Changes_M21-1I_1_SecA.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000017922?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000017922
+  }
+ ],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 2265,
+ "createdByUserName": "CAPLMAZA",
+ "createdDate": "06 Oct 2014 17:31:55.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": true,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "languageId": 1,
+ "lastModifiedBy": 2265,
+ "lastModifiedByUserName": "CAPLMAZA",
+ "lastModifiedDate": "19 May 2025 15:52:34.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "19 May 2025 15:52:25.000 +0000",
+ "owner": 0,
+ "parentFolderId": 554400000181489,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "summary": "\r\n   ",
+ "topicBreadcrumb": [
+  {
+   "topic": [
+    {
+     "id": 554400000001924,
+     "name": "Compensation and Pension"
+    },
+    {
+     "id": 554400000004049,
+     "name": "M21-1 Adjudication Procedures Manual"
+    },
+    {
+     "id": 554400000004050,
+     "name": "Part 01 (Part I). Claimants' Rights and  Claims Processing Centers and Programs"
+    },
+    {
+     "id": 554400000021432,
+     "name": "Historical"
+    },
+    {
+     "id": 554400000021433,
+     "name": "Chapter 01. Historical"
+    }
+   ]
+  }
+ ],
+ "uuid": "1740A203-4072-4C21-8D4F-9D178B44B3AB",
+ "version": 65,
+ "versionId": 554400000374098,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "Policy or Procedure",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "Policy or Procedure",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "VA Staff",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "VA Staff",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-13969",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000013969?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000013969
+}

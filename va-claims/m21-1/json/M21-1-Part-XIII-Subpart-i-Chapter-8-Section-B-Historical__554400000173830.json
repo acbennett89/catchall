@@ -1,0 +1,164 @@
+{
+ "name": "M21-1, Part XIII, Subpart i, Chapter 8, Section B - Historical",
+ "content": "<p style=\"text-align: right\"><span style=\"font-size: 11px\"><span style=\"font-family: arial , helvetica , sans-serif\"><a class=\"eGainArticleLink\" articleid=\"554400000173828\" articlename=\"M21-1, Part XIII, Subpart i, Chapter 8, Section A - Clothing Allowance\" href=\"https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000173828?portalId=554400000001018&usertype=customer&\">&lt;-- Previous Section</a> <a class=\"eGainArticleLink\" articleid=\"554400000173827\" articlename=\"M21-1, Part XIII, Subpart ii, Chapter 1, Section A - Social Security Administration (SSA) Requests for Medical Evidence\" href=\"https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000173827?portalId=554400000001018&usertype=customer&\">Next Section --&gt;</a></span></span></p>",
+ "articleType": 0,
+ "attachment": [
+  {
+   "name": "Reorganization Guide.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000015852?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000015852
+  },
+  {
+   "name": "6-1-21_Key Changes_M21-1XIII_i_8_SecB.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000015853?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000015853
+  },
+  {
+   "name": "Historical_M21-1XIII_i_8_SecB_6-1-21.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000022038?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000022038
+  },
+  {
+   "name": "4-22-24_Key Changes_M21-1XIII_i_8_SecB.docx",
+   "type": "INTERNAL",
+   "link": {
+    "rel": "self",
+    "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/attachment/554400000022039?portalId=554400000001018&usertype=customer&"
+   },
+   "id": 554400000022039
+  }
+ ],
+ "commitState": 1,
+ "contentType": 1,
+ "createdBy": 90711,
+ "createdByUserName": "VBACOMORITA",
+ "createdDate": "17 May 2021 16:15:02.000 +0000",
+ "departmentId": 999,
+ "expiryDateTimeZone": "GMT",
+ "hasAttachments": true,
+ "isDeleted": false,
+ "isLocked": false,
+ "isPromoted": false,
+ "isPublic": true,
+ "languageId": 1,
+ "lastModifiedBy": 2265,
+ "lastModifiedByUserName": "CAPLMAZA",
+ "lastModifiedDate": "22 Apr 2024 16:40:24.000 +0000",
+ "lockedBy": 0,
+ "lockDate": "22 Apr 2024 16:39:29.000 +0000",
+ "owner": 90711,
+ "parentFolderId": 554400000269229,
+ "parentFolderType": 7,
+ "snippet": "",
+ "state": "P",
+ "topicBreadcrumb": [
+  {
+   "topic": [
+    {
+     "id": 554400000001924,
+     "name": "Compensation and Pension"
+    },
+    {
+     "id": 554400000004049,
+     "name": "M21-1 Adjudication Procedures Manual"
+    },
+    {
+     "id": 554400000019850,
+     "name": "Part 13 (Part XIII). Eligibility Determinations and Information Sharing for Other Benefits"
+    },
+    {
+     "id": 554400000024770,
+     "name": "Historical"
+    }
+   ]
+  }
+ ],
+ "uuid": "F0F41204-E9D9-4026-A10B-D8FBC4FC335B",
+ "version": 7,
+ "versionId": 554400000325688,
+ "customAttribute": [
+  {
+   "name": "article_index",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "embed_article",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "internal_external",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_type",
+   "value": "Policy or Procedure",
+   "type": "STRING"
+  },
+  {
+   "name": "km_content_types",
+   "value": "Policy or Procedure",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_change",
+   "value": "Internal",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stage",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_process_stages",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_group",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_special_benefit_groups",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audience",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "km_target_audiences",
+   "value": "",
+   "type": "STRING"
+  },
+  {
+   "name": "wss_article_type",
+   "value": "",
+   "type": "STRING"
+  }
+ ],
+ "alternateId": "KMPR-173830",
+ "link": {
+  "rel": "self",
+  "href": "https://www.knowva.ebenefits.va.gov/system/ws/v11/ss/article/554400000173830?portalId=554400000001018&usertype=customer&"
+ },
+ "id": 554400000173830
+}
