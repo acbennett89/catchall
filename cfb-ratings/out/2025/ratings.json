@@ -288,6 +288,70 @@
     }
    ]
   },
+  "betting": {
+   "min_edge": 3,
+   "break_even": 0.5238095238095238,
+   "calibration": {
+    "seasons": [
+     2022,
+     2023,
+     2024
+    ],
+    "n": 2226,
+    "a": -0.052803842436997844,
+    "b": 0.04233313872378258,
+    "b_se": 0.03994725942312536,
+    "s": 15.236015062459876,
+    "rule": "actual margin - book margin = a + b * edge + Normal(0, s), least squares over the seasons' walk-forward picks with a book line; P(model's side covers) = Phi(sign(edge) * (a + b * edge) / s)"
+   },
+   "record": {
+    "all": {
+     "W": 404,
+     "L": 371,
+     "P": 0,
+     "pct": 0.5212903225806451
+    },
+    "likes": {
+     "W": 255,
+     "L": 221,
+     "P": 0,
+     "pct": 0.5357142857142857
+    },
+    "by_edge": {
+     "0-3": {
+      "W": 149,
+      "L": 150,
+      "P": 0,
+      "pct": 0.4983277591973244
+     },
+     "3-7": {
+      "W": 131,
+      "L": 124,
+      "P": 0,
+      "pct": 0.5137254901960784
+     },
+     "7-10": {
+      "W": 52,
+      "L": 44,
+      "P": 0,
+      "pct": 0.5416666666666666
+     },
+     "10+": {
+      "W": 72,
+      "L": 53,
+      "P": 0,
+      "pct": 0.576
+     }
+    },
+    "books": {
+     "DraftKings": 1,
+     "ESPN BET": 774
+    }
+   },
+   "upcoming_books": {},
+   "upcoming_without_line": 0,
+   "lines_read": true
+  },
   "excluded_games": [
    {
     "game": "401779329",

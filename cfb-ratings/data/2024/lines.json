@@ -1,0 +1,6893 @@
+{
+"games": {
+"401628319": {
+"ESPN BET": {
+"home_spread": -37.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401628320": {
+"ESPN BET": {
+"home_spread": -50.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401628321": {
+"ESPN BET": {
+"home_spread": -48.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401628322": {
+"Caesars Sportsbook (Colorado)": {
+"home_spread": 3.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": null
+},
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401628323": {
+"Caesars Sportsbook (Colorado)": {
+"home_spread": -13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": null
+},
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+},
+"SugarHouse": {
+"home_spread": -13.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.0
+},
+"Unibet": {
+"home_spread": -13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401628324": {
+"ESPN BET": {
+"home_spread": -25.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401628325": {
+"ESPN BET": {
+"home_spread": -45.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401628326": {
+"ESPN BET": {
+"home_spread": -26.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 61.5
+}
+},
+"401628327": {
+"ESPN BET": {
+"home_spread": -50.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401628328": {
+"ESPN BET": {
+"home_spread": -43.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401628329": {
+"ESPN BET": {
+"home_spread": -20.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401628330": {
+"ESPN BET": {
+"home_spread": -38.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401628331": {
+"ESPN BET": {
+"home_spread": -34.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401628332": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+},
+"SugarHouse": {
+"home_spread": -1.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+},
+"Unibet": {
+"home_spread": -1.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401628333": {
+"ESPN BET": {
+"home_spread": 13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401628334": {
+"Caesars Sportsbook (Colorado)": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": null
+},
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 67.5
+},
+"SugarHouse": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 66.0
+},
+"Unibet": {
+"home_spread": -6.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": 66.0
+}
+},
+"401628335": {
+"ESPN BET": {
+"home_spread": -33.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 65.5
+}
+},
+"401628336": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401628337": {
+"ESPN BET": {
+"home_spread": -11.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401628338": {
+"ESPN BET": {
+"home_spread": -38.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401628339": {
+"ESPN BET": {
+"home_spread": -54.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 68.5
+}
+},
+"401628340": {
+"ESPN BET": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 41.5
+}
+},
+"401628341": {
+"ESPN BET": {
+"home_spread": -46.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401628342": {
+"ESPN BET": {
+"home_spread": -42.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401628343": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401628344": {
+"ESPN BET": {
+"home_spread": -34.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401628345": {
+"ESPN BET": {
+"home_spread": -27.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401628346": {
+"ESPN BET": {
+"home_spread": 13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401628347": {
+"Caesars Sportsbook (Colorado)": {
+"home_spread": 4.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": null
+},
+"Caesars Sportsbook (New Jersey)": {
+"home_spread": 4.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": null
+},
+"Caesars Sportsbook (Tennessee)": {
+"home_spread": 4.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": null
+},
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 41.5
+},
+"SugarHouse": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401628348": {
+"ESPN BET": {
+"home_spread": -46.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401628349": {
+"ESPN BET": {
+"home_spread": -32.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401628350": {
+"ESPN BET": {
+"home_spread": 15.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401628351": {},
+"401628352": {
+"ESPN BET": {
+"home_spread": -25.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401628353": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401628354": {
+"ESPN BET": {
+"home_spread": 21.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401628355": {
+"ESPN BET": {
+"home_spread": 20.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 65.5
+}
+},
+"401628356": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401628357": {
+"ESPN BET": {
+"home_spread": -14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401628358": {
+"ESPN BET": {
+"home_spread": -13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401628359": {
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401628360": {
+"ESPN BET": {
+"home_spread": -49.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 61.5
+}
+},
+"401628361": {
+"ESPN BET": {
+"home_spread": -36.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401628362": {
+"ESPN BET": {
+"home_spread": 8.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401628363": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401628364": {
+"ESPN BET": {
+"home_spread": -21.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 41.5
+}
+},
+"401628365": {},
+"401628366": {
+"ESPN BET": {
+"home_spread": -35.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 68.5
+}
+},
+"401628367": {},
+"401628368": {
+"ESPN BET": {
+"home_spread": -18.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401628369": {
+"ESPN BET": {
+"home_spread": 5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401628370": {
+"ESPN BET": {
+"home_spread": -22.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 40.5
+}
+},
+"401628371": {
+"ESPN BET": {
+"home_spread": -41.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401628372": {},
+"401628373": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401628374": {
+"Caesars Sportsbook (Colorado)": {
+"home_spread": 4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": null
+},
+"Caesars Sportsbook (New Jersey)": {
+"home_spread": 4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": null
+},
+"Caesars Sportsbook (Tennessee)": {
+"home_spread": 4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": null
+},
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+},
+"SugarHouse": {
+"home_spread": 4.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401628375": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 43.5
+}
+},
+"401628376": {
+"ESPN BET": {
+"home_spread": -20.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 64.5
+}
+},
+"401628377": {
+"ESPN BET": {
+"home_spread": -15.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401628378": {
+"ESPN BET": {
+"home_spread": -38.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401628379": {
+"ESPN BET": {
+"home_spread": 14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401628380": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401628381": {
+"ESPN BET": {
+"home_spread": -21.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401628382": {
+"ESPN BET": {
+"home_spread": 10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401628383": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401628384": {
+"ESPN BET": {
+"home_spread": 22.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401628385": {
+"ESPN BET": {
+"home_spread": -19.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401628386": {
+"ESPN BET": {
+"home_spread": -34.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401628387": {
+"ESPN BET": {
+"home_spread": -12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 43.5
+}
+},
+"401628388": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 64.5
+}
+},
+"401628389": {
+"ESPN BET": {
+"home_spread": 27.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401628390": {
+"ESPN BET": {
+"home_spread": 16.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401628391": {
+"ESPN BET": {
+"home_spread": -13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401628392": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401628393": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 41.5
+}
+},
+"401628394": {
+"ESPN BET": {
+"home_spread": 21.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401628395": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401628396": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 40.5
+}
+},
+"401628397": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401628398": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+},
+"SugarHouse": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401628399": {
+"ESPN BET": {
+"home_spread": -27.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401628400": {
+"ESPN BET": {
+"home_spread": -16.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401628401": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 42.5
+}
+},
+"401628402": {
+"ESPN BET": {
+"home_spread": -19.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401628403": {
+"ESPN BET": {
+"home_spread": 7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401628404": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401628405": {
+"ESPN BET": {
+"home_spread": 16.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401628406": {
+"ESPN BET": {
+"home_spread": 7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401628407": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401628408": {
+"ESPN BET": {
+"home_spread": -14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401628409": {
+"ESPN BET": {
+"home_spread": -18.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401628410": {
+"ESPN BET": {
+"home_spread": -37.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401628411": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 43.5
+}
+},
+"401628412": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401628413": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+},
+"SugarHouse": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.0
+},
+"Unibet": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.0
+}
+},
+"401628414": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+},
+"SugarHouse": {
+"home_spread": 5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.0
+},
+"Unibet": {
+"home_spread": 5.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.0
+}
+},
+"401628415": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 41.5
+}
+},
+"401628416": {
+"ESPN BET": {
+"home_spread": -26.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 61.5
+}
+},
+"401628417": {
+"ESPN BET": {
+"home_spread": -24.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401628418": {
+"ESPN BET": {
+"home_spread": 5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401628419": {
+"ESPN BET": {
+"home_spread": 13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401628420": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401628421": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401628422": {
+"ESPN BET": {
+"home_spread": -41.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401628423": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 42.5
+}
+},
+"401628424": {
+"ESPN BET": {
+"home_spread": -38.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401628425": {
+"ESPN BET": {
+"home_spread": -42.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401628426": {
+"ESPN BET": {
+"home_spread": -25.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401628427": {
+"ESPN BET": {
+"home_spread": -23.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401628428": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401628429": {
+"ESPN BET": {
+"home_spread": 13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401628430": {
+"ESPN BET": {
+"home_spread": -42.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401628431": {
+"ESPN BET": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401628432": {
+"ESPN BET": {
+"home_spread": 9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401628433": {
+"ESPN BET": {
+"home_spread": 14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401628434": {
+"ESPN BET": {
+"home_spread": -42.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401628435": {
+"ESPN BET": {
+"home_spread": -41.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401628436": {
+"ESPN BET": {
+"home_spread": -18.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401628437": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401628438": {
+"ESPN BET": {
+"home_spread": 17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401628439": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401628440": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401628441": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401628442": {
+"ESPN BET": {
+"home_spread": -26.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 63.5
+}
+},
+"401628443": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401628444": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401628445": {
+"ESPN BET": {
+"home_spread": 4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401628446": {
+"ESPN BET": {
+"home_spread": 9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401628448": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401628449": {
+"ESPN BET": {
+"home_spread": -25.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401628450": {},
+"401628451": {
+"ESPN BET": {
+"home_spread": -18.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401628452": {},
+"401628453": {
+"ESPN BET": {
+"home_spread": -12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401628454": {},
+"401628455": {
+"ESPN BET": {
+"home_spread": -48.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401628456": {},
+"401628457": {
+"ESPN BET": {
+"home_spread": 7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401628458": {
+"ESPN BET": {
+"home_spread": -38.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401628459": {
+"ESPN BET": {
+"home_spread": 13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401628460": {
+"ESPN BET": {
+"home_spread": -29.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401628461": {
+"ESPN BET": {
+"home_spread": -24.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401628462": {
+"ESPN BET": {
+"home_spread": 4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401628463": {
+"ESPN BET": {
+"home_spread": -44.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401628464": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 36.5
+}
+},
+"401628465": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401628466": {
+"ESPN BET": {
+"home_spread": -27.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401628467": {},
+"401628468": {
+"ESPN BET": {
+"home_spread": -37.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401628469": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401628470": {
+"ESPN BET": {
+"home_spread": -35.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401628471": {
+"ESPN BET": {
+"home_spread": -24.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 41.5
+}
+},
+"401628472": {
+"ESPN BET": {
+"home_spread": -30.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401628473": {
+"ESPN BET": {
+"home_spread": -25.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401628474": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401628475": {
+"ESPN BET": {
+"home_spread": -21.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401628476": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401628477": {
+"ESPN BET": {
+"home_spread": -23.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 39.5
+}
+},
+"401628478": {},
+"401628479": {},
+"401628480": {
+"ESPN BET": {
+"home_spread": -42.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401628481": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401628482": {
+"ESPN BET": {
+"home_spread": -30.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401628483": {},
+"401628484": {},
+"401628485": {
+"ESPN BET": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 41.5
+}
+},
+"401628486": {
+"ESPN BET": {
+"home_spread": -28.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401628487": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 34.5
+}
+},
+"401628488": {
+"ESPN BET": {
+"home_spread": -22.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401628489": {
+"ESPN BET": {
+"home_spread": 4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 43.5
+}
+},
+"401628490": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401628491": {},
+"401628492": {
+"ESPN BET": {
+"home_spread": -38.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401628493": {},
+"401628494": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401628495": {
+"ESPN BET": {
+"home_spread": -19.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401628496": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401628497": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 34.5
+}
+},
+"401628498": {
+"ESPN BET": {
+"home_spread": 23.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401628499": {
+"ESPN BET": {
+"home_spread": 10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401628500": {
+"ESPN BET": {
+"home_spread": 23.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401628501": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401628502": {
+"ESPN BET": {
+"home_spread": -13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401628503": {
+"ESPN BET": {
+"home_spread": 12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 38.5
+}
+},
+"401628504": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401628505": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 39.5
+}
+},
+"401628506": {
+"ESPN BET": {
+"home_spread": -21.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401628507": {
+"ESPN BET": {
+"home_spread": 9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401628508": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 40.5
+}
+},
+"401628509": {
+"ESPN BET": {
+"home_spread": -11.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401628510": {
+"ESPN BET": {
+"home_spread": -29.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401628511": {
+"ESPN BET": {
+"home_spread": -21.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401628512": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 41.5
+}
+},
+"401628513": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401628514": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 39.5
+}
+},
+"401628515": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401628516": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401628517": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 43.5
+}
+},
+"401628518": {
+"ESPN BET": {
+"home_spread": 5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401628519": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401628520": {
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 39.5
+}
+},
+"401628521": {
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401628522": {
+"ESPN BET": {
+"home_spread": 9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 42.5
+}
+},
+"401628523": {
+"ESPN BET": {
+"home_spread": 29.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401628524": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 42.5
+}
+},
+"401628525": {
+"ESPN BET": {
+"home_spread": -22.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401628526": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401628527": {
+"ESPN BET": {
+"home_spread": -16.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 37.5
+}
+},
+"401628528": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401628529": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 39.5
+}
+},
+"401628530": {
+"ESPN BET": {
+"home_spread": -25.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401628531": {
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401628532": {
+"ESPN BET": {
+"home_spread": -13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401628533": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401628534": {
+"ESPN BET": {
+"home_spread": 7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401628535": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 40.5
+}
+},
+"401628536": {
+"ESPN BET": {
+"home_spread": 14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401628537": {
+"ESPN BET": {
+"home_spread": -8.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 39.5
+}
+},
+"401628538": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401628539": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401628540": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401628541": {
+"ESPN BET": {
+"home_spread": -14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401628542": {
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401628543": {
+"ESPN BET": {
+"home_spread": -24.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401628544": {
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401628545": {
+"ESPN BET": {
+"home_spread": -37.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401628546": {
+"ESPN BET": {
+"home_spread": -13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401628547": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401628548": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401628549": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401628550": {
+"ESPN BET": {
+"home_spread": 29.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401628551": {
+"ESPN BET": {
+"home_spread": 13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401628552": {
+"ESPN BET": {
+"home_spread": 30.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401628553": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401628554": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401628555": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401628556": {
+"ESPN BET": {
+"home_spread": 4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 39.5
+}
+},
+"401628557": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 34.5
+}
+},
+"401628558": {
+"ESPN BET": {
+"home_spread": -14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401628559": {
+"ESPN BET": {
+"home_spread": 11.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401628560": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 40.5
+}
+},
+"401628561": {
+"ESPN BET": {
+"home_spread": 4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401628562": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 41.5
+}
+},
+"401628563": {
+"ESPN BET": {
+"home_spread": 8.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 42.5
+}
+},
+"401628564": {
+"ESPN BET": {
+"home_spread": -28.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401628565": {
+"ESPN BET": {
+"home_spread": -26.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401628566": {
+"Caesars Sportsbook (Colorado)": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": null
+},
+"Caesars Sportsbook (New Jersey)": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": null
+},
+"Caesars Sportsbook (Tennessee)": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": null
+},
+"ESPN BET": {
+"home_spread": -20.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 41.5
+},
+"SugarHouse": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": null
+},
+"Unibet": {
+"home_spread": -9.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.0
+}
+},
+"401628567": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401628568": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 40.5
+}
+},
+"401628569": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401628570": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401628571": {
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401628572": {
+"ESPN BET": {
+"home_spread": 10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401628581": {},
+"401628582": {
+"ESPN BET": {
+"home_spread": -38.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401628584": {
+"ESPN BET": {
+"home_spread": -24.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401628586": {
+"ESPN BET": {
+"home_spread": -41.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401628589": {},
+"401628590": {
+"ESPN BET": {
+"home_spread": -32.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401628591": {
+"ESPN BET": {
+"home_spread": -33.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401628593": {
+"ESPN BET": {
+"home_spread": -37.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401628603": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401628625": {
+"ESPN BET": {
+"home_spread": -12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401628977": {
+"ESPN BET": {
+"home_spread": -28.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401628978": {
+"ESPN BET": {
+"home_spread": 7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401628979": {
+"ESPN BET": {
+"home_spread": -27.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 43.5
+}
+},
+"401628980": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401628981": {
+"ESPN BET": {
+"home_spread": -22.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401628982": {
+"ESPN BET": {
+"home_spread": 14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401628983": {
+"ESPN BET": {
+"home_spread": 14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401628984": {
+"ESPN BET": {
+"home_spread": -25.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401628985": {
+"ESPN BET": {
+"home_spread": -21.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401629030": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401629031": {
+"ESPN BET": {
+"home_spread": 0.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401629032": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401629033": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401629034": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401629035": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401629036": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401629037": {
+"ESPN BET": {
+"home_spread": 7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401629038": {
+"ESPN BET": {
+"home_spread": 9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401629039": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401629040": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401629041": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401629042": {
+"ESPN BET": {
+"home_spread": -19.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401629043": {
+"ESPN BET": {
+"home_spread": -15.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 43.5
+}
+},
+"401629044": {
+"ESPN BET": {
+"home_spread": -13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 40.5
+}
+},
+"401629045": {
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 66.5
+}
+},
+"401629046": {
+"ESPN BET": {
+"home_spread": 16.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401632062": {
+"ESPN BET": {
+"home_spread": -38.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401632064": {},
+"401632068": {
+"ESPN BET": {
+"home_spread": -18.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401632071": {
+"ESPN BET": {
+"home_spread": -41.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401632072": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401632459": {
+"ESPN BET": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401634133": {
+"ESPN BET": {
+"home_spread": -35.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401634169": {
+"ESPN BET": {
+"home_spread": -35.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401634181": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401634197": {
+"ESPN BET": {
+"home_spread": -30.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401634206": {
+"Caesars Sportsbook (Colorado)": {
+"home_spread": -9.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": null
+},
+"Caesars Sportsbook (New Jersey)": {
+"home_spread": -9.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": null
+},
+"Caesars Sportsbook (Tennessee)": {
+"home_spread": -9.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": null
+},
+"ESPN BET": {
+"home_spread": -11.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401634212": {
+"ESPN BET": {
+"home_spread": -12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401634240": {},
+"401634247": {
+"ESPN BET": {
+"home_spread": -29.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401634299": {
+"ESPN BET": {
+"home_spread": -32.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401634300": {
+"ESPN BET": {
+"home_spread": 8.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401634301": {
+"ESPN BET": {
+"home_spread": -20.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401634302": {},
+"401634303": {},
+"401634304": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401634305": {
+"ESPN BET": {
+"home_spread": -23.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401634306": {
+"ESPN BET": {
+"home_spread": -16.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401634765": {
+"ESPN BET": {
+"home_spread": -12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401634766": {
+"ESPN BET": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401634767": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401634768": {
+"ESPN BET": {
+"home_spread": -8.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401634769": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 41.5
+}
+},
+"401634770": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401634771": {
+"ESPN BET": {
+"home_spread": 7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401634772": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401634773": {
+"ESPN BET": {
+"home_spread": 7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401634779": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401635516": {
+"ESPN BET": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401635517": {
+"ESPN BET": {
+"home_spread": 20.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401635518": {
+"ESPN BET": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401635525": {
+"ESPN BET": {
+"home_spread": 10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401635531": {
+"ESPN BET": {
+"home_spread": -33.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401635532": {
+"ESPN BET": {
+"home_spread": -13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401635533": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 37.5
+}
+},
+"401635534": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401635535": {
+"ESPN BET": {
+"home_spread": -27.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401635536": {
+"ESPN BET": {
+"home_spread": -46.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401635537": {
+"ESPN BET": {
+"home_spread": -21.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401635538": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401635539": {
+"ESPN BET": {
+"home_spread": -33.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401635540": {
+"ESPN BET": {
+"home_spread": -20.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401635541": {
+"ESPN BET": {
+"home_spread": -18.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401635542": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401635543": {
+"ESPN BET": {
+"home_spread": -42.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401635544": {},
+"401635545": {
+"ESPN BET": {
+"home_spread": -37.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401635546": {
+"ESPN BET": {
+"home_spread": -20.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401635547": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 61.5
+}
+},
+"401635548": {
+"ESPN BET": {
+"home_spread": 15.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401635551": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401635552": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401635553": {
+"ESPN BET": {
+"home_spread": 14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401635554": {
+"ESPN BET": {
+"home_spread": -8.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401635555": {
+"ESPN BET": {
+"home_spread": 15.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 63.5
+}
+},
+"401635556": {
+"ESPN BET": {
+"home_spread": -11.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401635557": {},
+"401635558": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401635560": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401635561": {
+"ESPN BET": {
+"home_spread": -23.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401635562": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401635563": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401635564": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401635565": {
+"ESPN BET": {
+"home_spread": -31.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401635567": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401635568": {
+"ESPN BET": {
+"home_spread": 8.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401635569": {
+"ESPN BET": {
+"home_spread": 16.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+},
+"SugarHouse": {
+"home_spread": -3.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+},
+"Unibet": {
+"home_spread": -3.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401635570": {
+"ESPN BET": {
+"home_spread": null,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401635571": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401635572": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 61.5
+}
+},
+"401635573": {
+"ESPN BET": {
+"home_spread": 9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401635574": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401635575": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401635576": {
+"ESPN BET": {
+"home_spread": 21.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 63.5
+}
+},
+"401635577": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401635578": {
+"ESPN BET": {
+"home_spread": 7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401635580": {
+"ESPN BET": {
+"home_spread": -19.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401635581": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401635582": {
+"ESPN BET": {
+"home_spread": 12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401635583": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 64.5
+}
+},
+"401635587": {
+"ESPN BET": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401635588": {
+"ESPN BET": {
+"home_spread": -20.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401635589": {
+"ESPN BET": {
+"home_spread": 4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401635590": {
+"ESPN BET": {
+"home_spread": 16.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401635594": {
+"ESPN BET": {
+"home_spread": -11.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401635595": {
+"ESPN BET": {
+"home_spread": 11.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401635596": {
+"ESPN BET": {
+"home_spread": -21.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401635597": {
+"ESPN BET": {
+"home_spread": -11.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401635598": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401635599": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401635600": {
+"ESPN BET": {
+"home_spread": -11.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401635601": {
+"ESPN BET": {
+"home_spread": -19.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401635602": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401635604": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401635606": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401635607": {
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401635608": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401635609": {
+"ESPN BET": {
+"home_spread": 9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 64.5
+}
+},
+"401635610": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401635612": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401635613": {
+"ESPN BET": {
+"home_spread": -15.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401635614": {
+"ESPN BET": {
+"home_spread": -48.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401635615": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401635616": {
+"ESPN BET": {
+"home_spread": -33.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401635617": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401635618": {
+"ESPN BET": {
+"home_spread": -23.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 65.5
+}
+},
+"401635619": {
+"ESPN BET": {
+"home_spread": 10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401635620": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401635621": {
+"ESPN BET": {
+"home_spread": -11.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401635622": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401635623": {
+"ESPN BET": {
+"home_spread": 12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 65.5
+}
+},
+"401635624": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401635625": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401635627": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401635638": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401635639": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401635640": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401635659": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401636363": {},
+"401636364": {
+"ESPN BET": {
+"home_spread": -33.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401636374": {
+"ESPN BET": {
+"home_spread": -21.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401636380": {},
+"401636387": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401636606": {
+"ESPN BET": {
+"home_spread": -48.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401636607": {
+"ESPN BET": {
+"home_spread": -37.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401636608": {
+"ESPN BET": {
+"home_spread": -29.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401636609": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401636610": {
+"ESPN BET": {
+"home_spread": -33.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401636611": {},
+"401636612": {
+"ESPN BET": {
+"home_spread": -36.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401636613": {
+"ESPN BET": {
+"home_spread": -34.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401636614": {
+"ESPN BET": {
+"home_spread": -36.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 63.5
+}
+},
+"401636615": {
+"ESPN BET": {
+"home_spread": -45.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401636616": {
+"ESPN BET": {
+"home_spread": 9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401636617": {
+"ESPN BET": {
+"home_spread": -21.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401636618": {
+"ESPN BET": {
+"home_spread": -14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401636859": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 64.5
+}
+},
+"401636860": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 40.5
+}
+},
+"401636861": {
+"ESPN BET": {
+"home_spread": 7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401636862": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 43.5
+}
+},
+"401636863": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401636864": {
+"ESPN BET": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 61.5
+}
+},
+"401636865": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401636866": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401636867": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401636868": {},
+"401636869": {
+"ESPN BET": {
+"home_spread": 17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401636870": {
+"ESPN BET": {
+"home_spread": 20.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 43.5
+}
+},
+"401636871": {},
+"401636872": {
+"ESPN BET": {
+"home_spread": 7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401636873": {},
+"401636874": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401636875": {
+"ESPN BET": {
+"home_spread": -18.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401636876": {
+"ESPN BET": {
+"home_spread": 0.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401636877": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401636879": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401636880": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401636881": {
+"ESPN BET": {
+"home_spread": 16.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 42.5
+}
+},
+"401636882": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401636883": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401636884": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401636885": {
+"ESPN BET": {
+"home_spread": -12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401636886": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401636887": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401636888": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401636889": {
+"ESPN BET": {
+"home_spread": -12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401636890": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 64.5
+}
+},
+"401636891": {
+"ESPN BET": {
+"home_spread": -16.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401636892": {
+"ESPN BET": {
+"home_spread": 5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401636893": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401636894": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401636895": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401636896": {
+"ESPN BET": {
+"home_spread": 3.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401636897": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401636898": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401636899": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401636900": {
+"ESPN BET": {
+"home_spread": -13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401636901": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401636902": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401636903": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401636904": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401636905": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401636906": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 63.5
+}
+},
+"401636907": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401636908": {
+"ESPN BET": {
+"home_spread": 4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 35.5
+}
+},
+"401636909": {
+"ESPN BET": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401636910": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 65.5
+}
+},
+"401636911": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401636912": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401636913": {
+"ESPN BET": {
+"home_spread": 9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401636914": {
+"ESPN BET": {
+"home_spread": -14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401636915": {
+"ESPN BET": {
+"home_spread": 4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401636916": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401636917": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401636918": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401636919": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401636920": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 69.5
+}
+},
+"401636921": {
+"ESPN BET": {
+"home_spread": 4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401636922": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 40.5
+}
+},
+"401636923": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401636924": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401636925": {
+"ESPN BET": {
+"home_spread": -13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 43.5
+}
+},
+"401636926": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401636927": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401636929": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401636930": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401636931": {
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401636932": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401636933": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401636934": {
+"ESPN BET": {
+"home_spread": 4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401636935": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401636936": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 42.5
+}
+},
+"401636937": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401636938": {
+"ESPN BET": {
+"home_spread": -14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 66.5
+}
+},
+"401636939": {
+"ESPN BET": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401636940": {
+"ESPN BET": {
+"home_spread": 7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401636941": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401636942": {
+"ESPN BET": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 39.5
+}
+},
+"401636943": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401636944": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401636945": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 61.5
+}
+},
+"401636999": {
+"ESPN BET": {
+"home_spread": -14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401637159": {
+"ESPN BET": {
+"home_spread": -26.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401637162": {},
+"401640959": {
+"ESPN BET": {
+"home_spread": -14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401640979": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401640980": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401640981": {
+"ESPN BET": {
+"home_spread": 2.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401640982": {
+"ESPN BET": {
+"home_spread": -15.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401640983": {
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401640984": {
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401640985": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 43.5
+}
+},
+"401640986": {
+"ESPN BET": {
+"home_spread": -12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401640987": {
+"ESPN BET": {
+"home_spread": 8.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 41.5
+}
+},
+"401640988": {
+"ESPN BET": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401640989": {
+"ESPN BET": {
+"home_spread": 22.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401640990": {
+"ESPN BET": {
+"home_spread": -23.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401640991": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401640992": {},
+"401640993": {
+"ESPN BET": {
+"home_spread": 27.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401640994": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 63.5
+}
+},
+"401640995": {
+"ESPN BET": {
+"home_spread": 12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401640996": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401640997": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401640998": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401640999": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401641000": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401641001": {
+"ESPN BET": {
+"home_spread": 17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401641002": {
+"ESPN BET": {
+"home_spread": -21.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401641003": {
+"ESPN BET": {
+"home_spread": -20.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 64.5
+}
+},
+"401641004": {
+"ESPN BET": {
+"home_spread": 9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401641005": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401641006": {
+"ESPN BET": {
+"home_spread": 0.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401641007": {},
+"401641008": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401641009": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401641010": {
+"ESPN BET": {
+"home_spread": 12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401641011": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401641012": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401641013": {
+"ESPN BET": {
+"home_spread": -11.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401641014": {
+"ESPN BET": {
+"home_spread": -13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 41.5
+}
+},
+"401641015": {},
+"401641016": {
+"ESPN BET": {
+"home_spread": 14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401641017": {
+"ESPN BET": {
+"home_spread": -16.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 41.5
+}
+},
+"401641018": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401641019": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401641020": {
+"ESPN BET": {
+"home_spread": -23.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401641021": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 42.5
+}
+},
+"401641022": {
+"ESPN BET": {
+"home_spread": 20.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 43.5
+}
+},
+"401641023": {},
+"401641024": {
+"ESPN BET": {
+"home_spread": 10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401641025": {
+"ESPN BET": {
+"home_spread": -27.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401641026": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401641027": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401641028": {
+"ESPN BET": {
+"home_spread": -8.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401641029": {
+"ESPN BET": {
+"home_spread": 9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401641030": {
+"ESPN BET": {
+"home_spread": -18.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401641031": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401641032": {
+"ESPN BET": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401641033": {
+"ESPN BET": {
+"home_spread": -19.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401641034": {
+"ESPN BET": {
+"home_spread": -14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 43.5
+}
+},
+"401641035": {
+"ESPN BET": {
+"home_spread": 8.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401641036": {
+"ESPN BET": {
+"home_spread": 18.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401641037": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401641038": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401641039": {
+"ESPN BET": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401641040": {},
+"401641041": {
+"ESPN BET": {
+"home_spread": 10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401643696": {
+"ESPN BET": {
+"home_spread": 27.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401643697": {
+"ESPN BET": {
+"home_spread": 13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401643698": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401643699": {
+"ESPN BET": {
+"home_spread": -30.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401643700": {
+"ESPN BET": {
+"home_spread": 12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401643701": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401643702": {},
+"401643703": {},
+"401643704": {
+"ESPN BET": {
+"home_spread": -29.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401643705": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 43.5
+}
+},
+"401643706": {
+"ESPN BET": {
+"home_spread": -31.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401643707": {
+"ESPN BET": {
+"home_spread": -18.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401643708": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401643709": {
+"ESPN BET": {
+"home_spread": 5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401643710": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 39.5
+}
+},
+"401643711": {
+"ESPN BET": {
+"home_spread": 11.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401643712": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401643713": {
+"ESPN BET": {
+"home_spread": -13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401643714": {},
+"401643715": {
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401643716": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401643717": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401643718": {
+"ESPN BET": {
+"home_spread": 4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 33.5
+}
+},
+"401643719": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 65.5
+}
+},
+"401643720": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401643721": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401643722": {
+"ESPN BET": {
+"home_spread": 9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 37.5
+}
+},
+"401643723": {
+"ESPN BET": {
+"home_spread": -27.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 66.5
+}
+},
+"401643724": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401643725": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401643726": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401643727": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401643728": {
+"ESPN BET": {
+"home_spread": 20.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401643729": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401643730": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401643731": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401643732": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 41.5
+}
+},
+"401643733": {
+"ESPN BET": {
+"home_spread": 18.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 66.5
+}
+},
+"401643734": {
+"ESPN BET": {
+"home_spread": 5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401643735": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401643736": {
+"ESPN BET": {
+"home_spread": -18.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401643737": {
+"ESPN BET": {
+"home_spread": 0.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 77.5
+}
+},
+"401643738": {
+"ESPN BET": {
+"home_spread": -11.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401643739": {
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 61.5
+}
+},
+"401643740": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401643741": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 61.5
+}
+},
+"401643742": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401643743": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 41.5
+}
+},
+"401643744": {
+"ESPN BET": {
+"home_spread": 17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401643745": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401643746": {
+"ESPN BET": {
+"home_spread": -18.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 38.5
+}
+},
+"401643747": {
+"ESPN BET": {
+"home_spread": -24.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401643748": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401643749": {
+"ESPN BET": {
+"home_spread": -12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401643750": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401643751": {
+"ESPN BET": {
+"home_spread": 9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 40.5
+}
+},
+"401643752": {
+"ESPN BET": {
+"home_spread": -23.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401643753": {
+"ESPN BET": {
+"home_spread": 12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401643754": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 65.5
+}
+},
+"401643755": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401643756": {
+"ESPN BET": {
+"home_spread": -20.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 67.5
+}
+},
+"401643757": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401643758": {
+"ESPN BET": {
+"home_spread": 14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 61.5
+}
+},
+"401643759": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401643760": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 61.5
+}
+},
+"401643761": {
+"ESPN BET": {
+"home_spread": 11.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 71.5
+}
+},
+"401643762": {
+"ESPN BET": {
+"home_spread": -19.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401643763": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401643764": {
+"ESPN BET": {
+"home_spread": 25.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401643765": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 42.5
+}
+},
+"401643766": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401643767": {
+"ESPN BET": {
+"home_spread": 7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401643768": {
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 43.5
+}
+},
+"401643769": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401643770": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401643771": {
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 61.5
+}
+},
+"401643772": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401643773": {
+"ESPN BET": {
+"home_spread": -18.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401643774": {},
+"401643775": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401643776": {},
+"401643777": {
+"ESPN BET": {
+"home_spread": -35.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401643778": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401643779": {
+"ESPN BET": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 65.5
+}
+},
+"401643780": {
+"ESPN BET": {
+"home_spread": 10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401643781": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401643782": {
+"ESPN BET": {
+"home_spread": -16.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401643783": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401643784": {
+"ESPN BET": {
+"home_spread": -18.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401643785": {
+"ESPN BET": {
+"home_spread": -0.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401643786": {
+"ESPN BET": {
+"home_spread": 17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401643787": {
+"ESPN BET": {
+"home_spread": -27.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401643788": {
+"ESPN BET": {
+"home_spread": -36.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401643789": {},
+"401643790": {},
+"401643791": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401643792": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401643793": {
+"ESPN BET": {
+"home_spread": -20.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401643794": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401643795": {
+"ESPN BET": {
+"home_spread": -11.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401643796": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401643797": {
+"ESPN BET": {
+"home_spread": 14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401643798": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401643799": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401643800": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401643801": {
+"ESPN BET": {
+"home_spread": 16.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401643802": {
+"ESPN BET": {
+"home_spread": 16.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401643803": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401643804": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401643805": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401643806": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 63.5
+}
+},
+"401643807": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 41.5
+}
+},
+"401643808": {
+"ESPN BET": {
+"home_spread": -13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 66.5
+}
+},
+"401643809": {
+"ESPN BET": {
+"home_spread": -8.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401643810": {
+"ESPN BET": {
+"home_spread": -8.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401643811": {
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401643812": {
+"ESPN BET": {
+"home_spread": 8.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401643813": {
+"ESPN BET": {
+"home_spread": 10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401643814": {
+"ESPN BET": {
+"home_spread": 7.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401643815": {
+"ESPN BET": {
+"home_spread": 0.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401643816": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401643817": {
+"ESPN BET": {
+"home_spread": -27.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401643818": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401643819": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401643820": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 61.5
+}
+},
+"401643821": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401643822": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401643823": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401643824": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401643825": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401643826": {
+"ESPN BET": {
+"home_spread": -15.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401643827": {
+"ESPN BET": {
+"home_spread": -14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401643828": {
+"ESPN BET": {
+"home_spread": 9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401643829": {
+"ESPN BET": {
+"home_spread": 13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401643830": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401643831": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401643832": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401643833": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401643834": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401643835": {
+"ESPN BET": {
+"home_spread": -27.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401643836": {
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401643837": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401643838": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401643839": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401643840": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401643841": {
+"ESPN BET": {
+"home_spread": 24.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401643842": {
+"ESPN BET": {
+"home_spread": -22.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401643843": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401643844": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401643845": {
+"ESPN BET": {
+"home_spread": -0.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401643846": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401643847": {
+"ESPN BET": {
+"home_spread": 5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401643848": {
+"ESPN BET": {
+"home_spread": 8.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401643849": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401643858": {
+"ESPN BET": {
+"home_spread": -39.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401644683": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 40.5
+}
+},
+"401644684": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 43.5
+}
+},
+"401644685": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401644686": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 42.5
+}
+},
+"401644687": {
+"ESPN BET": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401644688": {
+"ESPN BET": {
+"home_spread": 12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401644689": {
+"ESPN BET": {
+"home_spread": -30.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401644690": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 42.5
+}
+},
+"401644691": {
+"ESPN BET": {
+"home_spread": -3.0,
+"read_at": null,
+"source": "ESPN closing",
+"total": 37.5
+}
+},
+"401644727": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401644728": {
+"ESPN BET": {
+"home_spread": -27.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401644729": {
+"ESPN BET": {
+"home_spread": -15.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401644730": {
+"ESPN BET": {
+"home_spread": -33.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401644731": {
+"ESPN BET": {
+"home_spread": -36.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401644732": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401644733": {
+"ESPN BET": {
+"home_spread": -13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401644734": {
+"ESPN BET": {
+"home_spread": -24.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401644735": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401644736": {
+"ESPN BET": {
+"home_spread": -12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 42.5
+}
+},
+"401644737": {
+"ESPN BET": {
+"home_spread": -25.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401644738": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401644739": {
+"ESPN BET": {
+"home_spread": 13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401644740": {
+"ESPN BET": {
+"home_spread": 16.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401644741": {
+"ESPN BET": {
+"home_spread": 10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401644742": {
+"ESPN BET": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401644743": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401644744": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401644745": {
+"ESPN BET": {
+"home_spread": 10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 44.5
+}
+},
+"401644746": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401644748": {
+"ESPN BET": {
+"home_spread": -23.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401644749": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401644750": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401644751": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 42.5
+}
+},
+"401644752": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401644753": {
+"ESPN BET": {
+"home_spread": 13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401644754": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401644755": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401644756": {
+"ESPN BET": {
+"home_spread": -19.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 61.5
+}
+},
+"401644757": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401644758": {
+"ESPN BET": {
+"home_spread": 10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401644760": {
+"ESPN BET": {
+"home_spread": 14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401644761": {
+"ESPN BET": {
+"home_spread": 20.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401644762": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401644763": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401644764": {
+"ESPN BET": {
+"home_spread": -9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401644765": {
+"ESPN BET": {
+"home_spread": -14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401644766": {
+"ESPN BET": {
+"home_spread": -14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 43.5
+}
+},
+"401644767": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401644769": {
+"ESPN BET": {
+"home_spread": 10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401644770": {
+"ESPN BET": {
+"home_spread": 5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401644772": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401644773": {
+"ESPN BET": {
+"home_spread": 0.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 45.5
+}
+},
+"401644774": {
+"ESPN BET": {
+"home_spread": 12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401644775": {
+"ESPN BET": {
+"home_spread": 9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401644776": {
+"ESPN BET": {
+"home_spread": -23.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401644777": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401644779": {
+"ESPN BET": {
+"home_spread": -16.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 41.5
+}
+},
+"401644780": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401645308": {
+"ESPN BET": {
+"home_spread": -23.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401645316": {
+"ESPN BET": {
+"home_spread": -29.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401645317": {
+"ESPN BET": {
+"home_spread": -28.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401645318": {
+"ESPN BET": {
+"home_spread": -37.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401645319": {
+"ESPN BET": {
+"home_spread": -31.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401645320": {
+"ESPN BET": {
+"home_spread": -31.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401645321": {
+"ESPN BET": {
+"home_spread": -38.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 62.5
+}
+},
+"401645322": {
+"ESPN BET": {
+"home_spread": -31.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401645323": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 42.5
+}
+},
+"401645324": {
+"ESPN BET": {
+"home_spread": -11.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 43.5
+}
+},
+"401645325": {
+"ESPN BET": {
+"home_spread": -21.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 72.5
+}
+},
+"401645326": {
+"ESPN BET": {
+"home_spread": -29.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401645327": {},
+"401645328": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 42.5
+}
+},
+"401645329": {
+"ESPN BET": {
+"home_spread": 8.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401645330": {
+"ESPN BET": {
+"home_spread": -36.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401645331": {
+"ESPN BET": {
+"home_spread": 21.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401645332": {
+"ESPN BET": {
+"home_spread": 5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401645333": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401645334": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401645335": {
+"ESPN BET": {
+"home_spread": -34.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401645336": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 65.5
+}
+},
+"401645337": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401645338": {
+"ESPN BET": {
+"home_spread": 18.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401645339": {
+"ESPN BET": {
+"home_spread": 13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401645340": {
+"ESPN BET": {
+"home_spread": 8.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401645341": {
+"ESPN BET": {
+"home_spread": 10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401645342": {
+"ESPN BET": {
+"home_spread": -25.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401645343": {
+"ESPN BET": {
+"home_spread": 5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401645344": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401645345": {
+"ESPN BET": {
+"home_spread": -14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401645346": {
+"ESPN BET": {
+"home_spread": -18.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401645347": {
+"ESPN BET": {
+"home_spread": -16.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401645348": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401645349": {
+"ESPN BET": {
+"home_spread": -10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 67.5
+}
+},
+"401645350": {
+"ESPN BET": {
+"home_spread": -22.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401645351": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401645352": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401645353": {
+"ESPN BET": {
+"home_spread": -16.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401645354": {
+"ESPN BET": {
+"home_spread": 7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 69.5
+}
+},
+"401645355": {
+"ESPN BET": {
+"home_spread": 9.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401645356": {
+"ESPN BET": {
+"home_spread": 14.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401645357": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 47.5
+}
+},
+"401645358": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401645359": {
+"ESPN BET": {
+"home_spread": 7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 61.5
+}
+},
+"401645360": {
+"ESPN BET": {
+"home_spread": 13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401645361": {
+"ESPN BET": {
+"home_spread": -5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401645362": {
+"ESPN BET": {
+"home_spread": -7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401645363": {
+"ESPN BET": {
+"home_spread": 4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401645364": {
+"ESPN BET": {
+"home_spread": -25.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401645365": {
+"ESPN BET": {
+"home_spread": 16.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 63.5
+}
+},
+"401645366": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 71.5
+}
+},
+"401645367": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401645368": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401645369": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401645370": {
+"ESPN BET": {
+"home_spread": 7.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 48.5
+}
+},
+"401645371": {
+"ESPN BET": {
+"home_spread": 3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 49.5
+}
+},
+"401645372": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 73.5
+}
+},
+"401645373": {
+"ESPN BET": {
+"home_spread": 6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401645374": {
+"ESPN BET": {
+"home_spread": -17.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 55.5
+}
+},
+"401645375": {
+"ESPN BET": {
+"home_spread": -13.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 60.5
+}
+},
+"401645376": {
+"ESPN BET": {
+"home_spread": -12.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 54.5
+}
+},
+"401645377": {
+"ESPN BET": {
+"home_spread": -1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 59.5
+}
+},
+"401645378": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401645379": {
+"ESPN BET": {
+"home_spread": null,
+"read_at": null,
+"source": "ESPN closing",
+"total": 52.5
+}
+},
+"401645380": {
+"ESPN BET": {
+"home_spread": 2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401645381": {
+"ESPN BET": {
+"home_spread": 10.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 63.5
+}
+},
+"401645382": {
+"ESPN BET": {
+"home_spread": 5.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 53.5
+}
+},
+"401645383": {
+"ESPN BET": {
+"home_spread": -6.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 39.5
+}
+},
+"401654845": {
+"ESPN BET": {
+"home_spread": -28.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401655632": {
+"ESPN BET": {
+"home_spread": -26.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 38.5
+}
+},
+"401673462": {
+"ESPN BET": {
+"home_spread": 4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 46.5
+}
+},
+"401673463": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 56.5
+}
+},
+"401673464": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401673465": {
+"ESPN BET": {
+"home_spread": 1.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 51.5
+}
+},
+"401673466": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 58.5
+}
+},
+"401673467": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 43.5
+}
+},
+"401673468": {
+"ESPN BET": {
+"home_spread": -3.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+},
+"401673469": {
+"ESPN BET": {
+"home_spread": -2.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 50.5
+}
+},
+"401673470": {
+"ESPN BET": {
+"home_spread": -4.5,
+"read_at": null,
+"source": "ESPN closing",
+"total": 57.5
+}
+}
+},
+"rule": "home_spread is the home team's point spread (negative = home favored); finished games carry ESPN's closing lines; Caesars read from The Odds API is the last line read before kickoff",
+"season": 2024,
+"source": {
+"espn": "https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/events/<id>/competitions/<id>/odds",
+"odds_api": "https://api.the-odds-api.com/v4/sports/americanfootball_ncaaf/odds (bookmaker williamhill_us)"
+}
+}

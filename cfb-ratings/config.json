@@ -28,6 +28,9 @@
     "max_iter": 500,
     "tol": 1e-09
   },
+  "betting": {
+    "min_edge": 3
+  },
   "exclusion": "path",
   "layer_mode": "rate",
   "end_of_half_seconds": 60,

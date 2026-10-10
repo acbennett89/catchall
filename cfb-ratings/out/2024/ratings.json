@@ -290,6 +290,69 @@
     }
    ]
   },
+  "betting": {
+   "min_edge": 3,
+   "break_even": 0.5238095238095238,
+   "calibration": {
+    "seasons": [
+     2022,
+     2023
+    ],
+    "n": 1493,
+    "a": -0.5336578230199497,
+    "b": 0.05329886877615142,
+    "b_se": 0.048029215298077015,
+    "s": 15.244561178616342,
+    "rule": "actual margin - book margin = a + b * edge + Normal(0, s), least squares over the seasons' walk-forward picks with a book line; P(model's side covers) = Phi(sign(edge) * (a + b * edge) / s)"
+   },
+   "record": {
+    "all": {
+     "W": 366,
+     "L": 367,
+     "P": 0,
+     "pct": 0.49931787175989084
+    },
+    "likes": {
+     "W": 237,
+     "L": 220,
+     "P": 0,
+     "pct": 0.5185995623632386
+    },
+    "by_edge": {
+     "0-3": {
+      "W": 129,
+      "L": 147,
+      "P": 0,
+      "pct": 0.4673913043478261
+     },
+     "3-7": {
+      "W": 124,
+      "L": 114,
+      "P": 0,
+      "pct": 0.5210084033613446
+     },
+     "7-10": {
+      "W": 56,
+      "L": 53,
+      "P": 0,
+      "pct": 0.5137614678899083
+     },
+     "10+": {
+      "W": 57,
+      "L": 53,
+      "P": 0,
+      "pct": 0.5181818181818182
+     }
+    },
+    "books": {
+     "Caesars Sportsbook (New Jersey)": 3,
+     "ESPN BET": 730
+    }
+   },
+   "upcoming_books": {},
+   "upcoming_without_line": 0,
+   "lines_read": true
+  },
   "excluded_games": [
    {
     "game": "401628581",

@@ -1,0 +1,174 @@
+"""The model's point spread beside a sportsbook's, and how the model's side has done against it.
+
+    python betting.py      every built season's record against the book, and the fit behind
+                           the cover chance (prints only)
+
+Reference only: nothing here enters a rating, and nothing here is betting advice.
+
+Model line: the predicted home margin (ratings.predict) as a home point spread, -margin, rounded
+to the half point. Book line: Caesars Sportsbook when there is one (odds.CAESARS), otherwise the
+book ESPN listed that season (odds.STAND_INS); every line names its book. Spreads are the home
+team's: -7 = home favored by 7.
+
+    edge = model margin + book home spread   (= model margin - the margin the book expects)
+
+Positive: the model likes the home team at the book's number; negative: the away team. The model
+"likes" a game when |edge| >= betting.min_edge points (config.json). Against the spread, home
+covers when actual margin + home spread > 0, and it is a push at 0.
+
+Cover chance (games not yet played): the chance the model's side covers, read from earlier
+complete seasons' walk-forward picks (each week's games predicted from the week before) against
+their book lines:
+
+    actual margin - book margin = a + b * edge + e,   e ~ Normal(0, s)
+    P(model's side covers) = Phi(sign(edge) * (a + b * edge) / s)
+
+b is the share of the model's disagreement that has shown up in results. A b near 0 means the
+disagreements carried little information beyond the book's line, and every cover chance is near
+50%. At standard -110 odds a side has to cover 52.4% of the time to break even.
+"""
+import json
+import math
+import os
+
+from odds import CAESARS, STAND_INS, load_lines
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+BUCKETS = ((0, 3), (3, 7), (7, 10), (10, None))  # |edge| in points; fixed before any results were seen
+BREAK_EVEN = 110 / 210  # a -110 bet: risk 110 to win 100
+
+
+def phi(x):
+    return 0.5 * (1 + math.erf(x / math.sqrt(2)))
+
+
+def half_point(x):
+    """Round to the nearest half point (halves away from zero), as books quote spreads."""
+    return math.copysign(math.floor(abs(x) * 2 + 0.5) / 2, x) if x else 0.0
+
+
+def book_line(books):
+    """The line the model is compared with: the first Caesars book with a spread, else ESPN's book."""
+    for b in CAESARS + STAND_INS:
+        v = (books or {}).get(b)
+        if v and v.get("home_spread") is not None:
+            return {"book": b, "caesars": b in CAESARS, "home_spread": v["home_spread"],
+                    "total": v.get("total"), "source": v.get("source"), "read_at": v.get("read_at")}
+    return None
+
+
+def cover_prob(edge, cal):
+    return phi((1 if edge > 0 else -1) * (cal["a"] + cal["b"] * edge) / cal["s"])
+
+
+def bet(home_margin, line, min_edge, cal=None, actual=None):
+    """The model's line against the book for one game. actual = final home margin, if played."""
+    out = {"model_home_spread": half_point(-home_margin) + 0.0}
+    if not line:
+        return out
+    edge = home_margin + line["home_spread"]
+    side = "home" if edge > 0 else "away" if edge < 0 else None
+    out.update(book=line["book"], caesars=line["caesars"], book_home_spread=line["home_spread"],
+               book_total=line["total"], line_source=line["source"], line_read_at=line["read_at"],
+               edge=edge, side=side, likes=side is not None and abs(edge) >= min_edge)
+    if cal and side:
+        out["cover_prob"] = cover_prob(edge, cal)
+    if actual is not None and side:
+        m = actual + line["home_spread"]  # the home team's margin against the spread
+        r = m if side == "home" else -m
+        out["ats"] = "W" if r > 0 else "L" if r < 0 else "P"
+    return out
+
+
+def label(lo, hi):
+    return f"{lo}+" if hi is None else f"{lo}-{hi}"
+
+
+def bucket_of(edge):
+    e = abs(edge)
+    return next(label(lo, hi) for lo, hi in BUCKETS if e >= lo and (hi is None or e < hi))
+
+
+def record(bets, min_edge):
+    """W-L-P of the model's side, overall, for the games it likes, and by |edge|."""
+    def tally(xs):
+        w, l, p = (sum(1 for x in xs if x["ats"] == k) for k in "WLP")
+        return {"W": w, "L": l, "P": p, "pct": w / (w + l) if w + l else None}
+    done = [b for b in bets if b.get("ats")]
+    return {"all": tally(done), "likes": tally([b for b in done if abs(b["edge"]) >= min_edge]),
+            "by_edge": {label(lo, hi): tally([b for b in done if bucket_of(b["edge"]) == label(lo, hi)])
+                        for lo, hi in BUCKETS},
+            "books": {k: sum(1 for b in done if b["book"] == k) for k in sorted({b["book"] for b in done})}}
+
+
+def season_rows(season):
+    """Walk-forward picks of a built season that have a book line: (edge, actual - book margin)."""
+    p = os.path.join(HERE, "out", str(season), "weekly.json")
+    if not os.path.exists(p):
+        return []
+    lines, rows = load_lines(season), []
+    for s in json.load(open(p, encoding="utf-8"))["weeks"]:
+        for g in s["picks"]:
+            line = book_line(lines.get(g["game"]))
+            if line:
+                actual = g["home_pts"] - g["away_pts"]
+                rows.append((g["home_margin"] + line["home_spread"], actual + line["home_spread"]))
+    return rows
+
+
+def calibrate(seasons):
+    """Fit actual - book margin = a + b * edge over these seasons' walk-forward picks."""
+    rows = [r for s in seasons for r in season_rows(s)]
+    if len(rows) < 100:
+        return None
+    n = len(rows)
+    mx, my = sum(x for x, _ in rows) / n, sum(y for _, y in rows) / n
+    sxx = sum((x - mx) ** 2 for x, _ in rows)
+    b = sum((x - mx) * (y - my) for x, y in rows) / sxx
+    a = my - b * mx
+    s = math.sqrt(sum((y - a - b * x) ** 2 for x, y in rows) / (n - 2))
+    return {"seasons": list(seasons), "n": n, "a": a, "b": b, "b_se": s / math.sqrt(sxx), "s": s,
+            "rule": "actual margin - book margin = a + b * edge + Normal(0, s), least squares over the "
+                    "seasons' walk-forward picks with a book line; P(model's side covers) = "
+                    "Phi(sign(edge) * (a + b * edge) / s)"}
+
+
+def prior_complete_seasons(season):
+    """Built seasons before `season` whose regular season is complete (their results are final)."""
+    out = []
+    for p in sorted(os.listdir(os.path.join(HERE, "out"))):
+        if p.isdigit() and int(p) < season:
+            f = os.path.join(HERE, "out", p, "ratings.json")
+            if os.path.exists(f) and json.load(open(f, encoding="utf-8"))["meta"].get("regular_season_complete"):
+                out.append(int(p))
+    return out
+
+
+def main():
+    seasons = sorted(int(p) for p in os.listdir(os.path.join(HERE, "out")) if p.isdigit())
+    total = {"W": 0, "L": 0, "P": 0}
+    for season in seasons:
+        b = json.load(open(os.path.join(HERE, "out", str(season), "ratings.json"), encoding="utf-8"))["meta"].get("betting")
+        if not b:
+            print(f"{season}: no betting record (rebuild with python build.py --season {season})")
+            continue
+        r = b["record"]
+        fmt = lambda t: f"{t['W']}-{t['L']}-{t['P']}" + (f" ({100 * t['pct']:.1f}%)" if t["pct"] is not None else "")
+        print(f"{season} vs {', '.join(f'{k} {v}' for k, v in r['books'].items()) or 'no lines'}")
+        print(f"   all picks {fmt(r['all'])};  edge >= {b['min_edge']:g}: {fmt(r['likes'])};  by |edge|: " +
+              ", ".join(f"{k} {fmt(v)}" for k, v in r["by_edge"].items()))
+        for k in total:
+            total[k] += r["all"][k]
+    if total["W"] + total["L"]:
+        print(f"all seasons: {total['W']}-{total['L']}-{total['P']} "
+              f"({100 * total['W'] / (total['W'] + total['L']):.1f}%; break-even at -110 is {100 * BREAK_EVEN:.1f}%)")
+    cal = calibrate([s for s in seasons if s in prior_complete_seasons(max(seasons) + 1)])
+    if cal:
+        print(f"fit over {cal['seasons']} ({cal['n']} games): a = {cal['a']:+.3f}, b = {cal['b']:.3f} +/- "
+              f"{cal['b_se']:.3f}, s = {cal['s']:.2f}")
+        for e in (3, 7, 10, 14):
+            print(f"   cover chance at an edge of {e} points: {100 * cover_prob(e, cal):.1f}%")
+
+
+if __name__ == "__main__":
+    main()

@@ -232,6 +232,50 @@ class OpponentRanks(unittest.TestCase):
         self.assertTrue(all(n.values()), n)
 
 
+class Betting(unittest.TestCase):
+    """The model's line against the book (betting.py): every pick and prediction against
+    data/<season>/lines.json, and each season's record recounted."""
+
+    def test_every_season(self):
+        sys.path.insert(0, HERE)
+        from betting import book_line, half_point, record
+        from odds import load_lines
+        for season in built_seasons():
+            with self.subTest(season=season):
+                out = os.path.join(HERE, "out", str(season))
+                r = json.load(open(os.path.join(out, "ratings.json"), encoding="utf-8"))
+                wk = json.load(open(os.path.join(out, "weekly.json"), encoding="utf-8"))
+                B, lines = r["meta"]["betting"], load_lines(season)
+                me = B["min_edge"]
+                picks = [g for s in wk["weeks"] for g in s["picks"]]
+                for g in picks + r["predictions"]:
+                    self.assertEqual(g["model_home_spread"], half_point(-g["home_margin"]))
+                    line = book_line(lines.get(g["game"]))
+                    if line is None:
+                        self.assertNotIn("edge", g)
+                        continue
+                    self.assertEqual((g["book"], g["book_home_spread"]), (line["book"], line["home_spread"]))
+                    edge = g["home_margin"] + line["home_spread"]
+                    self.assertAlmostEqual(g["edge"], edge, places=9)
+                    self.assertEqual(g["side"], "home" if edge > 0 else "away" if edge < 0 else None)
+                    self.assertEqual(g["likes"], g["side"] is not None and abs(edge) >= me)
+                    if g.get("home_pts") is not None and g["side"]:
+                        m = (g["home_pts"] - g["away_pts"] + line["home_spread"]) * (1 if g["side"] == "home" else -1)
+                        self.assertEqual(g["ats"], "W" if m > 0 else "L" if m < 0 else "P")
+                    self.assertEqual("cover_prob" in g, bool(B["calibration"]) and g["side"] is not None
+                                     and g in r["predictions"])
+                self.assertEqual(B["record"], record([g for g in picks if "edge" in g], me))
+                cal = B["calibration"]
+                if cal:  # fitted on earlier, complete seasons only
+                    self.assertTrue(cal["seasons"] and max(cal["seasons"]) < season)
+                    for s_ in cal["seasons"]:
+                        m = json.load(open(os.path.join(HERE, "out", str(s_), "ratings.json"), encoding="utf-8"))["meta"]
+                        self.assertTrue(m["regular_season_complete"])
+                if season in (2022, 2023):  # ESPN listed Caesars for nearly every game
+                    caesars = sum(n for b, n in B["record"]["books"].items() if b.startswith("Caesars"))
+                    self.assertGreater(caesars, 0.95 * sum(B["record"]["books"].values()))
+
+
 class Polls(unittest.TestCase):
     def test_polls_files(self):
         for season in built_seasons():

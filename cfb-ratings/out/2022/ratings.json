@@ -305,6 +305,60 @@
     }
    ]
   },
+  "betting": {
+   "min_edge": 3,
+   "break_even": 0.5238095238095238,
+   "calibration": null,
+   "record": {
+    "all": {
+     "W": 371,
+     "L": 355,
+     "P": 9,
+     "pct": 0.5110192837465565
+    },
+    "likes": {
+     "W": 244,
+     "L": 227,
+     "P": 7,
+     "pct": 0.5180467091295117
+    },
+    "by_edge": {
+     "0-3": {
+      "W": 127,
+      "L": 128,
+      "P": 2,
+      "pct": 0.4980392156862745
+     },
+     "3-7": {
+      "W": 112,
+      "L": 116,
+      "P": 6,
+      "pct": 0.49122807017543857
+     },
+     "7-10": {
+      "W": 49,
+      "L": 55,
+      "P": 1,
+      "pct": 0.47115384615384615
+     },
+     "10+": {
+      "W": 83,
+      "L": 56,
+      "P": 0,
+      "pct": 0.5971223021582733
+     }
+    },
+    "books": {
+     "Caesars Sportsbook": 567,
+     "Caesars Sportsbook (Colorado)": 3,
+     "Caesars Sportsbook (New Jersey)": 164,
+     "ESPN BET": 1
+    }
+   },
+   "upcoming_books": {},
+   "upcoming_without_line": 0,
+   "lines_read": true
+  },
   "excluded_games": [
    {
     "game": "401413256",

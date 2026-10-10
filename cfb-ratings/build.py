@@ -30,7 +30,9 @@ except ImportError:  # Python 3.8
     ZoneInfo = None
 
 from audit_penalties import audit
+from betting import BREAK_EVEN, bet, book_line, calibrate, prior_complete_seasons, record
 from efficiency import trace, trace_tempo
+from odds import load_lines
 from polls import latest as latest_poll, load_polls
 from ratings import (DISCIPLINE_KEYS, HERE, comparison_pool, drive_weight, good_clock,
                      is_situational_foul, load, load_config, phi, predict, rate, venue)
@@ -115,9 +117,10 @@ def finish_rows(res, polls, week):
     return rows, {"polls": used, "slot_base": slot_base}
 
 
-def snapshot(res, week, data, cfg, sigma, polls):
+def snapshot(res, week, data, cfg, sigma, polls, lines=None):
     """The table as it stood after `week`, plus the next week's games as the model saw them then
-    (prediction from these ratings, and the actual score)."""
+    (prediction from these ratings, the actual score, and the model's line against the book's
+    closing line: betting.py)."""
     teams = data["teams"]
     rows, info = finish_rows(res, polls, week)
     eligible = {r["id"] for r in rows if r["eligible"]}
@@ -134,7 +137,9 @@ def snapshot(res, week, data, cfg, sigma, polls):
                       "away": name_of(teams, g["away"]), "neutral": bool(g["neutral"]),
                       "tentative": any(x not in eligible for x in fbs_sides),
                       "home_margin": p["margin"], "home_win_prob": phi(p["margin"] / sigma),
-                      "possessions": p["poss"], "home_pts": g["home_pts"], "away_pts": g["away_pts"]})
+                      "possessions": p["poss"], "home_pts": g["home_pts"], "away_pts": g["away_pts"],
+                      **bet(p["margin"], book_line((lines or {}).get(g["id"])), min_edge(cfg),
+                            actual=g["home_pts"] - g["away_pts"])})
     meta = {"week": week, "last_game_date": eastern_date(max(g["date"] for g in res["games"])),
             "games_used": len(res["games"]), "games_with_drives": sum(1 for g in res["games"] if g["drives"]),
             "eligible": len(eligible), **rating_counts(rows),
@@ -143,6 +148,11 @@ def snapshot(res, week, data, cfg, sigma, polls):
             "net_weights": cfg["net_weights"], **info}
     return {"week": week, "meta": meta, "teams": [{k: r.get(k) for k in WEEK_FIELDS} for r in rows],
             "picks": picks, "picks_skipped": skipped}
+
+
+def min_edge(cfg):
+    """Points of disagreement with the book's line at which the model "likes" a side (config.json)."""
+    return cfg.get("betting", {}).get("min_edge", 3)
 
 
 def rating_counts(rows):
@@ -524,6 +534,7 @@ def main():
 
     os.makedirs(os.path.join(out_dir, "traces"), exist_ok=True)
     polls = load_polls(cfg["season"])
+    lines = load_lines(cfg["season"])  # sportsbook lines (odds.py); reference only
     rows, table_info = finish_rows(res, polls, last_week)
     # utf-8-sig: the byte-order mark lets Excel on Windows read "San José State" correctly.
     with open(os.path.join(out_dir, "ratings.csv"), "w", newline="", encoding="utf-8-sig") as f:
@@ -543,7 +554,7 @@ def main():
     snaps = []
     for w in range(1, last_week + 1):
         rw = res if w == last_week else rate(copy.deepcopy(data), cfg, through_week=w)
-        snaps.append(snapshot(rw, w, data, cfg, sigma, polls))
+        snaps.append(snapshot(rw, w, data, cfg, sigma, polls, lines))
     with open(os.path.join(out_dir, "weekly.json"), "w", encoding="utf-8") as f:
         json.dump({"season": cfg["season"],
                    "rule": "week w = ratings.rate(data, cfg, through_week=w): every number from the games of "
@@ -635,6 +646,8 @@ def main():
     has_fbs = lambda u: "FBS" in (teams[u["home"]]["division"], teams[u["away"]]["division"])
     week_in_progress = any(u["week"] == last_week and has_fbs(u) for u in upcoming)
     nxt = min((u["week"] for u in upcoming if has_fbs(u)), default=None)
+    # The cover chance for games not yet played comes from earlier complete seasons only.
+    cover_fit = calibrate(prior_complete_seasons(cfg["season"]))
     preds = []
     for u in upcoming:
         if u["week"] != nxt:
@@ -650,7 +663,8 @@ def main():
                       "tentative": any(x not in eligible for x in fbs_sides),
                       "home_margin": p["margin"], "home_win_prob": phi(p["margin"] / sigma),
                       "possessions": p["poss"], "em_diff_per_drive": p["em_diff_drive"],
-                      "hfa_per_drive": p["hfa_drive"]})
+                      "hfa_per_drive": p["hfa_drive"],
+                      **bet(p["margin"], book_line(lines.get(u["id"])), min_edge(cfg), cover_fit)})
     preds.sort(key=lambda x: x["date"])
 
 
@@ -683,6 +697,14 @@ def main():
                    "sr_iterations": res["sr"]["iterations"], "tempo_iterations": res["tempo"]["iterations"]},
         "holdout": {k: holdout[k] for k in ("n", "methods", "sigma", "same_games_vs_market",
                                              "calibration") if k in holdout},
+        # The model's line against the book (betting.py): every walk-forward pick of the season
+        # with a closing line, and the fit behind the cover chance of games not yet played.
+        "betting": {"min_edge": min_edge(cfg), "break_even": BREAK_EVEN, "calibration": cover_fit,
+                    "record": record([g for s in snaps for g in s["picks"] if "edge" in g], min_edge(cfg)),
+                    "upcoming_books": {b: sum(1 for p in preds if p.get("book") == b)
+                                       for b in sorted({p["book"] for p in preds if p.get("book")})},
+                    "upcoming_without_line": sum(1 for p in preds if not p.get("book")),
+                    "lines_read": bool(lines)},
         "excluded_games": [{"game": g["id"], "teams": f"{g['away_name']} at {g['home_name']}",
                             "reason": g["pbp_note"]}
                            for g in res["games"] if g["pbp_note"] and not g["drives"]],

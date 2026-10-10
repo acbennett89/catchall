@@ -33,9 +33,15 @@ the site. Run it again any time to pull the latest version. Then double-click:
 | Launcher | What it does |
 |---|---|
 | **Launch CFB Rankings.bat** | Builds the page if it is out of date, serves it on this computer only and opens your browser. Close the window to stop. |
-| **Update CFB Rankings.bat** | First downloads the current season's new games and AP/CFP polls from ESPN and rebuilds that season (the first run on a computer fetches every game so far and takes several minutes), then opens the site. |
+| **Update CFB Rankings.bat** | First downloads the current season's new games, AP/CFP polls and betting lines from ESPN and rebuilds that season (the first run on a computer fetches every game so far and takes several minutes), then opens the site. |
 
 **Any system:** `python launch.py` (or `python launch.py --update`) does the same from this folder.
+
+**Caesars lines for the coming games.** ESPN lists only DraftKings for 2026 games, so the Betting tab
+compares the model with DraftKings until you add a key for The Odds API (free plan: 500 credits a
+month; an update uses 2). Sign up at the-odds-api.com, put the key alone in a file named
+`odds_api_key.txt` in this folder (or set the environment variable `ODDS_API_KEY`), and run Update.
+The key file is never committed, and the installer leaves it in place.
 
 ## Run it
 
@@ -45,6 +51,7 @@ Python 3.8+ (tests and a full update checked on 3.8 and 3.11) and the standard l
 python fetch.py --season 2026 --weeks 1-6     # ESPN scoreboards + play-by-play -> cache/
 python parse.py --season 2026                 # -> data/2026/games.json.gz (drives, points, flags)
 python polls.py                               # AP and CFP rankings by week -> data/<season>/polls.json
+python odds.py                                # sportsbook lines -> data/<season>/lines.json (Caesars: see above)
 python build.py                               # -> out/2026/ (ratings.csv, ratings.json, traces/, anchors.json, weekly.json)
 python build.py --season 2025                 # any other parsed season -> out/2025/
 python report.py                              # -> out/site/ (one page, season and week pickers, data files per season)
@@ -54,6 +61,7 @@ python trace.py Indiana --season 2025         # ...for another season
 python trace.py Indiana --season 2025 --week 8   # ...as it stood after week 8 (recomputed)
 python trace.py "Idaho State" --internal      # derivation of an FCS opponent's internal input
 python audit_penalties.py                     # parsed penalties vs box scores -> out/penalty_audit.json
+python betting.py                             # the model's record against the book, every season
 python -m unittest discover -s tests          # network, solver, parser and penalty tests
 ```
 
@@ -87,6 +95,7 @@ All parameters live in `config.json`.
 |------|------|
 | `fetch.py` | Downloads ESPN payloads (cached, gzipped) |
 | `polls.py` | AP Top 25 and CFP committee rankings by week, each pinned to the games it follows |
+| `odds.py` / `betting.py` | Sportsbook spreads and totals (Caesars where available); the model's line against the book, its record and the cover chance |
 | `parse.py` | Drives, drive points from ESPN's scoring plays, garbage/OT/end-of-half flags, scrimmage plays, snap-to-snap clock intervals |
 | `penalties.py` | One row per foul from both ESPN text dialects, with how each value was read |
 | `efficiency.py` | Additive opponent-adjustment solver (AdjO, AdjD, home field, tempo) with traces |

@@ -166,7 +166,9 @@ def main():
         t, table_file = write_season(season, site)
         m = t["meta"]
         index.append({"season": season, "table": table_file, "complete": m.get("regular_season_complete", False),
-                      "through_week": m["through_week"], "rated": m["eligible"], "fbs": m["fbs_teams"]})
+                      "through_week": m["through_week"], "rated": m["eligible"], "fbs": m["fbs_teams"],
+                      # the model's record against the book, for the Betting tab's track record
+                      "betting": m.get("betting") and {"record": m["betting"]["record"]}})
         if season == default:
             tables[str(season)] = t  # the default season is inline so the page renders without a fetch
     docs = {}

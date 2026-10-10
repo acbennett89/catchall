@@ -2,7 +2,7 @@
 this computer only, and open it in your browser.
 
     python launch.py               open the site (close the window, or press Ctrl+C, to stop)
-    python launch.py --update      first download the current season's new games and polls and
+    python launch.py --update      first download the current season's new games, polls and lines and
                                    rebuild that season (needs the internet; `requests` is installed
                                    if missing), then open the site
     python launch.py --no-browser  serve without opening a browser tab
@@ -68,6 +68,10 @@ def update():
     step("fetch.py", "--season", str(season), "--weeks", f"1-{weeks}")
     step("parse.py", "--season", str(season))
     step("polls.py", "--season", str(season))
+    try:  # sportsbook lines are reference only: without them the ratings still update
+        step("odds.py", "--season", str(season))
+    except SystemExit as e:
+        print(f"{e}\nBetting lines were not updated; going on with the ratings.", flush=True)
     step("build.py", "--season", str(season))
 
 

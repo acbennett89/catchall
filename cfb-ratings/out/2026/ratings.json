@@ -159,6 +159,72 @@
     }
    ]
   },
+  "betting": {
+   "min_edge": 3,
+   "break_even": 0.5238095238095238,
+   "calibration": {
+    "seasons": [
+     2022,
+     2023,
+     2024,
+     2025
+    ],
+    "n": 3001,
+    "a": 0.19497403939340535,
+    "b": 0.06757230536456885,
+    "b_se": 0.03406324139302483,
+    "s": 15.185294010472944,
+    "rule": "actual margin - book margin = a + b * edge + Normal(0, s), least squares over the seasons' walk-forward picks with a book line; P(model's side covers) = Phi(sign(edge) * (a + b * edge) / s)"
+   },
+   "record": {
+    "all": {
+     "W": 154,
+     "L": 131,
+     "P": 3,
+     "pct": 0.5403508771929825
+    },
+    "likes": {
+     "W": 115,
+     "L": 100,
+     "P": 0,
+     "pct": 0.5348837209302325
+    },
+    "by_edge": {
+     "0-3": {
+      "W": 39,
+      "L": 31,
+      "P": 3,
+      "pct": 0.5571428571428572
+     },
+     "3-7": {
+      "W": 48,
+      "L": 37,
+      "P": 0,
+      "pct": 0.5647058823529412
+     },
+     "7-10": {
+      "W": 23,
+      "L": 23,
+      "P": 0,
+      "pct": 0.5
+     },
+     "10+": {
+      "W": 44,
+      "L": 40,
+      "P": 0,
+      "pct": 0.5238095238095238
+     }
+    },
+    "books": {
+     "DraftKings": 288
+    }
+   },
+   "upcoming_books": {
+    "DraftKings": 58
+   },
+   "upcoming_without_line": 0,
+   "lines_read": true
+  },
   "excluded_games": [
    {
     "game": "401868324",
@@ -16408,7 +16474,18 @@
    "home_win_prob": 0.7045610262575817,
    "possessions": 12.760279796432435,
    "em_diff_per_drive": 0.39772547548542825,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -9.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -9.5,
+   "book_total": 51.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -0.4833523315571657,
+   "side": "away",
+   "likes": false,
+   "cover_prob": 0.4957358607126649
   },
   {
    "game": "401871051",
@@ -16421,7 +16498,18 @@
    "home_win_prob": 0.42553525832372147,
    "possessions": 9.367297058277853,
    "em_diff_per_drive": -0.6450843015355532,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 3.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 3.0,
+   "book_total": 48.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -0.14920510251853303,
+   "side": "away",
+   "likes": false,
+   "cover_prob": 0.4951427100219459
   },
   {
    "game": "401871066",
@@ -16434,7 +16522,18 @@
    "home_win_prob": 0.7250594111538382,
    "possessions": 10.659350616877944,
    "em_diff_per_drive": 0.6320002758029934,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -10.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -7.0,
+   "book_total": 46.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 3.0293098261673865,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.5104988054885647
   },
   {
    "game": "401870766",
@@ -16447,7 +16546,18 @@
    "home_win_prob": 0.7294769020176674,
    "possessions": 12.074812134517956,
    "em_diff_per_drive": 0.5401707898543167,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -10.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -13.5,
+   "book_total": 52.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -3.247715939313453,
+   "side": "away",
+   "likes": true,
+   "cover_prob": 0.50064317138659
   },
   {
    "game": "401871052",
@@ -16460,7 +16570,18 @@
    "home_win_prob": 0.3568879517936062,
    "possessions": 11.754000592469222,
    "em_diff_per_drive": -0.832307854805711,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 6.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 1.5,
+   "book_total": 56.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -4.652220160564816,
+   "side": "away",
+   "likes": true,
+   "cover_prob": 0.5031364629417432
   },
   {
    "game": "401862794",
@@ -16473,7 +16594,18 @@
    "home_win_prob": 0.6341187488867588,
    "possessions": 10.673265535611538,
    "em_diff_per_drive": 0.22979277438257517,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -5.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -5.5,
+   "book_total": 49.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 0.2495348146123133,
+   "side": "home",
+   "likes": false,
+   "cover_prob": 0.5055650861352292
   },
   {
    "game": "401869933",
@@ -16486,7 +16618,18 @@
    "home_win_prob": 0.5652818581407496,
    "possessions": 10.118164026663734,
    "em_diff_per_drive": -0.03640468292375809,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -3.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -3.0,
+   "book_total": 60.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -0.2429199303168854,
+   "side": "away",
+   "likes": false,
+   "cover_prob": 0.495309063852904
   },
   {
    "game": "401858254",
@@ -16499,7 +16642,18 @@
    "home_win_prob": 0.48215726811404125,
    "possessions": 11.756082765232403,
    "em_diff_per_drive": -0.3727263031820063,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 1.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -4.0,
+   "book_total": 60.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -4.750431242748907,
+   "side": "away",
+   "likes": true,
+   "cover_prob": 0.5033108048965972
   },
   {
    "game": "401858487",
@@ -16512,7 +16666,18 @@
    "home_win_prob": 0.3829461588950619,
    "possessions": 12.088036344253926,
    "em_diff_per_drive": -0.7220487452157862,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 5.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -3.0,
+   "book_total": 41.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -7.994243357884987,
+   "side": "away",
+   "likes": true,
+   "cover_prob": 0.509068587187695
   },
   {
    "game": "401860922",
@@ -16525,7 +16690,18 @@
    "home_win_prob": 0.6762972754338972,
    "possessions": 11.759229847908227,
    "em_diff_per_drive": 0.34349087104082976,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -7.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -4.0,
+   "book_total": 44.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 3.671530240833171,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.5116384577498916
   },
   {
    "game": "401864519",
@@ -16538,7 +16714,18 @@
    "home_win_prob": 0.7026365526891843,
    "possessions": 11.682817875299396,
    "em_diff_per_drive": 0.4549037434919274,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -9.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -4.5,
+   "book_total": 42.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 4.423296610866393,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.5129723834003129
   },
   {
    "game": "401856826",
@@ -16551,7 +16738,18 @@
    "home_win_prob": 0.8305029033670894,
    "possessions": 11.176430522664386,
    "em_diff_per_drive": 1.126066821150947,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -16.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -11.5,
+   "book_total": 46.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 4.537727177771245,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.5131754153334053
   },
   {
    "game": "401858481",
@@ -16564,7 +16762,18 @@
    "home_win_prob": 0.4962289288770159,
    "possessions": 11.003236043244787,
    "em_diff_per_drive": -0.3233025768963611,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 0.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 8.5,
+   "book_total": 48.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 8.341446482258318,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.519922015815039
   },
   {
    "game": "401856824",
@@ -16577,7 +16786,18 @@
    "home_win_prob": 0.5347580744410548,
    "possessions": 12.011445287533792,
    "em_diff_per_drive": -0.18707367391591512,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -1.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -10.5,
+   "book_total": 53.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -9.03677551292343,
+   "side": "away",
+   "likes": true,
+   "cover_prob": 0.5109187432901673
   },
   {
    "game": "401856716",
@@ -16590,7 +16810,18 @@
    "home_win_prob": 0.8225283266082446,
    "possessions": 11.829141670406742,
    "em_diff_per_drive": 1.0027742226377492,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -15.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -3.5,
+   "book_total": 50.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 12.015895743410166,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.5264339377698467
   },
   {
    "game": "401856823",
@@ -16603,7 +16834,18 @@
    "home_win_prob": 0.2991754888258222,
    "possessions": 11.249300213967462,
    "em_diff_per_drive": -1.0943329447520491,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 9.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 3.5,
+   "book_total": 60.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -5.335651314906173,
+   "side": "away",
+   "likes": true,
+   "cover_prob": 0.5043496592655179
   },
   {
    "game": "401858256",
@@ -16616,7 +16858,18 @@
    "home_win_prob": 0.775944912695111,
    "possessions": 10.893262110475014,
    "em_diff_per_drive": 0.8591321205384586,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -12.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -3.5,
+   "book_total": 46.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 9.223602263187358,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.5214859383194098
   },
   {
    "game": "401858260",
@@ -16629,7 +16882,18 @@
    "home_win_prob": 0.3746310462974717,
    "possessions": 10.930007874796882,
    "em_diff_per_drive": -0.7993691820946409,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 5.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 3.5,
+   "book_total": 56.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -1.8609100643011098,
+   "side": "away",
+   "likes": false,
+   "cover_prob": 0.49818127308222837
   },
   {
    "game": "401862795",
@@ -16642,7 +16906,18 @@
    "home_win_prob": 0.7016490074913443,
    "possessions": 10.093083067631987,
    "em_diff_per_drive": 0.5704718153897783,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -9.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -3.5,
+   "book_total": 48.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 5.375500714152601,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.5146617532564175
   },
   {
    "game": "401866436",
@@ -16655,7 +16930,18 @@
    "home_win_prob": 0.6201062766259006,
    "possessions": 11.167761758433258,
    "em_diff_per_drive": 0.1503359995417317,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -5.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -8.5,
+   "book_total": 43.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -3.3714415054767715,
+   "side": "away",
+   "likes": true,
+   "cover_prob": 0.5008628128191362
   },
   {
    "game": "401858482",
@@ -16668,7 +16954,18 @@
    "home_win_prob": 0.9694674613422878,
    "possessions": 10.273058238676946,
    "em_diff_per_drive": 2.749254003723043,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -31.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -35.5,
+   "book_total": 53.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -4.0834791678667415,
+   "side": "away",
+   "likes": true,
+   "cover_prob": 0.5021268368548545
   },
   {
    "game": "401856714",
@@ -16681,7 +16978,18 @@
    "home_win_prob": 0.8211866488903401,
    "possessions": 11.675518377149789,
    "em_diff_per_drive": 1.012639138276854,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -15.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -10.5,
+   "book_total": 58.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 4.929571130371768,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.5138706302604178
   },
   {
    "game": "401869843",
@@ -16694,7 +17002,18 @@
    "home_win_prob": 0.8836795471378698,
    "possessions": 11.866180336280276,
    "em_diff_per_drive": 1.3782685871691371,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -20.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -10.0,
+   "book_total": 46.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 10.020161987002954,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.5228978290598507
   },
   {
    "game": "401866440",
@@ -16707,7 +17026,18 @@
    "home_win_prob": 0.6299846226007951,
    "possessions": 10.141037258807714,
    "em_diff_per_drive": 0.2399212610486554,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -5.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 6.0,
+   "book_total": 43.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 11.565544448410385,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.5256361620446932
   },
   {
    "game": "401856717",
@@ -16720,7 +17050,18 @@
    "home_win_prob": 0.22428411952220112,
    "possessions": 11.286044905786536,
    "em_diff_per_drive": -1.1262374398666333,
-   "hfa_per_drive": 0
+   "hfa_per_drive": 0,
+   "model_home_spread": 12.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 7.5,
+   "book_total": 39.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -5.210766320912887,
+   "side": "away",
+   "likes": true,
+   "cover_prob": 0.504127971700518
   },
   {
    "game": "401858257",
@@ -16733,7 +17074,18 @@
    "home_win_prob": 0.99863162930127,
    "possessions": 11.55472443954283,
    "em_diff_per_drive": 4.039976289134779,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -50.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -39.5,
+   "book_total": 54.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 10.749984640395873,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.5241911774637831
   },
   {
    "game": "401856718",
@@ -16746,7 +17098,18 @@
    "home_win_prob": 0.3639172741391244,
    "possessions": 9.791762933824241,
    "em_diff_per_drive": -0.9050249138591413,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 6.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 9.5,
+   "book_total": 54.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 3.662816250098615,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.511622994952193
   },
   {
    "game": "401858484",
@@ -16759,7 +17122,18 @@
    "home_win_prob": 0.5800024416378378,
    "possessions": 12.978086651878183,
    "em_diff_per_drive": -0.04795336611082379,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -3.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -10.5,
+   "book_total": 57.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -7.113504639077629,
+   "side": "away",
+   "likes": true,
+   "cover_prob": 0.5075054082429056
   },
   {
    "game": "401856825",
@@ -16772,7 +17146,18 @@
    "home_win_prob": 0.429123505202441,
    "possessions": 10.250907319851422,
    "em_diff_per_drive": -0.601138956003652,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 3.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -2.5,
+   "book_total": 54.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -5.495787646039798,
+   "side": "away",
+   "likes": true,
+   "cover_prob": 0.5046339206931505
   },
   {
    "game": "401858255",
@@ -16785,7 +17170,18 @@
    "home_win_prob": 0.3164748103385354,
    "possessions": 10.074513130335195,
    "em_diff_per_drive": -1.10401938785339,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 8.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 6.5,
+   "book_total": 45.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -1.5105126464320922,
+   "side": "away",
+   "likes": false,
+   "cover_prob": 0.49755924461396384
   },
   {
    "game": "401858259",
@@ -16798,7 +17194,18 @@
    "home_win_prob": 0.2445662097207621,
    "possessions": 12.151901611676525,
    "em_diff_per_drive": -1.2636251651525692,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 11.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 10.0,
+   "book_total": 53.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -1.6018130392655223,
+   "side": "away",
+   "likes": false,
+   "cover_prob": 0.4977213213353115
   },
   {
    "game": "401858480",
@@ -16811,7 +17218,18 @@
    "home_win_prob": 0.673521012592455,
    "possessions": 8.531331768736784,
    "em_diff_per_drive": 0.5751616107567417,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -7.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 2.5,
+   "book_total": 48.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 10.0421619905639,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.5229368197554285
   },
   {
    "game": "401862796",
@@ -16824,7 +17242,18 @@
    "home_win_prob": 0.9692322127382706,
    "possessions": 11.712384355496784,
    "em_diff_per_drive": 2.3685765032208583,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -31.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -29.5,
+   "book_total": 58.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 1.8595502806040543,
+   "side": "home",
+   "likes": false,
+   "cover_prob": 0.5084227949199427
   },
   {
    "game": "401862799",
@@ -16837,7 +17266,18 @@
    "home_win_prob": 0.48711324880720114,
    "possessions": 11.581569769197447,
    "em_diff_per_drive": -0.3556832056104182,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 0.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -1.5,
+   "book_total": 47.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -2.0419056537009643,
+   "side": "away",
+   "likes": false,
+   "cover_prob": 0.49850257981502905
   },
   {
    "game": "401866435",
@@ -16850,7 +17290,18 @@
    "home_win_prob": 0.3336590666414087,
    "possessions": 10.783513659749207,
    "em_diff_per_drive": -0.9774719958985079,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 7.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 5.5,
+   "book_total": 51.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -1.7096322459713198,
+   "side": "away",
+   "likes": false,
+   "cover_prob": 0.49791272278507004
   },
   {
    "game": "401866437",
@@ -16863,7 +17314,18 @@
    "home_win_prob": 0.9715384532032835,
    "possessions": 13.681525852624798,
    "em_diff_per_drive": 2.025234543588245,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -32.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -18.5,
+   "book_total": 55.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 13.43442441375353,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.5289460855626051
   },
   {
    "game": "401866438",
@@ -16876,7 +17338,18 @@
    "home_win_prob": 0.6803408587387525,
    "possessions": 9.20139013906184,
    "em_diff_per_drive": 0.5454101588431328,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -8.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -2.5,
+   "book_total": 45.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 5.360775372170938,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.5146356299538104
   },
   {
    "game": "401866439",
@@ -16889,7 +17362,18 @@
    "home_win_prob": 0.8277932037138267,
    "possessions": 10.132906775708257,
    "em_diff_per_drive": 1.2561755007890902,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -16.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -14.0,
+   "book_total": 43.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 1.8586917961835976,
+   "side": "home",
+   "likes": false,
+   "cover_prob": 0.5084212712488626
   },
   {
    "game": "401861964",
@@ -16902,7 +17386,18 @@
    "home_win_prob": 0.4483534494753685,
    "possessions": 10.085275123834478,
    "em_diff_per_drive": -0.5248048769806077,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 2.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -3.5,
+   "book_total": 54.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -5.677532095088116,
+   "side": "away",
+   "likes": true,
+   "cover_prob": 0.5049565362948191
   },
   {
    "game": "401862797",
@@ -16915,7 +17410,18 @@
    "home_win_prob": 0.6157490351407866,
    "possessions": 11.240216513588408,
    "em_diff_per_drive": 0.13032702030879295,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -5.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -10.0,
+   "book_total": 46.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -5.063073449701938,
+   "side": "away",
+   "likes": true,
+   "cover_prob": 0.5038657954635243
   },
   {
    "game": "401858483",
@@ -16928,7 +17434,18 @@
    "home_win_prob": 0.9278891184485989,
    "possessions": 11.91642104177448,
    "em_diff_per_drive": 1.7465041254201104,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -24.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -33.5,
+   "book_total": 56.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -9.007024115272056,
+   "side": "away",
+   "likes": true,
+   "cover_prob": 0.5108659472859282
   },
   {
    "game": "401856713",
@@ -16941,7 +17458,18 @@
    "home_win_prob": 0.09876152624731166,
    "possessions": 11.18349565690151,
    "em_diff_per_drive": -2.241613134086009,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 21.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 13.5,
+   "book_total": 51.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -8.114568792684242,
+   "side": "away",
+   "likes": true,
+   "cover_prob": 0.5092821364856448
   },
   {
    "game": "401860902",
@@ -16954,7 +17482,18 @@
    "home_win_prob": 0.9389159849993789,
    "possessions": 11.440660394141371,
    "em_diff_per_drive": 1.9573129245653493,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -26.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -16.5,
+   "book_total": 52.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 9.42689076297994,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.521846290617602
   },
   {
    "game": "401856715",
@@ -16967,7 +17506,18 @@
    "home_win_prob": 0.37643302302688375,
    "possessions": 12.692792361931733,
    "em_diff_per_drive": -0.7249744849205815,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 5.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 8.5,
+   "book_total": 50.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 3.218762327635985,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.5108350077638403
   },
   {
    "game": "401862798",
@@ -16980,7 +17530,18 @@
    "home_win_prob": 0.8164949753007702,
    "possessions": 10.70760189627784,
    "em_diff_per_drive": 1.1042026388892614,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -15.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -14.5,
+   "book_total": 54.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 0.6308640421516571,
+   "side": "home",
+   "likes": false,
+   "cover_prob": 0.5062419605278966
   },
   {
    "game": "401864517",
@@ -16993,7 +17554,18 @@
    "home_win_prob": 0.348917040304052,
    "possessions": 10.97145224133352,
    "em_diff_per_drive": -0.9024431202180359,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 6.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 10.0,
+   "book_total": 49.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 3.487891665776135,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.5113125912035046
   },
   {
    "game": "401864518",
@@ -17006,7 +17578,18 @@
    "home_win_prob": 0.3096465576627663,
    "possessions": 11.7058448679153,
    "em_diff_per_drive": -1.0208263373249906,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 8.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 2.5,
+   "book_total": 47.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -5.833782843346858,
+   "side": "away",
+   "likes": true,
+   "cover_prob": 0.5052338953001086
   },
   {
    "game": "401869943",
@@ -17019,7 +17602,18 @@
    "home_win_prob": 0.5774419687801444,
    "possessions": 11.357974981364642,
    "em_diff_per_drive": -0.020399724300207422,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -3.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -4.5,
+   "book_total": 58.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -1.2233021838866183,
+   "side": "away",
+   "likes": false,
+   "cover_prob": 0.49704939052215935
   },
   {
    "game": "401856712",
@@ -17032,7 +17626,18 @@
    "home_win_prob": 0.5974489642297496,
    "possessions": 12.46443652249441,
    "em_diff_per_drive": 0.023153284519918493,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -4.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -2.5,
+   "book_total": 51.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 1.6387680893049748,
+   "side": "home",
+   "likes": false,
+   "cover_prob": 0.5080309382323938
   },
   {
    "game": "401858485",
@@ -17045,7 +17650,18 @@
    "home_win_prob": 0.5253301242229562,
    "possessions": 10.265514134566939,
    "em_diff_per_drive": -0.20507945843564013,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -1.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -2.5,
+   "book_total": 54.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -1.434302060203429,
+   "side": "away",
+   "likes": false,
+   "cover_prob": 0.49742395566829184
   },
   {
    "game": "401858258",
@@ -17058,7 +17674,18 @@
    "home_win_prob": 0.6655198373258222,
    "possessions": 11.51730342065689,
    "em_diff_per_drive": 0.3138038837181365,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -7.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -11.5,
+   "book_total": 49.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -4.328212665023981,
+   "side": "away",
+   "likes": true,
+   "cover_prob": 0.5025612885486622
   },
   {
    "game": "401864516",
@@ -17071,7 +17698,18 @@
    "home_win_prob": 0.3115494770672904,
    "possessions": 10.32218359079,
    "em_diff_per_drive": -1.1075016409135479,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 8.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 7.0,
+   "book_total": 48.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -1.2433864551337557,
+   "side": "away",
+   "likes": false,
+   "cover_prob": 0.4970850438390561
   },
   {
    "game": "401869949",
@@ -17084,7 +17722,18 @@
    "home_win_prob": 0.5121562404186518,
    "possessions": 12.491378844174271,
    "em_diff_per_drive": -0.2679704863892498,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -0.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 7.5,
+   "book_total": 51.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 8.011176870368702,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.5193364198894492
   },
   {
    "game": "401869965",
@@ -17097,7 +17746,18 @@
    "home_win_prob": 0.5319638967335042,
    "possessions": 12.328652155023772,
    "em_diff_per_drive": -0.19977037055672842,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -1.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -3.0,
+   "book_total": 48.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -1.654666786948748,
+   "side": "away",
+   "likes": false,
+   "cover_prob": 0.49781514763462503
   },
   {
    "game": "401858486",
@@ -17110,7 +17770,18 @@
    "home_win_prob": 0.5865453386103338,
    "possessions": 10.29730639320637,
    "em_diff_per_drive": 0.04729138916770825,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -3.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 2.5,
+   "book_total": 50.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 6.167738344790126,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.5160671165189327
   },
   {
    "game": "401856827",
@@ -17123,7 +17794,18 @@
    "home_win_prob": 0.8750398587485544,
    "possessions": 12.154949067953012,
    "em_diff_per_drive": 1.2787926405056484,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -19.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -15.5,
+   "book_total": 50.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 3.7982363930108782,
+   "side": "home",
+   "likes": true,
+   "cover_prob": 0.511863293227786
   },
   {
    "game": "401860901",
@@ -17136,7 +17818,18 @@
    "home_win_prob": 0.39734546834167594,
    "possessions": 11.325534084136955,
    "em_diff_per_drive": -0.6942856043687351,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": 4.5,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": 7.0,
+   "book_total": 48.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": 2.6352213364166843,
+   "side": "home",
+   "likes": false,
+   "cover_prob": 0.509799432710238
   },
   {
    "game": "401856808",
@@ -17149,7 +17842,18 @@
    "home_win_prob": 0.857369105992884,
    "possessions": 11.984093605551028,
    "em_diff_per_drive": 1.1867023312725924,
-   "hfa_per_drive": 0.30889285987142984
+   "hfa_per_drive": 0.30889285987142984,
+   "model_home_spread": -18.0,
+   "book": "DraftKings",
+   "caesars": false,
+   "book_home_spread": -21.0,
+   "book_total": 50.5,
+   "line_source": "ESPN current",
+   "line_read_at": "2026-10-10T13:46Z",
+   "edge": -3.076647233318056,
+   "side": "away",
+   "likes": true,
+   "cover_prob": 0.5003394846481507
   }
  ],
  "names": {
