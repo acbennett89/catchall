@@ -1,0 +1,51 @@
+{
+  "season": 2026,
+  "min_games": 5,
+  "garbage_margin": {
+    "1": 43,
+    "2": 37,
+    "3": 27,
+    "4": 21
+  },
+  "explosive": {
+    "rush": 12,
+    "pass": 16
+  },
+  "prior_drives": 12,
+  "prior_plays": 65,
+  "pythag_exp": 2.37,
+  "net_weights": {
+    "primary": 0.6,
+    "secondary": 0.3,
+    "tertiary": 0.1
+  },
+  "record_prior": {
+    "wins": 1,
+    "losses": 1
+  },
+  "fcs_losses_count": true,
+  "solver": {
+    "max_iter": 500,
+    "tol": 1e-09
+  },
+  "betting": {
+    "min_edge": 3
+  },
+  "exclusion": "path",
+  "layer_mode": "rate",
+  "end_of_half_seconds": 60,
+  "situational": {
+    "max_zero_clock_share": 0.25,
+    "neutral_margin": 14,
+    "min_pace_intervals": 30,
+    "lead_protection": {
+      "max_lead": 21,
+      "min_mean_secs": 38.0,
+      "min_intervals": 2,
+      "min_plays": 3,
+      "min_run_share": 0.6,
+      "weight": 0.5,
+      "relative_slowdown": 6.0
+    }
+  }
+}

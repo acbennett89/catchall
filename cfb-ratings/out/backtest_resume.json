@@ -1,0 +1,31 @@
+{
+ "n_games": 567,
+ "win value total (losses ignored)": {
+  "logloss": 0.5674970789515014,
+  "accuracy": 0.6807760141093474
+ },
+ "net resume (wins - loss costs)": {
+  "logloss": 0.5676759920717905,
+  "accuracy": 0.6807760141093474
+ },
+ "win value per game": {
+  "logloss": 0.5714930873879338,
+  "accuracy": 0.6772486772486772
+ },
+ "net resume per game": {
+  "logloss": 0.5731335092363379,
+  "accuracy": 0.6825396825396826
+ },
+ "comparisons": {
+  "net total minus win-only total": {
+   "diff": 0.00017891312028948657,
+   "se": 0.004705315707039457,
+   "z": 0.03802361657089681
+  },
+  "net per game minus win-only per game": {
+   "diff": 0.001640421848404814,
+   "se": 0.004862022849888871,
+   "z": 0.3373949278009478
+  }
+ }
+}
