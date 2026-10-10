@@ -577,3 +577,27 @@ and week-0 games, and confirmed every other output was unchanged.
 | Tests | Expected slots used the code's own direction table, so a reversed AdjD passed. | Directions are written out in the test, which also checks that the official ranks run the right way. |
 | Docs | TRACE.md said every early rank is a tentative slot. | Reworded. |
 | Page | Before this change: the FCS drawer labelled its success-rate column "Opp AdjD" and showed "—" for μT in its tempo formula. | Named as in team traces; μT stored. |
+
+## N. The Betting tab: the model's line against Caesars (round 9)
+
+You asked for the model to set a line, compare it with Caesars and pick out the games it likes.
+Four reviewers checked it, each followed by a skeptic. One rebuilt every line from ESPN's raw odds
+payloads and checked the sign of every spread against ESPN's own favorite (0 mismatches in 22,656
+entries), then recomputed every pick, edge, result, record and the fit (0 mismatches). One checked
+every claim for statistical honesty, one checked The Odds API against its documentation with a
+simulated run, and one drove the tab in Chromium.
+
+| Area | Finding | Fix |
+|---|---|---|
+| Data | **Major.** ESPN's generic "Caesars Sportsbook" entry, tried first, was often stale in 2022–23: on 26 picks it was 3+ points from the other books' median, 5 with the favorite reversed (Notre Dame at Navy showed a 29.5-point "like"). Caesars' state desks agree with the market. | State desks first; the generic entry only without one; any Caesars entry 3+ points from the other books' median is passed over (also the 2024 entries, frozen preseason lines). |
+| Docs | **Major.** The Odds API carries Caesars (`williamhill_us`) on paid plans only; the README and page sent you to a free key. | Corrected everywhere; a run that gets no Caesars lines says why. DraftKings, which ESPN gives free, was within half a point of Caesars on 93–95% of 2022–23 games. |
+| Data | **Major.** Re-running the installer would erase every Caesars line read from The Odds API (it resets `data/`), and a played game's line can't be read again. | Kept in `cache/<season>/odds_api_lines.json`, which the installer leaves alone. |
+| Stats | **Major.** The cover-chance fit had an intercept (noise, ±0.28 points) that made a home side look better than an away side at the same disagreement. | Fit through the origin: the same for either side. A 10-point gap is about 51.5%. |
+| Stats | The model's side covered 53.3% in games with a tentative team (a season's first weeks) and 50.3% otherwise; the page didn't say so. | The record splits them, and the note says it. |
+| Data | 12 of this week's 58 games had kicked off when their line was read (the ESPN path had no kickoff check); 8 were starred. | A line read at or after kickoff is marked, shown and never starred or given a cover chance. The Odds API path also checks the event's own start time. |
+| Page | Diff and the star used the unrounded margin, so "−32 vs −18.5" read 13.4 and lines exactly 3 apart could miss the star. | The edge is the distance between the two lines shown. |
+| Page | With an Odds API key, a finished game would be graded against a pre-kickoff Caesars read while the page said "closing line". | The wording follows the data and says when a line is the last pre-kickoff read. |
+| CLI | A key file saved with a byte-order mark or as UTF-16 (PowerShell's `>`) broke the key; a network error printed the key. | Both handled; the key is masked in messages. |
+| Page | Green "at or above 52.4%" cells were all within noise; the starred games' own record wasn't stated. | No coloring; each record's 95% interval on hover; the hint gives the starred games' record since 2022. |
+| Page | A finished season showed an empty table; earlier-week rows overflowed; no sticky column on phones; non-clickable rows were tab stops and headers couldn't be sorted from the keyboard; the totals row sorted among the seasons. | All fixed. |
+| Docs | "No later information" overlooked that the 12-drive phantom game was tuned on 2025–26 error. | Said on the page and in METRICS 10.7. |

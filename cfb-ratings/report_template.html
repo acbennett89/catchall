@@ -70,7 +70,7 @@ table.grid th[aria-sort="descending"]::after { content: " ▼"; font-size: 10px;
 table.grid td { font-family: var(--data); font-size: 13px; }
 table.grid td.t, table.grid th.t { text-align: left; font-family: var(--body); }
 table.grid td.t { font-weight: 600; font-size: 14px; }
-table.grid tbody tr { cursor: pointer; }
+table.grid tbody tr.go { cursor: pointer; }
 table.grid tbody tr:hover, table.grid tbody tr:hover td { background: var(--accent-soft); }
 /* Rank and team stay in view while a wide table scrolls sideways (phones). */
 #tbl th:nth-child(1), #tbl td:nth-child(1), #tbl-resume th:nth-child(1), #tbl-resume td:nth-child(1) {
@@ -78,6 +78,8 @@ table.grid tbody tr:hover, table.grid tbody tr:hover td { background: var(--acce
 #tbl th:nth-child(2), #tbl td:nth-child(2), #tbl-resume th:nth-child(2), #tbl-resume td:nth-child(2), #tbl-disc th:nth-child(1), #tbl-disc td:nth-child(1) {
   position: sticky; left: 3.4em; z-index: 1; background: var(--surface); box-shadow: 1px 0 0 var(--line); }
 #tbl-disc th:nth-child(1), #tbl-disc td:nth-child(1) { left: 0; }
+#tbl-bet th:nth-child(1), #tbl-bet td:nth-child(1) {
+  position: sticky; left: 0; z-index: 1; background: var(--surface); box-shadow: 1px 0 0 var(--line); }
 .tent { font-family: var(--display); font-weight: 600; font-size: 11px; letter-spacing: .04em; color: var(--gold); border: 1px solid var(--gold); border-radius: 2px; padding: 0 3px; margin-left: 4px; vertical-align: 1px; }
 .tentv { font-style: italic; opacity: .8; }
 .tentnote { border-left: 3px solid var(--gold); padding-left: 10px; color: var(--ink); }
@@ -85,6 +87,7 @@ table.grid tbody tr:hover, table.grid tbody tr:hover td { background: var(--acce
 table.mini tr.cur td { background: var(--accent-soft); font-weight: 600; }
 .hit { color: var(--pos); } .miss { color: var(--neg); }
 .star { color: var(--gold); font-weight: 700; }
+#tbl-bet-record tfoot td { border-top: 2px solid var(--line); font-weight: 600; }
 .bet-h { margin: 22px 0 4px; font-family: var(--display); font-size: 15px; letter-spacing: .04em; text-transform: uppercase; }
 .tog { display: inline-flex; gap: 6px; align-items: center; font-size: 14px; color: var(--muted); cursor: pointer; white-space: nowrap; flex: none; }
 .tog[hidden] { display: none; }
@@ -274,17 +277,23 @@ details[open] > summary { margin-bottom: 6px; }
         return (typeof va === "string" ? va.localeCompare(vb) : va - vb) * dir;
       });
       el.innerHTML = "<thead><tr>" + cols.map(c =>
-        `<th class="${c.text ? "t" : ""}" data-k="${c.k}" title="${esc(c.title || "")}"` +
+        `<th class="${c.text ? "t" : ""}" data-k="${c.k}" tabindex="0" title="${esc(c.title || "")}"` +
         (c.k === key ? ` aria-sort="${dir > 0 ? "ascending" : "descending"}"` : "") + ">" + c.label + "</th>").join("") +
         "</tr></thead><tbody>" + sorted.map(r =>
-          `<tr tabindex="0" data-id="${esc(r.id || "")}">` + cols.map(c => `<td class="${c.text ? "t" : ""}">${c.f ? c.f(r[c.k], r) : esc(r[c.k])}</td>`).join("") + "</tr>"
+          (onRow ? `<tr class="go" tabindex="0" data-id="${esc(r.id || "")}">` : "<tr>") + cols.map(c => `<td class="${c.text ? "t" : ""}">${c.f ? c.f(r[c.k], r) : esc(r[c.k])}</td>`).join("") + "</tr>"
         ).join("") + "</tbody>";
-      el.querySelectorAll("th").forEach(th => th.addEventListener("click", () => {
-        const c = cols.find(x => x.k === th.dataset.k);
-        if (key === c.k) dir = -dir; else { key = c.k; dir = c.desc ? -1 : 1; }
-        st.key = key; st.dir = dir;
-        render();
-      }));
+      el.querySelectorAll("th").forEach(th => {
+        const sortBy = () => {
+          const c = cols.find(x => x.k === th.dataset.k);
+          if (key === c.k) dir = -dir; else { key = c.k; dir = c.desc ? -1 : 1; }
+          st.key = key; st.dir = dir;
+          render();
+          const again = el.querySelector(`th[data-k="${c.k}"]`);
+          if (again) again.focus();
+        };
+        th.addEventListener("click", sortBy);
+        th.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); sortBy(); } });
+      });
       if (onRow) el.querySelectorAll("tbody tr").forEach(tr => {
         tr.addEventListener("click", () => onRow(tr.dataset.id));
         tr.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); onRow(tr.dataset.id); } });
@@ -492,12 +501,20 @@ details[open] > summary { margin-bottom: 6px; }
   const pts = x => Number.isInteger(x) ? String(Math.abs(x)) : Math.abs(x).toFixed(1);
   // A home point spread as a book prints it: the favorite and its number.
   const lineTxt = (p, hs) => hs == null ? "—" : hs === 0 ? "Pick'em" : hs < 0 ? `${esc(p.home)} −${pts(hs)}` : `${esc(p.away)} −${pts(hs)}`;
-  // The side the model likes, at the book's number.
-  const sideTxt = p => p.side === "home" ? `${esc(p.home)} ${p.book_home_spread > 0 ? "+" : p.book_home_spread < 0 ? "−" : ""}${p.book_home_spread ? pts(p.book_home_spread) : "PK"}`
-    : `${esc(p.away)} ${p.book_home_spread < 0 ? "+" : p.book_home_spread > 0 ? "−" : ""}${p.book_home_spread ? pts(p.book_home_spread) : "PK"}`;
-  const bookShort = b => /^Caesars/.test(b || "") ? "Caesars" : b === "ESPN BET" ? "ESPN BET" : b || "";
-  const wlp = t => !t || !(t.W + t.L + t.P) ? "—" : `${t.W}-${t.L}${t.P ? "-" + t.P : ""} <span class="rk">${t.pct == null ? "" : (100 * t.pct).toFixed(1) + "%"}</span>`;
-  const pctCls = (t, be) => t && t.pct != null && t.W + t.L >= 20 ? (t.pct >= be ? "hit" : "") : "";
+  // A team's spread at the book's number: "+3.5", "−7", "PK".
+  const sideNum = x => x > 0 ? "+" + pts(x) : x < 0 ? "−" + pts(x) : "PK";
+  const sideTxt = p => p.side === "home" ? `${esc(p.home)} ${sideNum(p.book_home_spread)}` : `${esc(p.away)} ${sideNum(-p.book_home_spread)}`;
+  const bookShort = b => /^Caesars/.test(b || "") ? "Caesars" : b || "";
+  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const md = d => { const [, m, day] = String(d).split("-"); return m ? `${MONTHS[+m - 1]} ${+day}` : esc(d); };
+  const tallyOf = xs => { const t = { W: 0, L: 0, P: 0 }; xs.forEach(x => { if (x.ats) t[x.ats]++; }); t.pct = t.W + t.L ? t.W / (t.W + t.L) : null; return t; };
+  const addT = (a, b) => { const t = { W: a.W + b.W, L: a.L + b.L, P: a.P + b.P }; t.pct = t.W + t.L ? t.W / (t.W + t.L) : null; return t; };
+  const ZERO = { W: 0, L: 0, P: 0, pct: null };
+  // 95% interval for a win share (Wilson), for the record's tooltips.
+  const wilson = t => { const n = t.W + t.L; if (!n) return ""; const p = t.W / n, z = 1.96, d = 1 + z * z / n, c = p + z * z / (2 * n), h = z * Math.sqrt(p * (1 - p) / n + z * z / (4 * n * n));
+    return `95% interval ${(100 * (c - h) / d).toFixed(1)}–${(100 * (c + h) / d).toFixed(1)}%`; };
+  const wlp = t => !t || !(t.W + t.L + t.P) ? "—" : `<span title="${esc(wilson(t))}">${t.W}-${t.L}${t.P ? "-" + t.P : ""} <span class="rk">${t.pct == null ? "" : (100 * t.pct).toFixed(1) + "%"}</span></span>`;
+  const fromOddsApi = r => /^The Odds API/.test(r.line_source || "");
 
   // The "model likes" threshold: config's betting.min_edge unless the viewer picked another
   // (3, 7 or 10: the edges of the record's buckets, so the record can be shown for any of them).
@@ -515,74 +532,86 @@ details[open] > summary { margin-bottom: 6px; }
       betMin.dataset.ready = "1";
     }
     const me = +betMin.value;
-    const tab = document.getElementById("bet-tab");
-    tab.hidden = !Pk.length && !SEASONS.some(x => x.betting);
+    document.getElementById("bet-tab").hidden = !Pk.length && !SEASONS.some(x => x.betting);
+
+    // Every built season's record, for the table below and the hint's "since 2022" line.
+    const recs = SEASONS.filter(x => x.betting && x.betting.record).slice().sort((a, b) => a.season - b.season);
+    const buckets = recs.length ? Object.keys(recs[0].betting.record.by_edge) : [];
+    const atLeast = r => buckets.filter(k => parseFloat(k) >= me).reduce((t, k) => addT(t, r.by_edge[k]), ZERO);
+    const total = f => recs.reduce((t, x) => addT(t, f(x.betting.record)), ZERO);
+
     const rows = Pk.map(p => ({ ...p, matchup: `${p.away} ${p.neutral ? "vs" : "at"} ${p.home}`, diff: p.edge == null ? null : Math.abs(p.edge),
-      likes: !!p.side && Math.abs(p.edge) >= me }));
+      likes: !!p.side && !p.after_kickoff && Math.abs(p.edge) >= me }));
     const books = [...new Set(rows.filter(r => r.book).map(r => r.book))];
     const allCaesars = books.length && books.every(b => /^Caesars/.test(b)), anyCaesars = books.some(b => /^Caesars/.test(b));
-    const others = books.filter(b => !/^Caesars/.test(b)).map(bookShort);
+    const others = [...new Set(books.filter(b => !/^Caesars/.test(b)).map(bookShort))];
+    const anyApi = rows.some(fromOddsApi);
     const cols = [
-      { k: "date", label: "Date", text: true },
-      { k: "matchup", label: "Matchup", text: true, f: (v, r) => esc(v) + (r.tentative ? ` <span class="tent" title="At least one team has a tentative rating (fewer than ${M.min_games} games)">T</span>` : "") },
+      { k: "matchup", label: "Matchup", text: true, sortv: r => r.date + r.matchup,
+        f: (v, r) => `<span class="rk">${md(r.date)}</span> ${esc(v)}` + (r.tentative ? ` <span class="tent" title="At least one team has a tentative rating (fewer than ${M.min_games} games)">T</span>` : "") },
       { k: "model_home_spread", label: "Model line", text: true, sortv: r => Math.abs(r.model_home_spread), title: "The model's predicted margin as a point spread, to the half point", f: (v, r) => lineTxt(r, v) },
       { k: "book_home_spread", label: allCaesars ? "Caesars line" : "Book line", text: true, sortv: r => r.book_home_spread == null ? null : Math.abs(r.book_home_spread),
         f: (v, r) => v == null ? `<span class="rk">no line</span>` : `<span title="${esc(r.book)} · ${esc(r.line_source || "")}${r.line_read_at ? " · read " + esc(r.line_read_at) : ""}">${lineTxt(r, v)}</span> <span class="rk">${esc(bookShort(r.book))}</span>` },
-      { k: "diff", label: "Diff", desc: true, title: "Points between the model's line and the book's", f: v => fx(v, 1) },
+      { k: "diff", label: "Diff", desc: true, title: "Points between the model's line and the book's", f: v => v == null ? "—" : pts(v) },
       { k: "likes", label: "Model likes", text: true, desc: true, sortv: r => (r.likes ? 1000 : 0) + (r.diff || 0),
         title: `★ = the model's line is ${me} or more points from the book's; the side it likes, at the book's number`,
-        f: (v, r) => !r.side ? "—" : r.likes ? `<span class="star">★</span> ${sideTxt(r)}` : `<span class="rk" title="Within ${me} points of the book: no play">${sideTxt(r)}</span>` },
+        f: (v, r) => !r.side ? "—" : r.after_kickoff ? `<span class="rk" title="The book's line was read after kickoff, so it isn't a pregame line">kicked off</span>`
+          : r.likes ? `<span class="star">★</span> ${sideTxt(r)}` : `<span class="rk" title="Within ${me} points of the book: no play">${sideTxt(r)}</span>` },
     ];
     if (latest) cols.push({ k: "cover_prob", label: "Cover chance", desc: true,
       title: "Chance the model's side covers the book's number, from how its disagreements did in earlier seasons" + (cal ? ` (b = ${fx(cal.b, 3)} ± ${fx(cal.b_se, 3)}, so these are rough)` : ""),
       f: v => v == null ? "—" : `${(100 * v).toFixed(1)}%` });
-    else cols.push({ k: "ats", label: "Against the line", text: true, sortv: r => ({ W: 2, P: 1, L: 0 })[r.ats],
-      f: (v, r) => !v ? "—" : `<span class="${v === "W" ? "hit" : v === "L" ? "miss" : ""}">${v === "W" ? "✓ covered" : v === "L" ? "✗ did not cover" : "push"}</span> <span class="rk">${esc(r.away)} ${r.away_pts}, ${esc(r.home)} ${r.home_pts}</span>` });
+    else cols.push({ k: "ats", label: "Covered", text: true, sortv: r => ({ W: 2, P: 1, L: 0 })[r.ats],
+      f: (v, r) => !v ? "—" : `<span class="${v === "W" ? "hit" : v === "L" ? "miss" : ""}" title="Final: ${esc(r.away)} ${r.away_pts}, ${esc(r.home)} ${r.home_pts}">${v === "W" ? "✓" : v === "L" ? "✗" : "push"}</span> <span class="rk">${r.away_pts}-${r.home_pts}</span>` });
+    const wrap = document.getElementById("tbl-bet").parentElement;
+    wrap.hidden = !rows.length;
     buildTable(document.getElementById("tbl-bet"), rows, cols, "likes", -1, null);
 
-    const lined = rows.filter(r => r.book), liked = lined.filter(r => r.likes);
-    const bookPhrase = !books.length ? "a sportsbook's line" : allCaesars ? "Caesars Sportsbook's line" : anyCaesars ? `Caesars Sportsbook's line where there is one, otherwise ${others.join(" or ")}'s` : `the line at ${others.join(" or ")}, standing in for Caesars`;
-    const tally = xs => { const t = { W: 0, L: 0, P: 0 }; xs.forEach(x => { if (x.ats) t[x.ats]++; }); t.pct = t.W + t.L ? t.W / (t.W + t.L) : null; return t; };
+    const lined = rows.filter(r => r.book), liked = lined.filter(r => r.likes), late = rows.filter(r => r.after_kickoff);
+    const lineWord = anyApi ? "line" : latest ? "line" : "closing line";
+    const bookPhrase = !books.length ? `a sportsbook's ${lineWord}` : allCaesars ? `Caesars Sportsbook's ${lineWord}` : anyCaesars
+      ? `Caesars Sportsbook's ${lineWord} where there is one, otherwise ${others.join(" or ")}'s` : `the ${lineWord} at ${others.join(" or ")}, standing in for Caesars`;
+    const hist = recs.length ? atLeast({ by_edge: Object.fromEntries(buckets.map(k => [k, total(r => r.by_edge[k])])) }) : null;
+    const histTxt = hist && hist.W + hist.L ? ` Since ${recs[0].season}, games ${me}+ points apart went ${hist.W}-${hist.L}${hist.P ? "-" + hist.P : ""} (${(100 * hist.pct).toFixed(1)}%) for the model's side against closing lines.` : "";
     const hint = document.getElementById("bet-hint");
-    if (!rows.length) hint.textContent = "No games to price.";
+    if (!rows.length) hint.textContent = latest && M.regular_season_complete
+      ? `The ${M.season} regular season is over. Pick a week above to see that week's games against the closing line; the record is below.`
+      : "No games to price.";
     else if (latest) {
-      hint.innerHTML = `The model's point spread for each game beside ${esc(bookPhrase)} (${lined.length} of ${rows.length} games have one). ` +
-        `<span class="star">★</span> marks the side the model likes: its line is ${me} or more points from the book's (${liked.length} game${liked.length === 1 ? "" : "s"}). ` +
-        (cal ? `Cover chance is the chance that side covers the book's number, judged by how the model's disagreements did against closing lines in ${cal.seasons.join(", ")} (${cal.n} games): ` +
-          `about ${Math.round(cal.b * 100)}% of a disagreement has shown up in results, so even a 10-point gap is worth about ${(100 * coverAt(10, cal)).toFixed(1)}%. ` : "") +
-        `A bet at −110 needs ${(100 * be).toFixed(1)}% to break even. Reference only, not betting advice.` +
-        (!anyCaesars && M.season >= 2024 ? ` <b>No Caesars line:</b> ESPN lists only ${esc(others.join(" and ") || "one book")} for these games. For Caesars, get a free key at the-odds-api.com, save it as <code>odds_api_key.txt</code> in the cfb-ratings folder, and run Update CFB Rankings.` : "");
+      hint.innerHTML = `The model sets a line for each game (its predicted margin, to the half point), shown beside ${esc(bookPhrase)} (${lined.length} of ${rows.length} games have one).` +
+        (anyApi ? " Caesars lines from The Odds API are the last ones read before kickoff (hover a line for when)." : "") +
+        ` <span class="star">★</span> marks the side the model likes: its line is ${me} or more points from the book's (${liked.length} game${liked.length === 1 ? "" : "s"}).` + histTxt +
+        (late.length ? ` ${late.length} game${late.length === 1 ? "" : "s"} had kicked off when the line was read: shown, not starred.` : "") +
+        (cal ? ` Cover chance is the chance the model's side covers the book's number, judged by how its disagreements did against closing lines in ${cal.seasons.join(", ")} (${cal.n} games): ` +
+          `about ${Math.round(cal.b * 100)}% of a disagreement has shown up in results, so even a 10-point gap is worth about ${(100 * coverAt(10, cal)).toFixed(1)}%.` : "") +
+        ` A bet at −110 needs ${(100 * be).toFixed(1)}% to break even. Reference only, not betting advice.` +
+        (!anyCaesars && !M.regular_season_complete ? ` <b>No Caesars line:</b> ESPN lists only ${esc(others.join(" and ") || "one book")} for these games; in 2022–23 DraftKings' closing lines were within half a point of Caesars' on 93–95% of games. Caesars lines for coming games need a paid plan at The Odds API (see README: odds_api_key.txt).` : "");
     } else {
-      const t = tally(lined), tl = tally(liked);
-      hint.innerHTML = `Week ${V.week + 1} as the model saw it after week ${V.week}, against each game's closing line (${esc(bookPhrase)}). ` +
+      const t = tallyOf(lined), tl = tallyOf(liked);
+      const bookName = !books.length ? "a sportsbook" : allCaesars ? "Caesars Sportsbook" : anyCaesars ? `Caesars Sportsbook, or ${others.join(" or ")} where there is none` : `${others.join(" or ")}, standing in for Caesars`;
+      hint.innerHTML = `Week ${V.week + 1} as the model saw it after week ${V.week}, against each game's ${anyApi ? "line" : "closing line"} at ${esc(bookName)}` +
+        (anyApi ? " (Caesars from The Odds API: the last line read before kickoff)" : "") + `. ` +
         `The model's side covered ${t.W} and lost ${t.L}${t.P ? `, with ${t.P} push${t.P === 1 ? "" : "es"}` : ""}` + (t.pct == null ? "" : ` (${(100 * t.pct).toFixed(1)}%)`) +
         `; on the games it liked (<span class="star">★</span>, ${me}+ points from the book), ${tl.W}-${tl.L}${tl.P ? "-" + tl.P : ""}. A bet at −110 needs ${(100 * be).toFixed(1)}% to break even.`;
     }
 
-    // Every built season: each week's games predicted from the week before, against closing lines.
-    const recs = SEASONS.filter(x => x.betting && x.betting.record).slice().sort((a, b) => a.season - b.season);
-    const sum = keyFn => { const t = { W: 0, L: 0, P: 0 }; recs.forEach(x => { const r = keyFn(x.betting.record); if (r) { t.W += r.W; t.L += r.L; t.P += r.P; } }); t.pct = t.W + t.L ? t.W / (t.W + t.L) : null; return t; };
-    const buckets = recs.length ? Object.keys(recs[0].betting.record.by_edge) : [];
-    const atLeast = r => { const t = { W: 0, L: 0, P: 0 }; buckets.filter(k => parseFloat(k) >= me).forEach(k => { t.W += r.by_edge[k].W; t.L += r.by_edge[k].L; t.P += r.by_edge[k].P; }); t.pct = t.W + t.L ? t.W / (t.W + t.L) : null; return t; };
-    // The book each season was compared with, folding the Caesars desks together; a book with
-    // under 5% of a season's games is named only in the tooltip.
+    // The record: every built season, each week's games predicted from the week before.
     const bookList = bk => { const c = {}; Object.entries(bk).forEach(([b, n]) => { c[bookShort(b)] = (c[bookShort(b)] || 0) + n; });
       const tot = Object.values(c).reduce((a, n) => a + n, 0), main = Object.keys(c).filter(b => c[b] >= 0.05 * tot).sort((a, b) => c[b] - c[a]);
       return { text: main.join(", "), title: Object.entries(c).map(([b, n]) => `${b} ${n}`).join(", ") }; };
-    const recRows = recs.map(x => ({ season: String(x.season), books: bookList(x.betting.record.books), r: { ...x.betting.record, likes: atLeast(x.betting.record) } }));
-    if (recs.length) { const by = Object.fromEntries(buckets.map(k => [k, sum(r => r.by_edge[k])])); recRows.push({ season: "All", books: { text: "", title: "" }, r: { all: sum(r => r.all), likes: atLeast({ by_edge: by }), by_edge: by } }); }
-    const recCols = [
-      { k: "season", label: "Season", text: true },
-      { k: "books", label: "Book", text: true, sortv: r => r.books.text, f: v => `<span title="Games per book: ${esc(v.title)}">${esc(v.text)}</span>` },
-      { k: "all", label: "All picks", sortv: r => r.r.all.pct, f: (v, r) => `<span class="${pctCls(r.r.all, be)}">${wlp(r.r.all)}</span>` },
-      { k: "likes", label: `★ ${me}+ pts`, sortv: r => r.r.likes.pct, f: (v, r) => `<span class="${pctCls(r.r.likes, be)}">${wlp(r.r.likes)}</span>` },
-    ].concat(buckets.map(k => ({ k: "b" + k, label: `Diff ${k.replace("-", "–")}`, sortv: r => r.r.by_edge[k].pct, f: (v, r) => `<span class="${pctCls(r.r.by_edge[k], be)}">${wlp(r.r.by_edge[k])}</span>` })));
-    buildTable(document.getElementById("tbl-bet-record"), recRows, recCols, "season", 1, null);
+    const heads = ["Season", "Book", "All picks", `★ ${me}+ pts`, "T games", "Rated games"].concat(buckets.map(k => `Diff ${k.replace("-", "–")}`));
+    const line = (label, bk, r) => `<tr><td class="t">${label}</td><td class="t">${bk.text ? `<span title="Games per book: ${esc(bk.title)}">${esc(bk.text)}</span>` : ""}</td>` +
+      [r.all, atLeast(r), (r.by_status || {}).tentative, (r.by_status || {}).rated].concat(buckets.map(k => r.by_edge[k])).map(t => `<td>${wlp(t)}</td>`).join("") + "</tr>";
+    const allRec = { all: total(r => r.all), by_edge: Object.fromEntries(buckets.map(k => [k, total(r => r.by_edge[k])])),
+      by_status: { tentative: total(r => (r.by_status || {}).tentative || ZERO), rated: total(r => (r.by_status || {}).rated || ZERO) } };
+    document.getElementById("tbl-bet-record").innerHTML = !recs.length ? "" :
+      `<thead><tr>${heads.map((h, i) => `<th class="${i < 2 ? "t" : ""}">${h}</th>`).join("")}</tr></thead><tbody>` +
+      recs.map(x => line(String(x.season), bookList(x.betting.record.books), x.betting.record)).join("") + `</tbody><tfoot>${line("All", { text: "" }, allRec)}</tfoot>`;
     document.getElementById("bet-record-note").innerHTML = recs.length
-      ? `The model's side against the book, with every week's games predicted from the ratings after the week before (no later information), against closing lines: Caesars Sportsbook for 2022 and 2023, ESPN BET for 2024 and 2025 and DraftKings for 2026, where ESPN has no Caesars line. Won-lost-push, with the win share excluding pushes; green = at or above the ${(100 * be).toFixed(1)}% a −110 bet needs (20+ games). Bigger disagreements have not reliably done better, and the books' closing lines are harder to beat than the earlier lines a bettor would get.`
+      ? `The model's side against the book: every week's games predicted from the ratings after the week before (no later games; one model setting, the 12-drive phantom game, was tuned on 2025–2026 prediction error), against each game's closing line, from Caesars Sportsbook where ESPN has one and otherwise the book named. Won-lost-push; the share leaves out pushes; hover a record for its 95% interval. A bet at −110 needs ${(100 * be).toFixed(1)}%, and no row is clearly above it. T games have a team with fewer than ${M.min_games} games, a season's first weeks: the model's side has done better there than in rated games, where it is close to 50%. Bigger disagreements have not reliably done better, and closing lines are harder to beat than the earlier lines a bettor gets. Reference only, not betting advice.`
       : "No season has been built with betting lines yet (run python odds.py, then build.py).";
   }
-  const coverAt = (edge, cal) => { const z = (cal.a + cal.b * edge) / cal.s; return 0.5 * (1 + erf(z / Math.SQRT2)); };
+  const coverAt = (edge, cal) => 0.5 * (1 + erf(cal.b * Math.abs(edge) / cal.s / Math.SQRT2));
   // Abramowitz-Stegun 7.1.26 (|error| < 1.5e-7), for the page's one display of a cover chance at a round edge.
   function erf(x) { const t = 1 / (1 + 0.3275911 * Math.abs(x)), y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x); return x >= 0 ? y : -y; }
 

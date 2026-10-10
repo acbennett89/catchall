@@ -2,6 +2,7 @@
 python -m unittest discover -s tests"""
 import glob
 import json
+import math
 import os
 import sys
 import unittest
@@ -255,15 +256,21 @@ class Betting(unittest.TestCase):
                         self.assertNotIn("edge", g)
                         continue
                     self.assertEqual((g["book"], g["book_home_spread"]), (line["book"], line["home_spread"]))
-                    edge = g["home_margin"] + line["home_spread"]
-                    self.assertAlmostEqual(g["edge"], edge, places=9)
+                    edge = line["home_spread"] - half_point(-g["home_margin"])  # between the two lines shown
+                    self.assertEqual(g["edge"], edge)
                     self.assertEqual(g["side"], "home" if edge > 0 else "away" if edge < 0 else None)
-                    self.assertEqual(g["likes"], g["side"] is not None and abs(edge) >= me)
+                    late = bool(line.get("after_kickoff"))
+                    self.assertEqual(g.get("after_kickoff", False), late)
+                    self.assertEqual(g["likes"], g["side"] is not None and abs(edge) >= me and not late)
                     if g.get("home_pts") is not None and g["side"]:
                         m = (g["home_pts"] - g["away_pts"] + line["home_spread"]) * (1 if g["side"] == "home" else -1)
                         self.assertEqual(g["ats"], "W" if m > 0 else "L" if m < 0 else "P")
                     self.assertEqual("cover_prob" in g, bool(B["calibration"]) and g["side"] is not None
-                                     and g in r["predictions"])
+                                     and not late and g in r["predictions"])
+                    if "cover_prob" in g:  # the same for a home or an away side
+                        c = B["calibration"]
+                        z = c["b"] * abs(edge) / c["s"]
+                        self.assertAlmostEqual(g["cover_prob"], 0.5 * (1 + math.erf(z / math.sqrt(2))), places=12)
                 self.assertEqual(B["record"], record([g for g in picks if "edge" in g], me))
                 cal = B["calibration"]
                 if cal:  # fitted on earlier, complete seasons only

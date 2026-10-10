@@ -298,54 +298,67 @@
      2024
     ],
     "n": 2226,
-    "a": -0.052803842436997844,
-    "b": 0.04233313872378258,
-    "b_se": 0.03994725942312536,
-    "s": 15.236015062459876,
-    "rule": "actual margin - book margin = a + b * edge + Normal(0, s), least squares over the seasons' walk-forward picks with a book line; P(model's side covers) = Phi(sign(edge) * (a + b * edge) / s)"
+    "b": 0.030454679683309074,
+    "b_se": 0.04023471491434895,
+    "s": 15.218790888601763,
+    "rule": "actual margin - book margin = b * edge + Normal(0, s), least squares through the origin over the seasons' walk-forward picks with a book line; P(model's side covers) = Phi(b * |edge| / s)"
    },
    "record": {
     "all": {
-     "W": 404,
-     "L": 371,
+     "W": 395,
+     "L": 357,
      "P": 0,
-     "pct": 0.5212903225806451
+     "pct": 0.5252659574468085
     },
     "likes": {
-     "W": 255,
-     "L": 221,
+     "W": 270,
+     "L": 230,
      "P": 0,
-     "pct": 0.5357142857142857
+     "pct": 0.54
     },
     "by_edge": {
      "0-3": {
-      "W": 149,
-      "L": 150,
+      "W": 125,
+      "L": 127,
       "P": 0,
-      "pct": 0.4983277591973244
+      "pct": 0.49603174603174605
      },
      "3-7": {
-      "W": 131,
-      "L": 124,
+      "W": 137,
+      "L": 131,
       "P": 0,
-      "pct": 0.5137254901960784
+      "pct": 0.5111940298507462
      },
      "7-10": {
-      "W": 52,
-      "L": 44,
+      "W": 59,
+      "L": 45,
       "P": 0,
-      "pct": 0.5416666666666666
+      "pct": 0.5673076923076923
      },
      "10+": {
-      "W": 72,
-      "L": 53,
+      "W": 74,
+      "L": 54,
       "P": 0,
-      "pct": 0.576
+      "pct": 0.578125
+     }
+    },
+    "by_status": {
+     "tentative": {
+      "W": 152,
+      "L": 139,
+      "P": 0,
+      "pct": 0.5223367697594502
+     },
+     "rated": {
+      "W": 243,
+      "L": 218,
+      "P": 0,
+      "pct": 0.527114967462039
      }
     },
     "books": {
      "DraftKings": 1,
-     "ESPN BET": 774
+     "ESPN BET": 751
     }
    },
    "upcoming_books": {},

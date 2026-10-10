@@ -7,13 +7,17 @@ nothing here enters a rating).
 Two sources:
 
 1. ESPN's odds feed: every sportsbook ESPN lists for a game. ESPN listed Caesars Sportsbook for
-   2022 and 2023 games; for 2024 and 2025 only ESPN BET, and for 2026 only DraftKings. A finished
-   game's lines are its closing lines and are downloaded once (cache/<season>/odds/); a game not
-   yet played is re-read on every run. In-game ("Live Odds") lines are never used.
+   2022 and 2023 games (its state desks, New Jersey, Colorado and Tennessee, and a generic entry);
+   for 2024 and 2025 mostly ESPN BET, and for 2026 only DraftKings. A finished game's lines are
+   downloaded once (cache/<season>/odds/): its "closing" line is the value ESPN shows after the
+   game. A game not yet played is re-read on every run; a read at or after kickoff is marked
+   after_kickoff (shown, never starred). In-game ("Live Odds") entries are never used.
 2. Caesars Sportsbook through The Odds API (the-odds-api.com, bookmaker "williamhill_us"), for
    games not yet played, when a key is set: the environment variable ODDS_API_KEY or the file
-   odds_api_key.txt next to this script. The free plan has 500 credits a month; a run costs 2.
-   A line read after kickoff is ignored; the last one read before kickoff is kept.
+   odds_api_key.txt next to this script. The Odds API offers Caesars on paid plans only (its free
+   plan leaves it out); a run costs 2 credits. Only reads before kickoff are kept, the last one
+   winning, in cache/<season>/odds_api_lines.json, which git ignores and the installer keeps:
+   a line for a game already played cannot be read again.
 
 Writes data/<season>/lines.json: game id -> book -> {"home_spread", "total", "source", "read_at"}.
 Spreads are from the home team's side, as ESPN lists home and away: -7 = home favored by 7.
@@ -34,11 +38,15 @@ from fetch import CORE, HERE, get_json, read_gz, session, write_gz
 
 ODDS_API = "https://api.the-odds-api.com/v4/sports/americanfootball_ncaaf/odds"
 ODDS_API_BOOK = "Caesars Sportsbook (The Odds API)"
-# The book the model is compared with, best first: Caesars as ESPN listed it, then Caesars read
-# live from The Odds API. Without any Caesars line, ESPN's own book that season stands in.
-CAESARS = ("Caesars Sportsbook", "Caesars Sportsbook (New Jersey)", "Caesars Sportsbook (Colorado)",
-           "Caesars Sportsbook (Tennessee)", ODDS_API_BOOK)
+# The book the model is compared with, best first: Caesars' state desks as ESPN listed them (they
+# agree with each other and with the market), then ESPN's generic "Caesars Sportsbook" entry (often
+# stale in 2022-23: used only without a state desk), then Caesars read from The Odds API. Without a
+# Caesars line, ESPN's own book that season stands in. betting.book_line also passes over a line
+# 3+ points from the other books' median (a stale entry).
+CAESARS = ("Caesars Sportsbook (New Jersey)", "Caesars Sportsbook (Colorado)", "Caesars Sportsbook (Tennessee)",
+           "Caesars Sportsbook", ODDS_API_BOOK)
 STAND_INS = ("ESPN BET", "DraftKings", "consensus")
+PROJECTIONS = ("accuscore", "teamrankings", "numberfire")  # ESPN lists these, but they are models, not books
 
 
 def now_iso():
@@ -99,10 +107,14 @@ def download_espn(season, finished, upcoming, workers=8):
 
 
 def odds_api_key():
-    key = os.environ.get("ODDS_API_KEY", "").strip()
+    """The key from ODDS_API_KEY or odds_api_key.txt. Notepad and PowerShell may save the file
+    with a byte-order mark or as UTF-16; only the key's letters and digits are kept."""
+    key = os.environ.get("ODDS_API_KEY", "")
     p = os.path.join(HERE, "odds_api_key.txt")
-    if not key and os.path.exists(p):
-        key = open(p, encoding="utf-8").read().strip()
+    if not key.strip() and os.path.exists(p):
+        raw = open(p, "rb").read()
+        key = raw.decode("utf-16") if raw[:2] in (b"\xff\xfe", b"\xfe\xff") else raw.decode("utf-8-sig", "replace")
+    key = re.sub(r"[^A-Za-z0-9]", "", key)
     return key or None
 
 
@@ -202,53 +214,72 @@ def write(season):
     teams = data["teams"]
     fbs = lambda g: "FBS" in (teams[g["home"]]["division"], teams[g["away"]]["division"])
     finished = [g["id"] for g in data["games"] if g["d1"] and fbs(g)]
-    upcoming = [u for u in data.get("upcoming", []) if fbs(u)]
+    # Only the games build.py predicts: the next week with an FBS game (the latest week's own
+    # games when it is still in progress). Later weeks are re-read once they come up.
+    last = max((g["week"] for g in data["games"] if g["d1"]), default=0)
+    soon = [u for u in data.get("upcoming", []) if fbs(u) and u["week"] >= last]
+    nxt = min((u["week"] for u in soon), default=None)
+    upcoming = [u for u in soon if u["week"] == nxt]
+    start = {u["id"]: when(u["date"]) for u in upcoming}
     path = os.path.join(HERE, "data", str(season), "lines.json")
     old = json.load(open(path, encoding="utf-8"))["games"] if os.path.exists(path) else {}
 
-    lines, stamp = {}, now_iso()
+    lines, stamp, read = {}, now_iso(), datetime.now(timezone.utc)
     for gid, payload in download_espn(season, finished, [u["id"] for u in upcoming]).items():
         books = espn_lines(payload)
         final = gid in set(finished)
+        late = not final and read >= start[gid]  # this game's current line may be from after kickoff
         lines[gid] = {b: {**v, "source": "ESPN " + ("closing" if final else "current"),
-                          "read_at": None if final else stamp} for b, v in books.items()}
-    # Caesars lines read live in earlier runs stay: the last one read before kickoff.
-    for gid, books in old.items():
-        if ODDS_API_BOOK in books and gid in lines:
-            lines[gid][ODDS_API_BOOK] = books[ODDS_API_BOOK]
+                          "read_at": None if final else stamp, **({"after_kickoff": True} if late else {})}
+                      for b, v in books.items()}
 
+    # Caesars read from The Odds API: kept in cache/ (never reset by the installer), last read before kickoff.
+    kept_path = os.path.join(HERE, "cache", str(season), "odds_api_lines.json")
+    kept = json.load(open(kept_path, encoding="utf-8")) if os.path.exists(kept_path) else {}
+    for gid, books in old.items():  # reads an older version of this script left in lines.json
+        if ODDS_API_BOOK in books:
+            kept.setdefault(gid, books[ODDS_API_BOOK])
     key, note = odds_api_key(), ""
     events = None
     if key and upcoming:
         try:
             events, left = download_odds_api(key)
         except Exception as e:  # a bad key or an outage: keep ESPN's lines and the Caesars lines already read
-            note = f"; Caesars lines not read from The Odds API ({e})"
+            note = f"; Caesars lines not read from The Odds API ({str(e).replace(key, '***')})"
     if events is not None:
         pairs, unmatched = match_odds_api(events, upcoming, teams)
-        start = {u["id"]: when(u["date"]) for u in upcoming}
-        read = datetime.now(timezone.utc)
         n = 0
         for gid, (ev, swapped) in pairs.items():
-            if read >= start[gid]:
+            if read >= min(start[gid], when(ev["commence_time"])):
                 continue  # kicked off: an in-game line, not a pregame one
             c = caesars_from_event(ev, ev["away_team"] if swapped else ev["home_team"], stamp)
             if c:
-                lines.setdefault(gid, {})[ODDS_API_BOOK] = c
+                kept[gid] = c
                 n += 1
+        has_caesars = any(bk.get("key") == "williamhill_us" for ev in events for bk in ev.get("bookmakers") or [])
         note = (f"; Caesars from The Odds API for {n} games ({left} credits left this month)" +
+                ("" if has_caesars or not events else
+                 "; The Odds API sent no Caesars (williamhill_us) lines: Caesars needs a paid Odds API plan") +
                 (f"; {len(unmatched)} Odds API games not matched to ESPN's schedule" if unmatched else ""))
-        if unmatched:
-            for u in unmatched[:10]:
-                print("  not matched:", u, file=sys.stderr)
+        for u in unmatched[:10]:
+            print("  not matched:", u, file=sys.stderr)
     elif upcoming and not key:
         note = "; no Odds API key, so games not yet played have no Caesars line (see odds.py)"
+    if kept:
+        os.makedirs(os.path.dirname(kept_path), exist_ok=True)
+        with open(kept_path + ".part", "w", encoding="utf-8") as f:
+            json.dump(kept, f, indent=0, sort_keys=True)
+        os.replace(kept_path + ".part", kept_path)
+    for gid, c in kept.items():
+        if gid in lines:
+            lines[gid][ODDS_API_BOOK] = c
 
     out = {"season": season, "source": {"espn": f"{CORE}/events/<id>/competitions/<id>/odds",
                                         "odds_api": ODDS_API + " (bookmaker williamhill_us)"},
-           "rule": "home_spread is the home team's point spread (negative = home favored); finished "
-                   "games carry ESPN's closing lines; Caesars read from The Odds API is the last line "
-                   "read before kickoff",
+           "rule": "home_spread is the home team's point spread (negative = home favored); a finished "
+                   "game's ESPN lines are the values ESPN shows after it (closing); a game not yet played "
+                   "has the current line, marked after_kickoff when read at or after kickoff; Caesars read "
+                   "from The Odds API is the last line read before kickoff",
            "games": {g: lines[g] for g in sorted(lines)}}
     with open(path + ".part", "w", encoding="utf-8") as f:
         json.dump(out, f, indent=0, sort_keys=True)

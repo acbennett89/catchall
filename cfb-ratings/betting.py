@@ -6,22 +6,24 @@
 Reference only: nothing here enters a rating, and nothing here is betting advice.
 
 Model line: the predicted home margin (ratings.predict) as a home point spread, -margin, rounded
-to the half point. Book line: Caesars Sportsbook when there is one (odds.CAESARS), otherwise the
-book ESPN listed that season (odds.STAND_INS); every line names its book. Spreads are the home
-team's: -7 = home favored by 7.
+to the half point: the line the model sets. Book line: Caesars Sportsbook when there is one
+(odds.CAESARS; a Caesars entry 3+ points from the median of the game's other books is stale and
+passed over), otherwise the book ESPN listed that season (odds.STAND_INS); every line names its
+book. Spreads are the home team's: -7 = home favored by 7.
 
-    edge = model margin + book home spread   (= model margin - the margin the book expects)
+    edge = book home spread - model home spread   (points between the two lines shown)
 
 Positive: the model likes the home team at the book's number; negative: the away team. The model
-"likes" a game when |edge| >= betting.min_edge points (config.json). Against the spread, home
-covers when actual margin + home spread > 0, and it is a push at 0.
+"likes" a game when |edge| >= betting.min_edge points (config.json), unless the book's line was
+read after kickoff. Against the spread, home covers when actual margin + home spread > 0, and it
+is a push at 0.
 
 Cover chance (games not yet played): the chance the model's side covers, read from earlier
 complete seasons' walk-forward picks (each week's games predicted from the week before) against
-their book lines:
+their book lines, with no home/away term (the model's side is either):
 
-    actual margin - book margin = a + b * edge + e,   e ~ Normal(0, s)
-    P(model's side covers) = Phi(sign(edge) * (a + b * edge) / s)
+    actual margin - book margin = b * edge + e,   e ~ Normal(0, s)
+    P(model's side covers) = Phi(b * |edge| / s)
 
 b is the share of the model's disagreement that has shown up in results. A b near 0 means the
 disagreements carried little information beyond the book's line, and every cover chance is near
@@ -31,7 +33,7 @@ import json
 import math
 import os
 
-from odds import CAESARS, STAND_INS, load_lines
+from odds import CAESARS, ODDS_API_BOOK, PROJECTIONS, STAND_INS, load_lines
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BUCKETS = ((0, 3), (3, 7), (7, 10), (10, None))  # |edge| in points; fixed before any results were seen
@@ -47,31 +49,47 @@ def half_point(x):
     return math.copysign(math.floor(abs(x) * 2 + 0.5) / 2, x) if x else 0.0
 
 
+STALE = 3  # points from the other books' median at which a Caesars entry is passed over
+
+
 def book_line(books):
-    """The line the model is compared with: the first Caesars book with a spread, else ESPN's book."""
+    """The line the model is compared with: the first Caesars book with a spread that is within
+    STALE points of the median of the game's other ESPN books (when two or more list one), else
+    ESPN's book that season."""
+    books = books or {}
+    others = sorted(v["home_spread"] for b, v in books.items() if v.get("home_spread") is not None
+                    and b not in CAESARS and b not in PROJECTIONS)
+    median = (others[len(others) // 2] + others[(len(others) - 1) // 2]) / 2 if len(others) >= 2 else None
     for b in CAESARS + STAND_INS:
-        v = (books or {}).get(b)
-        if v and v.get("home_spread") is not None:
-            return {"book": b, "caesars": b in CAESARS, "home_spread": v["home_spread"],
-                    "total": v.get("total"), "source": v.get("source"), "read_at": v.get("read_at")}
+        v = books.get(b)
+        if not v or v.get("home_spread") is None:
+            continue
+        if b in CAESARS and median is not None and b != ODDS_API_BOOK and abs(v["home_spread"] - median) >= STALE:
+            continue
+        return {"book": b, "caesars": b in CAESARS, "home_spread": v["home_spread"], "total": v.get("total"),
+                "source": v.get("source"), "read_at": v.get("read_at"), "after_kickoff": bool(v.get("after_kickoff"))}
     return None
 
 
 def cover_prob(edge, cal):
-    return phi((1 if edge > 0 else -1) * (cal["a"] + cal["b"] * edge) / cal["s"])
+    return phi(cal["b"] * abs(edge) / cal["s"])
 
 
 def bet(home_margin, line, min_edge, cal=None, actual=None):
     """The model's line against the book for one game. actual = final home margin, if played."""
-    out = {"model_home_spread": half_point(-home_margin) + 0.0}
+    model = half_point(-home_margin) + 0.0
+    out = {"model_home_spread": model}
     if not line:
         return out
-    edge = home_margin + line["home_spread"]
+    edge = line["home_spread"] - model
     side = "home" if edge > 0 else "away" if edge < 0 else None
+    started = line.get("after_kickoff", False)
     out.update(book=line["book"], caesars=line["caesars"], book_home_spread=line["home_spread"],
                book_total=line["total"], line_source=line["source"], line_read_at=line["read_at"],
-               edge=edge, side=side, likes=side is not None and abs(edge) >= min_edge)
-    if cal and side:
+               edge=edge, side=side, likes=side is not None and abs(edge) >= min_edge and not started)
+    if started:
+        out["after_kickoff"] = True  # read once the game was under way: shown, not starred
+    elif cal and side:
         out["cover_prob"] = cover_prob(edge, cal)
     if actual is not None and side:
         m = actual + line["home_spread"]  # the home team's margin against the spread
@@ -90,7 +108,8 @@ def bucket_of(edge):
 
 
 def record(bets, min_edge):
-    """W-L-P of the model's side, overall, for the games it likes, and by |edge|."""
+    """W-L-P of the model's side: overall, at |edge| >= min_edge, by |edge|, and split into games
+    with a tentative team (fewer than min_games games: a season's first weeks) and the rest."""
     def tally(xs):
         w, l, p = (sum(1 for x in xs if x["ats"] == k) for k in "WLP")
         return {"W": w, "L": l, "P": p, "pct": w / (w + l) if w + l else None}
@@ -98,6 +117,8 @@ def record(bets, min_edge):
     return {"all": tally(done), "likes": tally([b for b in done if abs(b["edge"]) >= min_edge]),
             "by_edge": {label(lo, hi): tally([b for b in done if bucket_of(b["edge"]) == label(lo, hi)])
                         for lo, hi in BUCKETS},
+            "by_status": {"tentative": tally([b for b in done if b.get("tentative")]),
+                          "rated": tally([b for b in done if not b.get("tentative")])},
             "books": {k: sum(1 for b in done if b["book"] == k) for k in sorted({b["book"] for b in done})}}
 
 
@@ -112,25 +133,23 @@ def season_rows(season):
             line = book_line(lines.get(g["game"]))
             if line:
                 actual = g["home_pts"] - g["away_pts"]
-                rows.append((g["home_margin"] + line["home_spread"], actual + line["home_spread"]))
+                rows.append((line["home_spread"] - half_point(-g["home_margin"]), actual + line["home_spread"]))
     return rows
 
 
 def calibrate(seasons):
-    """Fit actual - book margin = a + b * edge over these seasons' walk-forward picks."""
+    """Fit actual - book margin = b * edge (through the origin) over these seasons' walk-forward picks."""
     rows = [r for s in seasons for r in season_rows(s)]
     if len(rows) < 100:
         return None
     n = len(rows)
-    mx, my = sum(x for x, _ in rows) / n, sum(y for _, y in rows) / n
-    sxx = sum((x - mx) ** 2 for x, _ in rows)
-    b = sum((x - mx) * (y - my) for x, y in rows) / sxx
-    a = my - b * mx
-    s = math.sqrt(sum((y - a - b * x) ** 2 for x, y in rows) / (n - 2))
-    return {"seasons": list(seasons), "n": n, "a": a, "b": b, "b_se": s / math.sqrt(sxx), "s": s,
-            "rule": "actual margin - book margin = a + b * edge + Normal(0, s), least squares over the "
-                    "seasons' walk-forward picks with a book line; P(model's side covers) = "
-                    "Phi(sign(edge) * (a + b * edge) / s)"}
+    sxx = sum(x * x for x, _ in rows)
+    b = sum(x * y for x, y in rows) / sxx
+    s = math.sqrt(sum((y - b * x) ** 2 for x, y in rows) / (n - 1))
+    return {"seasons": list(seasons), "n": n, "b": b, "b_se": s / math.sqrt(sxx), "s": s,
+            "rule": "actual margin - book margin = b * edge + Normal(0, s), least squares through the "
+                    "origin over the seasons' walk-forward picks with a book line; P(model's side covers) "
+                    "= Phi(b * |edge| / s)"}
 
 
 def prior_complete_seasons(season):
@@ -164,8 +183,8 @@ def main():
               f"({100 * total['W'] / (total['W'] + total['L']):.1f}%; break-even at -110 is {100 * BREAK_EVEN:.1f}%)")
     cal = calibrate([s for s in seasons if s in prior_complete_seasons(max(seasons) + 1)])
     if cal:
-        print(f"fit over {cal['seasons']} ({cal['n']} games): a = {cal['a']:+.3f}, b = {cal['b']:.3f} +/- "
-              f"{cal['b_se']:.3f}, s = {cal['s']:.2f}")
+        print(f"fit over {cal['seasons']} ({cal['n']} games): b = {cal['b']:.3f} +/- {cal['b_se']:.3f}, "
+              f"s = {cal['s']:.2f}")
         for e in (3, 7, 10, 14):
             print(f"   cover chance at an edge of {e} points: {100 * cover_prob(e, cal):.1f}%")
 

@@ -7434,7 +7434,7 @@
 }
 }
 },
-"rule": "home_spread is the home team's point spread (negative = home favored); finished games carry ESPN's closing lines; Caesars read from The Odds API is the last line read before kickoff",
+"rule": "home_spread is the home team's point spread (negative = home favored); a finished game's ESPN lines are the values ESPN shows after it (closing); a game not yet played has the current line, marked after_kickoff when read at or after kickoff; Caesars read from The Odds API is the last line read before kickoff",
 "season": 2025,
 "source": {
 "espn": "https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/events/<id>/competitions/<id>/odds",

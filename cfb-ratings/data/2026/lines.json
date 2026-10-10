@@ -451,7 +451,7 @@
 "401856712": {
 "DraftKings": {
 "home_spread": -2.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 51.5
 }
@@ -459,7 +459,7 @@
 "401856713": {
 "DraftKings": {
 "home_spread": 13.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 51.5
 }
@@ -467,15 +467,15 @@
 "401856714": {
 "DraftKings": {
 "home_spread": -10.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
-"total": 58.5
+"total": 59.5
 }
 },
 "401856715": {
 "DraftKings": {
 "home_spread": 8.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 50.5
 }
@@ -483,7 +483,7 @@
 "401856716": {
 "DraftKings": {
 "home_spread": -3.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 50.5
 }
@@ -491,15 +491,15 @@
 "401856717": {
 "DraftKings": {
 "home_spread": 7.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
-"total": 39.5
+"total": 40.5
 }
 },
 "401856718": {
 "DraftKings": {
 "home_spread": 9.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 54.5
 }
@@ -835,7 +835,7 @@
 "401856808": {
 "DraftKings": {
 "home_spread": -21.0,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 50.5
 }
@@ -947,7 +947,7 @@
 "401856823": {
 "DraftKings": {
 "home_spread": 3.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 60.5
 }
@@ -955,7 +955,7 @@
 "401856824": {
 "DraftKings": {
 "home_spread": -10.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 53.5
 }
@@ -963,15 +963,16 @@
 "401856825": {
 "DraftKings": {
 "home_spread": -2.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
-"total": 54.5
+"total": 55.5
 }
 },
 "401856826": {
 "DraftKings": {
+"after_kickoff": true,
 "home_spread": -11.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 46.5
 }
@@ -979,9 +980,9 @@
 "401856827": {
 "DraftKings": {
 "home_spread": -15.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
-"total": 50.5
+"total": 49.5
 }
 },
 "401856881": {
@@ -1394,16 +1395,17 @@
 },
 "401858254": {
 "DraftKings": {
+"after_kickoff": true,
 "home_spread": -4.0,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 60.5
 }
 },
 "401858255": {
 "DraftKings": {
-"home_spread": 6.5,
-"read_at": "2026-10-10T13:46Z",
+"home_spread": 4.5,
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 45.5
 }
@@ -1411,23 +1413,23 @@
 "401858256": {
 "DraftKings": {
 "home_spread": -3.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 46.5
 }
 },
 "401858257": {
 "DraftKings": {
-"home_spread": -39.5,
-"read_at": "2026-10-10T13:46Z",
+"home_spread": -40.5,
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
-"total": 54.5
+"total": 55.5
 }
 },
 "401858258": {
 "DraftKings": {
 "home_spread": -11.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 49.5
 }
@@ -1435,7 +1437,7 @@
 "401858259": {
 "DraftKings": {
 "home_spread": 10.0,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 53.5
 }
@@ -1443,7 +1445,7 @@
 "401858260": {
 "DraftKings": {
 "home_spread": 3.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 56.5
 }
@@ -1915,7 +1917,7 @@
 "401858480": {
 "DraftKings": {
 "home_spread": 2.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 48.5
 }
@@ -1923,15 +1925,15 @@
 "401858481": {
 "DraftKings": {
 "home_spread": 8.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 48.5
 }
 },
 "401858482": {
 "DraftKings": {
-"home_spread": -35.5,
-"read_at": "2026-10-10T13:46Z",
+"home_spread": -34.5,
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 53.5
 }
@@ -1939,7 +1941,7 @@
 "401858483": {
 "DraftKings": {
 "home_spread": -33.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 56.5
 }
@@ -1947,7 +1949,7 @@
 "401858484": {
 "DraftKings": {
 "home_spread": -10.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 57.5
 }
@@ -1955,7 +1957,7 @@
 "401858485": {
 "DraftKings": {
 "home_spread": -2.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 54.5
 }
@@ -1963,15 +1965,16 @@
 "401858486": {
 "DraftKings": {
 "home_spread": 2.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 50.5
 }
 },
 "401858487": {
 "DraftKings": {
+"after_kickoff": true,
 "home_spread": -3.0,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 41.5
 }
@@ -2171,7 +2174,7 @@
 "401860901": {
 "DraftKings": {
 "home_spread": 7.0,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 48.5
 }
@@ -2179,7 +2182,7 @@
 "401860902": {
 "DraftKings": {
 "home_spread": -16.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 52.5
 }
@@ -2194,8 +2197,9 @@
 },
 "401860922": {
 "DraftKings": {
+"after_kickoff": true,
 "home_spread": -4.0,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 44.5
 }
@@ -2219,7 +2223,7 @@
 "401861964": {
 "DraftKings": {
 "home_spread": -3.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 54.5
 }
@@ -2530,24 +2534,25 @@
 },
 "401862794": {
 "DraftKings": {
+"after_kickoff": true,
 "home_spread": -5.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 49.5
 }
 },
 "401862795": {
 "DraftKings": {
-"home_spread": -3.5,
-"read_at": "2026-10-10T13:46Z",
+"home_spread": -4.0,
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 48.5
 }
 },
 "401862796": {
 "DraftKings": {
-"home_spread": -29.5,
-"read_at": "2026-10-10T13:46Z",
+"home_spread": -28.5,
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 58.5
 }
@@ -2555,7 +2560,7 @@
 "401862797": {
 "DraftKings": {
 "home_spread": -10.0,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 46.5
 }
@@ -2563,7 +2568,7 @@
 "401862798": {
 "DraftKings": {
 "home_spread": -14.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 54.5
 }
@@ -2571,7 +2576,7 @@
 "401862799": {
 "DraftKings": {
 "home_spread": -1.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 47.5
 }
@@ -2779,7 +2784,7 @@
 "401864516": {
 "DraftKings": {
 "home_spread": 7.0,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 48.5
 }
@@ -2787,23 +2792,24 @@
 "401864517": {
 "DraftKings": {
 "home_spread": 10.0,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
-"total": 49.5
+"total": 47.5
 }
 },
 "401864518": {
 "DraftKings": {
 "home_spread": 2.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 47.5
 }
 },
 "401864519": {
 "DraftKings": {
+"after_kickoff": true,
 "home_spread": -4.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 42.5
 }
@@ -3107,7 +3113,7 @@
 "401866435": {
 "DraftKings": {
 "home_spread": 5.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 51.5
 }
@@ -3115,7 +3121,7 @@
 "401866436": {
 "DraftKings": {
 "home_spread": -8.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 43.5
 }
@@ -3123,7 +3129,7 @@
 "401866437": {
 "DraftKings": {
 "home_spread": -18.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 55.5
 }
@@ -3131,7 +3137,7 @@
 "401866438": {
 "DraftKings": {
 "home_spread": -2.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 45.5
 }
@@ -3139,7 +3145,7 @@
 "401866439": {
 "DraftKings": {
 "home_spread": -14.0,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 43.5
 }
@@ -3147,7 +3153,7 @@
 "401866440": {
 "DraftKings": {
 "home_spread": 6.0,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 43.5
 }
@@ -3331,7 +3337,7 @@
 "401869843": {
 "DraftKings": {
 "home_spread": -10.0,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 46.5
 }
@@ -3354,8 +3360,9 @@
 },
 "401869933": {
 "DraftKings": {
+"after_kickoff": true,
 "home_spread": -3.0,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 60.5
 }
@@ -3387,7 +3394,7 @@
 "401869943": {
 "DraftKings": {
 "home_spread": -4.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 58.5
 }
@@ -3403,7 +3410,7 @@
 "401869949": {
 "DraftKings": {
 "home_spread": 7.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 51.5
 }
@@ -3451,7 +3458,7 @@
 "401869965": {
 "DraftKings": {
 "home_spread": -3.0,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 48.5
 }
@@ -3482,8 +3489,9 @@
 },
 "401870766": {
 "DraftKings": {
+"after_kickoff": true,
 "home_spread": -13.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 52.5
 }
@@ -3546,24 +3554,27 @@
 },
 "401871051": {
 "DraftKings": {
+"after_kickoff": true,
 "home_spread": 3.0,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 48.5
 }
 },
 "401871052": {
 "DraftKings": {
+"after_kickoff": true,
 "home_spread": 1.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 56.5
 }
 },
 "401871066": {
 "DraftKings": {
+"after_kickoff": true,
 "home_spread": -7.0,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 46.5
 }
@@ -3578,14 +3589,15 @@
 },
 "401871090": {
 "DraftKings": {
+"after_kickoff": true,
 "home_spread": -9.5,
-"read_at": "2026-10-10T13:46Z",
+"read_at": "2026-10-10T14:54Z",
 "source": "ESPN current",
 "total": 51.5
 }
 }
 },
-"rule": "home_spread is the home team's point spread (negative = home favored); finished games carry ESPN's closing lines; Caesars read from The Odds API is the last line read before kickoff",
+"rule": "home_spread is the home team's point spread (negative = home favored); a finished game's ESPN lines are the values ESPN shows after it (closing); a game not yet played has the current line, marked after_kickoff when read at or after kickoff; Caesars read from The Odds API is the last line read before kickoff",
 "season": 2026,
 "source": {
 "espn": "https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/events/<id>/competitions/<id>/odds",

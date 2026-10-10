@@ -297,55 +297,67 @@
      2022
     ],
     "n": 735,
-    "a": -0.7576591419887813,
-    "b": 0.14144010443786856,
-    "b_se": 0.06935086654824395,
-    "s": 15.391307018826005,
-    "rule": "actual margin - book margin = a + b * edge + Normal(0, s), least squares over the seasons' walk-forward picks with a book line; P(model's side covers) = Phi(sign(edge) * (a + b * edge) / s)"
+    "b": 0.12077704482707749,
+    "b_se": 0.07053743839317078,
+    "s": 15.36502304504857,
+    "rule": "actual margin - book margin = b * edge + Normal(0, s), least squares through the origin over the seasons' walk-forward picks with a book line; P(model's side covers) = Phi(b * |edge| / s)"
    },
    "record": {
     "all": {
-     "W": 381,
-     "L": 355,
-     "P": 22,
-     "pct": 0.5176630434782609
+     "W": 364,
+     "L": 343,
+     "P": 23,
+     "pct": 0.5148514851485149
     },
     "likes": {
-     "W": 220,
-     "L": 222,
+     "W": 225,
+     "L": 238,
      "P": 12,
-     "pct": 0.497737556561086
+     "pct": 0.48596112311015116
     },
     "by_edge": {
      "0-3": {
-      "W": 161,
-      "L": 133,
-      "P": 10,
-      "pct": 0.5476190476190477
+      "W": 139,
+      "L": 105,
+      "P": 11,
+      "pct": 0.569672131147541
      },
      "3-7": {
-      "W": 127,
-      "L": 104,
+      "W": 128,
+      "L": 119,
       "P": 7,
-      "pct": 0.5497835497835498
+      "pct": 0.5182186234817814
      },
      "7-10": {
-      "W": 48,
-      "L": 47,
+      "W": 49,
+      "L": 45,
       "P": 3,
-      "pct": 0.5052631578947369
+      "pct": 0.5212765957446809
      },
      "10+": {
-      "W": 45,
-      "L": 71,
+      "W": 48,
+      "L": 74,
       "P": 2,
-      "pct": 0.3879310344827586
+      "pct": 0.39344262295081966
+     }
+    },
+    "by_status": {
+     "tentative": {
+      "W": 136,
+      "L": 128,
+      "P": 11,
+      "pct": 0.5151515151515151
+     },
+     "rated": {
+      "W": 228,
+      "L": 215,
+      "P": 12,
+      "pct": 0.5146726862302483
      }
     },
     "books": {
-     "Caesars Sportsbook": 45,
-     "Caesars Sportsbook (Colorado)": 11,
-     "Caesars Sportsbook (New Jersey)": 697,
+     "Caesars Sportsbook (Colorado)": 13,
+     "Caesars Sportsbook (New Jersey)": 712,
      "ESPN BET": 5
     }
    },

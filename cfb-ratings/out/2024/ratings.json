@@ -299,54 +299,67 @@
      2023
     ],
     "n": 1493,
-    "a": -0.5336578230199497,
-    "b": 0.05329886877615142,
-    "b_se": 0.048029215298077015,
-    "s": 15.244561178616342,
-    "rule": "actual margin - book margin = a + b * edge + Normal(0, s), least squares over the seasons' walk-forward picks with a book line; P(model's side covers) = Phi(sign(edge) * (a + b * edge) / s)"
+    "b": 0.03755494729130205,
+    "b_se": 0.04857799244607454,
+    "s": 15.228716393758564,
+    "rule": "actual margin - book margin = b * edge + Normal(0, s), least squares through the origin over the seasons' walk-forward picks with a book line; P(model's side covers) = Phi(b * |edge| / s)"
    },
    "record": {
     "all": {
-     "W": 366,
-     "L": 367,
+     "W": 358,
+     "L": 350,
      "P": 0,
-     "pct": 0.49931787175989084
+     "pct": 0.5056497175141242
     },
     "likes": {
-     "W": 237,
-     "L": 220,
+     "W": 243,
+     "L": 235,
      "P": 0,
-     "pct": 0.5185995623632386
+     "pct": 0.5083682008368201
     },
     "by_edge": {
      "0-3": {
-      "W": 129,
-      "L": 147,
+      "W": 115,
+      "L": 115,
       "P": 0,
-      "pct": 0.4673913043478261
+      "pct": 0.5
      },
      "3-7": {
-      "W": 124,
-      "L": 114,
+      "W": 123,
+      "L": 124,
       "P": 0,
-      "pct": 0.5210084033613446
+      "pct": 0.4979757085020243
      },
      "7-10": {
-      "W": 56,
-      "L": 53,
+      "W": 62,
+      "L": 56,
       "P": 0,
-      "pct": 0.5137614678899083
+      "pct": 0.5254237288135594
      },
      "10+": {
-      "W": 57,
-      "L": 53,
+      "W": 58,
+      "L": 55,
       "P": 0,
-      "pct": 0.5181818181818182
+      "pct": 0.5132743362831859
+     }
+    },
+    "by_status": {
+     "tentative": {
+      "W": 142,
+      "L": 116,
+      "P": 0,
+      "pct": 0.5503875968992248
+     },
+     "rated": {
+      "W": 216,
+      "L": 234,
+      "P": 0,
+      "pct": 0.48
      }
     },
     "books": {
      "Caesars Sportsbook (New Jersey)": 3,
-     "ESPN BET": 730
+     "ESPN BET": 705
     }
    },
    "upcoming_books": {},

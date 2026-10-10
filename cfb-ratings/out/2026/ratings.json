@@ -170,53 +170,66 @@
      2025
     ],
     "n": 3001,
-    "a": 0.19497403939340535,
-    "b": 0.06757230536456885,
-    "b_se": 0.03406324139302483,
-    "s": 15.185294010472944,
-    "rule": "actual margin - book margin = a + b * edge + Normal(0, s), least squares over the seasons' walk-forward picks with a book line; P(model's side covers) = Phi(sign(edge) * (a + b * edge) / s)"
+    "b": 0.0586976382000341,
+    "b_se": 0.03423396113866025,
+    "s": 15.174625642154949,
+    "rule": "actual margin - book margin = b * edge + Normal(0, s), least squares through the origin over the seasons' walk-forward picks with a book line; P(model's side covers) = Phi(b * |edge| / s)"
    },
    "record": {
     "all": {
-     "W": 154,
-     "L": 131,
+     "W": 153,
+     "L": 128,
      "P": 3,
-     "pct": 0.5403508771929825
+     "pct": 0.5444839857651246
     },
     "likes": {
-     "W": 115,
-     "L": 100,
+     "W": 118,
+     "L": 102,
      "P": 0,
-     "pct": 0.5348837209302325
+     "pct": 0.5363636363636364
     },
     "by_edge": {
      "0-3": {
-      "W": 39,
-      "L": 31,
+      "W": 35,
+      "L": 26,
       "P": 3,
-      "pct": 0.5571428571428572
+      "pct": 0.5737704918032787
      },
      "3-7": {
-      "W": 48,
-      "L": 37,
+      "W": 49,
+      "L": 35,
       "P": 0,
-      "pct": 0.5647058823529412
+      "pct": 0.5833333333333334
      },
      "7-10": {
-      "W": 23,
-      "L": 23,
+      "W": 24,
+      "L": 26,
       "P": 0,
-      "pct": 0.5
+      "pct": 0.48
      },
      "10+": {
-      "W": 44,
-      "L": 40,
+      "W": 45,
+      "L": 41,
       "P": 0,
-      "pct": 0.5238095238095238
+      "pct": 0.5232558139534884
+     }
+    },
+    "by_status": {
+     "tentative": {
+      "W": 153,
+      "L": 128,
+      "P": 3,
+      "pct": 0.5444839857651246
+     },
+     "rated": {
+      "W": 0,
+      "L": 0,
+      "P": 0,
+      "pct": null
      }
     },
     "books": {
-     "DraftKings": 288
+     "DraftKings": 284
     }
    },
    "upcoming_books": {
@@ -16481,11 +16494,11 @@
    "book_home_spread": -9.5,
    "book_total": 51.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -0.4833523315571657,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -0.5,
    "side": "away",
    "likes": false,
-   "cover_prob": 0.4957358607126649
+   "after_kickoff": true
   },
   {
    "game": "401871051",
@@ -16505,11 +16518,11 @@
    "book_home_spread": 3.0,
    "book_total": 48.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -0.14920510251853303,
-   "side": "away",
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 0.0,
+   "side": null,
    "likes": false,
-   "cover_prob": 0.4951427100219459
+   "after_kickoff": true
   },
   {
    "game": "401871066",
@@ -16529,11 +16542,11 @@
    "book_home_spread": -7.0,
    "book_total": 46.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 3.0293098261673865,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 3.0,
    "side": "home",
-   "likes": true,
-   "cover_prob": 0.5104988054885647
+   "likes": false,
+   "after_kickoff": true
   },
   {
    "game": "401870766",
@@ -16553,11 +16566,11 @@
    "book_home_spread": -13.5,
    "book_total": 52.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -3.247715939313453,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -3.0,
    "side": "away",
-   "likes": true,
-   "cover_prob": 0.50064317138659
+   "likes": false,
+   "after_kickoff": true
   },
   {
    "game": "401871052",
@@ -16577,11 +16590,11 @@
    "book_home_spread": 1.5,
    "book_total": 56.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -4.652220160564816,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -4.5,
    "side": "away",
-   "likes": true,
-   "cover_prob": 0.5031364629417432
+   "likes": false,
+   "after_kickoff": true
   },
   {
    "game": "401862794",
@@ -16601,11 +16614,11 @@
    "book_home_spread": -5.5,
    "book_total": 49.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 0.2495348146123133,
-   "side": "home",
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 0.0,
+   "side": null,
    "likes": false,
-   "cover_prob": 0.5055650861352292
+   "after_kickoff": true
   },
   {
    "game": "401869933",
@@ -16625,11 +16638,11 @@
    "book_home_spread": -3.0,
    "book_total": 60.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -0.2429199303168854,
-   "side": "away",
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 0.0,
+   "side": null,
    "likes": false,
-   "cover_prob": 0.495309063852904
+   "after_kickoff": true
   },
   {
    "game": "401858254",
@@ -16649,11 +16662,11 @@
    "book_home_spread": -4.0,
    "book_total": 60.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -4.750431242748907,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -5.0,
    "side": "away",
-   "likes": true,
-   "cover_prob": 0.5033108048965972
+   "likes": false,
+   "after_kickoff": true
   },
   {
    "game": "401858487",
@@ -16673,11 +16686,11 @@
    "book_home_spread": -3.0,
    "book_total": 41.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -7.994243357884987,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -8.0,
    "side": "away",
-   "likes": true,
-   "cover_prob": 0.509068587187695
+   "likes": false,
+   "after_kickoff": true
   },
   {
    "game": "401860922",
@@ -16697,11 +16710,11 @@
    "book_home_spread": -4.0,
    "book_total": 44.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 3.671530240833171,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 3.5,
    "side": "home",
-   "likes": true,
-   "cover_prob": 0.5116384577498916
+   "likes": false,
+   "after_kickoff": true
   },
   {
    "game": "401864519",
@@ -16721,11 +16734,11 @@
    "book_home_spread": -4.5,
    "book_total": 42.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 4.423296610866393,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 4.5,
    "side": "home",
-   "likes": true,
-   "cover_prob": 0.5129723834003129
+   "likes": false,
+   "after_kickoff": true
   },
   {
    "game": "401856826",
@@ -16745,11 +16758,11 @@
    "book_home_spread": -11.5,
    "book_total": 46.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 4.537727177771245,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 4.5,
    "side": "home",
-   "likes": true,
-   "cover_prob": 0.5131754153334053
+   "likes": false,
+   "after_kickoff": true
   },
   {
    "game": "401858481",
@@ -16769,11 +16782,11 @@
    "book_home_spread": 8.5,
    "book_total": 48.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 8.341446482258318,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 8.5,
    "side": "home",
    "likes": true,
-   "cover_prob": 0.519922015815039
+   "cover_prob": 0.5131145498973317
   },
   {
    "game": "401856824",
@@ -16793,11 +16806,11 @@
    "book_home_spread": -10.5,
    "book_total": 53.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -9.03677551292343,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -9.0,
    "side": "away",
    "likes": true,
-   "cover_prob": 0.5109187432901673
+   "cover_prob": 0.5138856910610508
   },
   {
    "game": "401856716",
@@ -16817,11 +16830,11 @@
    "book_home_spread": -3.5,
    "book_total": 50.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 12.015895743410166,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 12.0,
    "side": "home",
    "likes": true,
-   "cover_prob": 0.5264339377698467
+   "cover_prob": 0.5185113469165853
   },
   {
    "game": "401856823",
@@ -16841,11 +16854,11 @@
    "book_home_spread": 3.5,
    "book_total": 60.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -5.335651314906173,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -5.5,
    "side": "away",
    "likes": true,
-   "cover_prob": 0.5043496592655179
+   "cover_prob": 0.5084867739760461
   },
   {
    "game": "401858256",
@@ -16865,11 +16878,11 @@
    "book_home_spread": -3.5,
    "book_total": 46.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 9.223602263187358,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 9.0,
    "side": "home",
    "likes": true,
-   "cover_prob": 0.5214859383194098
+   "cover_prob": 0.5138856910610508
   },
   {
    "game": "401858260",
@@ -16889,11 +16902,11 @@
    "book_home_spread": 3.5,
    "book_total": 56.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -1.8609100643011098,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -2.0,
    "side": "away",
    "likes": false,
-   "cover_prob": 0.49818127308222837
+   "cover_prob": 0.5030863016468586
   },
   {
    "game": "401862795",
@@ -16910,14 +16923,14 @@
    "model_home_spread": -9.0,
    "book": "DraftKings",
    "caesars": false,
-   "book_home_spread": -3.5,
+   "book_home_spread": -4.0,
    "book_total": 48.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 5.375500714152601,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 5.0,
    "side": "home",
    "likes": true,
-   "cover_prob": 0.5146617532564175
+   "cover_prob": 0.507715350073975
   },
   {
    "game": "401866436",
@@ -16937,11 +16950,11 @@
    "book_home_spread": -8.5,
    "book_total": 43.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -3.3714415054767715,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -3.5,
    "side": "away",
    "likes": true,
-   "cover_prob": 0.5008628128191362
+   "cover_prob": 0.5054009167669509
   },
   {
    "game": "401858482",
@@ -16958,14 +16971,14 @@
    "model_home_spread": -31.5,
    "book": "DraftKings",
    "caesars": false,
-   "book_home_spread": -35.5,
+   "book_home_spread": -34.5,
    "book_total": 53.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -4.0834791678667415,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -3.0,
    "side": "away",
    "likes": true,
-   "cover_prob": 0.5021268368548545
+   "cover_prob": 0.5046293947477621
   },
   {
    "game": "401856714",
@@ -16983,13 +16996,13 @@
    "book": "DraftKings",
    "caesars": false,
    "book_home_spread": -10.5,
-   "book_total": 58.5,
+   "book_total": 59.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 4.929571130371768,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 5.0,
    "side": "home",
    "likes": true,
-   "cover_prob": 0.5138706302604178
+   "cover_prob": 0.507715350073975
   },
   {
    "game": "401869843",
@@ -17009,11 +17022,11 @@
    "book_home_spread": -10.0,
    "book_total": 46.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 10.020161987002954,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 10.0,
    "side": "home",
    "likes": true,
-   "cover_prob": 0.5228978290598507
+   "cover_prob": 0.5154278147470176
   },
   {
    "game": "401866440",
@@ -17033,11 +17046,11 @@
    "book_home_spread": 6.0,
    "book_total": 43.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 11.565544448410385,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 11.5,
    "side": "home",
    "likes": true,
-   "cover_prob": 0.5256361620446932
+   "cover_prob": 0.5177405604717005
   },
   {
    "game": "401856717",
@@ -17055,13 +17068,13 @@
    "book": "DraftKings",
    "caesars": false,
    "book_home_spread": 7.5,
-   "book_total": 39.5,
+   "book_total": 40.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -5.210766320912887,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -5.0,
    "side": "away",
    "likes": true,
-   "cover_prob": 0.504127971700518
+   "cover_prob": 0.507715350073975
   },
   {
    "game": "401858257",
@@ -17078,14 +17091,14 @@
    "model_home_spread": -50.0,
    "book": "DraftKings",
    "caesars": false,
-   "book_home_spread": -39.5,
-   "book_total": 54.5,
+   "book_home_spread": -40.5,
+   "book_total": 55.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 10.749984640395873,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 9.5,
    "side": "home",
    "likes": true,
-   "cover_prob": 0.5241911774637831
+   "cover_prob": 0.5146567803045017
   },
   {
    "game": "401856718",
@@ -17105,11 +17118,11 @@
    "book_home_spread": 9.5,
    "book_total": 54.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 3.662816250098615,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 3.5,
    "side": "home",
    "likes": true,
-   "cover_prob": 0.511622994952193
+   "cover_prob": 0.5054009167669509
   },
   {
    "game": "401858484",
@@ -17129,11 +17142,11 @@
    "book_home_spread": -10.5,
    "book_total": 57.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -7.113504639077629,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -7.0,
    "side": "away",
    "likes": true,
-   "cover_prob": 0.5075054082429056
+   "cover_prob": 0.5108008436997772
   },
   {
    "game": "401856825",
@@ -17151,13 +17164,13 @@
    "book": "DraftKings",
    "caesars": false,
    "book_home_spread": -2.5,
-   "book_total": 54.5,
+   "book_total": 55.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -5.495787646039798,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -5.5,
    "side": "away",
    "likes": true,
-   "cover_prob": 0.5046339206931505
+   "cover_prob": 0.5084867739760461
   },
   {
    "game": "401858255",
@@ -17174,14 +17187,14 @@
    "model_home_spread": 8.0,
    "book": "DraftKings",
    "caesars": false,
-   "book_home_spread": 6.5,
+   "book_home_spread": 4.5,
    "book_total": 45.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -1.5105126464320922,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -3.5,
    "side": "away",
-   "likes": false,
-   "cover_prob": 0.49755924461396384
+   "likes": true,
+   "cover_prob": 0.5054009167669509
   },
   {
    "game": "401858259",
@@ -17201,11 +17214,11 @@
    "book_home_spread": 10.0,
    "book_total": 53.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -1.6018130392655223,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -1.5,
    "side": "away",
    "likes": false,
-   "cover_prob": 0.4977213213353115
+   "cover_prob": 0.5023147363367391
   },
   {
    "game": "401858480",
@@ -17225,11 +17238,11 @@
    "book_home_spread": 2.5,
    "book_total": 48.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 10.0421619905639,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 10.0,
    "side": "home",
    "likes": true,
-   "cover_prob": 0.5229368197554285
+   "cover_prob": 0.5154278147470176
   },
   {
    "game": "401862796",
@@ -17246,14 +17259,14 @@
    "model_home_spread": -31.5,
    "book": "DraftKings",
    "caesars": false,
-   "book_home_spread": -29.5,
+   "book_home_spread": -28.5,
    "book_total": 58.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 1.8595502806040543,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 3.0,
    "side": "home",
-   "likes": false,
-   "cover_prob": 0.5084227949199427
+   "likes": true,
+   "cover_prob": 0.5046293947477621
   },
   {
    "game": "401862799",
@@ -17273,11 +17286,11 @@
    "book_home_spread": -1.5,
    "book_total": 47.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -2.0419056537009643,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -2.0,
    "side": "away",
    "likes": false,
-   "cover_prob": 0.49850257981502905
+   "cover_prob": 0.5030863016468586
   },
   {
    "game": "401866435",
@@ -17297,11 +17310,11 @@
    "book_home_spread": 5.5,
    "book_total": 51.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -1.7096322459713198,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -1.5,
    "side": "away",
    "likes": false,
-   "cover_prob": 0.49791272278507004
+   "cover_prob": 0.5023147363367391
   },
   {
    "game": "401866437",
@@ -17321,11 +17334,11 @@
    "book_home_spread": -18.5,
    "book_total": 55.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 13.43442441375353,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 13.5,
    "side": "home",
    "likes": true,
-   "cover_prob": 0.5289460855626051
+   "cover_prob": 0.5208232795796457
   },
   {
    "game": "401866438",
@@ -17345,11 +17358,11 @@
    "book_home_spread": -2.5,
    "book_total": 45.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 5.360775372170938,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 5.5,
    "side": "home",
    "likes": true,
-   "cover_prob": 0.5146356299538104
+   "cover_prob": 0.5084867739760461
   },
   {
    "game": "401866439",
@@ -17369,11 +17382,11 @@
    "book_home_spread": -14.0,
    "book_total": 43.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 1.8586917961835976,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 2.0,
    "side": "home",
    "likes": false,
-   "cover_prob": 0.5084212712488626
+   "cover_prob": 0.5030863016468586
   },
   {
    "game": "401861964",
@@ -17393,11 +17406,11 @@
    "book_home_spread": -3.5,
    "book_total": 54.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -5.677532095088116,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -5.5,
    "side": "away",
    "likes": true,
-   "cover_prob": 0.5049565362948191
+   "cover_prob": 0.5084867739760461
   },
   {
    "game": "401862797",
@@ -17417,11 +17430,11 @@
    "book_home_spread": -10.0,
    "book_total": 46.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -5.063073449701938,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -5.0,
    "side": "away",
    "likes": true,
-   "cover_prob": 0.5038657954635243
+   "cover_prob": 0.507715350073975
   },
   {
    "game": "401858483",
@@ -17441,11 +17454,11 @@
    "book_home_spread": -33.5,
    "book_total": 56.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -9.007024115272056,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -9.0,
    "side": "away",
    "likes": true,
-   "cover_prob": 0.5108659472859282
+   "cover_prob": 0.5138856910610508
   },
   {
    "game": "401856713",
@@ -17465,11 +17478,11 @@
    "book_home_spread": 13.5,
    "book_total": 51.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -8.114568792684242,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -8.0,
    "side": "away",
    "likes": true,
-   "cover_prob": 0.5092821364856448
+   "cover_prob": 0.5123433596945939
   },
   {
    "game": "401860902",
@@ -17489,11 +17502,11 @@
    "book_home_spread": -16.5,
    "book_total": 52.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 9.42689076297994,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 9.5,
    "side": "home",
    "likes": true,
-   "cover_prob": 0.521846290617602
+   "cover_prob": 0.5146567803045017
   },
   {
    "game": "401856715",
@@ -17513,11 +17526,11 @@
    "book_home_spread": 8.5,
    "book_total": 50.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 3.218762327635985,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 3.0,
    "side": "home",
    "likes": true,
-   "cover_prob": 0.5108350077638403
+   "cover_prob": 0.5046293947477621
   },
   {
    "game": "401862798",
@@ -17537,11 +17550,11 @@
    "book_home_spread": -14.5,
    "book_total": 54.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 0.6308640421516571,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 0.5,
    "side": "home",
    "likes": false,
-   "cover_prob": 0.5062419605278966
+   "cover_prob": 0.500771582627172
   },
   {
    "game": "401864517",
@@ -17559,13 +17572,13 @@
    "book": "DraftKings",
    "caesars": false,
    "book_home_spread": 10.0,
-   "book_total": 49.5,
+   "book_total": 47.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 3.487891665776135,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 3.5,
    "side": "home",
    "likes": true,
-   "cover_prob": 0.5113125912035046
+   "cover_prob": 0.5054009167669509
   },
   {
    "game": "401864518",
@@ -17585,11 +17598,11 @@
    "book_home_spread": 2.5,
    "book_total": 47.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -5.833782843346858,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -6.0,
    "side": "away",
    "likes": true,
-   "cover_prob": 0.5052338953001086
+   "cover_prob": 0.5092581661370157
   },
   {
    "game": "401869943",
@@ -17609,11 +17622,11 @@
    "book_home_spread": -4.5,
    "book_total": 58.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -1.2233021838866183,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -1.0,
    "side": "away",
    "likes": false,
-   "cover_prob": 0.49704939052215935
+   "cover_prob": 0.5015431623681418
   },
   {
    "game": "401856712",
@@ -17633,11 +17646,11 @@
    "book_home_spread": -2.5,
    "book_total": 51.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 1.6387680893049748,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 1.5,
    "side": "home",
    "likes": false,
-   "cover_prob": 0.5080309382323938
+   "cover_prob": 0.5023147363367391
   },
   {
    "game": "401858485",
@@ -17657,11 +17670,11 @@
    "book_home_spread": -2.5,
    "book_total": 54.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -1.434302060203429,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -1.5,
    "side": "away",
    "likes": false,
-   "cover_prob": 0.49742395566829184
+   "cover_prob": 0.5023147363367391
   },
   {
    "game": "401858258",
@@ -17681,11 +17694,11 @@
    "book_home_spread": -11.5,
    "book_total": 49.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -4.328212665023981,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -4.5,
    "side": "away",
    "likes": true,
-   "cover_prob": 0.5025612885486622
+   "cover_prob": 0.5069438973152234
   },
   {
    "game": "401864516",
@@ -17705,11 +17718,11 @@
    "book_home_spread": 7.0,
    "book_total": 48.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -1.2433864551337557,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -1.0,
    "side": "away",
    "likes": false,
-   "cover_prob": 0.4970850438390561
+   "cover_prob": 0.5015431623681418
   },
   {
    "game": "401869949",
@@ -17729,11 +17742,11 @@
    "book_home_spread": 7.5,
    "book_total": 51.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 8.011176870368702,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 8.0,
    "side": "home",
    "likes": true,
-   "cover_prob": 0.5193364198894492
+   "cover_prob": 0.5123433596945939
   },
   {
    "game": "401869965",
@@ -17753,11 +17766,11 @@
    "book_home_spread": -3.0,
    "book_total": 48.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -1.654666786948748,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -1.5,
    "side": "away",
    "likes": false,
-   "cover_prob": 0.49781514763462503
+   "cover_prob": 0.5023147363367391
   },
   {
    "game": "401858486",
@@ -17777,11 +17790,11 @@
    "book_home_spread": 2.5,
    "book_total": 50.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 6.167738344790126,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 6.0,
    "side": "home",
    "likes": true,
-   "cover_prob": 0.5160671165189327
+   "cover_prob": 0.5092581661370157
   },
   {
    "game": "401856827",
@@ -17799,13 +17812,13 @@
    "book": "DraftKings",
    "caesars": false,
    "book_home_spread": -15.5,
-   "book_total": 50.5,
+   "book_total": 49.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 3.7982363930108782,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 4.0,
    "side": "home",
    "likes": true,
-   "cover_prob": 0.511863293227786
+   "cover_prob": 0.5061724185845364
   },
   {
    "game": "401860901",
@@ -17825,11 +17838,11 @@
    "book_home_spread": 7.0,
    "book_total": 48.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": 2.6352213364166843,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": 2.5,
    "side": "home",
    "likes": false,
-   "cover_prob": 0.509799432710238
+   "cover_prob": 0.5038578554124925
   },
   {
    "game": "401856808",
@@ -17849,11 +17862,11 @@
    "book_home_spread": -21.0,
    "book_total": 50.5,
    "line_source": "ESPN current",
-   "line_read_at": "2026-10-10T13:46Z",
-   "edge": -3.076647233318056,
+   "line_read_at": "2026-10-10T14:54Z",
+   "edge": -3.0,
    "side": "away",
    "likes": true,
-   "cover_prob": 0.5003394846481507
+   "cover_prob": 0.5046293947477621
   }
  ],
  "names": {

@@ -38,10 +38,13 @@ the site. Run it again any time to pull the latest version. Then double-click:
 **Any system:** `python launch.py` (or `python launch.py --update`) does the same from this folder.
 
 **Caesars lines for the coming games.** ESPN lists only DraftKings for 2026 games, so the Betting tab
-compares the model with DraftKings until you add a key for The Odds API (free plan: 500 credits a
-month; an update uses 2). Sign up at the-odds-api.com, put the key alone in a file named
-`odds_api_key.txt` in this folder (or set the environment variable `ODDS_API_KEY`), and run Update.
-The key file is never committed, and the installer leaves it in place.
+compares the model with DraftKings (in 2022–23 its closing line was within half a point of Caesars' on
+93–95% of games). For Caesars itself, The Odds API carries it (`williamhill_us`) on paid plans only;
+its free plan leaves Caesars out. An update uses 2 credits. With a key, put it alone in a file named
+`odds_api_key.txt` in this folder (or set the environment variable `ODDS_API_KEY`) and run Update:
+each run keeps the last Caesars line read before kickoff in `cache/<season>/odds_api_lines.json`.
+Neither file is committed, and re-running the installer leaves both in place. A line for a game
+already played cannot be read afterwards.
 
 ## Run it
 

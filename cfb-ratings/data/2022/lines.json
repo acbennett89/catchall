@@ -30600,44 +30600,6 @@
 "total": 38.5
 }
 },
-"401409240": {
-"Caesars Sportsbook (Colorado)": {
-"home_spread": 21.5,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 43.0
-},
-"Caesars Sportsbook (New Jersey)": {
-"home_spread": 21.5,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 43.0
-},
-"ESPN BET": {
-"home_spread": 21.0,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 43.0
-},
-"accuscore": {
-"home_spread": 21.0,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 43.0
-},
-"consensus": {
-"home_spread": 21.0,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 43.0
-},
-"teamrankings": {
-"home_spread": 21.0,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 42.5
-}
-},
 "401409241": {
 "Caesars Sportsbook": {
 "home_spread": -22.0,
@@ -36710,80 +36672,6 @@
 "total": 49.0
 }
 },
-"401411170": {
-"Caesars Sportsbook": {
-"home_spread": -2.0,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.5
-},
-"Caesars Sportsbook (Colorado)": {
-"home_spread": -2.0,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.5
-},
-"Caesars Sportsbook (New Jersey)": {
-"home_spread": -2.0,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.5
-},
-"DraftKings": {
-"home_spread": -2.0,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.5
-},
-"ESPN BET": {
-"home_spread": -1.5,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.5
-},
-"PointsBet": {
-"home_spread": -2.5,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.5
-},
-"SugarHouse": {
-"home_spread": -1.5,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.5
-},
-"Titanbets": {
-"home_spread": -2.0,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.5
-},
-"Unibet": {
-"home_spread": -1.5,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.5
-},
-"accuscore": {
-"home_spread": -2.0,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.5
-},
-"consensus": {
-"home_spread": -2.0,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.5
-},
-"teamrankings": {
-"home_spread": -2.0,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.5
-}
-},
 "401411171": {
 "Caesars Sportsbook": {
 "home_spread": -10.0,
@@ -37152,38 +37040,6 @@
 "read_at": null,
 "source": "ESPN closing",
 "total": 43.0
-}
-},
-"401411176": {
-"ESPN BET": {
-"home_spread": -1.5,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 39.5
-},
-"MGM": {
-"home_spread": -1.5,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 40.0
-},
-"accuscore": {
-"home_spread": -1.5,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 40.0
-},
-"consensus": {
-"home_spread": -1.5,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 40.0
-},
-"teamrankings": {
-"home_spread": -1.5,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 40.0
 }
 },
 "401413216": {
@@ -52402,80 +52258,6 @@
 "total": 44.0
 }
 },
-"401416647": {
-"Caesars Sportsbook": {
-"home_spread": -14.0,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": null
-},
-"Caesars Sportsbook (Colorado)": {
-"home_spread": -13.5,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.0
-},
-"Caesars Sportsbook (New Jersey)": {
-"home_spread": -14.0,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.0
-},
-"DraftKings": {
-"home_spread": -13.5,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.5
-},
-"ESPN BET": {
-"home_spread": -13.5,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.5
-},
-"MGM": {
-"home_spread": -14.0,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.0
-},
-"PointsBet": {
-"home_spread": -14.0,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.0
-},
-"Titanbets": {
-"home_spread": -13.5,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.0
-},
-"Unibet": {
-"home_spread": -14.5,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 47.5
-},
-"accuscore": {
-"home_spread": -13.5,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.0
-},
-"consensus": {
-"home_spread": -14.0,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.0
-},
-"teamrankings": {
-"home_spread": -13.5,
-"read_at": "2026-10-10T13:45Z",
-"source": "ESPN current",
-"total": 44.0
-}
-},
 "401416648": {
 "Caesars Sportsbook": {
 "home_spread": -2.5,
@@ -66245,7 +66027,7 @@
 }
 }
 },
-"rule": "home_spread is the home team's point spread (negative = home favored); finished games carry ESPN's closing lines; Caesars read from The Odds API is the last line read before kickoff",
+"rule": "home_spread is the home team's point spread (negative = home favored); a finished game's ESPN lines are the values ESPN shows after it (closing); a game not yet played has the current line, marked after_kickoff when read at or after kickoff; Caesars read from The Odds API is the last line read before kickoff",
 "season": 2022,
 "source": {
 "espn": "https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/events/<id>/competitions/<id>/odds",
