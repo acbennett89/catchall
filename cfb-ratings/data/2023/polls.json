@@ -1,0 +1,4459 @@
+{
+ "season": 2023,
+ "source": "https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/seasons/2023/types/<1 preseason | 2 regular season>/weeks/<w>/rankings/<1 AP | 21 CFP>",
+ "rule": "after_week = the last game week a poll reflects: ESPN's 'Week N' poll follows week N-1 and the preseason poll is 0; checked against the release date, which must fall after the middle kickoff of that week and before the middle kickoff of the next",
+ "polls": [
+  {
+   "poll": "AP",
+   "after_week": 0,
+   "released": "2023-08-14T07:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 1,
+    "headline": "2023 NCAA Football Rankings - AP Poll Week 1"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "61",
+     "name": "Georgia",
+     "record": "0-0",
+     "points": 1572.0,
+     "first_place_votes": 60
+    },
+    {
+     "rank": 2,
+     "team": "130",
+     "name": "Michigan",
+     "record": "0-0",
+     "points": 1490.0,
+     "first_place_votes": 2
+    },
+    {
+     "rank": 3,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "0-0",
+     "points": 1400.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 4,
+     "team": "333",
+     "name": "Alabama",
+     "record": "0-0",
+     "points": 1398.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 5,
+     "team": "99",
+     "name": "LSU",
+     "record": "0-0",
+     "points": 1276.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "30",
+     "name": "USC",
+     "record": "0-0",
+     "points": 1245.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "213",
+     "name": "Penn State",
+     "record": "0-0",
+     "points": 1177.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "52",
+     "name": "Florida State",
+     "record": "0-0",
+     "points": 1147.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "228",
+     "name": "Clemson",
+     "record": "0-0",
+     "points": 1032.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "264",
+     "name": "Washington",
+     "record": "0-0",
+     "points": 977.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "251",
+     "name": "Texas",
+     "record": "0-0",
+     "points": 882.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "0-0",
+     "points": 868.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "0-0",
+     "points": 863.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "254",
+     "name": "Utah",
+     "record": "0-0",
+     "points": 811.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "0-0",
+     "points": 732.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "2306",
+     "name": "Kansas State",
+     "record": "0-0",
+     "points": 501.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "2628",
+     "name": "TCU",
+     "record": "0-0",
+     "points": 416.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "0-0",
+     "points": 406.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "275",
+     "name": "Wisconsin",
+     "record": "0-0",
+     "points": 386.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "0-0",
+     "points": 296.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "153",
+     "name": "North Carolina",
+     "record": "0-0",
+     "points": 292.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "0-0",
+     "points": 281.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "245",
+     "name": "Texas A&M",
+     "record": "0-0",
+     "points": 227.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "2655",
+     "name": "Tulane",
+     "record": "0-0",
+     "points": 224.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "2294",
+     "name": "Iowa",
+     "record": "0-0",
+     "points": 131.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "AP",
+   "after_week": 1,
+   "released": "2023-09-05T07:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 2,
+    "headline": "2023 NCAA Football Rankings - AP Poll Week 2"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "61",
+     "name": "Georgia",
+     "record": "1-0",
+     "points": 1569.0,
+     "first_place_votes": 58
+    },
+    {
+     "rank": 2,
+     "team": "130",
+     "name": "Michigan",
+     "record": "1-0",
+     "points": 1485.0,
+     "first_place_votes": 2
+    },
+    {
+     "rank": 3,
+     "team": "333",
+     "name": "Alabama",
+     "record": "1-0",
+     "points": 1424.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 4,
+     "team": "52",
+     "name": "Florida State",
+     "record": "1-0",
+     "points": 1384.0,
+     "first_place_votes": 3
+    },
+    {
+     "rank": 5,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "1-0",
+     "points": 1308.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "30",
+     "name": "USC",
+     "record": "2-0",
+     "points": 1255.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "213",
+     "name": "Penn State",
+     "record": "1-0",
+     "points": 1212.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "264",
+     "name": "Washington",
+     "record": "1-0",
+     "points": 1107.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "1-0",
+     "points": 975.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "2-0",
+     "points": 967.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "251",
+     "name": "Texas",
+     "record": "1-0",
+     "points": 935.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "254",
+     "name": "Utah",
+     "record": "1-0",
+     "points": 919.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "1-0",
+     "points": 823.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "99",
+     "name": "LSU",
+     "record": "0-1",
+     "points": 706.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "2306",
+     "name": "Kansas State",
+     "record": "1-0",
+     "points": 579.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "1-0",
+     "points": 558.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "153",
+     "name": "North Carolina",
+     "record": "1-0",
+     "points": 551.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "1-0",
+     "points": 426.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "275",
+     "name": "Wisconsin",
+     "record": "1-0",
+     "points": 407.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "1-0",
+     "points": 379.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "150",
+     "name": "Duke",
+     "record": "1-0",
+     "points": 343.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "38",
+     "name": "Colorado",
+     "record": "1-0",
+     "points": 269.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "245",
+     "name": "Texas A&M",
+     "record": "1-0",
+     "points": 267.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "2655",
+     "name": "Tulane",
+     "record": "1-0",
+     "points": 241.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "228",
+     "name": "Clemson",
+     "record": "0-1",
+     "points": 141.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "AP",
+   "after_week": 2,
+   "released": "2023-09-10T07:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 3,
+    "headline": "2023 NCAA Football Rankings - AP Poll Week 3"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "61",
+     "name": "Georgia",
+     "record": "2-0",
+     "points": 1540.0,
+     "first_place_votes": 55
+    },
+    {
+     "rank": 2,
+     "team": "130",
+     "name": "Michigan",
+     "record": "2-0",
+     "points": 1458.0,
+     "first_place_votes": 2
+    },
+    {
+     "rank": 3,
+     "team": "52",
+     "name": "Florida State",
+     "record": "2-0",
+     "points": 1413.0,
+     "first_place_votes": 3
+    },
+    {
+     "rank": 4,
+     "team": "251",
+     "name": "Texas",
+     "record": "2-0",
+     "points": 1338.0,
+     "first_place_votes": 2
+    },
+    {
+     "rank": 5,
+     "team": "30",
+     "name": "USC",
+     "record": "3-0",
+     "points": 1269.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "2-0",
+     "points": 1265.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "213",
+     "name": "Penn State",
+     "record": "2-0",
+     "points": 1204.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "264",
+     "name": "Washington",
+     "record": "2-0",
+     "points": 1102.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "3-0",
+     "points": 1015.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "333",
+     "name": "Alabama",
+     "record": "1-1",
+     "points": 953.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "2-0",
+     "points": 929.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "254",
+     "name": "Utah",
+     "record": "2-0",
+     "points": 847.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "2-0",
+     "points": 827.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "99",
+     "name": "LSU",
+     "record": "1-1",
+     "points": 667.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "2306",
+     "name": "Kansas State",
+     "record": "2-0",
+     "points": 636.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "2-0",
+     "points": 605.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "2-0",
+     "points": 505.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "38",
+     "name": "Colorado",
+     "record": "2-0",
+     "points": 481.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "2-0",
+     "points": 453.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "153",
+     "name": "North Carolina",
+     "record": "2-0",
+     "points": 444.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "150",
+     "name": "Duke",
+     "record": "2-0",
+     "points": 421.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "2390",
+     "name": "Miami",
+     "record": "2-0",
+     "points": 230.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "265",
+     "name": "Washington State",
+     "record": "2-0",
+     "points": 129.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "26",
+     "name": "UCLA",
+     "record": "2-0",
+     "points": 107.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "2294",
+     "name": "Iowa",
+     "record": "2-0",
+     "points": 106.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "AP",
+   "after_week": 3,
+   "released": "2023-09-17T07:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 4,
+    "headline": "2023 NCAA Football Rankings - AP Poll Week 4"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "61",
+     "name": "Georgia",
+     "record": "3-0",
+     "points": 1566.0,
+     "first_place_votes": 57
+    },
+    {
+     "rank": 2,
+     "team": "130",
+     "name": "Michigan",
+     "record": "3-0",
+     "points": 1481.0,
+     "first_place_votes": 2
+    },
+    {
+     "rank": 3,
+     "team": "251",
+     "name": "Texas",
+     "record": "3-0",
+     "points": 1380.0,
+     "first_place_votes": 3
+    },
+    {
+     "rank": 4,
+     "team": "52",
+     "name": "Florida State",
+     "record": "3-0",
+     "points": 1378.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 5,
+     "team": "30",
+     "name": "USC",
+     "record": "3-0",
+     "points": 1296.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "3-0",
+     "points": 1291.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "213",
+     "name": "Penn State",
+     "record": "3-0",
+     "points": 1217.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "264",
+     "name": "Washington",
+     "record": "3-0",
+     "points": 1194.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "4-0",
+     "points": 1066.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "3-0",
+     "points": 942.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "254",
+     "name": "Utah",
+     "record": "3-0",
+     "points": 921.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "99",
+     "name": "LSU",
+     "record": "2-1",
+     "points": 805.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "333",
+     "name": "Alabama",
+     "record": "2-1",
+     "points": 796.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "3-0",
+     "points": 715.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "3-0",
+     "points": 657.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "3-0",
+     "points": 606.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "153",
+     "name": "North Carolina",
+     "record": "3-0",
+     "points": 567.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "150",
+     "name": "Duke",
+     "record": "3-0",
+     "points": 530.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "38",
+     "name": "Colorado",
+     "record": "3-0",
+     "points": 509.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "2390",
+     "name": "Miami",
+     "record": "3-0",
+     "points": 359.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "265",
+     "name": "Washington State",
+     "record": "3-0",
+     "points": 278.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "26",
+     "name": "UCLA",
+     "record": "3-0",
+     "points": 204.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "2-1",
+     "points": 198.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "2294",
+     "name": "Iowa",
+     "record": "3-0",
+     "points": 125.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "57",
+     "name": "Florida",
+     "record": "2-1",
+     "points": 103.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "AP",
+   "after_week": 4,
+   "released": "2023-09-24T07:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 5,
+    "headline": "2023 NCAA Football Rankings - AP Poll Week 5"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "61",
+     "name": "Georgia",
+     "record": "4-0",
+     "points": 1562.0,
+     "first_place_votes": 55
+    },
+    {
+     "rank": 2,
+     "team": "130",
+     "name": "Michigan",
+     "record": "4-0",
+     "points": 1445.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 3,
+     "team": "251",
+     "name": "Texas",
+     "record": "4-0",
+     "points": 1401.0,
+     "first_place_votes": 2
+    },
+    {
+     "rank": 4,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "4-0",
+     "points": 1370.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 5,
+     "team": "52",
+     "name": "Florida State",
+     "record": "4-0",
+     "points": 1351.0,
+     "first_place_votes": 3
+    },
+    {
+     "rank": 6,
+     "team": "213",
+     "name": "Penn State",
+     "record": "4-0",
+     "points": 1244.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "264",
+     "name": "Washington",
+     "record": "4-0",
+     "points": 1228.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 8,
+     "team": "30",
+     "name": "USC",
+     "record": "4-0",
+     "points": 1169.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "4-0",
+     "points": 1076.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "254",
+     "name": "Utah",
+     "record": "4-0",
+     "points": 981.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "4-1",
+     "points": 904.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "333",
+     "name": "Alabama",
+     "record": "3-1",
+     "points": 862.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "99",
+     "name": "LSU",
+     "record": "3-1",
+     "points": 813.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "4-0",
+     "points": 716.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "153",
+     "name": "North Carolina",
+     "record": "4-0",
+     "points": 659.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "265",
+     "name": "Washington State",
+     "record": "4-0",
+     "points": 652.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "150",
+     "name": "Duke",
+     "record": "4-0",
+     "points": 648.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "2390",
+     "name": "Miami",
+     "record": "4-0",
+     "points": 523.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "3-1",
+     "points": 366.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "3-1",
+     "points": 349.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "3-1",
+     "points": 260.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "57",
+     "name": "Florida",
+     "record": "3-1",
+     "points": 235.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "142",
+     "name": "Missouri",
+     "record": "4-0",
+     "points": 197.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "2305",
+     "name": "Kansas",
+     "record": "4-0",
+     "points": 132.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "278",
+     "name": "Fresno State",
+     "record": "4-0",
+     "points": 64.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "AP",
+   "after_week": 5,
+   "released": "2023-10-01T07:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 6,
+    "headline": "2023 NCAA Football Rankings - AP Poll Week 6"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "61",
+     "name": "Georgia",
+     "record": "5-0",
+     "points": 1501.0,
+     "first_place_votes": 35
+    },
+    {
+     "rank": 2,
+     "team": "130",
+     "name": "Michigan",
+     "record": "5-0",
+     "points": 1436.0,
+     "first_place_votes": 12
+    },
+    {
+     "rank": 3,
+     "team": "251",
+     "name": "Texas",
+     "record": "5-0",
+     "points": 1426.0,
+     "first_place_votes": 10
+    },
+    {
+     "rank": 4,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "4-0",
+     "points": 1357.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 5,
+     "team": "52",
+     "name": "Florida State",
+     "record": "4-0",
+     "points": 1336.0,
+     "first_place_votes": 4
+    },
+    {
+     "rank": 6,
+     "team": "213",
+     "name": "Penn State",
+     "record": "5-0",
+     "points": 1227.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "264",
+     "name": "Washington",
+     "record": "5-0",
+     "points": 1213.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "5-0",
+     "points": 1113.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "30",
+     "name": "USC",
+     "record": "5-0",
+     "points": 1077.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "5-1",
+     "points": 975.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "333",
+     "name": "Alabama",
+     "record": "4-1",
+     "points": 921.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "5-0",
+     "points": 840.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "265",
+     "name": "Washington State",
+     "record": "4-0",
+     "points": 765.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "153",
+     "name": "North Carolina",
+     "record": "4-0",
+     "points": 726.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "4-1",
+     "points": 633.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "4-1",
+     "points": 616.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "2390",
+     "name": "Miami",
+     "record": "4-0",
+     "points": 589.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "254",
+     "name": "Utah",
+     "record": "4-1",
+     "points": 454.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "150",
+     "name": "Duke",
+     "record": "4-1",
+     "points": 384.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "96",
+     "name": "Kentucky",
+     "record": "5-0",
+     "points": 344.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "142",
+     "name": "Missouri",
+     "record": "5-0",
+     "points": 329.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "4-1",
+     "points": 306.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "99",
+     "name": "LSU",
+     "record": "3-2",
+     "points": 149.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "278",
+     "name": "Fresno State",
+     "record": "5-0",
+     "points": 130.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "97",
+     "name": "Louisville",
+     "record": "5-0",
+     "points": 90.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "AP",
+   "after_week": 6,
+   "released": "2023-10-08T07:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 7,
+    "headline": "2023 NCAA Football Rankings - AP Poll Week 7"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "61",
+     "name": "Georgia",
+     "record": "6-0",
+     "points": 1559.0,
+     "first_place_votes": 50
+    },
+    {
+     "rank": 2,
+     "team": "130",
+     "name": "Michigan",
+     "record": "6-0",
+     "points": 1489.0,
+     "first_place_votes": 11
+    },
+    {
+     "rank": 3,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "5-0",
+     "points": 1408.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 4,
+     "team": "52",
+     "name": "Florida State",
+     "record": "5-0",
+     "points": 1389.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 5,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "6-0",
+     "points": 1278.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "213",
+     "name": "Penn State",
+     "record": "5-0",
+     "points": 1273.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "264",
+     "name": "Washington",
+     "record": "5-0",
+     "points": 1239.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "5-0",
+     "points": 1150.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "251",
+     "name": "Texas",
+     "record": "5-1",
+     "points": 1052.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "30",
+     "name": "USC",
+     "record": "6-0",
+     "points": 999.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "333",
+     "name": "Alabama",
+     "record": "5-1",
+     "points": 971.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "153",
+     "name": "North Carolina",
+     "record": "5-0",
+     "points": 894.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "5-1",
+     "points": 748.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "97",
+     "name": "Louisville",
+     "record": "6-0",
+     "points": 731.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "5-1",
+     "points": 725.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "254",
+     "name": "Utah",
+     "record": "4-1",
+     "points": 567.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "150",
+     "name": "Duke",
+     "record": "4-1",
+     "points": 479.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "26",
+     "name": "UCLA",
+     "record": "4-1",
+     "points": 438.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "4-1",
+     "points": 412.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "265",
+     "name": "Washington State",
+     "record": "4-1",
+     "points": 412.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "5-2",
+     "points": 374.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "99",
+     "name": "LSU",
+     "record": "4-2",
+     "points": 321.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "2305",
+     "name": "Kansas",
+     "record": "5-1",
+     "points": 103.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "96",
+     "name": "Kentucky",
+     "record": "5-1",
+     "points": 99.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "2390",
+     "name": "Miami",
+     "record": "4-1",
+     "points": 74.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "AP",
+   "after_week": 7,
+   "released": "2023-10-15T07:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 8,
+    "headline": "2023 NCAA Football Rankings - AP Poll Week 8"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "61",
+     "name": "Georgia",
+     "record": "7-0",
+     "points": 1541.0,
+     "first_place_votes": 43
+    },
+    {
+     "rank": 2,
+     "team": "130",
+     "name": "Michigan",
+     "record": "7-0",
+     "points": 1492.0,
+     "first_place_votes": 16
+    },
+    {
+     "rank": 3,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "6-0",
+     "points": 1393.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 4,
+     "team": "52",
+     "name": "Florida State",
+     "record": "6-0",
+     "points": 1388.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 5,
+     "team": "264",
+     "name": "Washington",
+     "record": "6-0",
+     "points": 1355.0,
+     "first_place_votes": 2
+    },
+    {
+     "rank": 6,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "6-0",
+     "points": 1277.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "213",
+     "name": "Penn State",
+     "record": "6-0",
+     "points": 1253.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "251",
+     "name": "Texas",
+     "record": "5-1",
+     "points": 1098.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "5-1",
+     "points": 1034.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "153",
+     "name": "North Carolina",
+     "record": "6-0",
+     "points": 1011.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "333",
+     "name": "Alabama",
+     "record": "6-1",
+     "points": 987.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "6-1",
+     "points": 834.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "5-1",
+     "points": 825.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "254",
+     "name": "Utah",
+     "record": "5-1",
+     "points": 695.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "6-2",
+     "points": 664.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "150",
+     "name": "Duke",
+     "record": "5-1",
+     "points": 593.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "5-1",
+     "points": 557.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "30",
+     "name": "USC",
+     "record": "6-1",
+     "points": 530.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "99",
+     "name": "LSU",
+     "record": "5-2",
+     "points": 493.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "142",
+     "name": "Missouri",
+     "record": "6-1",
+     "points": 365.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "97",
+     "name": "Louisville",
+     "record": "6-1",
+     "points": 309.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "2005",
+     "name": "Air Force",
+     "record": "6-0",
+     "points": 245.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "2655",
+     "name": "Tulane",
+     "record": "5-1",
+     "points": 137.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "2294",
+     "name": "Iowa",
+     "record": "6-1",
+     "points": 125.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "26",
+     "name": "UCLA",
+     "record": "4-2",
+     "points": 122.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "AP",
+   "after_week": 8,
+   "released": "2023-10-22T07:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 9,
+    "headline": "2023 NCAA Football Rankings - AP Poll Week 9"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "61",
+     "name": "Georgia",
+     "record": "7-0",
+     "points": 1536.0,
+     "first_place_votes": 38
+    },
+    {
+     "rank": 2,
+     "team": "130",
+     "name": "Michigan",
+     "record": "8-0",
+     "points": 1504.0,
+     "first_place_votes": 19
+    },
+    {
+     "rank": 3,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "7-0",
+     "points": 1454.0,
+     "first_place_votes": 3
+    },
+    {
+     "rank": 4,
+     "team": "52",
+     "name": "Florida State",
+     "record": "7-0",
+     "points": 1408.0,
+     "first_place_votes": 3
+    },
+    {
+     "rank": 5,
+     "team": "264",
+     "name": "Washington",
+     "record": "7-0",
+     "points": 1325.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "7-0",
+     "points": 1267.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "251",
+     "name": "Texas",
+     "record": "6-1",
+     "points": 1150.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "6-1",
+     "points": 1133.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "333",
+     "name": "Alabama",
+     "record": "7-1",
+     "points": 1071.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "213",
+     "name": "Penn State",
+     "record": "6-1",
+     "points": 999.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "6-1",
+     "points": 922.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "6-1",
+     "points": 889.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "254",
+     "name": "Utah",
+     "record": "6-1",
+     "points": 868.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "6-2",
+     "points": 718.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "99",
+     "name": "LSU",
+     "record": "6-2",
+     "points": 687.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "142",
+     "name": "Missouri",
+     "record": "7-1",
+     "points": 594.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "153",
+     "name": "North Carolina",
+     "record": "6-1",
+     "points": 506.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "97",
+     "name": "Louisville",
+     "record": "6-1",
+     "points": 420.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "2005",
+     "name": "Air Force",
+     "record": "7-0",
+     "points": 395.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "150",
+     "name": "Duke",
+     "record": "5-2",
+     "points": 371.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "5-2",
+     "points": 306.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "2655",
+     "name": "Tulane",
+     "record": "6-1",
+     "points": 248.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "26",
+     "name": "UCLA",
+     "record": "5-2",
+     "points": 243.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "30",
+     "name": "USC",
+     "record": "6-2",
+     "points": 193.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "256",
+     "name": "James Madison",
+     "record": "7-0",
+     "points": 167.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "AP",
+   "after_week": 9,
+   "released": "2023-10-29T07:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 10,
+    "headline": "2023 NCAA Football Rankings - AP Poll Week 10"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "61",
+     "name": "Georgia",
+     "record": "8-0",
+     "points": 1553.0,
+     "first_place_votes": 48
+    },
+    {
+     "rank": 2,
+     "team": "130",
+     "name": "Michigan",
+     "record": "8-0",
+     "points": 1494.0,
+     "first_place_votes": 9
+    },
+    {
+     "rank": 3,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "8-0",
+     "points": 1446.0,
+     "first_place_votes": 3
+    },
+    {
+     "rank": 4,
+     "team": "52",
+     "name": "Florida State",
+     "record": "8-0",
+     "points": 1421.0,
+     "first_place_votes": 3
+    },
+    {
+     "rank": 5,
+     "team": "264",
+     "name": "Washington",
+     "record": "8-0",
+     "points": 1327.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "7-1",
+     "points": 1235.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "251",
+     "name": "Texas",
+     "record": "7-1",
+     "points": 1189.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "333",
+     "name": "Alabama",
+     "record": "7-1",
+     "points": 1114.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "213",
+     "name": "Penn State",
+     "record": "7-1",
+     "points": 1044.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "7-1",
+     "points": 1010.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "7-1",
+     "points": 990.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "7-2",
+     "points": 847.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "99",
+     "name": "LSU",
+     "record": "6-2",
+     "points": 816.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "142",
+     "name": "Missouri",
+     "record": "7-1",
+     "points": 714.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "97",
+     "name": "Louisville",
+     "record": "7-1",
+     "points": 666.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "6-2",
+     "points": 557.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "2005",
+     "name": "Air Force",
+     "record": "8-0",
+     "points": 526.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "254",
+     "name": "Utah",
+     "record": "6-2",
+     "points": 510.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "6-2",
+     "points": 473.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "26",
+     "name": "UCLA",
+     "record": "6-2",
+     "points": 331.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "2655",
+     "name": "Tulane",
+     "record": "7-1",
+     "points": 303.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "2305",
+     "name": "Kansas",
+     "record": "6-2",
+     "points": 250.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "256",
+     "name": "James Madison",
+     "record": "8-0",
+     "points": 192.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "30",
+     "name": "USC",
+     "record": "7-2",
+     "points": 139.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "2306",
+     "name": "Kansas State",
+     "record": "6-2",
+     "points": 112.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "CFP",
+   "after_week": 9,
+   "released": "2023-10-31T07:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 10,
+    "headline": "2023 NCAA Football Rankings - CFP Rankings Week 10"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "8-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 2,
+     "team": "61",
+     "name": "Georgia",
+     "record": "8-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 3,
+     "team": "130",
+     "name": "Michigan",
+     "record": "8-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 4,
+     "team": "52",
+     "name": "Florida State",
+     "record": "8-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 5,
+     "team": "264",
+     "name": "Washington",
+     "record": "8-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "7-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "251",
+     "name": "Texas",
+     "record": "7-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "333",
+     "name": "Alabama",
+     "record": "7-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "7-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "7-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "213",
+     "name": "Penn State",
+     "record": "7-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "142",
+     "name": "Missouri",
+     "record": "7-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "97",
+     "name": "Louisville",
+     "record": "7-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "99",
+     "name": "LSU",
+     "record": "6-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "7-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "6-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "6-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "254",
+     "name": "Utah",
+     "record": "6-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "26",
+     "name": "UCLA",
+     "record": "6-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "30",
+     "name": "USC",
+     "record": "7-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "2305",
+     "name": "Kansas",
+     "record": "6-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "197",
+     "name": "Oklahoma State",
+     "record": "6-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "2306",
+     "name": "Kansas State",
+     "record": "6-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "2655",
+     "name": "Tulane",
+     "record": "7-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "2005",
+     "name": "Air Force",
+     "record": "8-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "AP",
+   "after_week": 10,
+   "released": "2023-11-05T07:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 11,
+    "headline": "2023 NCAA Football Rankings - AP Poll Week 11"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "61",
+     "name": "Georgia",
+     "record": "9-0",
+     "points": 1558.0,
+     "first_place_votes": 49
+    },
+    {
+     "rank": 2,
+     "team": "130",
+     "name": "Michigan",
+     "record": "9-0",
+     "points": 1485.0,
+     "first_place_votes": 9
+    },
+    {
+     "rank": 3,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "9-0",
+     "points": 1453.0,
+     "first_place_votes": 3
+    },
+    {
+     "rank": 4,
+     "team": "52",
+     "name": "Florida State",
+     "record": "9-0",
+     "points": 1411.0,
+     "first_place_votes": 2
+    },
+    {
+     "rank": 5,
+     "team": "264",
+     "name": "Washington",
+     "record": "9-0",
+     "points": 1333.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "8-1",
+     "points": 1240.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "251",
+     "name": "Texas",
+     "record": "8-1",
+     "points": 1190.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "333",
+     "name": "Alabama",
+     "record": "8-1",
+     "points": 1143.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "213",
+     "name": "Penn State",
+     "record": "8-1",
+     "points": 1075.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "8-1",
+     "points": 1027.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "97",
+     "name": "Louisville",
+     "record": "8-1",
+     "points": 926.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "7-2",
+     "points": 772.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "254",
+     "name": "Utah",
+     "record": "7-2",
+     "points": 734.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "7-2",
+     "points": 703.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "197",
+     "name": "Oklahoma State",
+     "record": "7-2",
+     "points": 660.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "142",
+     "name": "Missouri",
+     "record": "7-2",
+     "points": 644.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "7-2",
+     "points": 547.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "99",
+     "name": "LSU",
+     "record": "6-3",
+     "points": 532.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "2305",
+     "name": "Kansas",
+     "record": "7-2",
+     "points": 496.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "2655",
+     "name": "Tulane",
+     "record": "8-1",
+     "points": 351.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "256",
+     "name": "James Madison",
+     "record": "9-0",
+     "points": 294.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "7-3",
+     "points": 270.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "12",
+     "name": "Arizona",
+     "record": "6-3",
+     "points": 176.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "153",
+     "name": "North Carolina",
+     "record": "7-2",
+     "points": 95.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "2335",
+     "name": "Liberty",
+     "record": "9-0",
+     "points": 85.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "CFP",
+   "after_week": 10,
+   "released": "2023-11-07T08:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 11,
+    "headline": "2023 NCAA Football Rankings - CFP Rankings Week 11"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "9-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 2,
+     "team": "61",
+     "name": "Georgia",
+     "record": "9-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 3,
+     "team": "130",
+     "name": "Michigan",
+     "record": "9-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 4,
+     "team": "52",
+     "name": "Florida State",
+     "record": "9-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 5,
+     "team": "264",
+     "name": "Washington",
+     "record": "9-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "8-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "251",
+     "name": "Texas",
+     "record": "8-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "333",
+     "name": "Alabama",
+     "record": "8-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "8-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "213",
+     "name": "Penn State",
+     "record": "8-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "97",
+     "name": "Louisville",
+     "record": "8-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "7-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "7-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "142",
+     "name": "Missouri",
+     "record": "7-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "197",
+     "name": "Oklahoma State",
+     "record": "7-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "2305",
+     "name": "Kansas",
+     "record": "7-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "7-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "254",
+     "name": "Utah",
+     "record": "7-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "99",
+     "name": "LSU",
+     "record": "6-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "7-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "12",
+     "name": "Arizona",
+     "record": "6-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "2294",
+     "name": "Iowa",
+     "record": "7-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "2655",
+     "name": "Tulane",
+     "record": "8-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "153",
+     "name": "North Carolina",
+     "record": "7-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "2306",
+     "name": "Kansas State",
+     "record": "6-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "AP",
+   "after_week": 11,
+   "released": "2023-11-12T08:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 12,
+    "headline": "2023 NCAA Football Rankings - AP Poll Week 12"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "61",
+     "name": "Georgia",
+     "record": "10-0",
+     "points": 1540.0,
+     "first_place_votes": 54
+    },
+    {
+     "rank": 2,
+     "team": "130",
+     "name": "Michigan",
+     "record": "10-0",
+     "points": 1464.0,
+     "first_place_votes": 7
+    },
+    {
+     "rank": 3,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "10-0",
+     "points": 1433.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 4,
+     "team": "52",
+     "name": "Florida State",
+     "record": "10-0",
+     "points": 1366.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 5,
+     "team": "264",
+     "name": "Washington",
+     "record": "10-0",
+     "points": 1322.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "9-1",
+     "points": 1218.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "251",
+     "name": "Texas",
+     "record": "9-1",
+     "points": 1180.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "333",
+     "name": "Alabama",
+     "record": "9-1",
+     "points": 1141.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "97",
+     "name": "Louisville",
+     "record": "9-1",
+     "points": 1002.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "8-2",
+     "points": 934.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "142",
+     "name": "Missouri",
+     "record": "8-2",
+     "points": 917.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "213",
+     "name": "Penn State",
+     "record": "8-2",
+     "points": 857.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "8-2",
+     "points": 810.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "8-2",
+     "points": 733.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "99",
+     "name": "LSU",
+     "record": "7-3",
+     "points": 703.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "254",
+     "name": "Utah",
+     "record": "7-3",
+     "points": 543.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "2655",
+     "name": "Tulane",
+     "record": "9-1",
+     "points": 412.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "256",
+     "name": "James Madison",
+     "record": "10-0",
+     "points": 405.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "12",
+     "name": "Arizona",
+     "record": "7-3",
+     "points": 387.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "7-3",
+     "points": 359.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "7-3",
+     "points": 333.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "153",
+     "name": "North Carolina",
+     "record": "8-2",
+     "points": 265.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "2306",
+     "name": "Kansas State",
+     "record": "7-3",
+     "points": 240.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "197",
+     "name": "Oklahoma State",
+     "record": "7-3",
+     "points": 178.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "2335",
+     "name": "Liberty",
+     "record": "10-0",
+     "points": 133.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "CFP",
+   "after_week": 11,
+   "released": "2023-11-14T08:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 12,
+    "headline": "2023 NCAA Football Rankings - CFP Rankings Week 12"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "61",
+     "name": "Georgia",
+     "record": "10-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 2,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "10-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 3,
+     "team": "130",
+     "name": "Michigan",
+     "record": "10-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 4,
+     "team": "52",
+     "name": "Florida State",
+     "record": "10-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 5,
+     "team": "264",
+     "name": "Washington",
+     "record": "10-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "9-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "251",
+     "name": "Texas",
+     "record": "9-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "333",
+     "name": "Alabama",
+     "record": "9-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "142",
+     "name": "Missouri",
+     "record": "8-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "97",
+     "name": "Louisville",
+     "record": "9-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "8-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "213",
+     "name": "Penn State",
+     "record": "8-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "8-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "8-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "99",
+     "name": "LSU",
+     "record": "7-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "2294",
+     "name": "Iowa",
+     "record": "8-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "12",
+     "name": "Arizona",
+     "record": "7-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "7-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "7-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "153",
+     "name": "North Carolina",
+     "record": "8-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "2306",
+     "name": "Kansas State",
+     "record": "7-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "254",
+     "name": "Utah",
+     "record": "7-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "197",
+     "name": "Oklahoma State",
+     "record": "7-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "2655",
+     "name": "Tulane",
+     "record": "9-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "2305",
+     "name": "Kansas",
+     "record": "7-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "AP",
+   "after_week": 12,
+   "released": "2023-11-19T08:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 13,
+    "headline": "2023 NCAA Football Rankings - AP Poll Week 13"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "61",
+     "name": "Georgia",
+     "record": "11-0",
+     "points": 1549.0,
+     "first_place_votes": 61
+    },
+    {
+     "rank": 2,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "11-0",
+     "points": 1447.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 3,
+     "team": "130",
+     "name": "Michigan",
+     "record": "11-0",
+     "points": 1440.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 4,
+     "team": "264",
+     "name": "Washington",
+     "record": "11-0",
+     "points": 1367.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 5,
+     "team": "52",
+     "name": "Florida State",
+     "record": "11-0",
+     "points": 1324.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "10-1",
+     "points": 1219.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "251",
+     "name": "Texas",
+     "record": "10-1",
+     "points": 1180.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "333",
+     "name": "Alabama",
+     "record": "10-1",
+     "points": 1138.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "97",
+     "name": "Louisville",
+     "record": "10-1",
+     "points": 1017.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "142",
+     "name": "Missouri",
+     "record": "9-2",
+     "points": 964.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "213",
+     "name": "Penn State",
+     "record": "9-2",
+     "points": 894.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "9-2",
+     "points": 878.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "9-2",
+     "points": 766.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "99",
+     "name": "LSU",
+     "record": "8-3",
+     "points": 748.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "8-3",
+     "points": 714.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "12",
+     "name": "Arizona",
+     "record": "8-3",
+     "points": 625.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "8-3",
+     "points": 503.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "2655",
+     "name": "Tulane",
+     "record": "10-1",
+     "points": 499.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "2306",
+     "name": "Kansas State",
+     "record": "8-3",
+     "points": 418.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "2294",
+     "name": "Iowa",
+     "record": "9-2",
+     "points": 332.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "197",
+     "name": "Oklahoma State",
+     "record": "8-3",
+     "points": 329.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "2335",
+     "name": "Liberty",
+     "record": "11-0",
+     "points": 229.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "2649",
+     "name": "Toledo",
+     "record": "10-1",
+     "points": 118.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "256",
+     "name": "James Madison",
+     "record": "10-1",
+     "points": 75.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "7-4",
+     "points": 72.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "CFP",
+   "after_week": 12,
+   "released": "2023-11-21T08:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 13,
+    "headline": "2023 NCAA Football Rankings - CFP Rankings Week 13"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "61",
+     "name": "Georgia",
+     "record": "11-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 2,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "11-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 3,
+     "team": "130",
+     "name": "Michigan",
+     "record": "11-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 4,
+     "team": "264",
+     "name": "Washington",
+     "record": "11-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 5,
+     "team": "52",
+     "name": "Florida State",
+     "record": "11-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "10-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "251",
+     "name": "Texas",
+     "record": "10-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "333",
+     "name": "Alabama",
+     "record": "10-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "142",
+     "name": "Missouri",
+     "record": "9-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "97",
+     "name": "Louisville",
+     "record": "10-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "213",
+     "name": "Penn State",
+     "record": "9-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "9-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "9-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "99",
+     "name": "LSU",
+     "record": "8-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "12",
+     "name": "Arizona",
+     "record": "8-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "8-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "2294",
+     "name": "Iowa",
+     "record": "9-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "8-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "2306",
+     "name": "Kansas State",
+     "record": "8-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "197",
+     "name": "Oklahoma State",
+     "record": "8-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "7-4",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "152",
+     "name": "NC State",
+     "record": "8-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "2655",
+     "name": "Tulane",
+     "record": "10-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "228",
+     "name": "Clemson",
+     "record": "7-4",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "2335",
+     "name": "Liberty",
+     "record": "11-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "AP",
+   "after_week": 13,
+   "released": "2023-11-26T08:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 14,
+    "headline": "2023 NCAA Football Rankings - AP Poll Week 14"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "61",
+     "name": "Georgia",
+     "record": "12-0",
+     "points": 1540.0,
+     "first_place_votes": 52
+    },
+    {
+     "rank": 2,
+     "team": "130",
+     "name": "Michigan",
+     "record": "12-0",
+     "points": 1495.0,
+     "first_place_votes": 10
+    },
+    {
+     "rank": 3,
+     "team": "264",
+     "name": "Washington",
+     "record": "12-0",
+     "points": 1413.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 4,
+     "team": "52",
+     "name": "Florida State",
+     "record": "12-0",
+     "points": 1358.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 5,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "11-1",
+     "points": 1277.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "11-1",
+     "points": 1251.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "251",
+     "name": "Texas",
+     "record": "11-1",
+     "points": 1205.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "333",
+     "name": "Alabama",
+     "record": "11-1",
+     "points": 1125.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "142",
+     "name": "Missouri",
+     "record": "10-2",
+     "points": 1011.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "213",
+     "name": "Penn State",
+     "record": "10-2",
+     "points": 961.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "10-2",
+     "points": 936.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "10-2",
+     "points": 857.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "99",
+     "name": "LSU",
+     "record": "9-3",
+     "points": 809.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "12",
+     "name": "Arizona",
+     "record": "9-3",
+     "points": 712.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "97",
+     "name": "Louisville",
+     "record": "10-2",
+     "points": 689.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "9-3",
+     "points": 592.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "2655",
+     "name": "Tulane",
+     "record": "11-1",
+     "points": 557.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "2294",
+     "name": "Iowa",
+     "record": "10-2",
+     "points": 458.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "197",
+     "name": "Oklahoma State",
+     "record": "9-3",
+     "points": 407.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "2335",
+     "name": "Liberty",
+     "record": "12-0",
+     "points": 293.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "152",
+     "name": "NC State",
+     "record": "9-3",
+     "points": 269.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "8-4",
+     "points": 269.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "2649",
+     "name": "Toledo",
+     "record": "11-1",
+     "points": 176.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "256",
+     "name": "James Madison",
+     "record": "11-1",
+     "points": 121.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "2567",
+     "name": "SMU",
+     "record": "10-2",
+     "points": 108.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "CFP",
+   "after_week": 13,
+   "released": "2023-11-28T08:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 14,
+    "headline": "2023 NCAA Football Rankings - CFP Rankings Week 14"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "61",
+     "name": "Georgia",
+     "record": "12-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 2,
+     "team": "130",
+     "name": "Michigan",
+     "record": "12-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 3,
+     "team": "264",
+     "name": "Washington",
+     "record": "12-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 4,
+     "team": "52",
+     "name": "Florida State",
+     "record": "12-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 5,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "11-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "11-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "251",
+     "name": "Texas",
+     "record": "11-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "333",
+     "name": "Alabama",
+     "record": "11-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "142",
+     "name": "Missouri",
+     "record": "10-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "213",
+     "name": "Penn State",
+     "record": "10-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "10-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "10-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "99",
+     "name": "LSU",
+     "record": "9-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "97",
+     "name": "Louisville",
+     "record": "10-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "12",
+     "name": "Arizona",
+     "record": "9-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "2294",
+     "name": "Iowa",
+     "record": "10-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "9-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "197",
+     "name": "Oklahoma State",
+     "record": "9-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "152",
+     "name": "NC State",
+     "record": "9-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "8-4",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "8-4",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "2655",
+     "name": "Tulane",
+     "record": "11-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "228",
+     "name": "Clemson",
+     "record": "8-4",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "2335",
+     "name": "Liberty",
+     "record": "12-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "2306",
+     "name": "Kansas State",
+     "record": "8-4",
+     "points": 0.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "AP",
+   "after_week": 14,
+   "released": "2023-12-03T08:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 15,
+    "headline": "2023 NCAA Football Rankings - AP Poll Week 15"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "130",
+     "name": "Michigan",
+     "record": "13-0",
+     "points": 1539.0,
+     "first_place_votes": 51
+    },
+    {
+     "rank": 2,
+     "team": "264",
+     "name": "Washington",
+     "record": "13-0",
+     "points": 1499.0,
+     "first_place_votes": 11
+    },
+    {
+     "rank": 3,
+     "team": "251",
+     "name": "Texas",
+     "record": "12-1",
+     "points": 1375.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 4,
+     "team": "52",
+     "name": "Florida State",
+     "record": "13-0",
+     "points": 1358.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 5,
+     "team": "333",
+     "name": "Alabama",
+     "record": "12-1",
+     "points": 1329.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "61",
+     "name": "Georgia",
+     "record": "12-1",
+     "points": 1256.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "11-1",
+     "points": 1185.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "11-2",
+     "points": 1119.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "142",
+     "name": "Missouri",
+     "record": "10-2",
+     "points": 1014.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "213",
+     "name": "Penn State",
+     "record": "10-2",
+     "points": 960.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "10-2",
+     "points": 944.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "10-2",
+     "points": 867.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "99",
+     "name": "LSU",
+     "record": "9-3",
+     "points": 823.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "12",
+     "name": "Arizona",
+     "record": "9-3",
+     "points": 740.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "9-3",
+     "points": 634.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "97",
+     "name": "Louisville",
+     "record": "10-3",
+     "points": 584.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "2567",
+     "name": "SMU",
+     "record": "11-2",
+     "points": 432.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "2335",
+     "name": "Liberty",
+     "record": "13-0",
+     "points": 424.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "152",
+     "name": "NC State",
+     "record": "9-3",
+     "points": 377.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "2294",
+     "name": "Iowa",
+     "record": "10-3",
+     "points": 356.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "8-4",
+     "points": 309.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "197",
+     "name": "Oklahoma State",
+     "record": "9-4",
+     "points": 256.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "2655",
+     "name": "Tulane",
+     "record": "11-2",
+     "points": 201.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "256",
+     "name": "James Madison",
+     "record": "11-1",
+     "points": 177.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "8-4",
+     "points": 98.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "CFP",
+   "after_week": 14,
+   "released": "2023-12-03T08:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 15,
+    "headline": "2023 NCAA Football Rankings - CFP Rankings Week 15"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "130",
+     "name": "Michigan",
+     "record": "13-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 2,
+     "team": "264",
+     "name": "Washington",
+     "record": "13-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 3,
+     "team": "251",
+     "name": "Texas",
+     "record": "12-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 4,
+     "team": "333",
+     "name": "Alabama",
+     "record": "12-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 5,
+     "team": "52",
+     "name": "Florida State",
+     "record": "13-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "61",
+     "name": "Georgia",
+     "record": "12-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "11-1",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "11-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "142",
+     "name": "Missouri",
+     "record": "10-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "213",
+     "name": "Penn State",
+     "record": "10-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "10-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "10-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "99",
+     "name": "LSU",
+     "record": "9-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "12",
+     "name": "Arizona",
+     "record": "9-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "97",
+     "name": "Louisville",
+     "record": "10-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "9-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "2294",
+     "name": "Iowa",
+     "record": "10-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "152",
+     "name": "NC State",
+     "record": "9-3",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "204",
+     "name": "Oregon State",
+     "record": "8-4",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "197",
+     "name": "Oklahoma State",
+     "record": "9-4",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "8-4",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "228",
+     "name": "Clemson",
+     "record": "8-4",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "2335",
+     "name": "Liberty",
+     "record": "13-0",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "2567",
+     "name": "SMU",
+     "record": "11-2",
+     "points": 0.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "2306",
+     "name": "Kansas State",
+     "record": "8-4",
+     "points": 0.0,
+     "first_place_votes": 0
+    }
+   ]
+  }
+ ]
+}

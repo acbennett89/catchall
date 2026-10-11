@@ -1,0 +1,1279 @@
+{
+ "season": 2026,
+ "source": "https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/seasons/2026/types/<1 preseason | 2 regular season>/weeks/<w>/rankings/<1 AP | 21 CFP>",
+ "rule": "after_week = the last game week a poll reflects: ESPN's 'Week N' poll follows week N-1 and the preseason poll is 0; checked against the release date, which must fall after the middle kickoff of that week and before the middle kickoff of the next",
+ "polls": [
+  {
+   "poll": "AP",
+   "after_week": 0,
+   "released": "2026-08-17T07:00Z",
+   "espn": {
+    "season_type": 1,
+    "week": 1,
+    "headline": "2026 NCAA Football Rankings - AP Poll Preseason"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "0-0",
+     "points": 1672.0,
+     "first_place_votes": 40
+    },
+    {
+     "rank": 2,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "0-0",
+     "points": 1597.0,
+     "first_place_votes": 14
+    },
+    {
+     "rank": 3,
+     "team": "61",
+     "name": "Georgia",
+     "record": "0-0",
+     "points": 1513.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 4,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "0-0",
+     "points": 1510.0,
+     "first_place_votes": 6
+    },
+    {
+     "rank": 5,
+     "team": "251",
+     "name": "Texas",
+     "record": "0-0",
+     "points": 1483.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "84",
+     "name": "Indiana",
+     "record": "0-0",
+     "points": 1440.0,
+     "first_place_votes": 8
+    },
+    {
+     "rank": 7,
+     "team": "2390",
+     "name": "Miami",
+     "record": "0-0",
+     "points": 1379.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 8,
+     "team": "245",
+     "name": "Texas A&M",
+     "record": "0-0",
+     "points": 1131.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "0-0",
+     "points": 1102.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "0-0",
+     "points": 1047.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "99",
+     "name": "LSU",
+     "record": "0-0",
+     "points": 988.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "2641",
+     "name": "Texas Tech",
+     "record": "0-0",
+     "points": 983.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "333",
+     "name": "Alabama",
+     "record": "0-0",
+     "points": 904.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "252",
+     "name": "BYU",
+     "record": "0-0",
+     "points": 839.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "30",
+     "name": "USC",
+     "record": "0-0",
+     "points": 839.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "130",
+     "name": "Michigan",
+     "record": "0-0",
+     "points": 718.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "264",
+     "name": "Washington",
+     "record": "0-0",
+     "points": 501.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "213",
+     "name": "Penn State",
+     "record": "0-0",
+     "points": 482.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "2567",
+     "name": "SMU",
+     "record": "0-0",
+     "points": 434.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "0-0",
+     "points": 394.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "254",
+     "name": "Utah",
+     "record": "0-0",
+     "points": 304.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "2294",
+     "name": "Iowa",
+     "record": "0-0",
+     "points": 260.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "248",
+     "name": "Houston",
+     "record": "0-0",
+     "points": 252.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "97",
+     "name": "Louisville",
+     "record": "0-0",
+     "points": 194.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "142",
+     "name": "Missouri",
+     "record": "0-0",
+     "points": 117.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "AP",
+   "after_week": 1,
+   "released": "2026-09-08T07:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 2,
+    "headline": "2026 NCAA Football Rankings - AP Poll Week 2"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "1-0",
+     "points": 1684.0,
+     "first_place_votes": 46
+    },
+    {
+     "rank": 2,
+     "team": "61",
+     "name": "Georgia",
+     "record": "1-0",
+     "points": 1532.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 3,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "1-0",
+     "points": 1512.0,
+     "first_place_votes": 4
+    },
+    {
+     "rank": 4,
+     "team": "251",
+     "name": "Texas",
+     "record": "1-0",
+     "points": 1462.0,
+     "first_place_votes": 2
+    },
+    {
+     "rank": 5,
+     "team": "84",
+     "name": "Indiana",
+     "record": "1-0",
+     "points": 1428.0,
+     "first_place_votes": 8
+    },
+    {
+     "rank": 6,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "1-0",
+     "points": 1422.0,
+     "first_place_votes": 3
+    },
+    {
+     "rank": 7,
+     "team": "2390",
+     "name": "Miami",
+     "record": "1-0",
+     "points": 1405.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 8,
+     "team": "99",
+     "name": "LSU",
+     "record": "1-0",
+     "points": 1315.0,
+     "first_place_votes": 5
+    },
+    {
+     "rank": 9,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "1-0",
+     "points": 1154.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "245",
+     "name": "Texas A&M",
+     "record": "1-0",
+     "points": 1079.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "1-0",
+     "points": 1039.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "333",
+     "name": "Alabama",
+     "record": "1-0",
+     "points": 910.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "2641",
+     "name": "Texas Tech",
+     "record": "1-0",
+     "points": 900.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "30",
+     "name": "USC",
+     "record": "2-0",
+     "points": 861.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "252",
+     "name": "BYU",
+     "record": "1-0",
+     "points": 840.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "213",
+     "name": "Penn State",
+     "record": "1-0",
+     "points": 621.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "2567",
+     "name": "SMU",
+     "record": "1-0",
+     "points": 501.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "1-0",
+     "points": 491.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "264",
+     "name": "Washington",
+     "record": "1-0",
+     "points": 489.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "254",
+     "name": "Utah",
+     "record": "1-0",
+     "points": 381.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "2294",
+     "name": "Iowa",
+     "record": "1-0",
+     "points": 369.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "248",
+     "name": "Houston",
+     "record": "1-0",
+     "points": 214.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "142",
+     "name": "Missouri",
+     "record": "1-0",
+     "points": 182.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "97",
+     "name": "Louisville",
+     "record": "0-1",
+     "points": 163.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "258",
+     "name": "Virginia",
+     "record": "1-0",
+     "points": 89.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "AP",
+   "after_week": 2,
+   "released": "2026-09-13T07:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 3,
+    "headline": "2026 NCAA Football Rankings - AP Poll Week 3"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "251",
+     "name": "Texas",
+     "record": "2-0",
+     "points": 1678.0,
+     "first_place_votes": 56
+    },
+    {
+     "rank": 2,
+     "team": "61",
+     "name": "Georgia",
+     "record": "2-0",
+     "points": 1551.0,
+     "first_place_votes": 3
+    },
+    {
+     "rank": 3,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "2-0",
+     "points": 1531.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 4,
+     "team": "84",
+     "name": "Indiana",
+     "record": "2-0",
+     "points": 1466.0,
+     "first_place_votes": 3
+    },
+    {
+     "rank": 5,
+     "team": "2390",
+     "name": "Miami",
+     "record": "2-0",
+     "points": 1452.0,
+     "first_place_votes": 4
+    },
+    {
+     "rank": 6,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "1-1",
+     "points": 1407.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "99",
+     "name": "LSU",
+     "record": "2-0",
+     "points": 1334.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 8,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "2-0",
+     "points": 1216.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "245",
+     "name": "Texas A&M",
+     "record": "2-0",
+     "points": 1165.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "333",
+     "name": "Alabama",
+     "record": "2-0",
+     "points": 1068.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "252",
+     "name": "BYU",
+     "record": "2-0",
+     "points": 966.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "30",
+     "name": "USC",
+     "record": "3-0",
+     "points": 944.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "2641",
+     "name": "Texas Tech",
+     "record": "2-0",
+     "points": 910.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "213",
+     "name": "Penn State",
+     "record": "2-0",
+     "points": 692.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "2-0",
+     "points": 676.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "2567",
+     "name": "SMU",
+     "record": "2-0",
+     "points": 636.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "254",
+     "name": "Utah",
+     "record": "2-0",
+     "points": 558.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "2294",
+     "name": "Iowa",
+     "record": "2-0",
+     "points": 391.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "130",
+     "name": "Michigan",
+     "record": "2-0",
+     "points": 382.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "142",
+     "name": "Missouri",
+     "record": "2-0",
+     "points": 344.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "1-1",
+     "points": 324.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "248",
+     "name": "Houston",
+     "record": "2-0",
+     "points": 292.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "97",
+     "name": "Louisville",
+     "record": "1-1",
+     "points": 244.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "201",
+     "name": "Oklahoma",
+     "record": "1-1",
+     "points": 222.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "258",
+     "name": "Virginia",
+     "record": "2-0",
+     "points": 182.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "AP",
+   "after_week": 3,
+   "released": "2026-09-20T07:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 4,
+    "headline": "2026 NCAA Football Rankings - AP Poll Week 4"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "251",
+     "name": "Texas",
+     "record": "3-0",
+     "points": 1706.0,
+     "first_place_votes": 58
+    },
+    {
+     "rank": 2,
+     "team": "61",
+     "name": "Georgia",
+     "record": "3-0",
+     "points": 1580.0,
+     "first_place_votes": 3
+    },
+    {
+     "rank": 3,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "3-0",
+     "points": 1517.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 4,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "3-0",
+     "points": 1488.0,
+     "first_place_votes": 3
+    },
+    {
+     "rank": 5,
+     "team": "84",
+     "name": "Indiana",
+     "record": "3-0",
+     "points": 1467.0,
+     "first_place_votes": 4
+    },
+    {
+     "rank": 6,
+     "team": "2390",
+     "name": "Miami",
+     "record": "3-0",
+     "points": 1445.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 7,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "2-1",
+     "points": 1415.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "333",
+     "name": "Alabama",
+     "record": "3-0",
+     "points": 1182.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "252",
+     "name": "BYU",
+     "record": "3-0",
+     "points": 1090.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "99",
+     "name": "LSU",
+     "record": "2-1",
+     "points": 1078.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "2641",
+     "name": "Texas Tech",
+     "record": "3-0",
+     "points": 1067.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "30",
+     "name": "USC",
+     "record": "4-0",
+     "points": 907.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "213",
+     "name": "Penn State",
+     "record": "3-0",
+     "points": 850.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "3-0",
+     "points": 826.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "254",
+     "name": "Utah",
+     "record": "3-0",
+     "points": 752.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "97",
+     "name": "Louisville",
+     "record": "2-1",
+     "points": 692.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "2294",
+     "name": "Iowa",
+     "record": "3-0",
+     "points": 561.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "130",
+     "name": "Michigan",
+     "record": "3-0",
+     "points": 432.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "142",
+     "name": "Missouri",
+     "record": "3-0",
+     "points": 369.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "2-1",
+     "points": 364.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "57",
+     "name": "Florida",
+     "record": "3-0",
+     "points": 269.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "2567",
+     "name": "SMU",
+     "record": "2-1",
+     "points": 212.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "245",
+     "name": "Texas A&M",
+     "record": "2-1",
+     "points": 202.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "344",
+     "name": "Mississippi State",
+     "record": "3-0",
+     "points": 179.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "248",
+     "name": "Houston",
+     "record": "2-1",
+     "points": 127.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "AP",
+   "after_week": 4,
+   "released": "2026-09-27T07:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 5,
+    "headline": "2026 NCAA Football Rankings - AP Poll Week 5"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "251",
+     "name": "Texas",
+     "record": "4-0",
+     "points": 1737.0,
+     "first_place_votes": 62
+    },
+    {
+     "rank": 2,
+     "team": "61",
+     "name": "Georgia",
+     "record": "4-0",
+     "points": 1646.0,
+     "first_place_votes": 6
+    },
+    {
+     "rank": 3,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "4-0",
+     "points": 1581.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 4,
+     "team": "2390",
+     "name": "Miami",
+     "record": "4-0",
+     "points": 1501.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 5,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "3-1",
+     "points": 1465.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "84",
+     "name": "Indiana",
+     "record": "4-0",
+     "points": 1408.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 7,
+     "team": "333",
+     "name": "Alabama",
+     "record": "4-0",
+     "points": 1305.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 8,
+     "team": "57",
+     "name": "Florida",
+     "record": "4-0",
+     "points": 1272.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "3-1",
+     "points": 1089.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "252",
+     "name": "BYU",
+     "record": "3-0",
+     "points": 1078.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "99",
+     "name": "LSU",
+     "record": "3-1",
+     "points": 1073.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "2641",
+     "name": "Texas Tech",
+     "record": "4-0",
+     "points": 1053.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "254",
+     "name": "Utah",
+     "record": "4-0",
+     "points": 903.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "2294",
+     "name": "Iowa",
+     "record": "4-0",
+     "points": 856.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "3-1",
+     "points": 725.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "344",
+     "name": "Mississippi State",
+     "record": "4-0",
+     "points": 715.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "3-1",
+     "points": 663.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "30",
+     "name": "USC",
+     "record": "4-1",
+     "points": 410.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "197",
+     "name": "Oklahoma State",
+     "record": "3-1",
+     "points": 345.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "248",
+     "name": "Houston",
+     "record": "3-1",
+     "points": 278.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "2567",
+     "name": "SMU",
+     "record": "3-1",
+     "points": 246.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "68",
+     "name": "Boise State",
+     "record": "3-1",
+     "points": 221.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "26",
+     "name": "UCLA",
+     "record": "4-0",
+     "points": 218.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "96",
+     "name": "Kentucky",
+     "record": "3-1",
+     "points": 150.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "142",
+     "name": "Missouri",
+     "record": "3-1",
+     "points": 118.0,
+     "first_place_votes": 0
+    }
+   ]
+  },
+  {
+   "poll": "AP",
+   "after_week": 5,
+   "released": "2026-10-04T07:00Z",
+   "espn": {
+    "season_type": 2,
+    "week": 6,
+    "headline": "2026 NCAA Football Rankings - AP Poll Week 6"
+   },
+   "ranks": [
+    {
+     "rank": 1,
+     "team": "251",
+     "name": "Texas",
+     "record": "4-0",
+     "points": 1737.0,
+     "first_place_votes": 61
+    },
+    {
+     "rank": 2,
+     "team": "61",
+     "name": "Georgia",
+     "record": "5-0",
+     "points": 1647.0,
+     "first_place_votes": 6
+    },
+    {
+     "rank": 3,
+     "team": "87",
+     "name": "Notre Dame",
+     "record": "5-0",
+     "points": 1532.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 4,
+     "team": "2390",
+     "name": "Miami",
+     "record": "5-0",
+     "points": 1524.0,
+     "first_place_votes": 2
+    },
+    {
+     "rank": 5,
+     "team": "194",
+     "name": "Ohio State",
+     "record": "4-1",
+     "points": 1490.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 6,
+     "team": "333",
+     "name": "Alabama",
+     "record": "5-0",
+     "points": 1460.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 7,
+     "team": "84",
+     "name": "Indiana",
+     "record": "5-0",
+     "points": 1380.0,
+     "first_place_votes": 1
+    },
+    {
+     "rank": 8,
+     "team": "252",
+     "name": "BYU",
+     "record": "4-0",
+     "points": 1144.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 9,
+     "team": "145",
+     "name": "Ole Miss",
+     "record": "3-1",
+     "points": 1095.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 10,
+     "team": "99",
+     "name": "LSU",
+     "record": "4-1",
+     "points": 1087.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 11,
+     "team": "2641",
+     "name": "Texas Tech",
+     "record": "5-0",
+     "points": 1062.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 12,
+     "team": "254",
+     "name": "Utah",
+     "record": "4-0",
+     "points": 996.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 13,
+     "team": "2483",
+     "name": "Oregon",
+     "record": "3-1",
+     "points": 831.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 14,
+     "team": "142",
+     "name": "Missouri",
+     "record": "4-1",
+     "points": 755.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 15,
+     "team": "2633",
+     "name": "Tennessee",
+     "record": "4-1",
+     "points": 746.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 16,
+     "team": "57",
+     "name": "Florida",
+     "record": "4-1",
+     "points": 691.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 17,
+     "team": "344",
+     "name": "Mississippi State",
+     "record": "4-1",
+     "points": 487.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 18,
+     "team": "197",
+     "name": "Oklahoma State",
+     "record": "3-1",
+     "points": 477.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 19,
+     "team": "30",
+     "name": "USC",
+     "record": "5-1",
+     "points": 439.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 20,
+     "team": "2294",
+     "name": "Iowa",
+     "record": "4-1",
+     "points": 367.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 21,
+     "team": "26",
+     "name": "UCLA",
+     "record": "4-0",
+     "points": 287.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 22,
+     "team": "248",
+     "name": "Houston",
+     "record": "4-1",
+     "points": 279.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 23,
+     "team": "68",
+     "name": "Boise State",
+     "record": "4-1",
+     "points": 271.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 24,
+     "team": "2567",
+     "name": "SMU",
+     "record": "4-1",
+     "points": 167.0,
+     "first_place_votes": 0
+    },
+    {
+     "rank": 25,
+     "team": "221",
+     "name": "Pittsburgh",
+     "record": "5-0",
+     "points": 162.0,
+     "first_place_votes": 0
+    }
+   ]
+  }
+ ]
+}
