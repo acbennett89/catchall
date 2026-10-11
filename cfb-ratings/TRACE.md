@@ -43,7 +43,9 @@ ESPN rankings ─ polls.py ──> data/<season>/polls.json  (AP and CFP by week
 
 ## Worked example 1: Notre Dame's AdjO
 
-From `python trace.py "Notre Dame" --section efficiency`:
+The worked examples are 2026 as it stood after week 5. `--week 5` reproduces them exactly after later updates.
+
+From `python trace.py "Notre Dame" --week 5 --section efficiency`:
 
 ```
 opponent               weight  raw PPD  opp_AdjD AdjD rk at game   now  opp adj  venue  adjusted
@@ -86,7 +88,7 @@ The ±8.7 standard error is the spread of the five game-level adjusted margins d
 
 ## Worked example 3: the value of Notre Dame's win over Wisconsin
 
-From `python trace.py "Notre Dame" --section network`:
+From `python trace.py "Notre Dame" --week 5 --section network`:
 
 ```
 anchors: NS_win 0.4682 (mean NS of the beaten team over all 271 FBS wins -> average win = 1.00)
@@ -110,14 +112,14 @@ WIN vs Wisconsin:  NS = 0.6*0.8000 + 0.3*0.5889 + 0.1*0.5444 = 0.7111;  value = 
 
 ## Worked example 4: a game result adjusted for garbage time
 
-From `python trace.py Rutgers --section luck`. Rutgers scored 150 and allowed 161. After removing the
+From `python trace.py Rutgers --week 5 --section luck`. Rutgers scored 150 and allowed 161. After removing the
 offensive points scored on garbage-time drives (each game's removals are listed in the schedule
 section), that becomes 104 and 144. Pythag = 104^2.37 / (104^2.37 + 144^2.37) = 0.316. The actual W% is
 0.200, so luck is −0.116; on raw scores it would be −0.258.
 
 ## Worked example 5: a lead-protection drive and a foul
 
-`python trace.py Alabama --section situational` shows the two tagged drives out of six Q4 leading
+`python trace.py Alabama --week 5 --section situational` shows the two tagged drives out of six Q4 leading
 drives in usable-clock games:
 
 ```
